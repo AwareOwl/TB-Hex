@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class VisualToken {
 
+    public TokenClass tokenClass;
+
     public GameObject Anchor;
     public GameObject Base;
     public GameObject Border;
@@ -12,6 +14,37 @@ public class VisualToken {
     int Type;
 
     public VisualToken () {
+        CreateToken ();
+    }
+
+    public VisualToken (TokenClass tokenClass) {
+        this.tokenClass = tokenClass;
+        CreateToken ();
+        Anchor.transform.parent = tokenClass.tile.visualTile.Anchor.transform;
+        Anchor.transform.localPosition = new Vector3 (0, 0.4f, 0);
+        SetState ();
+    }
+
+    public void SetState () {
+        SetOwner ();
+        SetText ();
+        SetType ();
+    }
+
+    public void SetOwner () {
+        Base.GetComponent<VisualEffectScript> ().Color = AppDefaults.PlayerColor [tokenClass.owner];
+    }
+
+    public void SetText () {
+        Text.GetComponent<TextMesh> ().text = tokenClass.value.ToString();
+    }
+
+    public void SetType () {
+        SetType (tokenClass.type);
+    }
+
+    public void CreateToken () {
+        Debug.Log ("Test");
         Anchor = new GameObject ();
 
         Base = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBase")) as GameObject;
@@ -33,7 +66,7 @@ public class VisualToken {
         Text.transform.localEulerAngles = new Vector3 (90, 0, 0);
     }
 
-    public void SetTokenType (int type) {
+    public void SetType (int type) {
         switch (type) {
             case 1:
                 Border.GetComponent<VisualEffectScript> ().Color = new Color (0.8f, 0.6f, 0.1f);

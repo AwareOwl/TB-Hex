@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler {
 
     public int number;
+    public int x;
+    public int y;
 
     public Sprite NormalSprite;
     public Sprite OnMouseOverSprite;
@@ -116,7 +118,8 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             MyNetworkManager.StartNewClient ();
                             break;
                         case "Tile":
-                            transform.parent.GetComponent<VisualEffectScript> ().PushItDown ();
+                            BoardEditorMenu.TileAction (x, y);
+                            //transform.parent.GetComponent<VisualEffectScript> ().PushItDown (-1);
                             break;
                         case "LogUserIn":
                             LoginMenu.LogIn ();

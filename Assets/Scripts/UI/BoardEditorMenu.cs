@@ -6,6 +6,8 @@ public class BoardEditorMenu : GOUI {
 
     static public BoardEditorMenu instance;
 
+    static BoardClass EditedBoard;
+
     static public GameObject BackgroundObject;
 
     static public int TileType;
@@ -14,7 +16,7 @@ public class BoardEditorMenu : GOUI {
     static public int TokenType;
 
     static int [] NumberOfButtons = new int [] { 4, 3, 5, 9, 8 };
-    static int [] SelectedButtons = new int [NumberOfButtons.Length];
+    static int [] Selected = new int [] {0, 1, 1, 1, 0 };
     static GameObject [] [] Buttons;
 
     private void Start () {
@@ -22,12 +24,37 @@ public class BoardEditorMenu : GOUI {
         CreateBoardEditorMenu ();
         CameraScript.SetBoardEditorCamera ();
         CurrentGUI = this;
+
+        EditedBoard = new BoardClass ();
+        EditedBoard.EnableVisualisation ();
+        EditedBoard.CreateNewBoard ();
     }
 
     static public void ShowBoardEditorMenu () {
         DestroyMenu ();
         CurrentCanvas.AddComponent<BoardEditorMenu> ();
-        EnvironmentScript.CreateRandomBoard ();
+        //EnvironmentScript.CreateRandomBoard ();
+    }
+
+    static public void TileAction (int x, int y) {
+        if (Selected [1] < 2) {
+            EnableTile (x, y);
+        } else {
+            SetToken (x, y);
+        }
+    }
+
+    static public void EnableTile (int x, int y) {
+        if (Selected [1] > 0) {
+            Debug.Log ("Wut " + x + " " + y);
+            EditedBoard.EnableTile (x, y, true);
+        } else if (Selected [1] == 0) {
+            EditedBoard.EnableTile (x, y, false);
+        }
+    }
+
+    static public void SetToken (int x, int y) {
+        TokenClass tile = EditedBoard.CreateToken (x, y, Selected [4], Selected [3] + 1, Selected [2]);
     }
 
     static public void CreateBoardEditorMenu () {
@@ -72,14 +99,14 @@ public class BoardEditorMenu : GOUI {
         AddButtons (px, py, maxX, maxY);
 
         for (int x = 1; x < 5; x++) {
-            SelectButton (x, 0);
+            SelectButton (x, Selected [x]);
         }
 
 
     }
 
     static public void SelectButton (int type, int number) {
-        SelectedButtons [type] = number;
+        Selected [type] = number;
         foreach (GameObject button in Buttons [type]) {
             button.GetComponent<UIController> ().FreeAndUnlcok ();
         }
@@ -189,7 +216,7 @@ public class BoardEditorMenu : GOUI {
                             Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
                             Clone.transform.localPosition = Vector3.zero;
                             Clone.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-                            VT.SetTokenType (number);
+                            VT.SetType (number);
                             DestroyImmediate (VT.Text);
                             break;
                     }

@@ -1,35 +1,44 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class VisualTile {
 
-    static VisualTile [,] visualField = new VisualTile [10, 10];
-
-    TileClass tile;
-
     public GameObject Anchor;
     public GameObject Tile;
+    public GameObject Collider;
 
     public VisualTile () {
-        CreateTile ();
     }
 
     public VisualTile (TileClass field) {
-        this.tile = field;
-        if (visualField [field.x, field.y] == null) {
-            visualField [field.x, field.y] = this;
+        CreateTile (field.x, field.y);
+    }
+
+    void CreateTile (int x, int y) {
+        Anchor = EnvironmentScript.CreateTile (x, -0.5f, y);
+        Tile = Anchor.transform.Find ("Tile").gameObject;
+        //Tile.AddComponent<UIController> ();
+        Collider = GameObject.Instantiate (Resources.Load ("Prefabs/TileCollider")) as GameObject;
+        Collider.transform.localPosition = TilePosition (x, 0, y);
+        Collider.transform.localScale = new Vector3 (0.5f, 0.5f, 0.2f);
+        Collider.name = "Tile";
+        Collider.AddComponent<UIController> ();
+        Collider.GetComponent<UIController> ().x = x;
+        Collider.GetComponent<UIController> ().y = y;
+
+    }
+
+    public void EnableTile (bool enable) {
+        if (enable) {
+            Anchor.GetComponent<VisualEffectScript> ().PushItToHeight (0);
+        } else {
+            Anchor.GetComponent<VisualEffectScript> ().PushItToHeight (-0.5f);
         }
     }
 
-    void CreateTile () {
-        Anchor = EnvironmentScript.CreateTile ();
-        Tile = Anchor.transform.Find ("Tile").gameObject;
-        Tile.AddComponent<UIController> ();
-
-    }
-
-    static public Vector3 TilePosition (int x, int y, int z) {
+    static public Vector3 TilePosition (int x, float y, int z) {
         return new Vector3 (-3.75f + x + (z % 2) * 0.5f, 0 + y, -3.5f + z * Mathf.Sqrt (3) / 2);
     }
 

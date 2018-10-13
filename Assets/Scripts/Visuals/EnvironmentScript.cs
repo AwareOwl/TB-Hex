@@ -136,9 +136,9 @@ public class EnvironmentScript : MonoBehaviour {
         for (int x = 0; x < (maxY - minY + 1) * 2; x++) {
             GameObject water = Instantiate (Resources.Load ("Prefabs/PreWater")) as GameObject;
             if (x == 0) {
-                water.transform.GetComponent<Renderer> ().material.color = new Color (0, 0.55f, 1, 0.12f);
+                water.transform.GetComponent<Renderer> ().material.color = new Color (0, 0.55f, 1, 0.16f);
             } else {
-                water.transform.GetComponent<Renderer> ().material.color = new Color (0, 0.55f, 1, 0.04f);
+                water.transform.GetComponent<Renderer> ().material.color = new Color (0, 0.55f, 1, 0.03f);
             }
             water.transform.localPosition = new Vector3 (0, -x * 0.75f, 0);
             water.transform.parent = Background.transform;
@@ -224,8 +224,12 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static public GameObject CreateAttachedTile (int x, int y, int z) {
-        GameObject hex = CreateTile ();
+        GameObject hex = CreateTile (x, y, z);
         hex.transform.parent = Background.transform;
+        return hex;
+    }
+    static public GameObject CreateTile (int x, float y, int z) {
+        GameObject hex = CreateTile ();
         hex.transform.localPosition = VisualTile.TilePosition (x, y, z);
         return hex;
     }
@@ -241,9 +245,9 @@ public class EnvironmentScript : MonoBehaviour {
         switch (Theme) {
             case 1:
                 if (Random.Range (0, 2) == 0) {
-                    TEffect.Init (new Color (0.47f, Random.Range (0.49f, 0.55f), 0.48f), false, true);
+                    TEffect.Init (new Color (0.5f, Random.Range (0.51f, 0.56f), 0.47f), false, true);
                 } else {
-                    TEffect.Init (new Color (0.47f, 0.48f, Random.Range (0.49f, 0.55f)), false, true);
+                    TEffect.Init (new Color (Random.Range (0.51f, 0.56f), 0.5f, 0.47f), false, true);
                 }
                 AEffect.Floating [0] = true;
                 break;

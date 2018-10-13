@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TileClass {
 
-    VisualTile visualTile;
+    public VisualTile visualTile;
 
     public int x;
     public int y;
@@ -26,11 +26,28 @@ public class TileClass {
         this.y = y;
     }
 
+    public void EnableTile (bool enable) {
+        enabled = enable;
+        if (visualTile != null) {
+            visualTile.EnableTile (enable);
+        }
+    }
+
     public void EnableVisual () {
         if (visualTile == null) {
             visualTile = new VisualTile (this);
-
+            if (token != null) {
+                token.EnableVisual ();
+            }
         }
+    }
+
+    public TokenClass CreateToken (int type, int value, int owner) {
+        token = new TokenClass (this, type, value, owner);
+        if (visualTile != null) {
+            token.EnableVisual ();
+        }
+        return token;
     }
 
     public TileClass (TileClass fieldReference) {

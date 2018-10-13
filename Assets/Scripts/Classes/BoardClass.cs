@@ -4,38 +4,72 @@ using UnityEngine;
 
 public class BoardClass {
 
+    bool visualised = true;
+
     TileClass [,] tile;
     List<TileClass> tileList = new List<TileClass> ();
 
     public void EnableTile (int x, int y) {
-        tile [x, y].enabled = true;
-        tileList.Add (tile [x, y]);
+        EnableTile (x, y, true);
     }
     public void DisableTile (int x, int y) {
-        tile [x, y].enabled = false;
-        tileList.Remove (tile [x, y]);
+        EnableTile (x, y, false);
     }
 
-    void CreateFields (int x, int y) {
-        tile = new TileClass [x, y];
+    public void EnableTile (int x, int y, bool enable) {
+        TileClass tile = this.tile [x, y];
+        tile.EnableTile (enable);
+        if (enable) {
+            tileList.Add (tile);
+        } else {
+            tileList.Remove (tile);
+        }
     }
 
+    public void VisualiseTile (TileClass tile) {
+        if (visualised) {
+            tile.EnableVisual ();
+        }
+
+    }
+
+    public void EnableVisualisation () {
+        visualised = true;
+        if (tile != null) {
+            foreach (TileClass tile in tile) {
+                VisualiseTile (tile);
+            }
+        }
+    }
+    
     public BoardClass () {
 
     }
-
     public void CreateNewBoard () {
-        tile = new TileClass [8, 8];
-        
+        CreateNewBoard (8, 8);
+    }
+
+    public void CreateNewBoard (int sx, int sy) {
+        tile = new TileClass [sx, sy];
+        Debug.Log (tile);
+        for (int x = 0; x < sx; x++) {
+            for (int y = 0; y < sy; y++) {
+                CreateTile (x, y);
+            }
+        }
     }
 
     TileClass CopyTile (TileClass fieldReference) {
-        return CreateTile (fieldReference.x, fieldReference.y);
+        int x = fieldReference.x;
+        int y = fieldReference.y;
+        TileClass tile = CreateTile (x, y);
+        EnableTile (x, y, fieldReference.enabled);
+        return tile;
     }
 
     TileClass CreateTile (int x, int y) {
         tile [x, y] = new TileClass (x, y);
-        tileList.Add (tile [x, y]);
+        VisualiseTile (tile [x, y]);
         return tile [x, y];
     }
 
@@ -44,5 +78,9 @@ public class BoardClass {
         foreach (TileClass tempField in match.tileList) {
             CopyTile (tempField);
         }
+    }
+
+    public TokenClass CreateToken (int x, int y, int type, int value, int owner) {
+        return tile [x, y].CreateToken (type, value, owner);
     }
 }

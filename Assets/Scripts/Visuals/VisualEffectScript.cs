@@ -179,7 +179,8 @@ public class VisualEffectScript : MonoBehaviour {
                 transform.localPosition = new Vector3 (PosX, PosY + 0.75f * Height, SPos.z);
             }
             if (Floating [phase]) {
-                float floatingSpeed = 1f * Time.deltaTime;
+                float HeighModifier = Mathf.Abs (FloatingDestination - FloatingHeight) * 2;
+                float floatingSpeed = Mathf.Min ((1f + HeighModifier) * Time.deltaTime, 1);
                 FloatingDestination = Random.Range (-0.4f, 0.4f) * floatingSpeed + FloatingDestination * (1f - floatingSpeed);
                 FloatingHeight = FloatingDestination * floatingSpeed + FloatingHeight * (1f - floatingSpeed);
                 transform.Translate (Vector3.up * FloatingHeight);
@@ -190,7 +191,14 @@ public class VisualEffectScript : MonoBehaviour {
 		}
 	}
 
-    public void PushItDown () {
+    public void PushItToHeight (float value) {
+        float delta = value - SPos.y;
+        //SPos = new Vector3 (SPos.x, value, SPos.z);
+        SPos += new Vector3 (0, delta, 0);
+        FloatingHeight -= delta;
+    }
+
+    public void PushItDown (float value) {
         SPos += new Vector3 (0, -1, 0);
         FloatingHeight++;
     }

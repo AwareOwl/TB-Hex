@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TokenClass {
-    
+
+    public VisualToken visualToken;
+
     public TileClass tile;
 
     public int type;
@@ -28,7 +30,15 @@ public class TokenClass {
 
     }
 
-    public TokenClass (int type, int value, int owner) {
+    public void EnableVisual () {
+        if (visualToken == null) {
+            visualToken = new VisualToken (this);
+
+        }
+    }
+
+    public TokenClass (TileClass tile, int type, int value, int owner) {
+        this.tile = tile;
         SetState (type, value, owner);
     }
 
