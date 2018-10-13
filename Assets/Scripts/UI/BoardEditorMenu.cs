@@ -13,9 +13,14 @@ public class BoardEditorMenu : GOUI {
     static public int Value;
     static public int TokenType;
 
+    static int [] NumberOfButtons = new int [] { 4, 3, 5, 9, 8 };
+    static int [] SelectedButtons = new int [NumberOfButtons.Length];
+    static GameObject [] [] Buttons;
+
     private void Start () {
         instance = this;
         CreateBoardEditorMenu ();
+        CameraScript.SetBoardEditorCamera ();
         CurrentGUI = this;
     }
 
@@ -26,6 +31,11 @@ public class BoardEditorMenu : GOUI {
     }
 
     static public void CreateBoardEditorMenu () {
+
+        Buttons = new GameObject [NumberOfButtons.Length] [];
+        for (int x = 0; x < NumberOfButtons.Length; x++) {
+            Buttons [x] = new GameObject [NumberOfButtons [x]];
+        }
 
         int sx = 390;
         int sy = 150;
@@ -61,6 +71,19 @@ public class BoardEditorMenu : GOUI {
 
         AddButtons (px, py, maxX, maxY);
 
+        for (int x = 1; x < 5; x++) {
+            SelectButton (x, 0);
+        }
+
+
+    }
+
+    static public void SelectButton (int type, int number) {
+        SelectedButtons [type] = number;
+        foreach (GameObject button in Buttons [type]) {
+            button.GetComponent<UIController> ().FreeAndUnlcok ();
+        }
+        Buttons [type] [number].GetComponent<UIController> ().PressAndLock ();
     }
 
     static int type = 0;
@@ -94,12 +117,15 @@ public class BoardEditorMenu : GOUI {
                 break;
         }
 
-        for (int x = 0; x < maxX; x++) {
-            for (int y = 0; y < maxY; y++) {
+        for (int y = 0; y < maxY; y++) {
+            for (int x = 0; x < maxX; x++) {
                 int number = x + y * maxX;
+                if (number >= NumberOfButtons [type]) {
+                    continue;
+                }
                 int npx = px + x * 60 + 75 - sx / 2;
                 int npy = py + y * 60 + 125 - sy / 2;
-                if (type == 0 && number < 4) {
+                if (type == 0) {
                     switch (x) {
                         case 0:
                             BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, false);
@@ -115,7 +141,7 @@ public class BoardEditorMenu : GOUI {
                             break;
                     }
                 }
-                if (type == 1 && x < 3 || type == 2 || type == 3 && number < 9 || type == 4) {
+                if (type > 0) {
                     BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx, npy, 11, 60, 60, false);
                     switch (type) {
                         case 1:
@@ -148,10 +174,12 @@ public class BoardEditorMenu : GOUI {
                             BackgroundObject.name = "BoardEditorOwner";
                             Clone = CreateSprite ("UI/White", npx, npy, 12, 30, 30, false);
                             Clone.GetComponent<SpriteRenderer> ().color = AppDefaults.PlayerColor [x];
+                            Destroy (Clone.GetComponent<Collider> ());
                             break;
                         case 3:
                             BackgroundObject.name = "BoardEditorValue";
                             Clone = CreateText ((number + 1).ToString(), npx, npy, 12, 0.03f);
+                            AddTextToGameObject (BackgroundObject, Clone);
                             break;
                         case 4:
                             BackgroundObject.name = "BoardEditorTokenType";
@@ -165,15 +193,13 @@ public class BoardEditorMenu : GOUI {
                             DestroyImmediate (VT.Text);
                             break;
                     }
-                    if (BackgroundObject != null) {
-                        BackgroundObject.GetComponent<UIController> ().number = number;
-                    }
 
                 }
+                BackgroundObject.GetComponent<UIController> ().number = number;
+                Buttons [type] [number] = BackgroundObject;
 
             }
         }
-
         type++;
     }
 }

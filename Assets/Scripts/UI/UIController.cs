@@ -136,16 +136,16 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
                         // BoardEditor
                         case "BoardEditorTileType":
-                            PressAndLock ();
+                            BoardEditorMenu.SelectButton (1, number);
                             break;
                         case "BoardEditorOwner":
-                            PressAndLock ();
+                            BoardEditorMenu.SelectButton (2, number);
                             break;
                         case "BoardEditorValue":
-                            PressAndLock ();
+                            BoardEditorMenu.SelectButton (3, number);
                             break;
                         case "BoardEditorTokenType":
-                            PressAndLock ();
+                            BoardEditorMenu.SelectButton (4, number);
                             break;
 
                         default:
