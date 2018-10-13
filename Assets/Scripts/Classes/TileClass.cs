@@ -9,6 +9,8 @@ public class TileClass {
     public int x;
     public int y;
 
+    public bool enabled;
+
     public TokenClass token;
 
     public TileClass () {

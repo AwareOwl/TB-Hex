@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class UserInterface : MonoBehaviour {
 
+    static public int SceneMode;
+
+    const int BoardEditor = 1;
+
 	// Use this for initialization
 	void Start () {
 		

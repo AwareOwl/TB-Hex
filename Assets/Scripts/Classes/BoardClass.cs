@@ -4,12 +4,29 @@ using UnityEngine;
 
 public class BoardClass {
 
-    TileClass [,] field;
-    List<TileClass> fieldList = new List<TileClass> ();
-    
+    TileClass [,] tile;
+    List<TileClass> tileList = new List<TileClass> ();
+
+    public void EnableTile (int x, int y) {
+        tile [x, y].enabled = true;
+        tileList.Add (tile [x, y]);
+    }
+    public void DisableTile (int x, int y) {
+        tile [x, y].enabled = false;
+        tileList.Remove (tile [x, y]);
+    }
 
     void CreateFields (int x, int y) {
-        field = new TileClass [x, y];
+        tile = new TileClass [x, y];
+    }
+
+    public BoardClass () {
+
+    }
+
+    public void CreateNewBoard () {
+        tile = new TileClass [8, 8];
+        
     }
 
     TileClass CopyTile (TileClass fieldReference) {
@@ -17,14 +34,14 @@ public class BoardClass {
     }
 
     TileClass CreateTile (int x, int y) {
-        field [x, y] = new TileClass (x, y);
-        fieldList.Add (field [x, y]);
-        return field [x, y];
+        tile [x, y] = new TileClass (x, y);
+        tileList.Add (tile [x, y]);
+        return tile [x, y];
     }
 
     public void CopyBoard (BoardClass match) {
-        CreateTile (match.field.GetLength (0), match.field.GetLength (1));
-        foreach (TileClass tempField in match.fieldList) {
+        CreateTile (match.tile.GetLength (0), match.tile.GetLength (1));
+        foreach (TileClass tempField in match.tileList) {
             CopyTile (tempField);
         }
     }
