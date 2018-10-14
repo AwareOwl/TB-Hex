@@ -183,7 +183,7 @@ public class GOUI : MonoBehaviour {
         clone = Instantiate (Resources.Load ("Prefabs/PreUIButton")) as GameObject;
         clone.transform.SetParent (UICanvas.transform);
         clone.GetComponent<Image> ().sprite = GetSprite (assetName);
-        clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px, -py);
+        clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px - 720, -py + 540);
         clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (sx, sy);
         clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
         clone.AddComponent<UIController> ();
@@ -199,7 +199,7 @@ public class GOUI : MonoBehaviour {
 
         clone = Instantiate (Resources.Load ("Prefabs/PreInputField")) as GameObject;
         clone.transform.SetParent (UICanvas.transform);
-        clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px, -py);
+        clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px - 720, -py + 540);
         clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (sx, sy);
         clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
         clone.transform.Find ("Placeholder").GetComponent<Text> ().fontSize = sy / 2;
@@ -215,7 +215,7 @@ public class GOUI : MonoBehaviour {
         Clone.GetComponent<Text> ().text = text;
         Clone.transform.SetParent (UICanvas.transform);
         Clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
-        Clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px, -py);
+        Clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px - 720, -py + 540);
         return Clone;
     }
 

@@ -25,6 +25,10 @@ public class VisualToken {
         SetState ();
     }
 
+    public void DestroyToken () {
+        GameObject.Destroy (Anchor);
+    }
+
     public void SetState () {
         SetOwner ();
         SetText ();
@@ -44,7 +48,6 @@ public class VisualToken {
     }
 
     public void CreateToken () {
-        Debug.Log ("Test");
         Anchor = new GameObject ();
 
         Base = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBase")) as GameObject;
@@ -64,6 +67,11 @@ public class VisualToken {
         Text.transform.parent = Anchor.transform;
         Text.transform.localPosition = new Vector3 (0, 0.05f, 0);
         Text.transform.localEulerAngles = new Vector3 (90, 0, 0);
+
+        Anchor.AddComponent<VisualEffectScript> ();
+        Anchor.GetComponent<VisualEffectScript> ().Init (Color.white, false, true);
+        Anchor.GetComponent<VisualEffectScript> ().Colored = false;
+        Anchor.GetComponent<VisualEffectScript> ().GrowAppear [0] = true;
     }
 
     public void SetType (int type) {

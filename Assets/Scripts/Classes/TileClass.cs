@@ -42,6 +42,24 @@ public class TileClass {
         }
     }
 
+    public TokenClass SetToken (int type, int value, int owner) {
+        if (token == null) {
+            token = CreateToken (type, value, owner);
+        } else {
+            token.SetState (type, value, owner);
+        }
+        return token;
+    }
+
+    public TokenClass DestroyToken () {
+        if (token != null) {
+            token.DestroyToken ();
+            token = null;
+        }
+        return token;
+    }
+
+
     public TokenClass CreateToken (int type, int value, int owner) {
         token = new TokenClass (this, type, value, owner);
         if (visualTile != null) {

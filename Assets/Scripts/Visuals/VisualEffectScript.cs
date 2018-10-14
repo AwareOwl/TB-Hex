@@ -7,8 +7,10 @@ public class VisualEffectScript : MonoBehaviour {
     public bool [] Invisible = new bool [2];
     public bool [] BlendAppear = new bool [2];
 	public bool [] BlendDisappear = new bool [2];
+    public bool [] GrowAppear = new bool [2];
+    public bool [] GrowDisappear = new bool [2];
 
-	public bool [] Uprising = new bool [2];
+    public bool [] Uprising = new bool [2];
 	public bool [] Rotating = new bool [2];
 	public bool [] Growing = new bool [2];
 	public bool [] Moving = new bool [2];
@@ -164,6 +166,10 @@ public class VisualEffectScript : MonoBehaviour {
                         renderer.material.color = new Color (0.75f, 0.75f, 0.75f, alpha);
                     }
                 }
+            }
+            if (GrowAppear [phase]) {
+                float x = SSize.x * (timer / timerScale);
+                transform.localScale = new Vector3 (x, x, x);
             }
             if (Growing [phase]) {
                 float x = SSize.x + (Size + timer / timerScale) / 2;

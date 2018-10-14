@@ -33,7 +33,18 @@ public class TokenClass {
     public void EnableVisual () {
         if (visualToken == null) {
             visualToken = new VisualToken (this);
+        }
+    }
 
+    public void RefreshVisual () {
+        if (visualToken != null) {
+            visualToken.SetState ();
+        }
+    }
+
+    public void DestroyVisual () {
+        if (visualToken != null) {
+            visualToken.DestroyToken ();
         }
     }
 
@@ -47,6 +58,11 @@ public class TokenClass {
         this.value = value;
         this.tempValue = value;
         this.owner = owner;
+        RefreshVisual ();
+    }
+
+    public void DestroyToken () {
+        visualToken.DestroyToken ();
     }
 
     public TokenClass (TokenClass tokenReference) {

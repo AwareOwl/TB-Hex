@@ -37,16 +37,12 @@ public class BoardEditorMenu : GOUI {
     }
 
     static public void TileAction (int x, int y) {
-        if (Selected [1] < 2) {
-            EnableTile (x, y);
-        } else {
-            SetToken (x, y);
-        }
+        EnableTile (x, y);
+        SetToken (x, y);
     }
 
     static public void EnableTile (int x, int y) {
         if (Selected [1] > 0) {
-            Debug.Log ("Wut " + x + " " + y);
             EditedBoard.EnableTile (x, y, true);
         } else if (Selected [1] == 0) {
             EditedBoard.EnableTile (x, y, false);
@@ -54,7 +50,11 @@ public class BoardEditorMenu : GOUI {
     }
 
     static public void SetToken (int x, int y) {
-        TokenClass tile = EditedBoard.CreateToken (x, y, Selected [4], Selected [3] + 1, Selected [2]);
+        if (Selected [1] == 2) {
+            EditedBoard.SetToken (x, y, Selected [4], Selected [3] + 1, Selected [2]);
+        } else {
+            EditedBoard.DestroyToken (x, y);
+        }
     }
 
     static public void CreateBoardEditorMenu () {

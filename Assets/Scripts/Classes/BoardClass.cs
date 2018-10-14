@@ -80,7 +80,11 @@ public class BoardClass {
         }
     }
 
-    public TokenClass CreateToken (int x, int y, int type, int value, int owner) {
-        return tile [x, y].CreateToken (type, value, owner);
+    public TokenClass SetToken (int x, int y, int type, int value, int owner) {
+        return tile [x, y].SetToken (type, value, owner);
+    }
+
+    public TokenClass DestroyToken (int x, int y) {
+        return tile [x, y].DestroyToken ();
     }
 }
