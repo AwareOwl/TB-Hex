@@ -27,6 +27,7 @@ public class VisualTile {
         Collider.AddComponent<UIController> ();
         Collider.GetComponent<UIController> ().x = x;
         Collider.GetComponent<UIController> ().y = y;
+        Collider.GetComponent<UIController> ().HoverObject = Collider.transform.Find ("Hover").gameObject;
 
     }
 

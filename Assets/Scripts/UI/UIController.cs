@@ -14,6 +14,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public Sprite OnMouseOverSprite;
     public Sprite OnMouseClickSprite;
     public GameObject Text;
+    public GameObject HoverObject;
 
     public List<GameObject> references = new List<GameObject> ();
 
@@ -77,6 +78,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (!PressedAndLocked) {
             SetSprite (NormalSprite);
             SetTextColor (Color.black);
+            SetHoverObjectColor (new Color (1, 1, 1, 0f));
         }
     }
 
@@ -84,12 +86,20 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (!PressedAndLocked) {
             SetSprite (OnMouseOverSprite);
             SetTextColor (Color.white);
+            SetHoverObjectColor (new Color (1, 1, 1, 0.25f));
         }
     }
 
     public void SetOnMouseClickSprite () {
         SetSprite (OnMouseClickSprite);
         SetTextColor (Color.white);
+        SetHoverObjectColor (new Color (1, 1, 1, 0.25f));
+    }
+
+    public void SetHoverObjectColor (Color color) {
+        if (HoverObject != null){
+            HoverObject.GetComponent<VisualEffectScript> ().Color = color;
+        }
     }
 
     public void SetTextColor (Color color) {
@@ -138,6 +148,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             break;
 
                         // BoardEditor
+                        case "SaveBoard":
+                            Debug.Log (1);
+                            BoardEditorMenu.EditedBoard.BoardToString ();
+                            break;
                         case "BoardEditorTileType":
                             BoardEditorMenu.SelectButton (1, number);
                             break;

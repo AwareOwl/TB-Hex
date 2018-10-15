@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -86,5 +87,25 @@ public class BoardClass {
 
     public TokenClass DestroyToken (int x, int y) {
         return tile [x, y].DestroyToken ();
+    }
+
+    public List <string> BoardToString () {
+        List<string> s = new List<string> ();
+        string s3 = "";
+        foreach (TileClass tile in this.tile) {
+            string s2 = "";
+            s2 += tile.x + " " + tile.y;
+            s2 += " ";
+            s2 += tile.enabled ? 1 : 0;
+            if (tile.token != null) {
+                s2 += " " + tile.token.type;
+                s2 += " " + tile.token.value;
+                s2 += " " + tile.token.owner;
+            }
+            s.Add (s2);
+            s3 += s2 + Environment.NewLine;
+        }
+        Debug.Log (s3);
+        return s;
     }
 }

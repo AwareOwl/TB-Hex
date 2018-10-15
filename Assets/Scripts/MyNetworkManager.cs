@@ -42,7 +42,7 @@ public class MyNetworkManager : NetworkManager {
 
     // Use this for initialization
     void Start () {
-
+        //Debug.Log ((int) true);
         //singleton
         //singleton.StartClient ();
        // singleton.StartHost (

@@ -158,7 +158,8 @@ public class VisualEffectScript : MonoBehaviour {
                         } else {
                             alpha = Color.a;
                         }
-
+                    } else {
+                        alpha = Color.a;
                     }
                     if (Triggered) {
                         renderer.material.color = new Color (Color.r, Color.g, Color.b, alpha);
@@ -185,7 +186,7 @@ public class VisualEffectScript : MonoBehaviour {
                 transform.localPosition = new Vector3 (PosX, PosY + 0.75f * Height, SPos.z);
             }
             if (Floating [phase]) {
-                float HeighModifier = Mathf.Abs (FloatingDestination - FloatingHeight) * 2;
+                float HeighModifier = Mathf.Abs (FloatingDestination - FloatingHeight) * 6;
                 float floatingSpeed = Mathf.Min ((1f + HeighModifier) * Time.deltaTime, 1);
                 FloatingDestination = Random.Range (-0.4f, 0.4f) * floatingSpeed + FloatingDestination * (1f - floatingSpeed);
                 FloatingHeight = FloatingDestination * floatingSpeed + FloatingHeight * (1f - floatingSpeed);

@@ -6,7 +6,7 @@ public class BoardEditorMenu : GOUI {
 
     static public BoardEditorMenu instance;
 
-    static BoardClass EditedBoard;
+    static public BoardClass EditedBoard;
 
     static public GameObject BackgroundObject;
 
@@ -156,6 +156,7 @@ public class BoardEditorMenu : GOUI {
                     switch (x) {
                         case 0:
                             BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, false);
+                            BackgroundObject.name = "SaveBoard";
                             break;
                         case 1:
                             BackgroundObject = CreateSprite ("UI/Butt_S_SetList", npx, npy, 11, 60, 60, false);
