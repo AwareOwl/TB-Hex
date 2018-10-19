@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 23086774143362650}
   - component: {fileID: 114449689950093744}
   m_Layer: 0
-  m_Name: Quad
+  m_Name: Hover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

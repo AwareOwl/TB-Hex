@@ -34,7 +34,7 @@ public class ServerLogic : MonoBehaviour {
     }
 
     static public bool VerifyUserPassword (string userName, string password) {
-        string userPassword = ServerData.GetUserKeyData (userName, "***Password");
+        string userPassword = ServerData.GetUserKeyData (userName, "Password");
         if (password.CompareTo (userPassword) == 0) {
             return true;
         }

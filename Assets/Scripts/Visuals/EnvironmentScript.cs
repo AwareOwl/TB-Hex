@@ -56,7 +56,9 @@ public class EnvironmentScript : MonoBehaviour {
                 if (true) {
                     //if (Random.Range (0, 2) != 0) {
                     //VisualTile tile = new VisualTile ();
-                    CreateAttachedTile (x, 0, y);
+                    if (Random.Range (0, 3) == 0) {
+                        CreateAttachedTile (x, 0, y);
+                    }
 
                     /*VisualToken token;
                     if (Random.Range (0, 3) == -1) {

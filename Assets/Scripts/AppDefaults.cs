@@ -19,8 +19,8 @@ public class AppDefaults {
         PlayerColor = new Color [7];
         for (int x = 0; x < PlayerColor.Length; x++) {
             PlayerColor [0] = new Color (0.6f, 0.6f, 0.6f);
-            PlayerColor [1] = new Color (0.8f, 0.4f, 0.4f);
-            PlayerColor [2] = new Color (0.4f, 0.8f, 0.4f);
+            PlayerColor [1] = new Color (0.4f, 0.8f, 0.4f);
+            PlayerColor [2] = new Color (0.8f, 0.4f, 0.4f);
             PlayerColor [3] = new Color (0.4f, 0.4f, 0.8f);
             PlayerColor [4] = new Color (0.4f, 0.8f, 0.8f);
             PlayerColor [5] = new Color (0.8f, 0.4f, 0.8f);
