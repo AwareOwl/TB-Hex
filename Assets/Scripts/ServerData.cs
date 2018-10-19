@@ -31,6 +31,10 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static void SaveNewBoard (string userName, string boardName, string [] board) {
+
+    }
+
     static void SetBoardNextId (int id) {
         string path = BoardContentPath () + "NextId.txt";
         if (!File.Exists (path)) {
