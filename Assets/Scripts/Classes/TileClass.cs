@@ -42,6 +42,12 @@ public class TileClass {
         }
     }
 
+    public void DestroyVisual () {
+        if (visualTile != null) {
+            visualTile.DestroyVisual ();
+        }
+    }
+
     public TokenClass SetToken (int type, int value, int owner) {
         if (token == null) {
             token = CreateToken (type, value, owner);

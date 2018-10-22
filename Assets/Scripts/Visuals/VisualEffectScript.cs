@@ -41,6 +41,7 @@ public class VisualEffectScript : MonoBehaviour {
 
 	Vector3 SSize;
 
+    public bool PresetPosition;
 	public Vector3 SPos;
 	Vector3 EPos;
 
@@ -63,8 +64,15 @@ public class VisualEffectScript : MonoBehaviour {
 	private void Awake () {
 	}
 
+    public void SetStartingPosition (Vector3 startingPosition) {
+        PresetPosition = true;
+        SPos = startingPosition;
+    }
+
 	void Start () {
-		SPos = transform.localPosition;
+        if (!PresetPosition) {
+            SPos = transform.localPosition;
+        }
 		SSize = transform.localScale;
 		renderers = GetComponentsInChildren<Renderer> ();
 		if (!AutoDestroy) {
@@ -202,11 +210,12 @@ public class VisualEffectScript : MonoBehaviour {
         float delta = value - SPos.y;
         //SPos = new Vector3 (SPos.x, value, SPos.z);
         SPos += new Vector3 (0, delta, 0);
+        //PresetPosition = true;
         FloatingHeight -= delta;
     }
-
+/*
     public void PushItDown (float value) {
         SPos += new Vector3 (0, -1, 0);
         FloatingHeight++;
-    }
+    }*/
 }

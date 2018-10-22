@@ -150,7 +150,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                         // BoardEditor
                         case "SaveBoard":
                             Debug.Log (1);
-                            BoardEditorMenu.EditedBoard.BoardToString ();
+                            BoardEditorMenu.EditedBoard.SaveBoard ("1", "Test");
+                            break;
+                        case "LoadBoard":
+                            Debug.Log (1);
+                            BoardEditorMenu.EditedBoard.LoadFromFile (1);
                             break;
                         case "BoardEditorTileType":
                             BoardEditorMenu.SelectButton (1, number);

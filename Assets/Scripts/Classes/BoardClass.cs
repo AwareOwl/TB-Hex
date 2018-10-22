@@ -52,10 +52,21 @@ public class BoardClass {
 
     public void CreateNewBoard (int sx, int sy) {
         tile = new TileClass [sx, sy];
-        Debug.Log (tile);
         for (int x = 0; x < sx; x++) {
             for (int y = 0; y < sy; y++) {
                 CreateTile (x, y);
+            }
+        }
+    }
+
+    public void DestroyAllVisuals () {
+        if (tile != null) {
+            foreach (TileClass tile in tile) {
+                Debug.Log ("Wut");
+
+                if (tile != null) {
+                    tile.DestroyVisual ();
+                }
             }
         }
     }
@@ -89,6 +100,10 @@ public class BoardClass {
         return tile [x, y].DestroyToken ();
     }
 
+    public void SaveBoard (string userName, string boardName) {
+        ServerData.SaveNewBoard (userName, boardName, BoardToString ().ToArray ());
+    }
+
     public List <string> BoardToString () {
         List<string> s = new List<string> ();
         string s3 = "";
@@ -107,5 +122,28 @@ public class BoardClass {
         }
         Debug.Log (s3);
         return s;
+    }
+
+    public void LoadFromFile (int id) {
+        LoadBoard (ServerData.GetBoard (id), 8, 8);
+    }
+
+    public void LoadBoard (string [] board, int x, int y) {
+        DestroyAllVisuals ();
+        CreateNewBoard (x, y);
+        foreach (string line in board) {
+            string [] s = line.Split (' ');
+            int [] i = Array.ConvertAll (s, Int32.Parse);
+            int px = i [0];
+            int py = i [1];
+            if (i [2] == 1) {
+                EnableTile (px, py);
+            } else {
+                DisableTile (px, py);
+            }
+            if (i.Length > 3) {
+                tile [px, py].CreateToken (i [3], i [4], i [5]);
+            }
+        }
     }
 }

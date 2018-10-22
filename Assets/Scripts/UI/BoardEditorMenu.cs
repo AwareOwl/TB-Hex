@@ -27,7 +27,7 @@ public class BoardEditorMenu : GOUI {
 
         EditedBoard = new BoardClass ();
         EditedBoard.EnableVisualisation ();
-        EditedBoard.CreateNewBoard ();
+        EditedBoard.LoadFromFile (1);
     }
 
     static public void ShowBoardEditorMenu () {
@@ -160,6 +160,7 @@ public class BoardEditorMenu : GOUI {
                             break;
                         case 1:
                             BackgroundObject = CreateSprite ("UI/Butt_S_SetList", npx, npy, 11, 60, 60, false);
+                            BackgroundObject.name = "LoadBoard";
                             break;
                         case 2:
                             BackgroundObject = CreateSprite ("UI/Butt_S_Delete", npx, npy, 11, 60, 60, false);

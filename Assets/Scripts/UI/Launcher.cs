@@ -8,10 +8,11 @@ public class Launcher : GOUI {
 	void Start () {
         UICanvas = GameObject.Find ("Canvas");
         EnvironmentScript.CreateNewBackground (1);
-        EnvironmentScript.CreateRandomBoard ();
+        Debug.Log (Language.test);
+        //EnvironmentScript.CreateRandomBoard ();
         //EnvironmentScript.CreateNormalBoard ();
 
-        VisualCard.Make4Cards ();
+        //VisualCard.Make4Cards ();
         //InGameUI.CreatePlayersUI ();
         CreateLauncherGUI ();
 

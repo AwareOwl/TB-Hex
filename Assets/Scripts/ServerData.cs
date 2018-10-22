@@ -7,6 +7,9 @@ using System.IO;
 
 public class ServerData : MonoBehaviour {
 
+    static string UserNameKey = "UserName";
+    static string BoardNameKey = "BoardName";
+
     static public string ServerPath () {
         string path = @"C:/TokenBattleHex/";
         if (!Directory.Exists (path)) {
@@ -31,8 +34,11 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static void SaveNewBoard (string userName, string boardName, string [] board) {
-
+    static public void SaveNewBoard (string userName, string boardName, string [] board) {
+        int id = IncrementBoardNextId ();
+        SetBoard (id, board);
+        AddBoardOwners (id, userName);
+        SetBoardInfoKey (id, BoardNameKey, boardName);
     }
 
     static void SetBoardNextId (int id) {
@@ -79,16 +85,70 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static public string [] GetBoardInfo (int id) {
+    static public string BoardInfoPath (int id) {
         string path = BoardContentPath (id) + "Info.txt";
-        string [] lines = File.ReadAllLines (path);
+        return path;
+    }
+
+    static public string [] GetBoardInfo (int id) {
+        string path = BoardInfoPath (id);
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return new string [0];
+    }
+
+    static public string [] SaveBoardInfo (int id, string [] info) {
+        string path = BoardInfoPath (id);
+        File.WriteAllLines (path, info);
+        return info;
+    }
+
+    static public bool SetBoardInfoKey (int id, string keyName, string keyValue) {
+        List<string> lines = new List<string> (GetBoardInfo (id));
+        keyName = "***" + keyName;
+        int index = lines.IndexOf (keyName);
+        if (index == -1) {
+            lines.Add (keyName);
+            lines.Add (keyValue);
+        } else{
+            lines [index + 1] = keyValue;
+        }
+        SaveBoardInfo (id, lines.ToArray ());
+        return index == -1 ? false: true;
+    }
+
+    static public string BoardOwnerPath (int id) {
+        return BoardContentPath (id) + "Owner.txt";
+    }
+
+    static public string [] GetBoardOwners (int id) {
+        string path = BoardOwnerPath (id);
+        string [] lines;
+        if (File.Exists (path)) {
+            lines = File.ReadAllLines (path);
+        } else {
+            lines = new string [0];
+        }
         return lines;
     }
 
-    static public string [] GetBoardOwner (int id) {
-        string path = BoardContentPath (id) + "Owner.txt";
-        string [] lines = File.ReadAllLines (path);
-        return lines;
+    static public string [] SaveBoardOwners (int id, string [] owners) {
+        string path = BoardOwnerPath (id);
+        File.WriteAllLines (path, owners);
+        return owners;
+    }
+
+    static public bool AddBoardOwners (int id, string owner) {
+        List <string> lines = new List<string> (GetBoardOwners (id));
+        if (lines.Exists (x => x == owner)) {
+            return false;
+        }
+        lines.Add (owner);
+        SaveBoardOwners (id, lines.ToArray ());
+        AddUserBoardProperty (owner, id);
+        return true;
     }
 
     static public string UsersPath () {
@@ -131,15 +191,41 @@ public class ServerData : MonoBehaviour {
 
     static public string UserBoardPropertiesPath (string userName) {
         if (UserExists (userName)) {
-            string path = UserPropertiesPath (userName) + "Board.txt";
+            string path = UserPropertiesPath (userName) + "Boards.txt";
             return path;
         }
         return null;
     }
 
     static public string [] GetUserBoardProperties (string userName) {
-        string [] Lines = File.ReadAllLines (UserBoardPropertiesPath (userName));
-        return Lines;
+        if (UserExists (userName)) {
+            string path = UserBoardPropertiesPath (userName);
+            if (File.Exists (path)) {
+                string [] Lines = File.ReadAllLines (path);
+                return Lines;
+            }
+        }
+        return new string [0];
+    }
+
+    static public string [] SaveUserBoardProperties (string userName, string [] boards) {
+        if (UserExists (userName)) {
+            string path = UserBoardPropertiesPath (userName);
+            File.WriteAllLines (path, boards);
+        }
+        return boards;
+    }
+
+    static public bool AddUserBoardProperty (string userName, int boardId) {
+        if (UserExists (userName)) {
+            List<string> Lines = new List<string> (GetUserBoardProperties (userName));
+            if (Lines.Exists (x => x == boardId.ToString ())) {
+            }
+            Lines.Add (boardId.ToString ());
+            SaveUserBoardProperties (userName, Lines.ToArray ());
+            return true;
+        }
+        return false;
     }
 
     static public string GetUserKeyData (string userName, string key) {

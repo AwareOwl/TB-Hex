@@ -232,7 +232,7 @@ public class EnvironmentScript : MonoBehaviour {
     }
     static public GameObject CreateTile (int x, float y, int z) {
         GameObject hex = CreateTile ();
-        hex.transform.localPosition = VisualTile.TilePosition (x, y, z);
+        hex.GetComponent<VisualEffectScript> ().SetStartingPosition (VisualTile.TilePosition (x, y, z));
         return hex;
     }
 

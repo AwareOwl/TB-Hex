@@ -31,6 +31,12 @@ public class VisualTile {
 
     }
 
+    public void DestroyVisual () {
+        GameObject.DestroyImmediate (Anchor);
+        GameObject.DestroyImmediate (Tile);
+        GameObject.DestroyImmediate (Collider);
+    }
+
     public void EnableTile (bool enable) {
         if (enable) {
             Anchor.GetComponent<VisualEffectScript> ().PushItToHeight (0);

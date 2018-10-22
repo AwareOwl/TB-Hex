@@ -5,6 +5,8 @@ using UnityEngine.Networking;
 
 public class ClientInterface : NetworkBehaviour {
 
+    public string UserName;
+
     public void Start () {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
