@@ -79,13 +79,13 @@ public class LoginMenu : GOUI {
 
         BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", px, 540, 10, sx + 120, 480, false);
 
-        Clone = CreateInputField ("User name", px, py, sx, sy);
+        Clone = CreateInputField (Language.AccountName, px, py, sx, sy);
         usernameInput = Clone.GetComponent<InputField> ();
         UsernameObject = Clone;
 
         py += 75;
         
-        Clone = CreateInputField ("Password", px, py, sx, sy);
+        Clone = CreateInputField (Language.Password, px, py, sx, sy);
         Clone.GetComponent<InputField> ().contentType = InputField.ContentType.Password;
         passwordInput = Clone.GetComponent<InputField> ();
         PasswordObject = Clone;
@@ -98,7 +98,7 @@ public class LoginMenu : GOUI {
         Clone.name = "LogUserIn";
         LoginObject = Clone;
 
-        Clone = CreateText ("Log in", px, py, 12, 0.03f);
+        Clone = CreateText (Language.LogIn, px, py, 12, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         Clone.transform.SetParent (LoginObject.transform);
         AddTextToGameObject (LoginObject, Clone);
@@ -111,7 +111,7 @@ public class LoginMenu : GOUI {
         Clone.name = "RegisterMenu";
         RegisterObject = Clone;
 
-        Clone = CreateText ("Register", px, py, 12, 0.03f);
+        Clone = CreateText (Language.Register, px, py, 12, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         Clone.transform.SetParent (RegisterObject.transform);
         AddTextToGameObject (RegisterObject, Clone);

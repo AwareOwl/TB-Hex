@@ -11,25 +11,30 @@ public class ServerLogic : MonoBehaviour {
                 if (VerifyUserPassword (userName, password)) {
                     CompleteLogIn (client, userName);
                 } else {
-                    client.TargetShowMessage (client.connectionToClient, "Password is incorrect.");
+                    client.TargetShowMessage (client.connectionToClient, Language.PasswordIsIncorrectKey);
                 }
             } else {
-                client.TargetShowMessage (client.connectionToClient, "Account doesn't exists.");
+                client.TargetShowMessage (client.connectionToClient, Language.AccountDoesntExistKey);
             }
         } else {
-            client.TargetShowMessage (client.connectionToClient, "Please eneter user name.");
+            client.TargetShowMessage (client.connectionToClient, Language.PleaseEnterAccountNameKey);
         }
     }
 
     static public void Register (ClientInterface client, string userName, string password, string email) {
         if (userName != null && userName != "") {
-            if (password.Length >= 8) {
-                ServerData.CreateAccount (userName, password, email);
+            if (!ServerData.UserExists (userName)) {
+                if (password.Length >= 8) {
+                    ServerData.CreateAccount (userName, password, email);
+                    client.TargetShowMessage (client.connectionToClient, Language.AccountCreatedKey);
+                } else {
+                    client.TargetShowMessage (client.connectionToClient, Language.PasswordHasToHaveAtLeast8CharactersKey);
+                }
             } else {
-                client.TargetShowMessage (client.connectionToClient, "Password has to have at least 8 characters.");
+                client.TargetShowMessage (client.connectionToClient, Language.AccountWithThisNameAlreadyExistsKey);
             }
         } else {
-            client.TargetShowMessage (client.connectionToClient, "User name can't be null.");
+            client.TargetShowMessage (client.connectionToClient, Language.AccountNameCantBeNullKey);
         }
     }
 

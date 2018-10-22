@@ -6,9 +6,10 @@ public class Launcher : GOUI {
 
 	// Use this for initialization
 	void Start () {
+
         UICanvas = GameObject.Find ("Canvas");
         EnvironmentScript.CreateNewBackground (1);
-        Debug.Log (Language.test);
+        //Debug.Log (Language.test);
         //EnvironmentScript.CreateRandomBoard ();
         //EnvironmentScript.CreateNormalBoard ();
 
@@ -41,7 +42,7 @@ public class Launcher : GOUI {
         Parent = Clone;
         Clone.name = "StartHost";
 
-        Clone = CreateText ("Stwórz sieć lokalną", 300, 400, 12, 0.03f);
+        Clone = CreateText (Language.CreateLocalNetwork, 300, 400, 12, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
 
@@ -51,7 +52,7 @@ public class Launcher : GOUI {
         Parent = Clone;
         Clone.name = "StartClient";
 
-        Clone = CreateText ("Dołącz do sieci lokalnej", 300, 500, 12, 0.03f);
+        Clone = CreateText (Language.JoinLocalNetwork, 300, 500, 12, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
 

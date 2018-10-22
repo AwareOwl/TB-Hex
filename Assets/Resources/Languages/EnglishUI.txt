@@ -1,0 +1,15 @@
+[0] Create local network
+[1] Join local network
+[2] Account name
+[3] Password
+[4] Confirm password
+[5] Email
+[6] Log in
+[7] Register
+[8] Password is incorrect.
+[9] Account doesn't exists.
+[10] Please eneter account name.
+[11] Password has to have at least 8 characters.
+[12] Account name can't be null.
+[13] Account with this name already exists.
+[14] Account created.

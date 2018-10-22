@@ -24,8 +24,8 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetShowMessage (NetworkConnection target, string message) {
-        GOUI.ShowMessage (message);
+    public void TargetShowMessage (NetworkConnection target, int messageID) {
+        GOUI.ShowMessage (Language.UI [messageID]);
     }
 
     [TargetRpc]
