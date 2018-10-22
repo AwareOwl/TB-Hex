@@ -121,6 +121,13 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             if (Input.GetMouseButtonUp (0)) {
                 if (Pressed) {
                     switch (name) {
+                        case "SelectPL":
+                            Language.SetLanguage (Language.Polish);
+                            break;
+                        case "SelectENG":
+                            Language.SetLanguage (Language.English);
+                            break;
+
                         case "StartHost":
                             MyNetworkManager.StartNewHost ();
                             break;

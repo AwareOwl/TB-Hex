@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Language {
+
+    static string SelectedLanguageKey = "SelectedLanguage";
 
     public const int English = 0;
     public const int Polish = 1;
@@ -30,13 +33,18 @@ public class Language {
     static public int AccountWithThisNameAlreadyExistsKey;
     static public int AccountCreatedKey;
 
+    static public void SetLanguage (int languageKey) {
+        PlayerPrefs.SetInt (SelectedLanguageKey, languageKey);
+        LoadLanguage ();
+        SceneManager.LoadScene ("OfflineScene", LoadSceneMode.Single);
+    }
+
     static Language () {
-        LoadLanguage (0);
+        LoadLanguage ();
     }
 
     static public void LoadLanguage () {
-        Debug.Log ("Test");
-        LoadLanguage (PlayerPrefs.GetInt ("SelectedLanguage"));
+        LoadLanguage (PlayerPrefs.GetInt (SelectedLanguageKey));
     }
 
     static public void LoadLanguage (int language) {
@@ -45,9 +53,6 @@ public class Language {
         string allLines = asset.text;
         string [] lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
         UI = new string [lines.Length];
-        Debug.Log ("Test");
-        Debug.Log (UI);
-        Debug.Log (UI.Length);
         for (int x = 0; x < lines.Length; x++) {
             int index = lines [x].IndexOf (']');
             if (lines [x].Length > index + 2) {

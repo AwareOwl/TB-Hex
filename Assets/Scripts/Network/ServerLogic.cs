@@ -23,7 +23,7 @@ public class ServerLogic : MonoBehaviour {
 
     static public void Register (ClientInterface client, string userName, string password, string email) {
         if (userName != null && userName != "") {
-            if (!ServerData.UserExists (userName)) {
+            if (!   ServerData.UserExists (userName)) {
                 if (password.Length >= 8) {
                     ServerData.CreateAccount (userName, password, email);
                     client.TargetShowMessage (client.connectionToClient, Language.AccountCreatedKey);

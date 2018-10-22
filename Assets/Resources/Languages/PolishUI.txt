@@ -1,0 +1,15 @@
+﻿[0] Stwórz sieć lokalną
+[1] Dołącz do sieci lokalnej
+[2] Nazwa konta
+[3] Hasło
+[4] Potwierdź hasło
+[5] Email
+[6] Logowanie
+[7] Rejestracja
+[8] Hasło jest niepoprawne.
+[9] Konto nie istnieje.
+[10] Proszę podać nazwę użytkownika.
+[11] Hasło musi zawierać co najmniej 8 znaków.
+[12] Nazwa konta nie może być pusta.
+[13] Konto o tej nazwie już istnieje.
+[14] Konto utworzone.
