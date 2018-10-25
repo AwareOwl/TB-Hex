@@ -26,6 +26,45 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string GameModePath () {
+        string path = ContentPath () + "GameMode/";
+        if (!Directory.Exists (path)) {
+            Directory.CreateDirectory (path);
+        }
+        return path;
+    }
+
+    static public string GameModePath (int id) {
+        string path = GameModePath () + id.ToString () + "/";
+        if (!Directory.Exists (path)) {
+            Directory.CreateDirectory (path);
+        }
+        return path;
+    }
+
+    static public string CardPoolPath (int id) {
+        string path = GameModePath (id) + "CardPool.txt";
+        return path;
+    }
+
+    static public string [] GetCardPool (int id) {
+        string path = CardPoolPath (id);
+        if (File.Exists (path)) {
+            return File.ReadAllLines (path);
+        } else {
+            return new string [0];
+        }
+    }
+
+    static public string [] GetCardPool (int id, string [] lines) {
+        string path = CardPoolPath (id);
+        if (File.Exists (path)) {
+            return File.ReadAllLines (path);
+        } else {
+            return new string [0];
+        }
+    }
+
     static public string BoardContentPath () {
         string path = ContentPath () + "Board/";
         if (!Directory.Exists (path)) {

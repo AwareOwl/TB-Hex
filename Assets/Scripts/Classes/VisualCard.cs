@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class VisualCard {
 
+    public GameObject Anchor;
     GameObject Background;
     GameObject [] Tile = new GameObject [6];
     GameObject ManaTile;
@@ -34,6 +35,13 @@ public class VisualCard {
         }
     }
 
+    public void SetState (int tokenType, int value, int abilityArea, int abilityType) {
+        Token.SetType (tokenType);
+        Token.SetValue (value);
+        SetAbilityArea (abilityArea);
+        SetAbilityIcon (abilityType + 1);
+    }
+
     public void SetAbilityArea (int x) {
         for (int y = 0; y < 6; y++) {
             if (Tile [y].GetComponent<VisualEffectScript> () == null) {
@@ -50,41 +58,54 @@ public class VisualCard {
         }
     }
 
-    public void SetAbilityIcon (int x) {
-        AbilityIcon.GetComponent<Renderer> ().material.mainTexture = Resources.Load ("Textures/Ability/Ability0" + x.ToString ()) as Texture;
-        /*switch (x) {
+    public void SetAbilityIcon (int type) {
+        SetAbilityIconInObject (AbilityIcon, type);
+        ManaTile.GetComponent<VisualEffectScript> ().Init (GetAbilityColor (type), false, true);
+    }
+
+    public Color GetAbilityColor (int type) {
+        switch (type) {
+            // Red
             case 1:
-                AbilityIcon.GetComponent<Renderer> ().material.color = Color.red;
-                break;
+                return Color.red;
+            // Green
             case 2:
-                AbilityIcon.GetComponent<Renderer> ().material.color = new Color (0, 0.95f, 0);
-                break;
+                return new Color (0, 0.95f, 0);
+            // Orange
             case 3:
-                AbilityIcon.GetComponent<Renderer> ().material.color = new Color (1, 0.5f, 0);
-                break;
+            case 5:
+                return new Color (1, 0.5f, 0);
+            // Yellow
             case 4:
-                AbilityIcon.GetComponent<Renderer> ().material.color = new Color (1, 1, 0);
-                break;
-        }*/
-        AbilityIcon.GetComponent<Renderer> ().material.color = new Color (0, 0, 0);
-        switch (x) {
-            case 1:
-                ManaTile.GetComponent<VisualEffectScript> ().Init (Color.red, false, true);
-                break;
-            case 2:
-                ManaTile.GetComponent<VisualEffectScript> ().Init (new Color (0, 0.95f, 0), false, true);
-                break;
-            case 3:
-                ManaTile.GetComponent<VisualEffectScript> ().Init (new Color (1, 0.5f, 0), false, true);
-                break;
-            case 4:
-                ManaTile.GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 0), false, true);
-                break;
+            case 6:
+                return new Color (1, 1, 0);
+            // Purple
+            case 7:
+                return new Color (0.8f, 0, 1);
         }
+        return Color.white;
+    }
+
+    static public string GetIconPath (int type) {
+        return "Textures/Ability/Ability0" + type.ToString ();
+    }
+
+    static public void SetAbilityIconInObject (GameObject icon, int type) {
+        Texture2D abilityTex = Resources.Load (GetIconPath (type)) as Texture2D;
+        if (abilityTex == null) {
+            icon.GetComponent<Renderer> ().enabled = false;
+            return;
+        }
+        icon.GetComponent<Renderer> ().enabled = true;
+        icon.GetComponent<Renderer> ().material.mainTexture = abilityTex;
+        icon.GetComponent<Renderer> ().material.color = new Color (0, 0, 0);
     }
 
     GameObject NewCard () {
+        Anchor = new GameObject ();
+
         Background = GameObject.CreatePrimitive (PrimitiveType.Cube);
+        Background.transform.SetParent (Anchor.transform);
         Background.transform.localScale = new Vector3 (1.2f, 0.05f, 1.4f);
         Background.transform.localPosition = new Vector3 (0, 0, -0.2f);
         Background.GetComponent<Renderer> ().material.color = Color.black;
@@ -108,7 +129,7 @@ public class VisualCard {
             Token.Base.transform.localPosition = Tile [x].transform.localPosition + new Vector3 (0, 0.05f, 0);
             Token.Base.transform.parent = Background.transform;*/
 
-            Tile [x].transform.parent = Background.transform;
+            Tile [x].transform.parent = Anchor.transform;
         }
 
 
@@ -123,23 +144,23 @@ public class VisualCard {
         ManaTile.transform.localScale = new Vector3 (0.5f, 0.1f, 0.5f);
         ManaTile.transform.localPosition = new Vector3 (0.35f, 0.05f, 0.5f);
         ManaTile.transform.localEulerAngles = new Vector3 (0, 90, 0);
-        ManaTile.transform.parent = Background.transform;
+        ManaTile.transform.parent = Anchor.transform;
 
 
         AbilityIcon = GameObject.CreatePrimitive (PrimitiveType.Quad);
         AbilityIcon.GetComponent<Renderer> ().material.shader = Shader.Find ("Sprites/Default");
-        AbilityIcon.transform.localEulerAngles = new Vector3 (60, 0, 0);
-        AbilityIcon.transform.localPosition = ManaTile.transform.position + new Vector3 (0, 0.05f, 0);
-        AbilityIcon.transform.SetParent (Background.transform, true);
+        AbilityIcon.transform.localPosition = ManaTile.transform.position + new Vector3 (0, 0.03f, 0);
+        AbilityIcon.transform.SetParent (Anchor.transform, true);
+        AbilityIcon.transform.localEulerAngles = new Vector3 (90, 0, 0);
         AbilityIcon.transform.localScale = new Vector3 (0.4f, 0.4f, 0.4f);
 
         Token = new VisualToken ();
         Token.Anchor.transform.localPosition = new Vector3 (0, 0.05f, -0.3f);
         Token.Anchor.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-        Token.Anchor.transform.parent = Background.transform;
+        Token.Anchor.transform.parent = Anchor.transform;
 
-        Background.transform.localScale *= 0.8f;
+        Anchor.transform.localScale *= 0.8f;
 
-        return Background;
+        return Anchor;
     }
 }

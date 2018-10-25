@@ -31,7 +31,7 @@ public class VisualToken {
 
     public void SetState () {
         SetOwner ();
-        SetText ();
+        SetValue ();
         SetType ();
     }
 
@@ -39,8 +39,12 @@ public class VisualToken {
         Base.GetComponent<VisualEffectScript> ().Color = AppDefaults.PlayerColor [tokenClass.owner];
     }
 
-    public void SetText () {
-        Text.GetComponent<TextMesh> ().text = tokenClass.value.ToString();
+    public void SetValue () {
+        SetValue (tokenClass.value);
+    }
+
+    public void SetValue (int value) {
+        Text.GetComponent<TextMesh> ().text = value.ToString ();
     }
 
     public void SetType () {
