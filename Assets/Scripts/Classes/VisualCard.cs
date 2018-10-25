@@ -7,7 +7,6 @@ public class VisualCard {
     public GameObject Anchor;
     GameObject Background;
     GameObject [] Tile = new GameObject [6];
-    GameObject ManaTile;
     GameObject AbilityTile;
     GameObject AbilityIcon;
     VisualToken Token;
@@ -39,15 +38,11 @@ public class VisualCard {
         Token.SetType (tokenType);
         Token.SetValue (value);
         SetAbilityArea (abilityArea);
-        SetAbilityIcon (abilityType + 1);
+        SetAbilityIcon (abilityType);
     }
 
     public void SetAbilityArea (int x) {
-        for (int y = 0; y < 6; y++) {
-            if (Tile [y].GetComponent<VisualEffectScript> () == null) {
-                Tile [y].AddComponent<VisualEffectScript> ().Init (new Color (0.3f, 0.3f, 0.3f), false, true);
-            }
-        }
+        DisableAbilityArea ();
         if (x < 3) {
             Tile [x].GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 1), false, true);
             Tile [x + 3].GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 1), false, true);
@@ -57,19 +52,46 @@ public class VisualCard {
             }
         }
     }
-
-    public void SetAbilityIcon (int type) {
-        SetAbilityIconInObject (AbilityIcon, type);
-        ManaTile.GetComponent<VisualEffectScript> ().Init (GetAbilityColor (type), false, true);
+    public void DisableAbilityArea () {
+        for (int y = 0; y < 6; y++) {
+            if (Tile [y].GetComponent<VisualEffectScript> () == null) {
+                Tile [y].AddComponent<VisualEffectScript> ().Init (new Color (0.3f, 0.3f, 0.3f), false, true);
+            } else {
+                Tile [y].GetComponent<VisualEffectScript> ().Color = new Color (0.3f, 0.3f, 0.3f);
+            }
+        }
     }
 
-    public Color GetAbilityColor (int type) {
+    public void SetAbilityIcon (int type) {
+        if (type == 0) {
+            DisableAbilityArea ();
+            EnableAbilityTile (false);
+        } else {
+            EnableAbilityTile (true);
+        }
+        SetAbilityIconInObject (AbilityIcon, type);
+        AbilityTile.GetComponent<VisualEffectScript> ().Init (GetAbilityColor (type), false, true);
+    }
+
+    public void EnableAbilityTile (bool enable) {
+        Renderer [] renderers = AbilityTile.GetComponentsInChildren<Renderer> ();
+        foreach (Renderer renderer in renderers) {
+            renderer.enabled = enable;
+        }
+        if (AbilityIcon.GetComponent<Renderer> ()) {
+            AbilityIcon.GetComponent<Renderer> ().enabled = enable;
+        }
+    }
+
+   static public Color GetAbilityColor (int type) {
         switch (type) {
             // Red
             case 1:
+            case 8:
                 return Color.red;
             // Green
             case 2:
+            case 9:
                 return new Color (0, 0.95f, 0);
             // Orange
             case 3:
@@ -81,13 +103,18 @@ public class VisualCard {
                 return new Color (1, 1, 0);
             // Purple
             case 7:
+            case 10:
                 return new Color (0.8f, 0, 1);
         }
         return Color.white;
     }
 
     static public string GetIconPath (int type) {
-        return "Textures/Ability/Ability0" + type.ToString ();
+        if (type < 10) {
+            return "Textures/Ability/Ability0" + type.ToString ();
+        } else {
+            return "Textures/Ability/Ability" + type.ToString ();
+        }
     }
 
     static public void SetAbilityIconInObject (GameObject icon, int type) {
@@ -139,20 +166,20 @@ public class VisualCard {
         ManaTile.transform.localEulerAngles = new Vector3 (0, 30, 0);
         ManaTile.transform.parent = Background.transform;*/
 
-        ManaTile = GameObject.Instantiate (AppDefaults.Tile) as GameObject;
-        ManaTile.AddComponent<VisualEffectScript> ().Init (new Color (0, 0, 0), false, true);
-        ManaTile.transform.localScale = new Vector3 (0.5f, 0.1f, 0.5f);
-        ManaTile.transform.localPosition = new Vector3 (0.35f, 0.05f, 0.5f);
-        ManaTile.transform.localEulerAngles = new Vector3 (0, 90, 0);
-        ManaTile.transform.parent = Anchor.transform;
+        AbilityTile = GameObject.Instantiate (AppDefaults.Tile) as GameObject;
+        AbilityTile.AddComponent<VisualEffectScript> ().Init (new Color (0, 0, 0), false, true);
+        AbilityTile.transform.localScale = new Vector3 (0.5f, 0.1f, 0.5f);
+        AbilityTile.transform.localPosition = new Vector3 (0.35f, 0.05f, 0.5f);
+        AbilityTile.transform.localEulerAngles = new Vector3 (0, 90, 0);
+        AbilityTile.transform.parent = Anchor.transform;
 
 
         AbilityIcon = GameObject.CreatePrimitive (PrimitiveType.Quad);
         AbilityIcon.GetComponent<Renderer> ().material.shader = Shader.Find ("Sprites/Default");
-        AbilityIcon.transform.localPosition = ManaTile.transform.position + new Vector3 (0, 0.03f, 0);
+        AbilityIcon.transform.localPosition = AbilityTile.transform.position + new Vector3 (0, 0.03f, 0);
         AbilityIcon.transform.SetParent (Anchor.transform, true);
         AbilityIcon.transform.localEulerAngles = new Vector3 (90, 0, 0);
-        AbilityIcon.transform.localScale = new Vector3 (0.4f, 0.4f, 0.4f);
+        AbilityIcon.transform.localScale = new Vector3 (0.45f, 0.45f, 0.45f);
 
         Token = new VisualToken ();
         Token.Anchor.transform.localPosition = new Vector3 (0, 0.05f, -0.3f);

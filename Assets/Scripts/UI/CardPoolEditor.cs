@@ -37,9 +37,9 @@ public class CardPoolEditor : GOUI {
                 int number = x + y * 5;
                 VisualCard card = new VisualCard ();
                 card.Anchor.transform.SetParent (GOUI.CurrentCanvas.transform);
-                card.Anchor.transform.localPosition = new Vector3 (-1.8f + x * 1.3f, 2.9f - 1.4f * y, 5);
+                card.Anchor.transform.localPosition = new Vector3 (-1.7f + x * 1.3f, 3.1f - 1.4f * y, 5);
                 card.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-                if (number < 7) {
+                if (number < 11) {
                     card.SetState (Random.Range (0, 8), Random.Range (1, 6), Random.Range (0, 2) * 3, number);
                 } else {
                     card.SetState (Random.Range (0, 8), Random.Range (1, 6), Random.Range (0, 2) * 3, Random.Range (0, 7));
@@ -199,6 +199,7 @@ public class CardPoolEditor : GOUI {
                             break;
                         case 4:
                             Clone = CreateSprite (VisualCard.GetIconPath (number), npx, npy, 12, 45, 45, false);
+                            Clone.GetComponent<SpriteRenderer> ().color = VisualCard.GetAbilityColor (number);
                             //Clone.GetComponent<SpriteRenderer> ().color = AppDefaults.PlayerColor [x];
                             Destroy (Clone.GetComponent<Collider> ());
                             /*Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
