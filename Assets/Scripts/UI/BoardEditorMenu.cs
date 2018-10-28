@@ -27,7 +27,8 @@ public class BoardEditorMenu : GOUI {
 
         EditedBoard = new BoardClass ();
         EditedBoard.EnableVisualisation ();
-        EditedBoard.LoadFromFile (1);
+        EditedBoard.CreateNewBoard ();
+        //EditedBoard.LoadFromFile (1);
     }
 
     static public void ShowBoardEditorMenu () {

@@ -79,32 +79,7 @@ public class VisualToken {
     }
 
     public void SetType (int type) {
-        switch (type) {
-            case 1:
-                Border.GetComponent<VisualEffectScript> ().Color = new Color (0.8f, 0.6f, 0.1f);
-                break;
-            case 2:
-                Border.GetComponent<VisualEffectScript> ().Color = new Color (0.6f, 0.6f, 0.6f);
-                break;
-            case 3:
-                Border.GetComponent<VisualEffectScript> ().Color = new Color (0.0f, 0.2f, 0.6f);
-                break;
-            case 4:
-                Border.GetComponent<VisualEffectScript> ().Color = new Color (0.0f, 0.2f, 0.6f);
-                break;
-            case 5:
-                Border.GetComponent<VisualEffectScript> ().Color = new Color (0.0f, 0.6f, 0.2f);
-                break;
-            case 6:
-                Border.GetComponent<VisualEffectScript> ().Color = new Color (0.6f, 0.0f, 0.2f);
-                break;
-            case 7:
-                Border.GetComponent<VisualEffectScript> ().Color = new Color (0.5f, 0.7f, 0.2f);
-                break;
-            default:
-                Border.GetComponent<VisualEffectScript> ().Color = Color.black;
-                break;
-        }
+        Border.GetComponent<VisualEffectScript> ().Color = AppDefaults.GetBorderColorMain (type);
         Type = type;
     }
 

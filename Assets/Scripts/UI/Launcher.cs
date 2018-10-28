@@ -77,21 +77,5 @@ public class Launcher : GOUI {
         Clone = CreateText (Language.JoinLocalNetwork, 300, 500, 12, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
-
-
-        /*for (int x = 0; x < 19; x++) {
-            for (int y = 0; y < 13; y++) {
-                Clone = CreateSprite ("UI/Butt_S_Delete");
-                SetInPixScale (Clone, 90, 90);
-                SetInPixPosition (Clone, 0 + 90 * x, 0 + 90 * y, -0.0001f);
-            }
-        }*/
-
-
     }
-    
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

@@ -5,7 +5,8 @@ using UnityEngine.Networking;
 
 public class ClientInterface : NetworkBehaviour {
 
-    public string UserName;
+    public string AccountName;
+    public int GameMode = 1;
 
     public void Start () {
         if (isLocalPlayer) {

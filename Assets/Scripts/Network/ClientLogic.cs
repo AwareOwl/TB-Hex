@@ -8,6 +8,7 @@ public class ClientLogic : MonoBehaviour {
 
     static public void LogIn () {
         //BoardEditorMenu.ShowBoardEditorMenu ();
-        CardPoolEditor.ShowCardPoolEditorMenu ();
+        //CardPoolEditor.ShowCardPoolEditorMenu ();
+        InGameUI.ShowInGameUI ();
     }
 }

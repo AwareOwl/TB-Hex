@@ -6,6 +6,10 @@ public class InGameUI : GOUI {
 
     static public int NumberOfPlayers = 2;
 
+    static public void ShowInGameUI () {
+        CreatePlayersUI ();
+    }
+    
     static public void CreatePlayersUI () {
         for (int x = 0; x < NumberOfPlayers; x++) {
             CreatePlayerUI (x, x < 1);

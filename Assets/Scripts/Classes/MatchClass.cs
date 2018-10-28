@@ -13,8 +13,25 @@ public class MatchClass {
     MatchClass () {
 
     }
-    MatchClass (int numberOfPlayers) {
 
+    MatchClass (int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
+    }
+
+    public void NewMatch () {
+        SetPlayers ();
+    }
+
+    void LoadBoard () {
+        Board = new BoardClass ();
+        Board.LoadFromFile (1);
+    }
+
+    void SetPlayers () {
+        Player = new PlayerClass [numberOfPlayers];
+        for (int x = 0; x < numberOfPlayers; x++) {
+            Player [x] = new PlayerClass ();
+        }
     }
     
 }

@@ -9,6 +9,11 @@ public class ServerData : MonoBehaviour {
 
     static string UserNameKey = "UserName";
     static string BoardNameKey = "BoardName";
+    static string GameModeNameKey = "GameModeName";
+
+    static string BoardProperty = "Board";
+    static string GameModeProperty = "GameMode";
+    static string CardSetProperty = "CardSet";
 
     static public string ServerPath () {
         string path = @"C:/TokenBattleHex/";
@@ -26,7 +31,7 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static public string GameModePath () {
+    static public string GameModeContentPath () {
         string path = ContentPath () + "GameMode/";
         if (!Directory.Exists (path)) {
             Directory.CreateDirectory (path);
@@ -34,21 +39,85 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static public string GameModePath (int id) {
-        string path = GameModePath () + id.ToString () + "/";
+    static public string GameModeContentPath (int id) {
+        string path = GameModeContentPath () + id.ToString () + "/";
         if (!Directory.Exists (path)) {
             Directory.CreateDirectory (path);
         }
         return path;
     }
 
-    static public string CardPoolPath (int id) {
-        string path = GameModePath (id) + "CardPool.txt";
+    static void SetGameModeNextId (int id) {
+        string path = GameModeContentPath () + "NextId.txt";
+        if (!File.Exists (path)) {
+            File.WriteAllText (path, "1");
+        } else {
+            File.WriteAllText (path, id.ToString ());
+        }
+    }
+
+    static int GetGameModeNextId () {
+        string path = GameModeContentPath () + "NextId.txt";
+        if (!File.Exists (path)) {
+            SetGameModeNextId (1);
+        }
+        string Line = File.ReadAllText (path);
+        return int.Parse (Line);
+    }
+
+    static public int IncrementGameModeNextId () {
+        int CurrentId = GetGameModeNextId ();
+        SetGameModeNextId (CurrentId + 1);
+        return CurrentId;
+    }
+
+    static public void CreateNewGameMode (string userName) {
+        int id = IncrementGameModeNextId ();
+        string path = GameModeContentPath (id);
+        SetKeyData (KeyDataPath (path), GameModeNameKey, "New game mode");
+    }
+
+    static public string GameModeOwnerPath (int id) {
+        return GameModeContentPath (id) + "Owner.txt";
+    }
+
+    static public string [] GetGameModeOwners (int id) {
+        string path = GameModeOwnerPath (id);
+        string [] lines;
+        if (File.Exists (path)) {
+            lines = File.ReadAllLines (path);
+        } else {
+            lines = new string [0];
+        }
+        return lines;
+    }
+    static public string [] SaveGameModeOwners (int id, string [] owners) {
+        string path = GameModeOwnerPath (id);
+        File.WriteAllLines (path, owners);
+        return owners;
+    }
+
+    static public bool AddGameModeOwner (int id, string owner) {
+        List<string> lines = new List<string> (GetBoardOwners (id));
+        if (lines.Exists (x => x == owner)) {
+            return false;
+        }
+        lines.Add (owner);
+        SaveGameModeOwners (id, lines.ToArray ());
+        AddUserProperty (owner, BoardProperty, id);
+        return true;
+    }
+
+
+
+
+    static public string CardPoolContentPath (int gameModeId) {
+        string path = GameModeContentPath (gameModeId) + "CardPool.txt";
         return path;
     }
 
-    static public string [] GetCardPool (int id) {
-        string path = CardPoolPath (id);
+    static public string [] GetCardPool (int gameModeId) {
+        string path = CardPoolContentPath (gameModeId);
         if (File.Exists (path)) {
             return File.ReadAllLines (path);
         } else {
@@ -56,13 +125,10 @@ public class ServerData : MonoBehaviour {
         }
     }
 
-    static public string [] GetCardPool (int id, string [] lines) {
-        string path = CardPoolPath (id);
-        if (File.Exists (path)) {
-            return File.ReadAllLines (path);
-        } else {
-            return new string [0];
-        }
+    static public string [] SetCardPool (int gameModeId, string [] lines) {
+        string path = CardPoolContentPath (gameModeId);
+        File.WriteAllLines (path, lines);
+        return lines;
     }
 
     static public string BoardContentPath () {
@@ -186,7 +252,7 @@ public class ServerData : MonoBehaviour {
         }
         lines.Add (owner);
         SaveBoardOwners (id, lines.ToArray ());
-        AddUserBoardProperty (owner, id);
+        AddUserProperty (owner, BoardProperty, id);
         return true;
     }
 
@@ -211,7 +277,7 @@ public class ServerData : MonoBehaviour {
 
     static public string UserDataPath (string userName) {
         if (UserExists (userName)) {
-            string path = UserPath (userName) + "Data.txt";
+            string path = KeyDataPath (UserPath (userName));
             return path;
         }
         return null;
@@ -228,17 +294,17 @@ public class ServerData : MonoBehaviour {
         return null;
     }
 
-    static public string UserBoardPropertiesPath (string userName) {
+    static public string UserPropertiesPath (string userName, string propertyType) {
         if (UserExists (userName)) {
-            string path = UserPropertiesPath (userName) + "Boards.txt";
+            string path = UserPropertiesPath (userName) + propertyType + "s.txt";
             return path;
         }
         return null;
     }
 
-    static public string [] GetUserBoardProperties (string userName) {
+    static public string [] GetUserProperties (string userName, string propertyType) {
         if (UserExists (userName)) {
-            string path = UserBoardPropertiesPath (userName);
+            string path = UserPropertiesPath (userName, propertyType);
             if (File.Exists (path)) {
                 string [] Lines = File.ReadAllLines (path);
                 return Lines;
@@ -247,21 +313,21 @@ public class ServerData : MonoBehaviour {
         return new string [0];
     }
 
-    static public string [] SaveUserBoardProperties (string userName, string [] boards) {
+    static public string [] SaveUserProperties (string userName, string propertyType, string [] boards) {
         if (UserExists (userName)) {
-            string path = UserBoardPropertiesPath (userName);
+            string path = UserPropertiesPath (userName, propertyType);
             File.WriteAllLines (path, boards);
         }
         return boards;
     }
 
-    static public bool AddUserBoardProperty (string userName, int boardId) {
+    static public bool AddUserProperty (string userName, string propertyType, int boardId) {
         if (UserExists (userName)) {
-            List<string> Lines = new List<string> (GetUserBoardProperties (userName));
+            List<string> Lines = new List<string> (GetUserProperties (userName, propertyType));
             if (Lines.Exists (x => x == boardId.ToString ())) {
             }
             Lines.Add (boardId.ToString ());
-            SaveUserBoardProperties (userName, Lines.ToArray ());
+            SaveUserProperties (userName, propertyType, Lines.ToArray ());
             return true;
         }
         return false;
@@ -269,6 +335,19 @@ public class ServerData : MonoBehaviour {
 
     static public string GetUserKeyData (string userName, string key) {
         return GetKeyData (UserDataPath (userName), key);
+    }
+
+    static public string [] GetAllKeyData (string path) {
+        if (File.Exists (path)) {
+            string [] Lines = File.ReadAllLines (path);
+            return Lines;
+        } else {
+            return new string [0];
+        }
+    }
+
+    static public string KeyDataPath (string path) {
+        return path + "Data.txt";
     }
 
     static public string GetKeyData (string path, string key) {
@@ -281,8 +360,20 @@ public class ServerData : MonoBehaviour {
         }
     }
 
+    static public string SetKeyData (string path, string key, string value) {
+        List<string> Lines = new List<string> (GetAllKeyData (path));
+        string KeyCode = "***" + key;
+        int index = Lines.IndexOf (KeyCode);
+        if (index >= 0) {
+            Lines [index + 1] = value;
+        } else {
+            Lines.Add (KeyCode);
+            Lines.Add (value);
+        }
+        return key;
+    }
+
     static public void CreateAccount (string userName, string password, string email) {
-        Debug.Log ("Wut");
         Directory.CreateDirectory (UserPath (userName));
         List<string> Lines = new List<string> ();
         Lines.Add ("***Password");
@@ -291,12 +382,5 @@ public class ServerData : MonoBehaviour {
         Lines.Add (email);
         File.WriteAllLines (UserDataPath (userName), Lines.ToArray ());
     }
-
-
-    /*
-    static public string UpdateUserKeyData (string userName, string key) {
-        string [] Lines = File.ReadAllLines (UserDataPath (userName));
-        int index = 
-    }*/
 
 }

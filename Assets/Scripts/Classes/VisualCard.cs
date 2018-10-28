@@ -5,11 +5,11 @@ using UnityEngine;
 public class VisualCard {
 
     public GameObject Anchor;
-    GameObject Background;
-    GameObject [] Tile = new GameObject [6];
+    public GameObject Background;
     GameObject AbilityTile;
     GameObject AbilityIcon;
     VisualToken Token;
+    VisualArea Area;
 
     public VisualCard () {
         GameObject Clone = NewCard ();
@@ -21,7 +21,7 @@ public class VisualCard {
                 VisualCard card = new VisualCard ();
                 card.Background.transform.localPosition = new Vector3 (-1.95f + x * 1.3f, 2 - 0.15f * y, -5.75f - 0.025f * y);
                 card.Background.transform.localEulerAngles = new Vector3 (-25, 0, 0);
-                card.SetAbilityArea (x);
+                card.Area.SetAbilityArea (x);
                 if (y == 0) {
                     card.SetAbilityIcon (x % 4 + 1);
                 } else {
@@ -34,43 +34,26 @@ public class VisualCard {
         }
     }
 
+    public void SetState (CardClass card) {
+        SetState (card.tokenType, card.value, card.abilityArea, card.abilityType);
+    }
+
     public void SetState (int tokenType, int value, int abilityArea, int abilityType) {
         Token.SetType (tokenType);
         Token.SetValue (value);
-        SetAbilityArea (abilityArea);
+        Area.SetAbilityArea (abilityArea);
         SetAbilityIcon (abilityType);
-    }
-
-    public void SetAbilityArea (int x) {
-        DisableAbilityArea ();
-        if (x < 3) {
-            Tile [x].GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 1), false, true);
-            Tile [x + 3].GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 1), false, true);
-        } else {
-            for (int y = 0; y < 6; y++) {
-                Tile [y].GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 1), false, true);
-            }
-        }
-    }
-    public void DisableAbilityArea () {
-        for (int y = 0; y < 6; y++) {
-            if (Tile [y].GetComponent<VisualEffectScript> () == null) {
-                Tile [y].AddComponent<VisualEffectScript> ().Init (new Color (0.3f, 0.3f, 0.3f), false, true);
-            } else {
-                Tile [y].GetComponent<VisualEffectScript> ().Color = new Color (0.3f, 0.3f, 0.3f);
-            }
-        }
     }
 
     public void SetAbilityIcon (int type) {
         if (type == 0) {
-            DisableAbilityArea ();
+            Area.DisableAbilityArea ();
             EnableAbilityTile (false);
         } else {
             EnableAbilityTile (true);
         }
         SetAbilityIconInObject (AbilityIcon, type);
-        AbilityTile.GetComponent<VisualEffectScript> ().Init (GetAbilityColor (type), false, true);
+        AbilityTile.GetComponent<VisualEffectScript> ().Init (AppDefaults.GetAbilityColor (type), false, true);
     }
 
     public void EnableAbilityTile (bool enable) {
@@ -81,32 +64,6 @@ public class VisualCard {
         if (AbilityIcon.GetComponent<Renderer> ()) {
             AbilityIcon.GetComponent<Renderer> ().enabled = enable;
         }
-    }
-
-   static public Color GetAbilityColor (int type) {
-        switch (type) {
-            // Red
-            case 1:
-            case 8:
-                return Color.red;
-            // Green
-            case 2:
-            case 9:
-                return new Color (0, 0.95f, 0);
-            // Orange
-            case 3:
-            case 5:
-                return new Color (1, 0.5f, 0);
-            // Yellow
-            case 4:
-            case 6:
-                return new Color (1, 1, 0);
-            // Purple
-            case 7:
-            case 10:
-                return new Color (0.8f, 0, 1);
-        }
-        return Color.white;
     }
 
     static public string GetIconPath (int type) {
@@ -138,26 +95,9 @@ public class VisualCard {
         Background.GetComponent<Renderer> ().material.color = Color.black;
         Background.name = "Card";
 
-        for (int x = 0; x < 6; x++) {
-            Tile [x] = GameObject.Instantiate (AppDefaults.Tile) as GameObject;
-            Tile [x].transform.localScale = new Vector3 (0.35f, 0.1f, 0.35f);
-            //Tiles [x].transform.parent = Background.transform;
-        }
-
-        Tile [0].transform.localPosition = new Vector3 (-0.4f, 0.05f, -0.3f);
-        Tile [1].transform.localPosition = new Vector3 (-0.2f, 0.05f, 0.05f);
-        Tile [2].transform.localPosition = new Vector3 (0.2f, 0.05f, 0.05f);
-        Tile [3].transform.localPosition = new Vector3 (0.4f, 0.05f, -0.3f);
-        Tile [4].transform.localPosition = new Vector3 (0.2f, 0.05f, -0.65f);
-        Tile [5].transform.localPosition = new Vector3 (-0.2f, 0.05f, -0.65f);
-        for (int x = 0; x < 6; x++) {
-
-            /*Token = new VisualToken ();
-            Token.Base.transform.localPosition = Tile [x].transform.localPosition + new Vector3 (0, 0.05f, 0);
-            Token.Base.transform.parent = Background.transform;*/
-
-            Tile [x].transform.parent = Anchor.transform;
-        }
+        Area = new VisualArea ();
+        Area.Anchor.transform.SetParent (Anchor.transform);
+        Area.Anchor.transform.localPosition = new Vector3 (0, 0.05f, -0.3f);
 
 
         /*ManaTile = GameObject.Instantiate (Resources.Load ("Prefabs/Hex")) as GameObject;
@@ -175,6 +115,7 @@ public class VisualCard {
 
 
         AbilityIcon = GameObject.CreatePrimitive (PrimitiveType.Quad);
+        GameObject.Destroy (AbilityIcon.GetComponent<Collider> ());
         AbilityIcon.GetComponent<Renderer> ().material.shader = Shader.Find ("Sprites/Default");
         AbilityIcon.transform.localPosition = AbilityTile.transform.position + new Vector3 (0, 0.03f, 0);
         AbilityIcon.transform.SetParent (Anchor.transform, true);

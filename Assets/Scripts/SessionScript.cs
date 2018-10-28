@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SessionScript : MonoBehaviour {
 
+    static public int GameModeID = 1;
+
     static public int GameID;
 
 

@@ -15,9 +15,17 @@ public class CardPoolEditor : GOUI {
     static public int Value;
     static public int TokenType;
 
-    static int [] NumberOfButtons = new int [] { 4, 8, 20, 2, 50 };
-    static int [] Selected = new int [] { 0, 1, 1, 0, 0 };
+
+    static int maxX = 5;
+    static int maxY = 4;
+
+    static int [] NumberOfButtons = new int [] { 4, 8, 6, 2, 13 };
+    static int [] Selected = new int [] { 0, 1, 0, 0, 1 };
     static GameObject [] [] Buttons;
+
+
+    static GameObject EmptyCardSlot;
+    static VisualCard [] CardSlot;
 
     private void Start () {
         instance = this;
@@ -25,27 +33,70 @@ public class CardPoolEditor : GOUI {
         CurrentGUI = this;
 
         EditedCardPool = new CardPoolClass ();
+        EditedCardPool.LoadFromString (ServerData.GetCardPool (1));
 
         CreateSampleCards ();
         //EditedCardPool.EnableVisualisation ();
         //EditedCardPool.LoadFromFile (1);
     }
 
+    static public void CardAction (int number) {
+        EditedCardPool.SetCard (number, Selected [1] + 1, Selected [2], Selected [3] * 3, Selected [4]);
+        UpdateCard (number);
+    }
+
+
     static public void CreateSampleCards () {
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 5; x++) {
-                int number = x + y * 5;
-                VisualCard card = new VisualCard ();
-                card.Anchor.transform.SetParent (GOUI.CurrentCanvas.transform);
-                card.Anchor.transform.localPosition = new Vector3 (-1.7f + x * 1.3f, 3.1f - 1.4f * y, 5);
-                card.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-                if (number < 11) {
-                    card.SetState (Random.Range (0, 8), Random.Range (1, 6), Random.Range (0, 2) * 3, number);
-                } else {
-                    card.SetState (Random.Range (0, 8), Random.Range (1, 6), Random.Range (0, 2) * 3, Random.Range (0, 7));
-                }
-            }
+        CardSlot = new VisualCard [maxX * maxY];
+        EmptyCardSlot = CreateEmptySlot ();
+        SetEmptySlot (0);
+        int x = 0;
+        foreach (CardClass card in EditedCardPool.Card) {
+            UpdateCard (x++);
         }
+    }
+
+
+    static public void SaveCardPool (int GameMode) {
+        ServerData.SetCardPool (GameMode, EditedCardPool.ToString ().ToArray ());
+    }
+
+    static void CreateCard (int number) {
+        int x = number % maxX;
+        int y = number / maxX;
+        VisualCard card = new VisualCard ();
+        card.Anchor.transform.SetParent (GOUI.CurrentCanvas.transform);
+        card.Anchor.transform.localPosition = new Vector3 (-1.7f + x * 1.3f, 3.1f - 1.4f * y, 5);
+        card.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+        card.Background.name = UIName.CardPoolEditorCard;
+        card.Background.AddComponent<UIController> ().number = number;
+        CardSlot [number] = card;
+    }
+
+    static void UpdateCard (int number) {
+        if (CardSlot [number] == null) {
+            CreateCard (number);
+            SetEmptySlot (number + 1);
+        }
+        CardSlot [number].SetState (EditedCardPool.Card [number]);
+    }
+
+    static GameObject CreateEmptySlot () {
+        GameObject Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
+        Clone.transform.SetParent (GOUI.CurrentCanvas.transform);
+        Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
+        Clone.GetComponent<Renderer> ().material.shader = Shader.Find ("Sprites/Default");
+        Clone.GetComponent<Renderer> ().material.mainTexture = Resources.Load (VisualCard.GetIconPath (2)) as Texture2D;
+        Clone.name = UIName.CardPoolEditorCard;
+        Clone.AddComponent<UIController> ();
+        return Clone;
+    }
+
+    static void SetEmptySlot (int number) {
+        int x = number % maxX;
+        int y = number / maxX;
+        EmptyCardSlot.transform.localPosition = new Vector3 (-1.7f + x * 1.3f, 2.9f - 1.4f * y, 5);
+        EmptyCardSlot.GetComponent<UIController> ().number = number;
     }
 
     static public void ShowCardPoolEditorMenu () {
@@ -160,11 +211,11 @@ public class CardPoolEditor : GOUI {
                     switch (x) {
                         case 0:
                             BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, false);
-                            BackgroundObject.name = "SaveBoard";
+                            BackgroundObject.name = UIName.CardPoolEditorSaveCardPool;
                             break;
                         case 1:
                             BackgroundObject = CreateSprite ("UI/Butt_S_SetList", npx, npy, 11, 60, 60, false);
-                            BackgroundObject.name = "LoadBoard";
+                            BackgroundObject.name = UIName.CardPoolEditorLoadCardPool;
                             break;
                         case 2:
                             BackgroundObject = CreateSprite ("UI/Butt_S_Delete", npx, npy, 11, 60, 60, false);
@@ -182,12 +233,12 @@ public class CardPoolEditor : GOUI {
                     }
                     switch (type) {
                         case 1:
-                            BackgroundObject.name = "BoardEditorValue";
+                            BackgroundObject.name = UIName.CardPoolEditorValue;
                             Clone = CreateText ((number + 1).ToString (), npx, npy, 12, 0.03f);
                             AddTextToGameObject (BackgroundObject, Clone);
                             break;
                         case 2:
-                            BackgroundObject.name = "BoardEditorTokenType";
+                            BackgroundObject.name = UIName.CardPoolEditorTokenType;
                             VT = new VisualToken ();
                             Clone = VT.Anchor;
                             Clone.transform.SetParent (BackgroundObject.transform);
@@ -197,18 +248,24 @@ public class CardPoolEditor : GOUI {
                             VT.SetType (number);
                             DestroyImmediate (VT.Text);
                             break;
+                        case 3:
+                            BackgroundObject.name = UIName.CardPoolEditorAbilityArea;
+                            VisualArea area = new VisualArea ();
+                            area.Anchor.transform.SetParent (BackgroundObject.transform);
+                            area.Anchor.transform.localPosition = new Vector3 (0, 0, 0);
+                            area.Anchor.transform.localScale = new Vector3 (0.7f, 0.7f, 0.7f);
+                            area.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+                            if (number == 0) {
+                                area.SetAbilityArea (0);
+                            } else {
+                                area.SetAbilityArea (3);
+                            }
+                            break;
                         case 4:
+                            BackgroundObject.name = UIName.CardPoolEditorAbilityType;
                             Clone = CreateSprite (VisualCard.GetIconPath (number), npx, npy, 12, 45, 45, false);
-                            Clone.GetComponent<SpriteRenderer> ().color = VisualCard.GetAbilityColor (number);
-                            //Clone.GetComponent<SpriteRenderer> ().color = AppDefaults.PlayerColor [x];
+                            Clone.GetComponent<SpriteRenderer> ().color = AppDefaults.GetAbilityColor (number);
                             Destroy (Clone.GetComponent<Collider> ());
-                            /*Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
-                            Clone.GetComponent<Renderer> ().material.shader = Shader.Find ("Sprites/Default");
-                            Clone.transform.SetParent (BackgroundObject.transform);
-                            Clone.transform.localEulerAngles = Vector3.zero;
-                            Clone.transform.localPosition = Vector3.zero;
-                            Clone.transform.localScale = new Vector3 (0.4f, 0.2f, 0.4f);
-                            VisualCard.SetAbilityIconInObject (Clone, number);*/
                             break;
                     }
 

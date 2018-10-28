@@ -156,11 +156,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
                         // BoardEditor
                         case "SaveBoard":
-                            Debug.Log (1);
                             BoardEditorMenu.EditedBoard.SaveBoard ("1", "Test");
                             break;
                         case "LoadBoard":
-                            Debug.Log (1);
                             BoardEditorMenu.EditedBoard.LoadFromFile (1);
                             break;
                         case "BoardEditorTileType":
@@ -176,6 +174,30 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             BoardEditorMenu.SelectButton (4, number);
                             break;
 
+                        // CardPoolEditor
+                        case UIName.CardPoolEditorValue:
+                            CardPoolEditor.SelectButton (1, number);
+                            break;
+                        case UIName.CardPoolEditorTokenType:
+                            CardPoolEditor.SelectButton (2, number);
+                            break;
+                        case UIName.CardPoolEditorAbilityArea:
+                            CardPoolEditor.SelectButton (3, number);
+                            break;
+                        case UIName.CardPoolEditorAbilityType:
+                            CardPoolEditor.SelectButton (4, number);
+                            break;
+                        case UIName.CardPoolEditorCard:
+                            CardPoolEditor.CardAction (number);
+                            break;
+
+                        case UIName.CardPoolEditorSaveCardPool:
+                            CardPoolEditor.SaveCardPool (1);
+                            break;
+
+
+
+                        // Other
                         default:
                             Debug.Log (name);
                             break;

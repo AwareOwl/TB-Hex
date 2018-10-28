@@ -46,8 +46,8 @@ public class ServerLogic : MonoBehaviour {
         return false;
     }
 
-    static public void CompleteLogIn (ClientInterface client, string userName) {
-        client.UserName = userName;
+    static public void CompleteLogIn (ClientInterface client, string accountName) {
+        client.AccountName = accountName;
         client.TargetLogIn (client.connectionToClient);
     }
 }
