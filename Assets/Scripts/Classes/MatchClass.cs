@@ -7,7 +7,9 @@ public class MatchClass {
     BoardClass Board;
 
     int numberOfPlayers;
-    PlayerClass [] Player;
+    public PlayerClass [] Player;
+
+    public MatchPropertiesClass Properties;
 
 
     MatchClass () {
@@ -19,6 +21,7 @@ public class MatchClass {
     }
 
     public void NewMatch () {
+        Properties = new MatchPropertiesClass ();
         SetPlayers ();
     }
 

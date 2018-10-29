@@ -6,10 +6,10 @@ public class PlayerClass {
 
     HandClass Hand;
 
-    int Score;
-    int ScoreIncome;
+    public int score;
+    public int scoreIncome;
 
-    string UserName;
+    public PlayerPropertiesClass Properties;
 
 
 }
