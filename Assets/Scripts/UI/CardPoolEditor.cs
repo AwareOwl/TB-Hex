@@ -33,7 +33,7 @@ public class CardPoolEditor : GOUI {
         CurrentGUI = this;
 
         EditedCardPool = new CardPoolClass ();
-        EditedCardPool.LoadFromString (ServerData.GetCardPool (1));
+        EditedCardPool.LoadFromFile (1);
 
         CreateSampleCards ();
         //EditedCardPool.EnableVisualisation ();

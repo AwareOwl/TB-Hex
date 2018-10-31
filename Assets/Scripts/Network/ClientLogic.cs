@@ -9,6 +9,11 @@ public class ClientLogic : MonoBehaviour {
     static public void LogIn () {
         //BoardEditorMenu.ShowBoardEditorMenu ();
         //CardPoolEditor.ShowCardPoolEditorMenu ();
-        InGameUI.ShowInGameUI ();
+
+        MatchClass match = new MatchClass (2);
+        match.NewMatch ();
+        InGameUI.ShowInGameUI (match);
+
+        new HandClass (4).GenerateRandomHand ();
     }
 }

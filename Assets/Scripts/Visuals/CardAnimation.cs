@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class CardAnimation : MonoBehaviour {
 
+    int stack;
+    int numberOfStacks;
+    public int position;
 
+    public const float shuffleTime = 0.5f;
+    public float shuffleTimer = 0;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public void Init (int stack, int numberOfStacks, int position) {
+        this.stack = stack;
+        this.numberOfStacks = numberOfStacks;
+        this.position = position;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        int x = stack;
+        int y = position;
+        float shuffleLength = 2f;
+        transform.localPosition -= new Vector3 (0, 0, - Mathf.Sin (shuffleTimer / shuffleTime * Mathf.PI) * shuffleLength);
+        shuffleTimer -= Time.deltaTime;
+        shuffleTimer = Mathf.Max (shuffleTimer, 0);
+        Vector3 dest = Vector3.Lerp (transform.localPosition, new Vector3 (-1.95f + x * 1.3f, 2 - 0.15f * y, -5.55f - 0.025f * y), Time.deltaTime * 4);
+        transform.localPosition = dest + new Vector3 (0, 0, - Mathf.Sin (shuffleTimer / shuffleTime * Mathf.PI) * shuffleLength);
+    }
 }

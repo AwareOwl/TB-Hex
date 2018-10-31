@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VisualPlayer : GOUI {
+public class VisualPlayer {
 
-    int NumberOfPlayers;
+    PlayerClass player;
+    int playerNumber;
+    bool ally;
+    int numberOfPlayers;
 
     int margin;
     int avatarSize;
@@ -13,13 +16,24 @@ public class VisualPlayer : GOUI {
     int avatarPosition;
     int barPosition;
 
+    GameObject HealthBar;
+    GameObject ScoreText;
 
-    public void CreatePlayerUI (int playerNumber, bool ally, int numberOfPlayers) {
+    public VisualPlayer () {
+
+    }
+
+    public void CreatePlayerUI (PlayerClass player, bool ally, int numberOfPlayers) {
         GameObject Clone;
+
+        this.player = player;
+        playerNumber = player.playerNumber - 1;
+        this.ally = ally;
+        this.numberOfPlayers = numberOfPlayers;
 
         int margin = 60;
         int avatarSize = 90;
-        int shiftLength = (1440 - margin * 2) / NumberOfPlayers;
+        int shiftLength = (1440 - margin * 2) / numberOfPlayers;
         int barLength = shiftLength - avatarSize - 30;
         int avatarPosition = margin + avatarSize / 2 + shiftLength * playerNumber;
         int barPosition = margin + barLength / 2 + shiftLength * playerNumber;
@@ -30,47 +44,49 @@ public class VisualPlayer : GOUI {
             avatarPosition += barLength;
         }
 
-        Clone = CreateSprite ("Textures/Avatars/Avatar0" + ((playerNumber % 4) + 2).ToString ());
-        SetInPixScale (Clone, avatarSize, avatarSize);
-        SetInPixPosition (Clone, avatarPosition, 45, 14);
+        Clone = GOUI.CreateSprite ("Textures/Avatars/Avatar0" + ((playerNumber % 4) + 2).ToString ());
+        GOUI.SetInPixScale (Clone, avatarSize, avatarSize);
+        GOUI.SetInPixPosition (Clone, avatarPosition, 45, 14);
 
-        Clone = CreateSprite ("UI/White");
-        SetInPixScale (Clone, barLength, 30);
-        SetInPixPosition (Clone, barPosition, 15, 11);
+        Clone = GOUI.CreateSprite ("UI/White");
+        GOUI.SetInPixScale (Clone, barLength, 30);
+        GOUI.SetInPixPosition (Clone, barPosition, 15, 11);
+        GOUI.SetSpriteColor (Clone, AppDefaults.PlayerColor [playerNumber + 1] * 0.5f);
 
-        SetSpriteColor (Clone, AppDefaults.PlayerColor [playerNumber] * 0.5f);
-        Clone = CreateSprite ("UI/White");
-        SetSpriteColor (Clone, AppDefaults.PlayerColor [playerNumber]);
+        Clone = GOUI.CreateSprite ("UI/White");
+        GOUI.SetSpriteColor (Clone, AppDefaults.PlayerColor [playerNumber + 1]);
+        HealthBar = Clone;
 
-        Clone = CreateText ();
+        Clone = GOUI.CreateText ("", barPosition, 15, 13, 0.025f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
-        Clone.transform.localScale = Vector3.one * 0.02f;
-        SetInPixPosition (Clone, barPosition, 15, 13);
+        ScoreText = Clone;
     }
 
-    public void SetPlayerHealthBar (PlayerClass player) {
-        SetPlayerHealthBar (playerNumber, player.score, player.scoreIncome, PlayedMatch.Properties.scoreLimit);
+    public void UpdateVisuals (MatchClass match) {
+        SetPlayerHealthBar (match, player);
     }
 
-    public void SetPlayerHealthBar (int playerNumber, float score, float scoreIncome, float scoreLimit) {
+    public void SetPlayerHealthBar (MatchClass match, PlayerClass player) {
+        SetPlayerHealthBar (player.score, player.scoreIncome, match.Properties.scoreLimit);
+    }
 
-        int avatarPosition = margin + avatarSize / 2 + shiftLength * playerNumber;
-        int barPosition = margin + barLength / 2 + shiftLength * playerNumber;
-        if (Ally [playerNumber]) {
+    public void SetPlayerHealthBar (int score, int scoreIncome, int scoreLimit) {
+        int avatarPosition = margin + avatarSize / 2 + shiftLength * player.playerNumber;
+        int barPosition = margin + barLength / 2 + shiftLength * player.playerNumber;
+        if (ally) {
             barPosition += avatarSize;
         } else {
             avatarPosition += barLength;
         }
 
-        float percentage = Random.Range (0f, 1f);
-        SetInPixScale (Clone, (int) (percentage * barLength), 30);
+        float percentage = score / scoreLimit;
+        GOUI.SetInPixScale (HealthBar, (int) (percentage * barLength), 30);
         if (ally) {
-            SetInPixPosition (Clone, barPosition - (int) (barLength / 2 * (1 - percentage)), 15, 12);
+            GOUI.SetInPixPosition (HealthBar, barPosition - (int) (barLength / 2 * (1 - percentage)), 15, 12);
         } else {
-            SetInPixPosition (Clone, barPosition + (int) ((barLength * (1 - percentage) + 1) / 2), 15, 12);
+            GOUI.SetInPixPosition (HealthBar, barPosition + (int) ((barLength * (1 - percentage) + 1) / 2), 15, 12);
         }
-        Clone.GetComponent<TextMesh> ().text = ((int) (500 * percentage)).ToString () + " (+" + (Random.Range (0, 30).ToString ()) + ")";
-
+        ScoreText.GetComponent<TextMesh> ().text = score.ToString () + " (+" + scoreIncome.ToString () + ")";
     }
 
 }

@@ -66,6 +66,11 @@ public class TileClass {
     }
 
 
+    public TokenClass CreateToken (CardClass card, int owner) {
+        return CreateToken (card.tokenType, card.value, owner);
+    }
+
+
     public TokenClass CreateToken (int type, int value, int owner) {
         token = new TokenClass (this, type, value, owner);
         if (visualTile != null) {

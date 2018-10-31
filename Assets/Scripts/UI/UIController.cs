@@ -135,7 +135,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             MyNetworkManager.StartNewClient ();
                             break;
                         case "Tile":
-                            BoardEditorMenu.TileAction (x, y);
+                            TileAction ();
                             //transform.parent.GetComponent<VisualEffectScript> ().PushItDown (-1);
                             break;
                         case "LogUserIn":
@@ -210,6 +210,14 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
+    public void TileAction () {
+        if (BoardEditorMenu.instance != null) {
+            BoardEditorMenu.TileAction (x, y);
+        }
+        if (InGameUI.instance != null) {
+            InGameUI.TileAction (x, y);
+        }
+    }
     void DestroyReferences () {
         foreach (GameObject Ref in references) {
             DestroyImmediate (Ref);

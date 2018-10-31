@@ -35,4 +35,8 @@ public class CardPoolClass {
             AddCard ().ConvertFromString (line);
         }
     }
+
+    public void LoadFromFile (int GameModeId) {
+        LoadFromString (ServerData.GetCardPool (GameModeId));
+    }
 }

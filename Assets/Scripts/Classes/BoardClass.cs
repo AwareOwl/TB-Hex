@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class BoardClass {
 
-    bool visualised = true;
+    bool visualised = false;
 
-    TileClass [,] tile;
-    List<TileClass> tileList = new List<TileClass> ();
+    public TileClass [,] tile;
+    public List<TileClass> tileList = new List<TileClass> ();
 
     public void EnableTile (int x, int y) {
         EnableTile (x, y, true);
@@ -62,8 +62,6 @@ public class BoardClass {
     public void DestroyAllVisuals () {
         if (tile != null) {
             foreach (TileClass tile in tile) {
-                Debug.Log ("Wut");
-
                 if (tile != null) {
                     tile.DestroyVisual ();
                 }

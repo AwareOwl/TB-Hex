@@ -12,7 +12,12 @@ public class VisualCard {
     VisualArea Area;
 
     public VisualCard () {
-        GameObject Clone = NewCard ();
+        NewCard ();
+    }
+
+    public VisualCard (CardClass card) {
+        NewCard ();
+        SetState (card);
     }
 
     static public void Make4Cards () {

@@ -11,10 +11,15 @@ public class CardClass {
     public int abilityType;
     public int abilityArea;
 
-    VisualCard visualCard;
+    public VisualCard visualCard;
 
     public CardClass () {
 
+    }
+
+    public CardClass (CardClass card) {
+        SetState (card.value, card.tokenType, card.abilityArea, card.abilityType);
+        this.cardNumber = card.cardNumber;
     }
 
     public CardClass (int value, int tokenType, int abilityArea, int abilityType) {
@@ -44,6 +49,12 @@ public class CardClass {
         tokenType = int.Parse (s [2]);
         abilityArea = int.Parse (s [3]);
         abilityType = int.Parse (s [4]);
+    }
+
+    public void EnableVisual () {
+        if (visualCard == null) {
+            visualCard = new VisualCard (this);
+        }
     }
 
 }

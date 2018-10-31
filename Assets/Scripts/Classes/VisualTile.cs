@@ -14,6 +14,7 @@ public class VisualTile {
 
     public VisualTile (TileClass field) {
         CreateTile (field.x, field.y);
+        EnableTile (field.enabled);
     }
 
     void CreateTile (int x, int y) {
