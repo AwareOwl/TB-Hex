@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InGameUI : GOUI {
 
+    static public GameObject [,] VisualEffectAnchor;
+
     static public InGameUI instance;
 
     static public MatchClass PlayedMatch;
@@ -44,6 +46,14 @@ public class InGameUI : GOUI {
         PlayedMatch = playedMatch;
         CurrentCanvas.AddComponent<InGameUI> ();
     }
+
+    static public PlayerClass GetPlayer () {
+        return PlayedMatch.Player [MyPlayerNumber];
+    }
+
+    static public CardClass GetSelectedCard () {
+        return GetPlayer ().Hand.Stack [SelectedStack].TopCard ();
+    }
     
     static public void CreatePlayersUI () {
         for (int x = 0; x < NumberOfPlayers; x++) {
@@ -53,11 +63,38 @@ public class InGameUI : GOUI {
             player.visualPlayer.CreatePlayerUI (player, ally, NumberOfPlayers);
             player.visualPlayer.SetPlayerHealthBar (PlayedMatch, player);
         }
+        int sx = PlayedMatch.Board.tile.GetLength (0);
+        int sy = PlayedMatch.Board.tile.GetLength (1);
+        VisualEffectAnchor = new GameObject [sx, sy];
+        for (int x = 0; x < sx; x++) {
+            for (int y = 0; y < sy; y++) {
+                VisualEffectAnchor [x, y] = new GameObject ();
+                VisualEffectAnchor [x, y].transform.localPosition = VisualTile.TilePosition (x, 0.2f, y);
+            }
+        }
     }
 
     public void SetPlayerHealthBar (int playerNumber) {
         PlayerClass player = GetPlayer (playerNumber);
 
         //SetPlayerHealthBar (playerNumber, player.score, player.scoreIncome, PlayedMatch.Properties.scoreLimit);
+    }
+
+    static public void SetAreaHovers (int x, int y) {
+        foreach (GameObject anchor in VisualEffectAnchor) {
+            Transform [] childs = new Transform [anchor.transform.childCount];
+            for (int c = 0; c < childs.Length; c++) {
+                childs [c] = anchor.transform.GetChild (c);
+            }
+            for (int c = 0; c < childs.Length; c++) {
+                DestroyImmediate (childs [c].gameObject);
+            }
+        }
+        List<AbilityVector> list = PlayedMatch.Board.GetAbilityVectors (x, y, GetSelectedCard ().abilityArea);
+        foreach (AbilityVector vector in list) {
+            if (PlayedMatch.Board.IsTileEnabled (vector.x, vector.y)) {
+                VisualEffectInterface.CreateEffect (VisualEffectAnchor [vector.x, vector.y], GetSelectedCard ().abilityType, true, false);
+            }
+        }
     }
 }

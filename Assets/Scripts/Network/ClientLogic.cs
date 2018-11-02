@@ -13,7 +13,5 @@ public class ClientLogic : MonoBehaviour {
         MatchClass match = new MatchClass (2);
         match.NewMatch ();
         InGameUI.ShowInGameUI (match);
-
-        new HandClass (4).GenerateRandomHand ();
     }
 }

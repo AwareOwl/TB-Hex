@@ -144,4 +144,44 @@ public class BoardClass {
             }
         }
     }
+
+    public bool IsTileInBounds (int x, int y) {
+        if (x >= 0 && y >= 0 && x < tile.GetLength (0) && y < tile.GetLength (1)) {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsTileEnabled (int x, int y) {
+        if (IsTileInBounds (x, y) && tile [x, y].enabled) {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsTileEnabledAndEmpty (int x, int y) {
+        if (IsTileEnabled (x, y) && tile [x, y].token == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public List <AbilityVector> GetAbilityVectors (int x, int y, int abilityArea) {
+        AbilityVector vector;
+        List <AbilityVector> list = new List<AbilityVector> ();
+        if (abilityArea == 1 || abilityArea == 4) {
+            vector = new AbilityVector (x, y, 1);
+            list.Add (new AbilityVector (x, y, 1));
+            list.Add (new AbilityVector (x, y, 2));
+        }
+        if (abilityArea == 2 || abilityArea == 4) {
+            list.Add (new AbilityVector (x, y, 3));
+            list.Add (new AbilityVector (x, y, 4));
+        }
+        if (abilityArea == 3 || abilityArea == 4) {
+            list.Add (new AbilityVector (x, y, 5));
+            list.Add (new AbilityVector (x, y, 6));
+        }
+        return list;
+    }
 }

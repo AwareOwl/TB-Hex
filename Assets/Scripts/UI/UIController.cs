@@ -114,6 +114,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private void OnMouseOver () {
         if (!EventSystem.current.IsPointerOverGameObject ()) {
+            switch (name) {
+                case "Tile":
+                    InGameUI.SetAreaHovers (x, y);
+                    break;
+            }
             if (Input.GetMouseButtonDown (0)) {
                 SetOnMouseClickSprite ();
                 Pressed = true;

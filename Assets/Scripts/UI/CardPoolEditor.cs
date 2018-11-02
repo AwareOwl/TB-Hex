@@ -41,7 +41,7 @@ public class CardPoolEditor : GOUI {
     }
 
     static public void CardAction (int number) {
-        EditedCardPool.SetCard (number, Selected [1] + 1, Selected [2], Selected [3] * 3, Selected [4]);
+        EditedCardPool.SetCard (number, Selected [1] + 1, Selected [2], Selected [3] * 3 + 1, Selected [4]);
         UpdateCard (number);
     }
 
@@ -256,9 +256,9 @@ public class CardPoolEditor : GOUI {
                             area.Anchor.transform.localScale = new Vector3 (0.7f, 0.7f, 0.7f);
                             area.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
                             if (number == 0) {
-                                area.SetAbilityArea (0);
+                                area.SetAbilityArea (1);
                             } else {
-                                area.SetAbilityArea (3);
+                                area.SetAbilityArea (4);
                             }
                             break;
                         case 4:

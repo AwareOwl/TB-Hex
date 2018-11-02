@@ -22,7 +22,7 @@ public class VisualTile {
         Tile = Anchor.transform.Find ("Tile").gameObject;
         //Tile.AddComponent<UIController> ();
         Collider = GameObject.Instantiate (Resources.Load ("Prefabs/TileCollider")) as GameObject;
-        Collider.transform.localPosition = TilePosition (x, 0, y);
+        Collider.transform.localPosition = TilePosition (x, 0.12f, y);
         Collider.transform.localScale = new Vector3 (0.5f, 0.5f, 0.2f);
         Collider.name = "Tile";
         Collider.AddComponent<UIController> ();
