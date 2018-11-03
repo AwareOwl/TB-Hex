@@ -36,7 +36,7 @@ public class VisualToken {
     }
 
     public void SetOwner () {
-        Base.GetComponent<VisualEffectScript> ().Color = AppDefaults.PlayerColor [tokenClass.owner];
+        Base.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.PlayerColor [tokenClass.owner]);
     }
 
     public void SetValue () {
@@ -55,12 +55,12 @@ public class VisualToken {
         Anchor = new GameObject ();
 
         Base = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBase")) as GameObject;
-        Base.AddComponent<VisualEffectScript> ().Init (new Color (0.8f, 0.8f, 0.8f), false, true);
+        Base.AddComponent<VisualEffectScript> ().SetColor (new Color (0.8f, 0.8f, 0.8f));
         Base.transform.localScale = new Vector3 (0.72f, 0.05f, 0.72f);
         Base.transform.parent = Anchor.transform;
 
         Border = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBorder")) as GameObject;
-        Border.AddComponent<VisualEffectScript> ().Init (new Color (0.1f, 0.1f, 0.1f), false, true);
+        Border.AddComponent<VisualEffectScript> ().SetColor (new Color (0.1f, 0.1f, 0.1f));
         Border.transform.localScale = new Vector3 (0.8f, 0.1f, 0.8f);
         Border.transform.parent = Anchor.transform;
 
@@ -72,14 +72,26 @@ public class VisualToken {
         Text.transform.localPosition = new Vector3 (0, 0.05f, 0);
         Text.transform.localEulerAngles = new Vector3 (90, 0, 0);
 
-        Anchor.AddComponent<VisualEffectScript> ();
-        Anchor.GetComponent<VisualEffectScript> ().Init (Color.white, false, true);
-        Anchor.GetComponent<VisualEffectScript> ().Colored = false;
-        Anchor.GetComponent<VisualEffectScript> ().GrowAppear [0] = true;
+        Anchor.name = "AToken";
+        Anchor.AddComponent<VisualEffectScript> ().SetPhaseTimer (0.5f);
+    }
+
+    public void AddCreateAnimation () {
+        Anchor.GetComponent<VisualEffectScript> ().SetScale (new Vector3 [2] {
+        new Vector3 (0, 0, 0), new Vector3 (1, 1, 1) });
+    }
+
+    public void AddPlayAnimation () {
+        VisualEffectScript VEScript = Anchor.GetComponent<VisualEffectScript> ();
+
+        VEScript.AddPhase ();
+        float height = 2;
+        VEScript.SetDeltaPosition (new Vector3 [3] {
+        new Vector3 (0, height, 0), new Vector3 (0, height, 0), new Vector3 (0, 0, 0) });
     }
 
     public void SetType (int type) {
-        Border.GetComponent<VisualEffectScript> ().Color = AppDefaults.GetBorderColorMain (type);
+        Border.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetBorderColorMain (type));
         Type = type;
     }
 

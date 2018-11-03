@@ -39,7 +39,6 @@ GameObject:
   - component: {fileID: 4420673259947212}
   - component: {fileID: 33773989429905570}
   - component: {fileID: 23086774143362650}
-  - component: {fileID: 114449689950093744}
   m_Layer: 0
   m_Name: Hover
   m_TagString: Untagged
@@ -228,36 +227,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114449689950093744
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1095850501607632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1c9d717c4c8dd94e8cc9ff1e2b90a07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Invisible: 0000
-  BlendAppear: 0000
-  BlendDisappear: 0000
-  GrowAppear: 0000
-  GrowDisappear: 0000
-  Uprising: 0000
-  Rotating: 0000
-  Growing: 0000
-  Moving: 0000
-  Fluctuate: 0000
-  Droping: 0000
-  Twist: 0000
-  Floating: 0000
-  FloatingHeight: 0
-  FloatingDestination: 0
-  Pushed: 0
-  Triggered: 1
-  AutoDestroy: 0
-  TurnedToCamera: 0
-  Colored: 1
-  Color: {r: 1, g: 1, b: 1, a: 0}
-  SPos: {x: 0, y: 0, z: 0}

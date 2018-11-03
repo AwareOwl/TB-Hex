@@ -31,12 +31,13 @@ public class VisualPlayer {
         this.ally = ally;
         this.numberOfPlayers = numberOfPlayers;
 
-        int margin = 60;
-        int avatarSize = 90;
-        int shiftLength = (1440 - margin * 2) / numberOfPlayers;
-        int barLength = shiftLength - avatarSize - 30;
-        int avatarPosition = margin + avatarSize / 2 + shiftLength * playerNumber;
-        int barPosition = margin + barLength / 2 + shiftLength * playerNumber;
+        margin = 60;
+        avatarSize = 90;
+        shiftLength = (1440 - margin * 2) / numberOfPlayers;
+        barLength = shiftLength - avatarSize - 30;
+        avatarPosition = margin + avatarSize / 2 + shiftLength * playerNumber;
+        barPosition = margin + barLength / 2 + shiftLength * playerNumber;
+        Debug.Log (barPosition);
 
         if (ally) {
             barPosition += avatarSize;
@@ -71,15 +72,15 @@ public class VisualPlayer {
     }
 
     public void SetPlayerHealthBar (int score, int scoreIncome, int scoreLimit) {
-        int avatarPosition = margin + avatarSize / 2 + shiftLength * player.playerNumber;
+        /*int avatarPosition = margin + avatarSize / 2 + shiftLength * player.playerNumber;
         int barPosition = margin + barLength / 2 + shiftLength * player.playerNumber;
         if (ally) {
             barPosition += avatarSize;
         } else {
             avatarPosition += barLength;
-        }
+        }*/
 
-        float percentage = score / scoreLimit;
+        float percentage = Mathf.Min (1f * score / scoreLimit, 1);
         GOUI.SetInPixScale (HealthBar, (int) (percentage * barLength), 40);
         if (ally) {
             GOUI.SetInPixPosition (HealthBar, barPosition - (int) (barLength / 2 * (1 - percentage)), 20, 12);

@@ -31,20 +31,20 @@ public class VisualArea {
     public void SetAbilityArea (int x) {
         DisableAbilityArea ();
         if (x > 0  && x <= 3) {
-            Tile [x - 1].GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 1), false, true);
-            Tile [x + 3 - 1].GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 1), false, true);
+            Tile [x - 1].GetComponent<VisualEffectScript> ().SetColor (new Color (1, 1, 1));
+            Tile [x + 3 - 1].GetComponent<VisualEffectScript> ().SetColor (new Color (1, 1, 1));
         } else if (x == 4) {
             for (int y = 0; y < 6; y++) {
-                Tile [y].GetComponent<VisualEffectScript> ().Init (new Color (1, 1, 1), false, true);
+                Tile [y].GetComponent<VisualEffectScript> ().SetColor (new Color (1, 1, 1));
             }
         }
     }
     public void DisableAbilityArea () {
         for (int y = 0; y < 6; y++) {
             if (Tile [y].GetComponent<VisualEffectScript> () == null) {
-                Tile [y].AddComponent<VisualEffectScript> ().Init (new Color (0.3f, 0.3f, 0.3f), false, true);
+                Tile [y].AddComponent<VisualEffectScript> ().SetColor (new Color (0.3f, 0.3f, 0.3f));
             } else {
-                Tile [y].GetComponent<VisualEffectScript> ().Color = new Color (0.3f, 0.3f, 0.3f);
+                Tile [y].GetComponent<VisualEffectScript> ().SetColor (new Color (0.3f, 0.3f, 0.3f));
             }
         }
     }

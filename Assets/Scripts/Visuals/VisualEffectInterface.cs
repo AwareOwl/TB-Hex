@@ -14,7 +14,7 @@ public class VisualEffectInterface : MonoBehaviour {
         DestroyImmediate (Clone.GetComponent<Collider> ());
         Renderer renderer = Clone.GetComponent<Renderer> ();
         renderer.material.shader = Shader.Find ("Sprites/Default");
-        renderer.material.mainTexture = Resources.Load ("Textures/Ability/Ability0" + effectNumber) as Texture;
+        renderer.material.mainTexture = Resources.Load (VisualCard.GetIconPath (effectNumber)) as Texture;
         renderer.material.color = AppDefaults.GetAbilityColor (effectNumber);
         Clone.transform.parent = anchor.transform;
         Clone.transform.localPosition = new Vector3 (0, 0, 0);

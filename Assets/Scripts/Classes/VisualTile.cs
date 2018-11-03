@@ -29,6 +29,9 @@ public class VisualTile {
         Collider.GetComponent<UIController> ().x = x;
         Collider.GetComponent<UIController> ().y = y;
         Collider.GetComponent<UIController> ().HoverObject = Collider.transform.Find ("Hover").gameObject;
+        GameObject Hover = Collider.transform.Find ("Hover").gameObject;
+        Hover.GetComponent<Renderer> ().material.color = new Color (0, 0, 0, 0);
+        Hover.AddComponent<VisualEffectScript> ();
 
     }
 
@@ -40,9 +43,9 @@ public class VisualTile {
 
     public void EnableTile (bool enable) {
         if (enable) {
-            Anchor.GetComponent<VisualEffectScript> ().PushItToHeight (0);
+            Anchor.GetComponent<VisualEffectScript> ().PushToHeight (0);
         } else {
-            Anchor.GetComponent<VisualEffectScript> ().PushItToHeight (-0.5f);
+            Anchor.GetComponent<VisualEffectScript> ().PushToHeight (-0.5f);
         }
     }
 

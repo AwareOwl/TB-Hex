@@ -33,6 +33,7 @@ public class TokenClass {
     public void EnableVisual () {
         if (visualToken == null) {
             visualToken = new VisualToken (this);
+            visualToken.AddCreateAnimation ();
         }
     }
 

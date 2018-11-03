@@ -58,7 +58,7 @@ public class VisualCard {
             EnableAbilityTile (true);
         }
         SetAbilityIconInObject (AbilityIcon, type);
-        AbilityTile.GetComponent<VisualEffectScript> ().Init (AppDefaults.GetAbilityColor (type), false, true);
+        AbilityTile.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetAbilityColor (type));
     }
 
     public void EnableAbilityTile (bool enable) {
@@ -112,7 +112,7 @@ public class VisualCard {
         ManaTile.transform.parent = Background.transform;*/
 
         AbilityTile = GameObject.Instantiate (AppDefaults.Tile) as GameObject;
-        AbilityTile.AddComponent<VisualEffectScript> ().Init (new Color (0, 0, 0), false, true);
+        AbilityTile.AddComponent<VisualEffectScript> ().SetColor (new Color (0, 0, 0));
         AbilityTile.transform.localScale = new Vector3 (0.5f, 0.1f, 0.5f);
         AbilityTile.transform.localPosition = new Vector3 (0.35f, 0.05f, 0.5f);
         AbilityTile.transform.localEulerAngles = new Vector3 (0, 90, 0);

@@ -3,215 +3,218 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class VisualEffectScript : MonoBehaviour {
-
-    public bool [] Invisible = new bool [2];
-    public bool [] BlendAppear = new bool [2];
-	public bool [] BlendDisappear = new bool [2];
-    public bool [] GrowAppear = new bool [2];
-    public bool [] GrowDisappear = new bool [2];
-
-    public bool [] Uprising = new bool [2];
-	public bool [] Rotating = new bool [2];
-	public bool [] Growing = new bool [2];
-	public bool [] Moving = new bool [2];
-	public bool [] Fluctuate = new bool [2];
-	public bool [] Droping = new bool [2];
-	public bool [] Twist = new bool [2];
-    public bool [] Floating = new bool [2];
-
-    public float FloatingHeight = 0f;
-    public float FloatingDestination = 0f; 
-
-
-	int Size;
-	int Height;
-
-	public bool Pushed;
-	public bool Triggered;
-	public bool AutoDestroy;
-	public bool TurnedToCamera;
-    public bool Colored;
-	public Color Color;
-	bool Extended;
-
-	float alpha;
+    
+	public bool triggered = true;
+    public bool destroyOnEnd = false;
+	public int endPhase = 1;
+    
 	float timer;
-	float continuousTimer;
+    float percentageTimer;
     float timerScale = AppSettings.AnimationDuration;
+    int currentPhase = 0;
+    List <float> phaseTimer;
+    
+    public List <Color> basicColor = null;
+    public List <Vector3> basicScale;
+    public List <Vector3> basicPosition;
+    public List <Vector3> deltaPosition;
+    
+    public List <bool> drift;
 
-	Vector3 SSize;
+    public bool lerpPosition;
+    float driftHeight = 0f;
+    float driftDestination = 0f;
 
-    public bool PresetPosition;
-	public Vector3 SPos;
-	Vector3 EPos;
+    Renderer [] renderers;
 
-	public void PushIt (Vector3 destination) {
-		Pushed = true;
-		EPos = destination / transform.parent.lossyScale.x;
+    public void Init (Color color, int endPhase, bool destroyOnEnd, bool triggered) {
 	}
 
-	public void Init (Color color, bool autoDestroy, bool triggered) {
-        if (color != null) {
-            Colored = true;
+    public void Init () {
+
+    }
+    
+    public void SetColor (Color color) {
+        basicColor = new List<Color> ();
+        for (int x = 0; x <= endPhase; x++) {
+            basicColor.Add (color);
         }
-		Color = color;
-		AutoDestroy = autoDestroy;
-		Triggered = triggered;
-	}
-
-	Renderer [] renderers;
-
-	private void Awake () {
-	}
-
-    public void SetStartingPosition (Vector3 startingPosition) {
-        PresetPosition = true;
-        SPos = startingPosition;
     }
 
-	void Start () {
-        if (!PresetPosition) {
-            SPos = transform.localPosition;
+    public void AutoSetPosition () {
+        if (basicPosition == null) {
+            SetPosition (transform.localPosition);
         }
-		SSize = transform.localScale;
+    }
+
+    public void SetPosition (Vector3 position) {
+        basicPosition = new List<Vector3> ();
+        for (int x = 0; x <= endPhase; x++) {
+            basicPosition.Add (position);
+        }
+    }
+
+    public void SetDeltaPosition (Vector3 position) {
+        deltaPosition = new List<Vector3> ();
+        for (int x = 0; x <= endPhase; x++) {
+            deltaPosition.Add (position);
+        }
+    }
+
+    public void SetScale (Vector3 scale) {
+        basicScale = new List<Vector3> ();
+        for (int x = 0; x <= endPhase; x++) {
+            basicScale.Add (scale);
+        }
+    }
+
+    public void SetDrift (bool driftValue) {
+        drift = new List<bool> ();
+        for (int x = 0; x <= endPhase; x++) {
+            drift.Add (driftValue);
+        }
+    }
+
+    public void SetPosition (Vector3 [] position) {
+        basicPosition = new List<Vector3> ();
+        for (int x = 0; x <= endPhase; x++) {
+            basicPosition.Add (position [Mathf.Min (position.Length - 1, x)]);
+        }
+    }
+
+    public void SetDeltaPosition (Vector3 [] position) {
+        deltaPosition = new List<Vector3> ();
+        for (int x = 0; x <= endPhase; x++) {
+            deltaPosition.Add (position [Mathf.Min (position.Length - 1, x)]);
+        }
+    }
+
+    public void SetScale (Vector3 [] scale) {
+        basicScale = new List<Vector3> ();
+        for (int x = 0; x <= endPhase; x++) {
+            basicScale.Add (scale [Mathf.Min (scale.Length - 1, x)]);
+        }
+    }
+    
+    public void AddPhase () {
+        if (phaseTimer != null) {
+            phaseTimer.Add (phaseTimer [endPhase] * 2 - phaseTimer [endPhase - 1]);
+        }
+        if (basicColor != null) {
+            basicColor.Add (basicColor [endPhase]);
+        }
+        if (basicPosition != null) {
+            basicPosition.Add (basicPosition [endPhase]);
+        }
+        if (basicScale != null) {
+            basicScale.Add (basicScale [endPhase]);
+        }
+        if (drift != null) {
+            drift.Add (drift [endPhase]);
+        }
+        endPhase++;
+    }
+
+    public void SetPhaseTimer (float duration) {
+        phaseTimer = new List<float> ();
+        phaseTimer.Add (0);
+        for (int x = 1; x <= endPhase; x++) {
+            phaseTimer.Add (duration + phaseTimer [x - 1]);
+        }
+    }
+
+    void Start () {
+        AutoSetPosition ();
+        if (basicScale == null) {
+            SetScale (transform.localScale);
+        }
+        if (phaseTimer == null) {
+            SetPhaseTimer (1);
+        }
 		renderers = GetComponentsInChildren<Renderer> ();
-		if (!AutoDestroy) {
-			timerScale *= 0.5f;
-		}
-        if (Colored) {
+        UpdateEverything ();
+	}
+
+    public void UpdateColor () {
+        if (basicColor != null && basicColor.Count > 0) {
+            Color newColor;
+            newColor = basicColor [currentPhase] * percentageTimer
+                + basicColor [Mathf.Min (currentPhase + 1, endPhase)] * (1 - percentageTimer);
             foreach (Renderer renderer in renderers) {
-                if (Invisible [0] || BlendAppear [0]) {
-                    alpha = 0;
+                if (triggered) {
+                    renderer.material.color = newColor;
                 } else {
-                    alpha = Color.a;
-                }
-                renderer.material.color = new Color (Color.r, Color.g, Color.b, Color.a);
-                if (Droping [phase]) {
-                    transform.localPosition = new Vector3 (SPos.x, SPos.y - AppDefaults.TokenSpawnHeight, SPos.z);
-                } else {
-                    transform.localPosition = new Vector3 (SPos.x, SPos.y, SPos.z);
-                }
-                if (Triggered) {
-                    renderer.material.color = new Color (Color.r, Color.g, Color.b, alpha);
-                } else {
-                    renderer.material.color = new Color (0.75f, 0.75f, 0.75f, alpha);
+                    renderer.material.color = new Color (0.75f, 0.75f, 0.75f, newColor.a) * 0.8f + newColor * 0.2f;
                 }
             }
         }
-	}
+    }
 
-	public bool CheckPhase () {
-		if (Uprising [phase - 1]){
-			Height++;
-		}
-		if (Growing [phase - 1]) {
-			Size++;
-		}
-		return 
-			BlendAppear [phase] ||
-			BlendDisappear [phase] ||
-			Uprising [phase] ||
-			Rotating [phase] ||
-			Growing [phase] ||
-			Moving [phase] ||
-			Invisible [phase] ||
-			Twist [phase];
-	}
+    public void UpdatePosition () {
+        Vector3 newPosition;
+        Vector3 Position1 = basicPosition [currentPhase];
+        Vector3 Position2 = basicPosition [Mathf.Min (currentPhase + 1, endPhase)];
+        if (deltaPosition != null) {
+            Position1 += deltaPosition [currentPhase];
+            Position2 += deltaPosition [Mathf.Min (currentPhase + 1, endPhase)];
+        }
 
-	int phase = 0;
-	bool uphold = true;
+        newPosition = Position1 * (1 - percentageTimer) + Position2 * (percentageTimer);
+
+        if (drift != null && drift [currentPhase]) {
+            //Debug.Log ("Test");
+            float heightModifier = Mathf.Abs (driftDestination - driftHeight) * 6;
+            float driftSpeed = Mathf.Min ((1f + heightModifier) * Time.deltaTime, 1);
+            driftDestination = Random.Range (-0.4f, 0.4f) * driftSpeed + driftDestination * (1f - driftSpeed);
+            driftHeight = driftDestination * driftSpeed + driftHeight * (1f - driftSpeed);
+            newPosition += Vector3.up * driftHeight;
+        }
+        transform.localPosition = newPosition;
+    }
+
+    public void UpdateScale () {
+        Vector3 newScale;
+        Vector3 Scale1 = basicScale [currentPhase];
+        Vector3 Scale2 = basicScale [Mathf.Min (currentPhase + 1, endPhase)];
+
+        newScale = Scale1 * (1 - percentageTimer) + Scale2 * percentageTimer;
+
+        transform.localScale = newScale;
+    }
+
+    public void UpdatePhase () {
+        timer += Time.deltaTime;
+        timer = Mathf.Min (timer, phaseTimer [endPhase] * timerScale);
+        for (int x = currentPhase; x <= endPhase; x++) {
+            if (timer / timerScale >= phaseTimer [x]) {
+                currentPhase = x;
+            }
+        }
+        if (currentPhase < endPhase) {
+            percentageTimer = timer / timerScale - phaseTimer [currentPhase];
+            percentageTimer /= phaseTimer [currentPhase + 1] - phaseTimer [currentPhase];
+        } else {
+            percentageTimer = 1;
+        }
+    }
 
 	// Update is called once per frame
 	void Update () {
-		timer += Time.deltaTime;
-		continuousTimer += Time.deltaTime;
-		if (AutoDestroy) {
-			if (timer > timerScale) {
-				timer -= timerScale;
-				phase++;
-				if (phase < 2){
-					uphold = CheckPhase ();
-				}
-			}
-			if (phase > 1) {
-				Destroy (gameObject);
-				return;
-			} 
-		} else {
-			if (timer > timerScale){
-				timer = timerScale;
-			}
-		}
-		if (uphold) {
-			if (Rotating [phase]) {
-				transform.localEulerAngles = new Vector3 (0, -90f * continuousTimer / timerScale, 0);
-			} else if (Fluctuate [phase]) {
-				transform.localEulerAngles = new Vector3 (0, 20f * Mathf.Sin (continuousTimer / timerScale), 0);
-			} else if (Twist [phase]) {
-				transform.localEulerAngles = new Vector3 (0, -30f * (1 - Mathf.Min (continuousTimer / timerScale, 1)), 0);
-			}
-			if (TurnedToCamera) {
-				transform.localEulerAngles = new Vector3 (270, 0, 0);
-				//transform.LookAt (CameraScript.Camera.transform);
-			}
-            if (Colored) {
-                foreach (Renderer renderer in renderers) {
-                    if (timer < timerScale) {
-                        if (Invisible [phase]) {
-                            alpha = 0;
-                        } else if (BlendAppear [phase]) {
-                            alpha = Color.a * timer / timerScale;
-                        } else if (BlendDisappear [phase] && AutoDestroy) {
-                            alpha = Color.a - Color.a * timer / timerScale;
-                        } else {
-                            alpha = Color.a;
-                        }
-                    } else {
-                        alpha = Color.a;
-                    }
-                    if (Triggered) {
-                        renderer.material.color = new Color (Color.r, Color.g, Color.b, alpha);
-                    } else {
-                        renderer.material.color = new Color (0.75f, 0.75f, 0.75f, alpha);
-                    }
-                }
-            }
-            if (GrowAppear [phase]) {
-                float x = SSize.x * (timer / timerScale);
-                transform.localScale = new Vector3 (x, x, x);
-            }
-            if (Growing [phase]) {
-                float x = SSize.x + (Size + timer / timerScale) / 2;
-                transform.localScale = new Vector3 (x, x, x);
-            }
-            float PosX = EPos.x * Mathf.Sin (Mathf.Min (continuousTimer / timerScale, 1) * Mathf.PI / 2) + SPos.x;
-            float PosY = EPos.y * Mathf.Sin (Mathf.Min (continuousTimer / timerScale, 1) * Mathf.PI / 2) + SPos.y;
-            if (Uprising [phase]) {
-                transform.localPosition = new Vector3 (PosX, PosY + 0.75f * (Height + timer / timerScale), SPos.z);
-            } else if (Droping [phase]) {
-                transform.localPosition = new Vector3 (PosX, PosY + 0.75f * Height - AppDefaults.TokenSpawnHeight * (1 - timer / timerScale), SPos.z);
-            } else {
-                transform.localPosition = new Vector3 (PosX, PosY + 0.75f * Height, SPos.z);
-            }
-            if (Floating [phase]) {
-                float HeighModifier = Mathf.Abs (FloatingDestination - FloatingHeight) * 6;
-                float floatingSpeed = Mathf.Min ((1f + HeighModifier) * Time.deltaTime, 1);
-                FloatingDestination = Random.Range (-0.4f, 0.4f) * floatingSpeed + FloatingDestination * (1f - floatingSpeed);
-                FloatingHeight = FloatingDestination * floatingSpeed + FloatingHeight * (1f - floatingSpeed);
-                transform.Translate (Vector3.up * FloatingHeight);
-            }
-
-        } else if (AutoDestroy) {
-			Destroy (gameObject);
-		}
+        UpdateEverything ();
 	}
 
-    public void PushItToHeight (float value) {
-        float delta = value - SPos.y;
-        //SPos = new Vector3 (SPos.x, value, SPos.z);
-        SPos += new Vector3 (0, delta, 0);
-        //PresetPosition = true;
-        FloatingHeight -= delta;
+    void UpdateEverything () {
+        UpdatePhase ();
+        UpdateColor ();
+        UpdatePosition ();
+        UpdateScale ();
+    }
+
+    public void PushToHeight (float height) {
+        AutoSetPosition ();
+        Vector3 pos = basicPosition [endPhase];
+        pos = new Vector3 (pos.x, height, pos.z);
+        basicPosition [endPhase] = pos;
     }
 /*
     public void PushItDown (float value) {

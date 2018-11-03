@@ -98,7 +98,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void SetHoverObjectColor (Color color) {
         if (HoverObject != null){
-            HoverObject.GetComponent<VisualEffectScript> ().Color = color;
+            HoverObject.GetComponent<VisualEffectScript> ().SetColor (color);
         }
     }
 
@@ -116,7 +116,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (!EventSystem.current.IsPointerOverGameObject ()) {
             switch (name) {
                 case "Tile":
-                    InGameUI.SetAreaHovers (x, y);
+                    OnMouseOverTileAction ();
                     break;
             }
             if (Input.GetMouseButtonDown (0)) {
@@ -212,6 +212,14 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             }
         } else {
             //Debug.Log (name);
+        }
+    }
+
+    public void OnMouseOverTileAction () {
+        if (BoardEditorMenu.instance != null) {
+        }
+        if (InGameUI.instance != null) {
+            InGameUI.SetAreaHovers (x, y);
         }
     }
 

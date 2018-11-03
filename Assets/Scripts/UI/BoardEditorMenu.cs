@@ -183,13 +183,13 @@ public class BoardEditorMenu : GOUI {
                             tile.transform.localScale = new Vector3 (0.4f, 0.2f, 0.4f);
                             switch (x) {
                                 case 0:
-                                    tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ().Init (new Color (0.2f, 0.2f, 0.2f), false, true);
+                                    tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ().SetColor (new Color (0.2f, 0.2f, 0.2f));
                                     break;
                                 case 1:
-                                    tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ().Init (new Color (0.6f, 0.6f, 0.6f), false, true);
+                                    tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ().SetColor (new Color (0.6f, 0.6f, 0.6f));
                                     break;
                                 case 2:
-                                    tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ().Init (new Color (0.6f, 0.6f, 0.6f), false, true);
+                                    tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ().SetColor (new Color (0.6f, 0.6f, 0.6f));
                                     VT = new VisualToken ();
                                     Clone = VT.Anchor;
                                     Clone.transform.SetParent (tile.transform);

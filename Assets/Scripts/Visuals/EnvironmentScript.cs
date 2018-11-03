@@ -118,7 +118,7 @@ public class EnvironmentScript : MonoBehaviour {
                 token.Anchor.transform.parent = Hexes [x].transform;
                 token.Anchor.transform.localPosition = new Vector3 (0, 0.4f, 0);
 
-                token.Base.GetComponent<VisualEffectScript> ().Init (AppDefaults.PlayerColor [Random.Range (0, 2)], false, true);
+                token.Base.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.PlayerColor [Random.Range (0, 2)]);
             }
         }
 
@@ -232,7 +232,8 @@ public class EnvironmentScript : MonoBehaviour {
     }
     static public GameObject CreateTile (int x, float y, int z) {
         GameObject hex = CreateTile ();
-        hex.GetComponent<VisualEffectScript> ().SetStartingPosition (VisualTile.TilePosition (x, y, z));
+        hex.transform.localPosition = VisualTile.TilePosition (x, y, z);
+        //hex.GetComponent<VisualEffectScript> ().SetPosition (VisualTile.TilePosition (x, y, z));
         return hex;
     }
 
@@ -247,15 +248,15 @@ public class EnvironmentScript : MonoBehaviour {
         switch (Theme) {
             case 1:
                 if (Random.Range (0, 2) == 0) {
-                    TEffect.Init (new Color (0.5f, Random.Range (0.51f, 0.56f), 0.47f), false, true);
+                    TEffect.SetColor (new Color (0.5f, Random.Range (0.51f, 0.56f), 0.47f));
                 } else {
-                    TEffect.Init (new Color (Random.Range (0.51f, 0.56f), 0.5f, 0.47f), false, true);
+                    TEffect.SetColor (new Color (Random.Range (0.51f, 0.56f), 0.5f, 0.47f));
                 }
-                AEffect.Floating [0] = true;
+                AEffect.SetDrift (true);
                 break;
             case 2:
                 col = new Color (Random.Range (0.49f, 0.53f), Random.Range (0.49f, 0.53f), Random.Range (0.49f, 0.53f));
-                TEffect.Init ((col), false, true);
+                TEffect.SetColor (col);
                 add = Instantiate (AppDefaults.Tile) as GameObject;
                 add.transform.parent = tile.transform;
                 add.transform.localScale = new Vector3 (0.4f, 1000f, 0.4f);
@@ -263,12 +264,12 @@ public class EnvironmentScript : MonoBehaviour {
                 break;
             case 3:
                 col = new Color (Random.Range (0.39f, 0.43f), Random.Range (0.29f, 0.33f), Random.Range (0.29f, 0.33f));
-                TEffect.Init ((col), false, true);
-                AEffect.Floating [0] = true;
+                TEffect.SetColor (col);
+                AEffect.SetDrift (true);
                 add = Instantiate (AppDefaults.Tile) as GameObject;
                 col = new Color (Random.Range (0.93f, 1f), Random.Range (0.58f, 0.65f), Random.Range (0.28f, 0.35f), 0.7f);
                 add.AddComponent<VisualEffectScript> ();
-                add.GetComponent<VisualEffectScript> ().Init ((col), false, true);
+                add.GetComponent<VisualEffectScript> ().SetColor (col);
                 add.transform.parent = tile.transform;
                 add.transform.localScale = new Vector3 (1.05f, 1, 1.05f);
                 add.transform.localPosition = new Vector3 (0, -0.1f, 0);

@@ -77,8 +77,13 @@ public class MatchClass {
             EndTurn ();
         }
     }
-    
+
     public void PlayToken (CardClass card, int playerNumber, TileClass tile) {
+        CreateToken (card, playerNumber, tile);
+        tile.token.visualToken.AddPlayAnimation ();
+    }
+
+    public void CreateToken (CardClass card, int playerNumber, TileClass tile) {
         tile.CreateToken (card, playerNumber);
     }
 
