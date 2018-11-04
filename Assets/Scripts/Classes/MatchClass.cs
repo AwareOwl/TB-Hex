@@ -63,28 +63,61 @@ public class MatchClass {
         Player [playerNumber].MoveTopCard (stackNumber);
     }
 
-    public void PlayCard (int playerNumber, int stackNumber, int x, int y) {
-        PlayCard (playerNumber, stackNumber, Board.tile [x, y]);
+    public void PlayCard (int x, int y, int playerNumber, int stackNumber) {
+        PlayCard (Board.tile [x, y], playerNumber, stackNumber);
     }
 
-    public void PlayCard (int playerNumber, int stackNumber, TileClass tile) {
+    public void PlayCard (TileClass tile, int playerNumber, int stackNumber) {
         if (turnOfPlayer == playerNumber && tile.enabled && tile.token == null) {
             PlayerClass player = Player [playerNumber];
             StackClass stack = player.Hand.Stack [stackNumber];
             CardClass card = stack.TopCard ();
-            PlayToken (card, playerNumber, tile);
+            PlayToken (tile, card, playerNumber);
+            UseAbility (playerNumber, card.abilityArea, card.abilityType, tile);
+            UpdateBoard ();
             stack.MoveTopCard ();
             EndTurn ();
         }
     }
 
-    public void PlayToken (CardClass card, int playerNumber, TileClass tile) {
-        CreateToken (card, playerNumber, tile);
+    public void UpdateBoard () {
+        foreach (TileClass tile in Board.tileList) {
+            tile.Update ();
+        }
+    }
+
+    public void UseAbility (int playerNumber, int abilityArea, int abilityType, TileClass tile) {
+        AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea).ToArray ();
+        foreach (AbilityVector vector in vectors) {
+            switch (abilityType) {
+                case 1:
+                    ModifyTempValue (vector.target, -1);
+                    break;
+                case 2:
+                    CreateToken (vector.target, 0, 1, playerNumber);
+                    break;
+            }
+        }
+    }
+
+    public void ModifyTempValue (TileClass tile, int value) {
+        TokenClass target = tile.token;
+        if (target != null) {
+            target.ModifyTempValue (value);
+        }
+    }
+
+    public void PlayToken (TileClass tile, CardClass card, int playerNumber) {
+        CreateToken (tile, card, playerNumber);
         tile.token.visualToken.AddPlayAnimation ();
     }
 
-    public void CreateToken (CardClass card, int playerNumber, TileClass tile) {
+    public void CreateToken (TileClass tile, CardClass card, int playerNumber) {
         tile.CreateToken (card, playerNumber);
+    }
+
+    public void CreateToken (TileClass tile, int type, int value, int playerNumber) {
+        tile.CreateToken (type, value, playerNumber);
     }
 
     void LoadBoard () {

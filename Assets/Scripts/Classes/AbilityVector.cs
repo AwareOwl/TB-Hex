@@ -6,14 +6,17 @@ public class AbilityVector {
 
     public int x;
     public int y;
+    public TileClass target;
 
     public int pushX;
     public int pushY;
+    public TileClass pushTarget;
 
     public int flipX;
     public int flipY;
+    public TileClass flipTarget;
 
-    public AbilityVector (int sx, int sy, int relativeNumber) {
+    public AbilityVector (BoardClass board, int sx, int sy, int relativeNumber) {
         switch (relativeNumber) {
             case 1:
                 x = sx - 1;
@@ -70,16 +73,14 @@ public class AbilityVector {
                 }
                 break;
         }
+        if (board.IsTileInBounds (x, y)) {
+            target = board.tile [x, y];
+        }
+        if (board.IsTileInBounds (pushX, pushY)) {
+            pushTarget = board.tile [pushX, pushY];
+        }
+        if (board.IsTileInBounds (flipX, flipY)) {
+            flipTarget = board.tile [flipX, flipY];
+        }
     }
-
-    public void Init (int sx, int sy, int tx, int ty) {
-        x = tx;
-        y = ty;
-
-        pushX = tx * 2 - sx;
-        pushY = ty * 2 - sy;
-
-        flipX = sx * 2 - tx;
-        flipY = sy * 2 - sy;
-    }
-    }
+   }

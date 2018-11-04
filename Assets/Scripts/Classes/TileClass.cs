@@ -91,4 +91,10 @@ public class TileClass {
         }
     }
 
+
+    public void Update () {
+        if (token != null) {
+            token.Update ();
+        }
+    }
 }

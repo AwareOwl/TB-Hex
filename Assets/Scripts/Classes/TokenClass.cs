@@ -27,7 +27,7 @@ public class TokenClass {
     }
 
     public TokenClass () {
-
+   
     }
 
     public void EnableVisual () {
@@ -49,9 +49,33 @@ public class TokenClass {
         }
     }
 
+    public void Update () {
+        UpdateValue ();
+    }
+
     public TokenClass (TileClass tile, int type, int value, int owner) {
         this.tile = tile;
         SetState (type, value, owner);
+    }
+
+    public void SetValue (int value) {
+        this.value = value;
+        RefreshVisual ();
+    }
+
+    public void ModifyTempValue (int value) {
+        this.tempValue += value;
+    }
+
+    public void SetTempValue (int value) {
+        this.tempValue = value;
+    }
+
+    public void UpdateValue () {
+        SetValue (tempValue);
+        if (value <= 0) {
+            DestroyToken ();
+        }
     }
 
     public void SetState (int type, int value, int owner) {
@@ -63,7 +87,8 @@ public class TokenClass {
     }
 
     public void DestroyToken () {
-        visualToken.DestroyToken ();
+        tile.token = null;
+        DestroyVisual ();
     }
 
     public TokenClass (TokenClass tokenReference) {

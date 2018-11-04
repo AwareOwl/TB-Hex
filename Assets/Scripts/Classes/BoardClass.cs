@@ -170,17 +170,16 @@ public class BoardClass {
         AbilityVector vector;
         List <AbilityVector> list = new List<AbilityVector> ();
         if (abilityArea == 1 || abilityArea == 4) {
-            vector = new AbilityVector (x, y, 1);
-            list.Add (new AbilityVector (x, y, 1));
-            list.Add (new AbilityVector (x, y, 2));
+            list.Add (new AbilityVector (this, x, y, 1));
+            list.Add (new AbilityVector (this, x, y, 2));
         }
         if (abilityArea == 2 || abilityArea == 4) {
-            list.Add (new AbilityVector (x, y, 3));
-            list.Add (new AbilityVector (x, y, 4));
+            list.Add (new AbilityVector (this, x, y, 3));
+            list.Add (new AbilityVector (this, x, y, 4));
         }
         if (abilityArea == 3 || abilityArea == 4) {
-            list.Add (new AbilityVector (x, y, 5));
-            list.Add (new AbilityVector (x, y, 6));
+            list.Add (new AbilityVector (this, x, y, 5));
+            list.Add (new AbilityVector (this, x, y, 6));
         }
         return list;
     }

@@ -38,7 +38,7 @@ public class InGameUI : GOUI {
     }
 
     static public void TileAction (int x, int y) {
-        PlayedMatch.PlayCard (MyPlayerNumber, SelectedStack, x, y);
+        PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
     }
 
     static public void ShowInGameUI (MatchClass playedMatch) {

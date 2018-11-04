@@ -37,7 +37,6 @@ public class VisualPlayer {
         barLength = shiftLength - avatarSize - 30;
         avatarPosition = margin + avatarSize / 2 + shiftLength * playerNumber;
         barPosition = margin + barLength / 2 + shiftLength * playerNumber;
-        Debug.Log (barPosition);
 
         if (ally) {
             barPosition += avatarSize;
