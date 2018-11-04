@@ -90,10 +90,15 @@ public class InGameUI : GOUI {
                 DestroyImmediate (childs [c].gameObject);
             }
         }
-        List<AbilityVector> list = PlayedMatch.Board.GetAbilityVectors (x, y, GetSelectedCard ().abilityArea);
-        foreach (AbilityVector vector in list) {
-            if (PlayedMatch.Board.IsTileEnabled (vector.x, vector.y)) {
-                VisualEffectInterface.CreateEffect (VisualEffectAnchor [vector.x, vector.y], GetSelectedCard ().abilityType, true, false);
+        if (PlayedMatch.Board.tile [x, y].enabled) {
+            List<AbilityVector> list = PlayedMatch.Board.GetAbilityVectors (x, y, GetSelectedCard ().abilityArea);
+            foreach (AbilityVector vector in list) {
+                if (PlayedMatch.Board.IsTileEnabled (vector.x, vector.y)) {
+                    VisualEffectInterface.CreateEffect (VisualEffectAnchor [vector.x, vector.y], GetSelectedCard ().abilityType, true, false);
+                    if (PlayedMatch.Board.IsTileInBounds (vector.pushX, vector.pushY)) {
+                        VisualEffectInterface.CreateEffect (VisualEffectAnchor [vector.pushX, vector.pushY], GetSelectedCard ().abilityType, true, false);
+                    }
+                }
             }
         }
     }

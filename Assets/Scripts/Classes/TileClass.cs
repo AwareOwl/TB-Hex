@@ -17,6 +17,10 @@ public class TileClass {
 
     }
 
+    public bool IsEmptyTile () {
+        return enabled && token == null;
+    }
+
     public TileClass (int x, int y) {
         SetXY (x, y);
     }
@@ -27,7 +31,10 @@ public class TileClass {
     }
 
     public void EnableTile (bool enable) {
-        enabled = enable;
+        this.enabled = enable;
+        if (!enable) {
+            DestroyToken ();
+        }
         if (visualTile != null) {
             visualTile.EnableTile (enable);
         }
@@ -65,16 +72,27 @@ public class TileClass {
         return token;
     }
 
+    public TokenClass CreateToken (TokenClass token) {
+        if (token != null) {
+            return CreateToken (token.type, token.value, token.owner);
+        }
+        return null;
+    }
 
     public TokenClass CreateToken (CardClass card, int owner) {
-        return CreateToken (card.tokenType, card.value, owner);
+        if (card != null) {
+            return CreateToken (card.tokenType, card.value, owner);
+        }
+        return null;
     }
 
 
     public TokenClass CreateToken (int type, int value, int owner) {
-        token = new TokenClass (this, type, value, owner);
-        if (visualTile != null) {
-            token.EnableVisual ();
+        if (enabled && token == null) {
+            token = new TokenClass (this, type, value, owner);
+            if (visualTile != null) {
+                token.EnableVisual ();
+            }
         }
         return token;
     }

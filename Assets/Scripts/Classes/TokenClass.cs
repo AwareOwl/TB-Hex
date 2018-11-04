@@ -51,6 +51,9 @@ public class TokenClass {
 
     public void Update () {
         UpdateValue ();
+        if (value <= 0 || destroyed) {
+            DestroyToken ();
+        }
     }
 
     public TokenClass (TileClass tile, int type, int value, int owner) {
@@ -73,9 +76,6 @@ public class TokenClass {
 
     public void UpdateValue () {
         SetValue (tempValue);
-        if (value <= 0) {
-            DestroyToken ();
-        }
     }
 
     public void SetState (int type, int value, int owner) {

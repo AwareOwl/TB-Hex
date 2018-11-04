@@ -26,6 +26,9 @@ public class MatchClass {
             TokenClass token = tile.token;
             if (token != null) {
                 int value = token.value;
+                if (token.type == 1) {
+                    value *= 2;
+                }
                 playerIncome [token.owner] += value;
             }
         }
@@ -94,30 +97,103 @@ public class MatchClass {
                     ModifyTempValue (vector.target, -1);
                     break;
                 case 2:
+                    ModifyTempValue (vector.target, 1);
                     CreateToken (vector.target, 0, 1, playerNumber);
+                    break;
+                case 3:
+                    DisableEmptyTile (vector.target);
+                    break;
+                case 4:
+                    Player [playerNumber].AddScore (GetTokenValue (vector.target));
+                    break;
+                case 5:
+                    MoveToken (vector.target, vector.pushTarget);
+                    break;
+                case 6:
+                    if (vector.target != null && vector.target.IsEmptyTile ()) {
+                        ModifyTempValue (tile, -1);
+                    }
+                    break;
+                case 7:
+                    Player [playerNumber].AddScore (GetTokenValue (vector.target));
                     break;
             }
         }
     }
 
     public void ModifyTempValue (TileClass tile, int value) {
-        TokenClass target = tile.token;
-        if (target != null) {
-            target.ModifyTempValue (value);
+        if (tile != null) {
+            TokenClass target = tile.token;
+            if (target != null) {
+                target.ModifyTempValue (value);
+            }
         }
     }
 
     public void PlayToken (TileClass tile, CardClass card, int playerNumber) {
-        CreateToken (tile, card, playerNumber);
-        tile.token.visualToken.AddPlayAnimation ();
+        if (tile != null) {
+            CreateToken (tile, card, playerNumber);
+            tile.token.visualToken.AddPlayAnimation ();
+        }
     }
 
     public void CreateToken (TileClass tile, CardClass card, int playerNumber) {
-        tile.CreateToken (card, playerNumber);
+        if (tile != null) {
+            tile.CreateToken (card, playerNumber);
+        }
     }
 
     public void CreateToken (TileClass tile, int type, int value, int playerNumber) {
-        tile.CreateToken (type, value, playerNumber);
+        if (tile != null) {
+            tile.CreateToken (type, value, playerNumber);
+        }
+    }
+
+    public void CreateToken (TileClass tile, TokenClass token) {
+        if (tile != null) {
+            tile.CreateToken (token);
+        }
+    }
+
+    public void DisableEmptyTile (TileClass tile) {
+        if (tile != null && tile.token == null) {
+            DisableTile (tile);
+        }
+    }
+
+    public void DisableTile (TileClass tile) {
+        if (tile != null) {
+            tile.EnableTile (false);
+        }
+    }
+
+    public void MoveToken (TileClass sourceTile, TileClass destinationTile) {
+        if (sourceTile != null && sourceTile.token != null) {
+            TokenClass sourceToken = sourceTile.token;
+            if (destinationTile != null && destinationTile.enabled) {
+                TokenClass destinationToken = destinationTile.token;
+                if (destinationToken == null) {
+                    sourceTile.AttachToken (null);
+                    //CreateToken (destinationTile, sourceToken);
+                    destinationTile.AttachToken (sourceToken);
+                }
+            } else {
+                DestroyToken (sourceTile);
+            }
+        }
+    }
+
+    public void DestroyToken (TileClass tile) {
+        if (tile != null && tile.token != null) {
+            tile.token.DestroyToken ();
+        }
+    }
+
+    public int GetTokenValue (TileClass tile) {
+        if (tile != null && tile.token != null) {
+            return tile.token.value;
+        }
+        return 0;
     }
 
     void LoadBoard () {

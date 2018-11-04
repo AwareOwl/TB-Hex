@@ -21,22 +21,34 @@ public class AbilityVector {
             case 1:
                 x = sx - 1;
                 y = sy;
+                pushX = sx - 2;
+                pushY = sy;
                 break;
             case 2:
                 x = sx + 1;
                 y = sy;
+                pushX = sx + 2;
+                pushY = sy;
                 break;
             case 3:
                 y = sy + 1;
+                pushX = sx - 1;
+                pushY = sy + 2;
                 break;
             case 4:
                 y = sy - 1;
+                pushX = sx + 1;
+                pushY = sy - 2;
                 break;
             case 5:
                 y = sy + 1;
+                pushX = sx + 1;
+                pushY = sy + 2;
                 break;
             case 6:
                 y = sy - 1;
+                pushX = sx - 1;
+                pushY = sy - 2;
                 break;
         }
         switch (sy % 2) {
