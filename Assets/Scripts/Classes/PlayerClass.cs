@@ -14,6 +14,8 @@ public class PlayerClass {
 
     public VisualPlayer visualPlayer;
 
+    public MoveHistoryClass LastMove;
+
     public PlayerClass () {
 
     }

@@ -154,22 +154,29 @@ public class VisualEffectScript : MonoBehaviour {
         Vector3 newPosition;
         Vector3 Position1 = basicPosition [currentPhase];
         Vector3 Position2 = basicPosition [Mathf.Min (currentPhase + 1, endPhase)];
-        if (deltaPosition != null) {
-            Position1 += deltaPosition [currentPhase];
-            Position2 += deltaPosition [Mathf.Min (currentPhase + 1, endPhase)];
-        }
 
-        newPosition = Position1 * (1 - percentageTimer) + Position2 * (percentageTimer);
+        if (lerpPosition) {
+            transform.localPosition = Vector3.Lerp (deltaPosition [currentPhase], transform.localPosition, 0.2f);
 
-        if (drift != null && drift [currentPhase]) {
-            //Debug.Log ("Test");
-            float heightModifier = Mathf.Abs (driftDestination - driftHeight) * 6;
-            float driftSpeed = Mathf.Min ((1f + heightModifier) * Time.deltaTime, 1);
-            driftDestination = Random.Range (-0.4f, 0.4f) * driftSpeed + driftDestination * (1f - driftSpeed);
-            driftHeight = driftDestination * driftSpeed + driftHeight * (1f - driftSpeed);
-            newPosition += Vector3.up * driftHeight;
+        } else {
+            if (deltaPosition != null) {
+                Position1 += deltaPosition [currentPhase];
+                Position2 += deltaPosition [Mathf.Min (currentPhase + 1, endPhase)];
+            }
+
+            newPosition = Position1 * (1 - percentageTimer) + Position2 * (percentageTimer);
+
+
+            if (drift != null && drift [currentPhase]) {
+                //Debug.Log ("Test");
+                float heightModifier = Mathf.Abs (driftDestination - driftHeight) * 6;
+                float driftSpeed = Mathf.Min ((1f + heightModifier) * Time.deltaTime, 1);
+                driftDestination = Random.Range (-0.4f, 0.4f) * driftSpeed + driftDestination * (1f - driftSpeed);
+                driftHeight = driftDestination * driftSpeed + driftHeight * (1f - driftSpeed);
+                newPosition += Vector3.up * driftHeight;
+            }
+            transform.localPosition = newPosition;
         }
-        transform.localPosition = newPosition;
     }
 
     public void UpdateScale () {

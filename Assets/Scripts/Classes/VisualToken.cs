@@ -90,6 +90,10 @@ public class VisualToken {
         new Vector3 (0, height, 0), new Vector3 (0, height, 0), new Vector3 (0, 0, 0) });
     }
 
+    public void AddLerpAnimation () {
+        Anchor.GetComponent<VisualEffectScript> ().lerpPosition = true;
+    }
+
     public void SetType (int type) {
         Border.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetBorderColorMain (type));
         Type = type;

@@ -21,6 +21,10 @@ public class TileClass {
         return enabled && token == null;
     }
 
+    public bool IsFilledTile () {
+        return enabled && token != null;
+    }
+
     public TileClass (int x, int y) {
         SetXY (x, y);
     }
@@ -105,7 +109,7 @@ public class TileClass {
     public void AttachToken (TokenClass token) {
         this.token = token;
         if (token != null) {
-            token.tile = this;
+            token.SetTile (this);
         }
     }
 

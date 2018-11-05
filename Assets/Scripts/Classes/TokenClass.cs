@@ -74,6 +74,10 @@ public class TokenClass {
         this.tempValue = value;
     }
 
+    public void SetType (int type) {
+        this.type = type;
+    }
+
     public void UpdateValue () {
         SetValue (tempValue);
     }
@@ -84,6 +88,13 @@ public class TokenClass {
         this.tempValue = value;
         this.owner = owner;
         RefreshVisual ();
+    }
+
+    public void SetTile (TileClass tile) {
+        this.tile = tile;
+        if (visualToken != null) {
+            visualToken.Anchor.transform.SetParent (tile.visualTile.Anchor.transform);
+        }
     }
 
     public void DestroyToken () {
