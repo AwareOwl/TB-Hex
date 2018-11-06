@@ -38,7 +38,9 @@ public class BoardClass {
         visualised = true;
         if (tile != null) {
             foreach (TileClass tile in tile) {
-                VisualiseTile (tile);
+                if (tile.enabled || BoardEditorMenu.instance != null) {
+                    VisualiseTile (tile);
+                }
             }
         }
     }
@@ -79,7 +81,9 @@ public class BoardClass {
 
     TileClass CreateTile (int x, int y) {
         tile [x, y] = new TileClass (x, y);
-        VisualiseTile (tile [x, y]);
+        if (tile [x, y].enabled || BoardEditorMenu.instance != null) {
+            VisualiseTile (tile [x, y]);
+        }
         return tile [x, y];
     }
 

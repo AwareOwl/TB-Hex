@@ -45,6 +45,7 @@ public class StackClass {
         }
     }
 
+
     public void UpdateCardAnimation (int cardNumber) {
         CardClass card = Card [cardNumber];
         GameObject anchor = card.visualCard.Anchor;

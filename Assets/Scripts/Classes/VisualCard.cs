@@ -51,8 +51,13 @@ public class VisualCard {
     }
 
     public void SetAbilityIcon (int type) {
+        switch (type) {
+            case 0:
+            case 11:
+                Area.DisableAbilityArea ();
+                break;
+        }
         if (type == 0) {
-            Area.DisableAbilityArea ();
             EnableAbilityTile (false);
         } else {
             EnableAbilityTile (true);

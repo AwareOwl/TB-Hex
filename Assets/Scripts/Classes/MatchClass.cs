@@ -61,7 +61,7 @@ public class MatchClass {
         SetPlayers (null);
 
         Board = new BoardClass ();
-        Board.LoadFromFile (Random.Range (1, 4));
+        Board.LoadFromFile (Random.Range (1, 5));
     }
 
     public void MoveTopCard (int playerNumber, int stackNumber) {

@@ -28,6 +28,7 @@ public class InGameUI : GOUI {
         PlayedMatch.Board.EnableVisualisation ();
     }
 
+
     public void Update () {
         for (int x = 1; x <= 4; x++) {
             if (Input.GetKeyDown (x.ToString())) {
@@ -80,7 +81,7 @@ public class InGameUI : GOUI {
         //SetPlayerHealthBar (playerNumber, player.score, player.scoreIncome, PlayedMatch.Properties.scoreLimit);
     }
 
-    static public void SetAreaHovers (int x, int y) {
+    static public void HideAreaHovers () {
         foreach (GameObject anchor in VisualEffectAnchor) {
             Transform [] childs = new Transform [anchor.transform.childCount];
             for (int c = 0; c < childs.Length; c++) {
@@ -90,14 +91,19 @@ public class InGameUI : GOUI {
                 DestroyImmediate (childs [c].gameObject);
             }
         }
+    }
+
+
+    static public void SetAreaHovers (int x, int y) {
+        HideAreaHovers ();
         if (PlayedMatch.Board.tile [x, y].enabled) {
             List<AbilityVector> list = PlayedMatch.Board.GetAbilityVectors (x, y, GetSelectedCard ().abilityArea);
             foreach (AbilityVector vector in list) {
                 if (PlayedMatch.Board.IsTileEnabled (vector.x, vector.y)) {
                     VisualEffectInterface.CreateEffect (VisualEffectAnchor [vector.x, vector.y], GetSelectedCard ().abilityType, true, false);
-                    if (PlayedMatch.Board.IsTileInBounds (vector.pushX, vector.pushY)) {
+                    /*if (PlayedMatch.Board.IsTileInBounds (vector.pushX, vector.pushY)) {
                         VisualEffectInterface.CreateEffect (VisualEffectAnchor [vector.pushX, vector.pushY], GetSelectedCard ().abilityType, true, false);
-                    }
+                    }*/
                 }
             }
         }

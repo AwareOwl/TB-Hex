@@ -68,6 +68,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
 
     private void OnMouseExit () {
+        switch (name) {
+            case "Tile":
+                OnMouseLeaveTileAction ();
+                break;
+        }
         if (!Pressed) {
             SetNormalSprite ();
         }
@@ -231,6 +236,13 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             InGameUI.TileAction (x, y);
         }
     }
+
+    public void OnMouseLeaveTileAction () {
+        if (InGameUI.instance != null) {
+            InGameUI.HideAreaHovers ();
+        }
+    }
+
     void DestroyReferences () {
         foreach (GameObject Ref in references) {
             DestroyImmediate (Ref);
