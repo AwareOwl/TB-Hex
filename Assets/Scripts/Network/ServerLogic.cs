@@ -9,7 +9,9 @@ public class ServerLogic : MonoBehaviour {
         if (userName != null && userName != "") {
             if (ServerData.UserExists (userName)) {
                 if (VerifyUserPassword (userName, password)) {
-                    CompleteLogIn (client, userName);
+                    JoinGameAgainstAI (client);
+                    //CompleteLogIn (client, userName);
+
                 } else {
                     client.TargetShowMessage (client.connectionToClient, Language.PasswordIsIncorrectKey);
                 }
@@ -49,5 +51,15 @@ public class ServerLogic : MonoBehaviour {
     static public void CompleteLogIn (ClientInterface client, string accountName) {
         client.AccountName = accountName;
         client.TargetLogIn (client.connectionToClient);
+    }
+
+    static public void JoinGameAgainstAI (ClientInterface client) {
+        HandClass hand1 = new HandClass ();
+        HandClass hand2 = new HandClass ();
+        hand1.GenerateRandomHand ();
+        hand2.GenerateRandomHand ();
+        MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
+            new PlayerPropertiesClass (1, false, client.AccountName, hand1),
+            new PlayerPropertiesClass (2, true, "Doge2", hand2) });
     }
 }

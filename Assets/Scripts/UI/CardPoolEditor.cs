@@ -68,7 +68,7 @@ public class CardPoolEditor : GOUI {
         card.Anchor.transform.SetParent (GOUI.CurrentCanvas.transform);
         card.Anchor.transform.localPosition = new Vector3 (-1.7f + x * 1.3f, 3.1f - 1.4f * y, 5);
         card.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-        card.Background.name = UIName.CardPoolEditorCard;
+        card.Background.name = UIString.CardPoolEditorCard;
         card.Background.AddComponent<UIController> ().number = number;
         CardSlot [number] = card;
     }
@@ -87,7 +87,7 @@ public class CardPoolEditor : GOUI {
         Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
         Clone.GetComponent<Renderer> ().material.shader = Shader.Find ("Sprites/Default");
         Clone.GetComponent<Renderer> ().material.mainTexture = Resources.Load (VisualCard.GetIconPath (2)) as Texture2D;
-        Clone.name = UIName.CardPoolEditorCard;
+        Clone.name = UIString.CardPoolEditorCard;
         Clone.AddComponent<UIController> ();
         return Clone;
     }
@@ -211,11 +211,11 @@ public class CardPoolEditor : GOUI {
                     switch (x) {
                         case 0:
                             BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, false);
-                            BackgroundObject.name = UIName.CardPoolEditorSaveCardPool;
+                            BackgroundObject.name = UIString.CardPoolEditorSaveCardPool;
                             break;
                         case 1:
                             BackgroundObject = CreateSprite ("UI/Butt_S_SetList", npx, npy, 11, 60, 60, false);
-                            BackgroundObject.name = UIName.CardPoolEditorLoadCardPool;
+                            BackgroundObject.name = UIString.CardPoolEditorLoadCardPool;
                             break;
                         case 2:
                             BackgroundObject = CreateSprite ("UI/Butt_S_Delete", npx, npy, 11, 60, 60, false);
@@ -233,12 +233,12 @@ public class CardPoolEditor : GOUI {
                     }
                     switch (type) {
                         case 1:
-                            BackgroundObject.name = UIName.CardPoolEditorValue;
+                            BackgroundObject.name = UIString.CardPoolEditorValue;
                             Clone = CreateText ((number + 1).ToString (), npx, npy, 12, 0.03f);
                             AddTextToGameObject (BackgroundObject, Clone);
                             break;
                         case 2:
-                            BackgroundObject.name = UIName.CardPoolEditorTokenType;
+                            BackgroundObject.name = UIString.CardPoolEditorTokenType;
                             VT = new VisualToken ();
                             Clone = VT.Anchor;
                             Clone.transform.SetParent (BackgroundObject.transform);
@@ -249,7 +249,7 @@ public class CardPoolEditor : GOUI {
                             DestroyImmediate (VT.Text);
                             break;
                         case 3:
-                            BackgroundObject.name = UIName.CardPoolEditorAbilityArea;
+                            BackgroundObject.name = UIString.CardPoolEditorAbilityArea;
                             VisualArea area = new VisualArea ();
                             area.Anchor.transform.SetParent (BackgroundObject.transform);
                             area.Anchor.transform.localPosition = new Vector3 (0, 0, 0);
@@ -262,7 +262,7 @@ public class CardPoolEditor : GOUI {
                             }
                             break;
                         case 4:
-                            BackgroundObject.name = UIName.CardPoolEditorAbilityType;
+                            BackgroundObject.name = UIString.CardPoolEditorAbilityType;
                             Clone = CreateSprite (VisualCard.GetIconPath (number), npx, npy, 12, 45, 45, false);
                             Clone.GetComponent<SpriteRenderer> ().color = AppDefaults.GetAbilityColor (number);
                             Destroy (Clone.GetComponent<Collider> ());

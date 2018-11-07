@@ -33,6 +33,11 @@ public class ClientInterface : NetworkBehaviour {
     public void TargetLogIn (NetworkConnection target) {
         ClientLogic.LogIn ();
     }
+
+    [Command]
+    public void CmdJoinGameAgainstAI () {
+        ServerLogic.JoinGameAgainstAI (this);
+    }
     /*
     [TargetRpc]
     public void TargetAccountDoesntExist (NetworkConnection target) {

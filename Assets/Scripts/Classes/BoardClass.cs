@@ -171,7 +171,6 @@ public class BoardClass {
     }
 
     public List <AbilityVector> GetAbilityVectors (int x, int y, int abilityArea) {
-        AbilityVector vector;
         List <AbilityVector> list = new List<AbilityVector> ();
         if (abilityArea == 1 || abilityArea == 4) {
             list.Add (new AbilityVector (this, x, y, 1));

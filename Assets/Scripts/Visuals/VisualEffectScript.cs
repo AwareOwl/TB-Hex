@@ -154,15 +154,16 @@ public class VisualEffectScript : MonoBehaviour {
         Vector3 newPosition;
         Vector3 Position1 = basicPosition [currentPhase];
         Vector3 Position2 = basicPosition [Mathf.Min (currentPhase + 1, endPhase)];
+        if (deltaPosition != null) {
+            Position1 += deltaPosition [currentPhase];
+            Position2 += deltaPosition [Mathf.Min (currentPhase + 1, endPhase)];
+        }
 
         if (lerpPosition) {
-            transform.localPosition = Vector3.Lerp (deltaPosition [currentPhase], transform.localPosition, 0.2f);
+
+            transform.localPosition = Vector3.Lerp (transform.localPosition, Position2, 0.1f);
 
         } else {
-            if (deltaPosition != null) {
-                Position1 += deltaPosition [currentPhase];
-                Position2 += deltaPosition [Mathf.Min (currentPhase + 1, endPhase)];
-            }
 
             newPosition = Position1 * (1 - percentageTimer) + Position2 * (percentageTimer);
 

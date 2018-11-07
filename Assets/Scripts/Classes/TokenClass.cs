@@ -94,6 +94,8 @@ public class TokenClass {
         this.tile = tile;
         if (visualToken != null) {
             visualToken.Anchor.transform.SetParent (tile.visualTile.Anchor.transform);
+            visualToken.Anchor.GetComponent<VisualEffectScript> ().SetPosition (new Vector3 (0, 0.4f, 0));
+            visualToken.Anchor.GetComponent<VisualEffectScript> ().lerpPosition = true;
         }
     }
 

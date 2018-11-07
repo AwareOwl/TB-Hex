@@ -52,13 +52,10 @@ public class MatchClass {
 
     }
 
-    public MatchClass (int numberOfPlayers) {
+    public void NewMatch (int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
-    }
-
-    public void NewMatch () {
         Properties = new MatchPropertiesClass ();
-        SetPlayers (null);
+        SetPlayers ();
 
         Board = new BoardClass ();
         Board.LoadFromFile (Random.Range (1, 5));
@@ -69,21 +66,26 @@ public class MatchClass {
     }
 
     public void PlayCard (int x, int y, int playerNumber, int stackNumber) {
-        PlayCard (Board.tile [x, y], playerNumber, stackNumber);
-    }
-
-    public void PlayCard (TileClass tile, int playerNumber, int stackNumber) {
+        TileClass tile = Board.tile [x, y];
         if (turnOfPlayer == playerNumber && tile.enabled && tile.token == null) {
             PlayerClass player = Player [playerNumber];
-            StackClass stack = player.Hand.Stack [stackNumber];
-            CardClass card = stack.TopCard ();
-            TokenClass token = PlayToken (tile, card, playerNumber);
-            UseAbility (playerNumber, card.abilityArea, card.abilityType, tile);
-            SaveLastMove (tile.x, tile.y, card, token, playerNumber);
-            UpdateBoard ();
-            stack.MoveTopCard ();
-            EndTurn ();
+            CardClass card = player.GetTopCard (stackNumber);
+            PlayCard (x, y, playerNumber, stackNumber, card);
         }
+    }
+
+    public void PlayCard (int x, int y, int playerNumber, int stackNumber, CardClass card) {
+        PlayCard (Board.tile [x, y], playerNumber, stackNumber, card);
+    }
+
+    public void PlayCard (TileClass tile, int playerNumber, int stackNumber, CardClass card) {
+        PlayerClass player = Player [playerNumber];
+        TokenClass token = PlayToken (tile, card, playerNumber);
+        UseAbility (playerNumber, card.abilityArea, card.abilityType, tile);
+        SaveLastMove (tile.x, tile.y, card, token, playerNumber);
+        UpdateBoard ();
+        player.MoveTopCard (stackNumber);
+        EndTurn ();
     }
 
     public void SaveLastMove (int x, int y, CardClass playedCard, TokenClass token, int playerNumber) {
@@ -104,6 +106,7 @@ public class MatchClass {
             }
         }
         AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea).ToArray ();
+        VectorInfo info = new VectorInfo (vectors);
         foreach (AbilityVector vector in vectors) {
             switch (abilityType) {
                 case 1:
@@ -140,9 +143,20 @@ public class MatchClass {
             }
         }
         switch (abilityType) {
+            case 9:
+                if (info.WeakestTargets.Count == 1) {
+                    ModifyTempValue (info.WeakestTargets [0].target, 2);
+                }
+                break;
             case 11:
                 SwapToken (tile, LastPlayedTile ());
                 break;
+            case 12:
+                if (info.StrongestTargets.Count == 1) {
+                    ModifyTempValue (info.StrongestTargets [0].target, -4);
+                }
+                break;
+
         }
     }
 
@@ -259,15 +273,14 @@ public class MatchClass {
         Board.LoadFromFile (1);
     }
 
-    void SetPlayers (MatchClass match) {
+    void SetPlayers () {
         Player = new PlayerClass [numberOfPlayers + 1];
-        for (int x = 0; x <= numberOfPlayers; x++) {
-            Player [x] = new PlayerClass (x);
-            if (match == null) {
-                Player [x].Hand.GenerateRandomHand ();
-            }
-        }
-        EnableVisuals ();
+        Player [0] = new PlayerClass ();
+    }
+
+    public void SetPlayer (int PlayerNumber, PlayerClass player) {
+        Player [PlayerNumber] = player;
+        player.playerNumber = PlayerNumber;
     }
 
     public void EnableVisuals () {

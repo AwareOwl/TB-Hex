@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIName {
+public class UIString {
 
     public const string CardPoolEditorValue = "CardPoolEditorValue";
     public const string CardPoolEditorTokenType = "CardPoolEditorTokenType";

@@ -16,6 +16,41 @@ public class InGameUI : GOUI {
 
     static public int NumberOfPlayers = 2;
 
+    static public void DestroyVisuals () {
+        if (VisualEffectAnchor != null) {
+            for (int x = 0; x < VisualEffectAnchor.GetLength (0); x++) {
+
+            }
+            foreach (GameObject obj in VisualEffectAnchor) {
+                if (obj != null) {
+                    Debug.Log ("Test");
+                        DestroyImmediate (obj);
+                    }
+            }
+        }
+
+        if (PlayedMatch != null) {
+            foreach (TileClass tile in PlayedMatch.Board.tile) {
+                if (tile.visualTile != null) {
+                    tile.visualTile.DestroyVisual ();
+                }
+            }
+            foreach (PlayerClass player in PlayedMatch.Player) {
+                //DestroyImmediate (player.visualPlayer);
+                if (player.properties != null) {
+                    foreach (StackClass stack in player.GetHand ().stack) {
+                        foreach (CardClass card in stack.card) {
+                            if (card.visualCard != null) {
+                                DestroyImmediate (card.visualCard.Anchor);
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     static public PlayerClass GetPlayer (int number) {
         return PlayedMatch.Player [number];
     }
@@ -23,6 +58,7 @@ public class InGameUI : GOUI {
     private void Start () {
         instance = this;
         CurrentGUI = this;
+        Debug.Log (name);
 
         CreatePlayersUI ();
         PlayedMatch.Board.EnableVisualisation ();
@@ -31,10 +67,13 @@ public class InGameUI : GOUI {
 
     public void Update () {
         for (int x = 1; x <= 4; x++) {
-            if (Input.GetKeyDown (x.ToString())) {
+            if (Input.GetKeyDown (x.ToString ())) {
                 SelectedStack = x - 1;
                 //PlayedMatch.MoveTopCard (MyPlayerNumber, x - 1);
             }
+        }
+        if (Input.GetKeyDown ("r")) {
+            ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
         }
     }
 
@@ -43,6 +82,7 @@ public class InGameUI : GOUI {
     }
 
     static public void ShowInGameUI (MatchClass playedMatch) {
+        DestroyVisuals ();
         DestroyMenu ();
         PlayedMatch = playedMatch;
         CurrentCanvas.AddComponent<InGameUI> ();
@@ -53,13 +93,14 @@ public class InGameUI : GOUI {
     }
 
     static public CardClass GetSelectedCard () {
-        return GetPlayer ().Hand.Stack [SelectedStack].TopCard ();
+        return GetPlayer ().GetTopCard (SelectedStack);
     }
     
     static public void CreatePlayersUI () {
-        for (int x = 0; x < NumberOfPlayers; x++) {
-            PlayerClass player = GetPlayer (x + 1);
-            bool ally = player.playerNumber == GetPlayer (MyPlayerNumber).playerNumber;
+        Debug.Log ("Test2");
+        for (int x = 1; x <= NumberOfPlayers; x++) {
+            PlayerClass player = GetPlayer (x);
+            bool ally = player.properties.team == GetPlayer (MyPlayerNumber).properties.team;
             player.EnableVisuals ();
             player.visualPlayer.CreatePlayerUI (player, ally, NumberOfPlayers);
             player.visualPlayer.SetPlayerHealthBar (PlayedMatch, player);
@@ -71,14 +112,9 @@ public class InGameUI : GOUI {
             for (int y = 0; y < sy; y++) {
                 VisualEffectAnchor [x, y] = new GameObject ();
                 VisualEffectAnchor [x, y].transform.localPosition = VisualTile.TilePosition (x, 0.2f, y);
+                VisualEffectAnchor [x, y].name = "VisualEffectAnchor";
             }
         }
-    }
-
-    public void SetPlayerHealthBar (int playerNumber) {
-        PlayerClass player = GetPlayer (playerNumber);
-
-        //SetPlayerHealthBar (playerNumber, player.score, player.scoreIncome, PlayedMatch.Properties.scoreLimit);
     }
 
     static public void HideAreaHovers () {

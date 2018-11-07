@@ -4,38 +4,39 @@ using UnityEngine;
 
 public class HandClass  {
 
-    bool visualised;
-
     int numberOfStacks;
-    public StackClass [] Stack;
+    public StackClass [] stack;
 
     public HandClass () {
         Init (4);
-    }
-
-    public void MoveTopCard (int stackNumber) {
-        Stack [stackNumber].MoveTopCard ();
     }
 
     public HandClass (int numberOfStacks) {
         Init (numberOfStacks);
     }
 
-    public void Init (int numberOfStacks) {
-        this.numberOfStacks = numberOfStacks;
-        Stack = new StackClass [numberOfStacks];
-        for (int x = 0; x < numberOfStacks; x++) {
-            Stack [x] = new StackClass ();
-            Stack [x].stackNumber = x;
-        }
+    public int GetNumberOfStacks () {
+        return stack.Length;
     }
 
-    public void EnableVisual () {
-        if (visualised == false) {
-            visualised = true;
-            foreach (StackClass stack in Stack) {
-                stack.EnableVisual ();
-            }
+    public StackClass GetStack (int stackNumber) {
+        return stack [stackNumber];
+    }
+
+    public int GetStackSize (int stackNumber) {
+        return stack [stackNumber].card.Count;
+    }
+
+    public CardClass GetCard (int stackNumber, int cardNumber) {
+        return stack [stackNumber].card [cardNumber];
+    }
+
+    public void Init (int numberOfStacks) {
+        this.numberOfStacks = numberOfStacks;
+        stack = new StackClass [numberOfStacks];
+        for (int x = 0; x < numberOfStacks; x++) {
+            stack [x] = new StackClass ();
+            stack [x].stackNumber = x;
         }
     }
 
@@ -65,7 +66,7 @@ public class HandClass  {
                         break;
                     }
                 }
-                Stack [x].Add (new CardClass (CardPool.Card [id]));
+                stack [x].Add (new CardClass (CardPool.Card [id]));
             }
         }
 

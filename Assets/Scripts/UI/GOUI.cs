@@ -24,6 +24,7 @@ public class GOUI : MonoBehaviour {
 
     static public void CreateNewCanvas () {
         CurrentCanvas = new GameObject ();
+
         CurrentCanvas.transform.parent = CameraScript.CameraObject.transform;
         CurrentCanvas.transform.localPosition = new Vector3 (0, 0, 0.8655f * globalScale);
         CurrentCanvas.transform.localEulerAngles = new Vector3 (0, 0, 0);

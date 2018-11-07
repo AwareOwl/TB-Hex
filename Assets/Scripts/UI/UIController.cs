@@ -185,23 +185,23 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             break;
 
                         // CardPoolEditor
-                        case UIName.CardPoolEditorValue:
+                        case UIString.CardPoolEditorValue:
                             CardPoolEditor.SelectButton (1, number);
                             break;
-                        case UIName.CardPoolEditorTokenType:
+                        case UIString.CardPoolEditorTokenType:
                             CardPoolEditor.SelectButton (2, number);
                             break;
-                        case UIName.CardPoolEditorAbilityArea:
+                        case UIString.CardPoolEditorAbilityArea:
                             CardPoolEditor.SelectButton (3, number);
                             break;
-                        case UIName.CardPoolEditorAbilityType:
+                        case UIString.CardPoolEditorAbilityType:
                             CardPoolEditor.SelectButton (4, number);
                             break;
-                        case UIName.CardPoolEditorCard:
+                        case UIString.CardPoolEditorCard:
                             CardPoolEditor.CardAction (number);
                             break;
 
-                        case UIName.CardPoolEditorSaveCardPool:
+                        case UIString.CardPoolEditorSaveCardPool:
                             CardPoolEditor.SaveCardPool (1);
                             break;
 
