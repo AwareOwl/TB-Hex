@@ -10,11 +10,36 @@ public class BoardClass {
     public TileClass [,] tile;
     public List<TileClass> tileList = new List<TileClass> ();
 
+    public BoardClass () {
+
+    }
+
+    public BoardClass (BoardClass board) {
+        int width = board.tile.GetLength (0);
+        int height = board.tile.GetLength (1);
+        this.tile = new TileClass [width, height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                this.tile [x, y] = new TileClass (board.tile [x, y]);
+            }
+        }
+    }
+
     public void EnableTile (int x, int y) {
         EnableTile (x, y, true);
     }
     public void DisableTile (int x, int y) {
         EnableTile (x, y, false);
+    }
+
+    public List<TileClass> GetEmptyTiles () {
+        List<TileClass> tiles = new List<TileClass> ();
+        foreach (TileClass tile in tileList) {
+            if (tile.IsEmptyTile ()) {
+                tiles.Add (tile);
+            }
+        }
+        return tiles;
     }
 
     public void EnableTile (int x, int y, bool enable) {
@@ -44,10 +69,7 @@ public class BoardClass {
             }
         }
     }
-    
-    public BoardClass () {
 
-    }
     public void CreateNewBoard () {
         CreateNewBoard (8, 8);
     }
@@ -71,27 +93,12 @@ public class BoardClass {
         }
     }
 
-    TileClass CopyTile (TileClass fieldReference) {
-        int x = fieldReference.x;
-        int y = fieldReference.y;
-        TileClass tile = CreateTile (x, y);
-        EnableTile (x, y, fieldReference.enabled);
-        return tile;
-    }
-
     TileClass CreateTile (int x, int y) {
         tile [x, y] = new TileClass (x, y);
         if (tile [x, y].enabled || BoardEditorMenu.instance != null) {
             VisualiseTile (tile [x, y]);
         }
         return tile [x, y];
-    }
-
-    public void CopyBoard (BoardClass match) {
-        CreateTile (match.tile.GetLength (0), match.tile.GetLength (1));
-        foreach (TileClass tempField in match.tileList) {
-            CopyTile (tempField);
-        }
     }
 
     public TokenClass SetToken (int x, int y, int type, int value, int owner) {

@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class PlayerClass {
 
-    //public HandClass Hand;
-
-    //public bool visualised;
-
     public int playerNumber;
     public int score;
     public int scoreIncome;
@@ -26,20 +22,22 @@ public class PlayerClass {
 
     public PlayerClass (PlayerPropertiesClass properties) {
         this.properties = properties;
-        topCardNumber = new int [properties.hand.stack.Length];
+        this.topCardNumber = new int [properties.hand.stack.Length];
         for (int x = 0; x < topCardNumber.Length; x++) {
             topCardNumber [x] = 0;
         }
     }
 
     public PlayerClass (PlayerClass player) {
-        playerNumber = player.playerNumber;
-        properties = player.properties;
-        topCardNumber = new int [player.topCardNumber.Length];
+        this.playerNumber = player.playerNumber;
+        this.score = player.score;
+        this.scoreIncome = player.scoreIncome;
+        this.properties = player.properties;
+        this.topCardNumber = new int [player.topCardNumber.Length];
         for (int x = 0; x < topCardNumber.Length; x++) {
-            topCardNumber [x] = player.topCardNumber [x];
+            this.topCardNumber [x] = player.topCardNumber [x];
         }
-        LastMove = player.LastMove;
+        this.LastMove = player.LastMove;
     }
 
     public HandClass GetHand () {
@@ -80,6 +78,9 @@ public class PlayerClass {
     
     public void UpdateCardVisuals (int stackNumber, int cardNumber) {
         CardClass card = GetCard (stackNumber, cardNumber);
+        if (card.visualCard == null) {
+            return;
+        }
         GameObject anchor = card.visualCard.Anchor;
         int stackSize = GetStackSize (stackNumber);
         int position = (stackSize - topCardNumber [stackNumber] + cardNumber) % stackSize;
@@ -92,6 +93,9 @@ public class PlayerClass {
 
     public void ShuffleCardVisual (int stackNumber, int cardNumber) {
         CardClass card = GetCard (stackNumber, cardNumber);
+        if (card.visualCard == null) {
+            return;
+        }
         GameObject anchor = card.visualCard.Anchor;
         anchor.GetComponent<CardAnimation> ().shuffleTimer = CardAnimation.shuffleTime;
     }

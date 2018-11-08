@@ -16,6 +16,7 @@ public class GOUI : MonoBehaviour {
     static public void DestroyMenu () {
         if (CurrentGUI != null) {
             CurrentGUI.DestroyThis ();
+            CreateNewCanvas ();
         }
     }
 
@@ -23,12 +24,14 @@ public class GOUI : MonoBehaviour {
     }
 
     static public void CreateNewCanvas () {
+        if (CurrentCanvas != null) {
+            DestroyImmediate (CurrentCanvas);
+        }
         CurrentCanvas = new GameObject ();
-
         CurrentCanvas.transform.parent = CameraScript.CameraObject.transform;
         CurrentCanvas.transform.localPosition = new Vector3 (0, 0, 0.8655f * globalScale);
         CurrentCanvas.transform.localEulerAngles = new Vector3 (0, 0, 0);
-
+        CurrentCanvas.name = "CurrentCanvas";
     }
 
     static public GameObject CreateText (string s, int px, int py, int layer, float scale) {

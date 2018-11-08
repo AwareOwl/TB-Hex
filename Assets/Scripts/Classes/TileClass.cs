@@ -17,6 +17,12 @@ public class TileClass {
 
     }
 
+    public TileClass (TileClass tile) {
+        this.SetXY (tile.x, tile.y);
+        this.enabled = tile.enabled;
+        this.AttachToken (new TokenClass (tile.token));
+    }
+
     public bool IsEmptyTile () {
         return enabled && token == null;
     }
@@ -99,11 +105,6 @@ public class TileClass {
             }
         }
         return token;
-    }
-
-    public TileClass (TileClass fieldReference) {
-        SetXY (fieldReference.x, fieldReference.y);
-        AttachToken (new TokenClass (fieldReference.token));
     }
 
     public void AttachToken (TokenClass token) {

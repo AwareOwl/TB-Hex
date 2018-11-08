@@ -21,6 +21,19 @@ public class MatchClass {
 
     }
 
+    public MatchClass (MatchClass match) {
+        this.Board = new BoardClass (match.Board);
+        this.turn = match.turn;
+        this.turnOfPlayer = match.turnOfPlayer;
+        this.numberOfPlayers = match.numberOfPlayers;
+        this.Player = new PlayerClass [this.numberOfPlayers];
+        for (int x = 0; x < this.numberOfPlayers; x++) {
+            this.Player [x] = new PlayerClass (match.Player [x]);
+        }
+        this.LastMove = match.LastMove;
+        this.Properties = match.Properties;
+    }
+
     public void EndTurn () {
         int [] playerIncome = new int [Player.Length];
 
@@ -41,7 +54,7 @@ public class MatchClass {
             player.UpdateVisuals (this);
         }
 
-        turnOfPlayer = Mathf.Max (1, (turnOfPlayer + 1) % numberOfPlayers);
+        turnOfPlayer = Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1));
         turn++;
         if (turn >= Properties.turnLimit) {
             FinishGame ();
@@ -63,6 +76,15 @@ public class MatchClass {
 
     public void MoveTopCard (int playerNumber, int stackNumber) {
         Player [playerNumber].MoveTopCard (stackNumber);
+    }
+
+    public void MakeRandomMove () {
+        List<TileClass> tiles = Board.GetEmptyTiles ();
+        if (tiles.Count == 0) {
+            return;
+        }
+        TileClass tile = tiles [Random.Range (0, tiles.Count)];
+        PlayCard (tile.x, tile.y, turnOfPlayer, Random.Range (0, 4));
     }
 
     public void PlayCard (int x, int y, int playerNumber, int stackNumber) {

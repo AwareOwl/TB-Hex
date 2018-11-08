@@ -27,7 +27,11 @@ public class TokenClass {
     }
 
     public TokenClass () {
-   
+
+    }
+
+    public TokenClass (TokenClass tokenReference) {
+        SetState (tokenReference.type, tokenReference.value, tokenReference.owner);
     }
 
     public void EnableVisual () {
@@ -102,9 +106,5 @@ public class TokenClass {
     public void DestroyToken () {
         tile.token = null;
         DestroyVisual ();
-    }
-
-    public TokenClass (TokenClass tokenReference) {
-        SetState (tokenReference.type, tokenReference.value, tokenReference.owner);
     }
 }

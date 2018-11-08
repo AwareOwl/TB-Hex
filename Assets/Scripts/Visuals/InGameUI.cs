@@ -16,14 +16,13 @@ public class InGameUI : GOUI {
 
     static public int NumberOfPlayers = 2;
 
-    static public void DestroyVisuals () {
+    override public void DestroyThis () {
         if (VisualEffectAnchor != null) {
             for (int x = 0; x < VisualEffectAnchor.GetLength (0); x++) {
 
             }
             foreach (GameObject obj in VisualEffectAnchor) {
                 if (obj != null) {
-                    Debug.Log ("Test");
                         DestroyImmediate (obj);
                     }
             }
@@ -58,7 +57,6 @@ public class InGameUI : GOUI {
     private void Start () {
         instance = this;
         CurrentGUI = this;
-        Debug.Log (name);
 
         CreatePlayersUI ();
         PlayedMatch.Board.EnableVisualisation ();
@@ -72,8 +70,15 @@ public class InGameUI : GOUI {
                 //PlayedMatch.MoveTopCard (MyPlayerNumber, x - 1);
             }
         }
+        if (Input.GetKeyDown ("f4")) {
+            Debug.Log ("Test");
+            ShowInGameUI ();
+        }
         if (Input.GetKeyDown ("r")) {
             ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+        }
+        if (Input.GetKeyDown ("p")) {
+            PlayedMatch.MakeRandomMove ();
         }
     }
 
@@ -81,8 +86,13 @@ public class InGameUI : GOUI {
         PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
     }
 
+    static public void ShowInGameUI () {
+        DestroyMenu ();
+        PlayedMatch = MatchMakingClass.FindMatch (ClientLogic.MyInterface.AccountName);
+        CurrentCanvas.AddComponent<InGameUI> ();
+    }
+
     static public void ShowInGameUI (MatchClass playedMatch) {
-        DestroyVisuals ();
         DestroyMenu ();
         PlayedMatch = playedMatch;
         CurrentCanvas.AddComponent<InGameUI> ();
@@ -97,7 +107,6 @@ public class InGameUI : GOUI {
     }
     
     static public void CreatePlayersUI () {
-        Debug.Log ("Test2");
         for (int x = 1; x <= NumberOfPlayers; x++) {
             PlayerClass player = GetPlayer (x);
             bool ally = player.properties.team == GetPlayer (MyPlayerNumber).properties.team;
