@@ -50,6 +50,10 @@ public class VisualCard {
         SetAbilityIcon (abilityType);
     }
 
+    public void DestroyVisual () {
+        GameObject.DestroyImmediate (Anchor);
+    }
+
     public void SetAbilityIcon (int type) {
         switch (type) {
             case 0:

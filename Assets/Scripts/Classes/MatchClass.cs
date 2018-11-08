@@ -6,7 +6,7 @@ public class MatchClass {
 
     public BoardClass Board;
 
-    int turn = 1;
+    public int turn = 1;
     int turnOfPlayer = 1;
 
     int numberOfPlayers;
@@ -15,6 +15,8 @@ public class MatchClass {
     MoveHistoryClass LastMove;
 
     public MatchPropertiesClass Properties;
+
+    public MatchClass prevMatch;
 
 
     public MatchClass () {
@@ -26,12 +28,13 @@ public class MatchClass {
         this.turn = match.turn;
         this.turnOfPlayer = match.turnOfPlayer;
         this.numberOfPlayers = match.numberOfPlayers;
-        this.Player = new PlayerClass [this.numberOfPlayers];
-        for (int x = 0; x < this.numberOfPlayers; x++) {
+        this.Player = new PlayerClass [this.numberOfPlayers + 1];
+        for (int x = 0; x <= this.numberOfPlayers; x++) {
             this.Player [x] = new PlayerClass (match.Player [x]);
         }
         this.LastMove = match.LastMove;
         this.Properties = match.Properties;
+        this.prevMatch = match.prevMatch;
     }
 
     public void EndTurn () {
@@ -101,6 +104,7 @@ public class MatchClass {
     }
 
     public void PlayCard (TileClass tile, int playerNumber, int stackNumber, CardClass card) {
+        prevMatch = new MatchClass (this);
         PlayerClass player = Player [playerNumber];
         TokenClass token = PlayToken (tile, card, playerNumber);
         UseAbility (playerNumber, card.abilityArea, card.abilityType, tile);
@@ -209,7 +213,9 @@ public class MatchClass {
     public TokenClass PlayToken (TileClass tile, CardClass card, int playerNumber) {
         if (tile != null) {
             TokenClass token = CreateToken (tile, card, playerNumber);
-            tile.token.visualToken.AddPlayAnimation ();
+            if (tile.visualTile != null) {
+                tile.token.visualToken.AddPlayAnimation ();
+            }
             return token;
         }
         return null;

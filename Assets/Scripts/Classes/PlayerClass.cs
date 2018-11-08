@@ -33,9 +33,11 @@ public class PlayerClass {
         this.score = player.score;
         this.scoreIncome = player.scoreIncome;
         this.properties = player.properties;
-        this.topCardNumber = new int [player.topCardNumber.Length];
-        for (int x = 0; x < topCardNumber.Length; x++) {
-            this.topCardNumber [x] = player.topCardNumber [x];
+        if (player.topCardNumber != null) {
+            this.topCardNumber = new int [player.topCardNumber.Length];
+            for (int x = 0; x < topCardNumber.Length; x++) {
+                this.topCardNumber [x] = player.topCardNumber [x];
+            }
         }
         this.LastMove = player.LastMove;
     }
@@ -127,6 +129,20 @@ public class PlayerClass {
                     }
                 }
             }
+        }
+    }
+
+    public void DestroyVisuals () {
+        if (visualPlayer != null) {
+            for (int x = 0; x < GetNumberOfStacks (); x++) {
+                for (int y = 0; y < GetStackSize (x); y++) {
+                    CardClass card = GetCard (x, y);
+                    if (card.visualCard != null) {
+                        card.DestroyVisual ();
+                    }
+                }
+            }
+            visualPlayer = null;
         }
     }
 

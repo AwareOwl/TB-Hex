@@ -21,6 +21,9 @@ public class BoardClass {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 this.tile [x, y] = new TileClass (board.tile [x, y]);
+                if (tile [x, y].enabled) {
+                    EnableTile (x, y, true);
+                }
             }
         }
     }

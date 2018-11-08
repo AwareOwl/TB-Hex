@@ -57,4 +57,11 @@ public class CardClass : VisualClass {
         }
     }
 
+    public void DestroyVisual () {
+        if (visualCard != null) {
+            visualCard.DestroyVisual ();
+            visualCard = null;
+        }
+    }
+
 }

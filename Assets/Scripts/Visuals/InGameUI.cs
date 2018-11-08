@@ -17,35 +17,26 @@ public class InGameUI : GOUI {
     static public int NumberOfPlayers = 2;
 
     override public void DestroyThis () {
-        if (VisualEffectAnchor != null) {
-            for (int x = 0; x < VisualEffectAnchor.GetLength (0); x++) {
+        DestroyVisuals ();
+    }
 
-            }
+    public void DestroyVisuals () {
+        if (VisualEffectAnchor != null) {
             foreach (GameObject obj in VisualEffectAnchor) {
                 if (obj != null) {
-                        DestroyImmediate (obj);
-                    }
+                    DestroyImmediate (obj);
+                }
             }
         }
 
         if (PlayedMatch != null) {
             foreach (TileClass tile in PlayedMatch.Board.tile) {
                 if (tile.visualTile != null) {
-                    tile.visualTile.DestroyVisual ();
+                    tile.DestroyVisual ();
                 }
             }
             foreach (PlayerClass player in PlayedMatch.Player) {
-                //DestroyImmediate (player.visualPlayer);
-                if (player.properties != null) {
-                    foreach (StackClass stack in player.GetHand ().stack) {
-                        foreach (CardClass card in stack.card) {
-                            if (card.visualCard != null) {
-                                DestroyImmediate (card.visualCard.Anchor);
-                            }
-
-                        }
-                    }
-                }
+                player.DestroyVisuals ();
             }
         }
     }
@@ -70,8 +61,7 @@ public class InGameUI : GOUI {
                 //PlayedMatch.MoveTopCard (MyPlayerNumber, x - 1);
             }
         }
-        if (Input.GetKeyDown ("f4")) {
-            Debug.Log ("Test");
+        if (Input.GetKeyDown ("f5")) {
             ShowInGameUI ();
         }
         if (Input.GetKeyDown ("r")) {
@@ -79,6 +69,24 @@ public class InGameUI : GOUI {
         }
         if (Input.GetKeyDown ("p")) {
             PlayedMatch.MakeRandomMove ();
+        }
+        if (Input.GetKeyDown ("h")) {
+            MatchClass match = PlayedMatch;
+            Debug.Log ("Test");
+            while (match != null) {
+                Debug.Log (match.turn);
+                match = match.prevMatch;
+            }
+        }
+        if (Input.GetKeyDown ("t")) {
+            Debug.Log (PlayedMatch.turn);
+        }
+        if (Input.GetKeyDown ("z")) {
+            if (PlayedMatch.prevMatch != null) {
+                DestroyVisuals ();
+                PlayedMatch = PlayedMatch.prevMatch;
+                ShowInGameUI (PlayedMatch);
+            }
         }
     }
 

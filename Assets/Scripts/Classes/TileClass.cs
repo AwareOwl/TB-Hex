@@ -20,7 +20,9 @@ public class TileClass {
     public TileClass (TileClass tile) {
         this.SetXY (tile.x, tile.y);
         this.enabled = tile.enabled;
-        this.AttachToken (new TokenClass (tile.token));
+        if (tile.token != null) {
+            this.AttachToken (new TokenClass (tile.token));
+        }
     }
 
     public bool IsEmptyTile () {
@@ -62,6 +64,10 @@ public class TileClass {
     public void DestroyVisual () {
         if (visualTile != null) {
             visualTile.DestroyVisual ();
+            visualTile = null;
+        }
+        if (token != null) {
+            token.DestroyVisual ();
         }
     }
 

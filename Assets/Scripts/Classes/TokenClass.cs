@@ -50,6 +50,7 @@ public class TokenClass {
     public void DestroyVisual () {
         if (visualToken != null) {
             visualToken.DestroyToken ();
+            visualToken = null;
         }
     }
 
