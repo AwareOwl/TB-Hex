@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AppDefaults {
 
+    static public int AvailableTokens = 2; 
+    static public int AvailableAbilities = 13; // Always + 1, to include null
+
     static public Object Tile;
 
     static public float TokenSpawnHeight = 10f;

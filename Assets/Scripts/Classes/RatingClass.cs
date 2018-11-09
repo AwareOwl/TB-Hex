@@ -11,10 +11,23 @@ public class RatingClass {
     static int [] winnerScore = new int [1000];
     static int [] loserScore = new int [1000];
 
-    static public int [,] AbilityOnStack;
+    static float [] NumberOfCards = new float [40]; // CardsInHand
+
+    static public float [,,] AbilityOnStack; // AbilityType, AbilityArea (0, 2, 6 fields), stackNumber;
+    static public float [,,] AbilityOnRow;
 
     RatingClass () {
+        AbilityOnStack = new float [AppDefaults.AvailableAbilities, 3, 10];
+        AbilityOnRow = new float [AppDefaults.AvailableAbilities, 3, 10];
 
+        for (int x = 0; x < AbilityOnStack.GetLength (0); x++) {
+            for (int y = 0; y < AbilityOnStack.GetLength (0); y++) {
+                for (int z = 0; z < AbilityOnStack.GetLength (0); z++) {
+                    AbilityOnStack [x, y, z] = 0.5f;
+                    AbilityOnRow [x, y, z] = 0.5f;
+                }
+            }
+        }
     }
 
     static public void AnalyzeStatistics (MatchClass match) { // anal...

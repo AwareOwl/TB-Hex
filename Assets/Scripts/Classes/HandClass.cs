@@ -50,11 +50,23 @@ public class HandClass  {
             CardValue [x] = 1f;
         }
 
-        for (int x = 0; x < numberOfStacks; x++) {
-            for (int y = 0; y < 2 || (Random.Range (0, 2) == 0 && y < 5); y++) {
-                float SumOfValues = 0;
+        bool [] finished = new bool [numberOfStacks];
+        float SumOfValues = 0;
+
+        for (int y = 0; y < 5; y++) {
+            if (SumOfValues == 0) {
+                break;
+            }
+            for (int x = 0; x < numberOfStacks; x++) {
+                if (finished [x]) {
+                    continue;
+                }
+                SumOfValues = 0;
                 foreach (float value in CardValue) {
                     SumOfValues += value;
+                }
+                if (SumOfValues == 0) {
+                    break;
                 }
                 float rng = Random.Range (0f, SumOfValues);
                 int id = -1;
@@ -67,6 +79,9 @@ public class HandClass  {
                     }
                 }
                 stack [x].Add (new CardClass (CardPool.Card [id]));
+                if (y > 0) {
+                    finished [x] = Random.Range (0, 2) == 0;
+                }
             }
         }
 
