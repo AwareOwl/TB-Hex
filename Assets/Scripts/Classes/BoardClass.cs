@@ -45,6 +45,16 @@ public class BoardClass {
         return tiles;
     }
 
+    public int GetEmptyTilesCount () {
+        int count = 0;
+        foreach (TileClass tile in tileList) {
+            if (tile.IsEmptyTile ()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void EnableTile (int x, int y, bool enable) {
         TileClass tile = this.tile [x, y];
         tile.EnableTile (enable);

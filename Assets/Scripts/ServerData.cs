@@ -23,6 +23,26 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string RatingPath () {
+        string path = ServerPath () + "Rating/";
+        if (!Directory.Exists (path)) {
+            Directory.CreateDirectory (path);
+        }
+        return path;
+    }
+
+    static public string SaveRatingPlayerWinRatio (string [] lines) {
+        string path = RatingPath () + "PlayerWinRatio.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string SaveRatingTurn (string [] lines) {
+        string path = RatingPath () + "Turn.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
     static public string ContentPath () {
         string path = ServerPath () + "Content/";
         if (!Directory.Exists (path)) {

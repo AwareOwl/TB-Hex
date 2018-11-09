@@ -7,10 +7,14 @@ public class MatchClass {
     public BoardClass Board;
 
     public int turn = 1;
-    int turnOfPlayer = 1;
+    public int turnOfPlayer = 1;
 
-    int numberOfPlayers;
+    public int numberOfPlayers;
     public PlayerClass [] Player;
+
+    public PlayerClass winner;
+    public bool finished;
+    public bool real = true;
 
     MoveHistoryClass LastMove;
 
@@ -59,13 +63,45 @@ public class MatchClass {
 
         turnOfPlayer = Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1));
         turn++;
+        CheckFinishCondition ();
+        PlayerClass nextPlayer = Player [turnOfPlayer];
+        AIClass AI = nextPlayer.properties.AI;
+        if (!finished && real && AI != null) {
+            RunAI ();
+        }
+
+        //AIClass AI = Player [1].properties.AI;
+       // Debug.Log (AI.TurnToWinPredict (this, 1) + " " + AI.TurnToWinPredict (this, 2) + " " + AI.CalculateMatchValue (this, 1) + " " + AI.CalculateMatchValue (this, 2));
+    }
+
+    public void CheckFinishCondition () {
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            if (Player [x].score >= Properties.scoreLimit) {
+                FinishGame ();
+                return;
+            }
+        }
         if (turn >= Properties.turnLimit) {
             FinishGame ();
+            return;
+        }
+        if (Board.GetEmptyTiles ().Count == 0) {
+            FinishGame ();
+            return;
         }
     }
 
     public void FinishGame () {
-
+        finished = true;
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            if (winner == null || winner.score < Player [x].score) {
+                winner = Player [x];
+            }
+        }
+        if (real) {
+            RatingClass.AnalyzeStatistics (this);
+            //Debug.Log ("GameFinished: " + winner.playerNumber + " " + Player [1].score + " " + Player [2].score + " " + turn);
+        }
     }
 
     public void NewMatch (int numberOfPlayers) {
@@ -90,9 +126,17 @@ public class MatchClass {
         PlayCard (tile.x, tile.y, turnOfPlayer, Random.Range (0, 4));
     }
 
+    public void RunAI () {
+        Vector3Int output = Player [turnOfPlayer].properties.AI.FindBestMove (this);
+        int x = output.x;
+        int y = output.y;
+        //Debug.Log (x + " " + y + " " + Board.tile [x, y].enabled + " " + Board.tile [x, y].IsEmptyTile () + " ... " + Player [turnOfPlayer].GetTopCard (output.z).cardNumber);
+        PlayCard (output.x, output.y, turnOfPlayer, output.z);
+    }
+
     public void PlayCard (int x, int y, int playerNumber, int stackNumber) {
         TileClass tile = Board.tile [x, y];
-        if (turnOfPlayer == playerNumber && tile.enabled && tile.token == null) {
+        if (!finished && turnOfPlayer == playerNumber && tile.enabled && tile.token == null) {
             PlayerClass player = Player [playerNumber];
             CardClass card = player.GetTopCard (stackNumber);
             PlayCard (x, y, playerNumber, stackNumber, card);
@@ -187,9 +231,12 @@ public class MatchClass {
     }
 
     public TileClass LastPlayedTile () {
-        TokenClass token = LastPlayedToken ();
+        if (LastMove == null) {
+            return null;
+        }
+        TokenClass token = LastMove.playedToken;
         if (token != null) {
-            return token.tile;
+            return Board.tile [token.x, token.y];
         }
         return null;
     }
@@ -198,7 +245,7 @@ public class MatchClass {
         if (LastMove == null) {
             return null;
         }
-        return LastMove.playedToken;
+        return LastPlayedTile ().token;
     }
 
     public void ModifyTempValue (TileClass tile, int value) {
@@ -309,6 +356,10 @@ public class MatchClass {
     public void SetPlayer (int PlayerNumber, PlayerClass player) {
         Player [PlayerNumber] = player;
         player.playerNumber = PlayerNumber;
+        AIClass AI = player.properties.AI;
+        if (AI != null) {
+            AI.MaxEmptyTileCount = Board.GetEmptyTilesCount ();
+        }
     }
 
     public void EnableVisuals () {

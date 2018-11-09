@@ -49,8 +49,8 @@ public class InGameUI : GOUI {
         instance = this;
         CurrentGUI = this;
 
-        CreatePlayersUI ();
-        PlayedMatch.Board.EnableVisualisation ();
+        //CreatePlayersUI ();
+        //PlayedMatch.Board.EnableVisualisation ();
     }
 
 
@@ -69,6 +69,9 @@ public class InGameUI : GOUI {
         }
         if (Input.GetKeyDown ("p")) {
             PlayedMatch.MakeRandomMove ();
+        }
+        if (Input.GetKeyDown ("a")) {
+            PlayedMatch.RunAI ();
         }
         if (Input.GetKeyDown ("h")) {
             MatchClass match = PlayedMatch;
@@ -129,6 +132,7 @@ public class InGameUI : GOUI {
             for (int y = 0; y < sy; y++) {
                 VisualEffectAnchor [x, y] = new GameObject ();
                 VisualEffectAnchor [x, y].transform.localPosition = VisualTile.TilePosition (x, 0.2f, y);
+                VisualEffectAnchor [x, y].transform.localEulerAngles = new Vector3 (x, y, 0);
                 VisualEffectAnchor [x, y].name = "VisualEffectAnchor";
             }
         }

@@ -11,6 +11,10 @@ public class ClientInterface : NetworkBehaviour {
     public void Start () {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
+            gameObject.AddComponent<InputController> ();
+        }
+        if (isServer) {
+            gameObject.AddComponent<ServerManagement> ();
         }
     }
 
