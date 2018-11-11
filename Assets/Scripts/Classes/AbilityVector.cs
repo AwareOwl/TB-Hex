@@ -23,32 +23,40 @@ public class AbilityVector {
                 y = sy;
                 pushX = sx - 2;
                 pushY = sy;
+                flipX = sx + 1;
+                flipY = sy;
                 break;
             case 2:
                 x = sx + 1;
                 y = sy;
                 pushX = sx + 2;
                 pushY = sy;
+                flipX = sx - 1;
+                flipY = sy;
                 break;
             case 3:
                 y = sy + 1;
                 pushX = sx - 1;
                 pushY = sy + 2;
+                flipY = sy - 1;
                 break;
             case 4:
                 y = sy - 1;
                 pushX = sx + 1;
                 pushY = sy - 2;
+                flipY = sy + 1;
                 break;
             case 5:
                 y = sy + 1;
                 pushX = sx + 1;
                 pushY = sy + 2;
+                flipY = sy - 1;
                 break;
             case 6:
                 y = sy - 1;
                 pushX = sx - 1;
                 pushY = sy - 2;
+                flipY = sy + 1;
                 break;
         }
         switch (sy % 2) {
@@ -56,15 +64,19 @@ public class AbilityVector {
                 switch (relativeNumber) {
                     case 3:
                         x = sx - 1;
+                        flipX = sx;
                         break;
                     case 4:
                         x = sx;
+                        flipX = sx - 1;
                         break;
                     case 5:
                         x = sx;
+                        flipX = sx - 1;
                         break;
                     case 6:
                         x = sx - 1;
+                        flipX = sx;
                         break;
                 }
                 break;
@@ -72,15 +84,19 @@ public class AbilityVector {
                 switch (relativeNumber) {
                     case 3:
                         x = sx;
+                        flipX = sx +1;
                         break;
                     case 4:
                         x = sx + 1;
+                        flipX = sx;
                         break;
                     case 5:
                         x = sx + 1;
+                        flipX = sx;
                         break;
                     case 6:
                         x = sx;
+                        flipX = sx + 1;
                         break;
                 }
                 break;

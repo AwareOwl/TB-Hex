@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class AIClass {
 
-    float difficulty = 1;
+    int difficulty = 100;
+
+    public int edgeDanger = 5;
+    public int surroundDanger = 5;
+    public int multiTargetDanger = 5;
 
     public float MaxEmptyTileCount;
+
+    public AIClass () {
+        edgeDanger = Random.Range (0, 10);
+        surroundDanger = Random.Range (0, 10);
+        multiTargetDanger = Random.Range (0, 10);
+    }
 
     public Vector3Int FindBestMove (MatchClass match) {
         int playerNumber = match.turnOfPlayer;
@@ -58,10 +68,69 @@ public class AIClass {
         for (int x = 1; x <= match.numberOfPlayers; x++) {
             if (x != playerNumber) {
                 playerValue *= TurnToWinPredict (match, x)/ myTurnsToWin;
-                value += myScoreIncome - match.Player [x].scoreIncome;
+                //value += myScoreIncome - match.Player [x].scoreIncome;
             }
         }
         value += playerValue;
+        value += CalculateBoardValue (match, playerNumber);
+        return value;
+    }
+
+    public float CalculateBoardValue (MatchClass match, int playerNumber) {
+        float value = 0;
+        TileClass [] tiles = match.Board.GetEmptyTiles ().ToArray ();
+        foreach (TileClass tile in tiles) {
+            float tempValue = 0;
+            float dangerCount = 0;
+            float edgeCount = 0;
+            float multiDangerCount = 0;
+            for (int x = 1; x <= 4; x++) {
+                if (tile.IsFilledTile ()) {
+                    x = 4;
+                }
+                List <AbilityVector> vectors = match.Board.GetAbilityVectors (tile.x, tile.y, x);
+                float enemies = 0;
+                float allies = 0;
+                foreach (AbilityVector vector in vectors) {
+                    if (tile.IsFilledTile ()) {
+                        if (vector.target == null || !vector.target.enabled) {
+                            if (vector.flipTarget != null && vector.flipTarget.IsEmptyTile ()) {
+                                edgeCount++;
+                            }
+                        } else if (vector.target.IsEmptyTile ()) {
+                            dangerCount++;
+                        }
+                    } else if (vector.target != null && vector.target.IsFilledTile ()) {
+                        if (vector.target.token.owner == playerNumber) {
+                            allies++;
+                        } else{
+                            enemies++;
+                        }
+                    }
+                }
+                multiDangerCount += Mathf.Max (0, enemies - allies - 0.5f);
+            }
+            float riskValue = 2;
+            if (tile.IsFilledTile ()) {
+                float tokenValue = tile.token.value;
+                int tokenType = tile.token.type;
+                switch (tokenType) {
+                    case 1:
+                        tokenValue *= 1.9f;
+                        break;
+                }
+                if (tile.token.owner != playerNumber) {
+                    tokenValue *= -1;
+                }
+                riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);
+                riskValue *= Mathf.Min (1, (
+                    dangerCount * surroundDanger +
+                    edgeCount * edgeDanger) / 100f);
+            } else {
+                riskValue *= multiDangerCount * multiTargetDanger / 100f;
+                value -= riskValue;
+            }
+        }
         return value;
     }
 

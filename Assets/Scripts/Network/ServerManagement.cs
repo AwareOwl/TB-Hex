@@ -5,9 +5,13 @@ using UnityEngine;
 public class ServerManagement : MonoBehaviour {
 
     bool AutoDeleteAllFinished = true;
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Start () {
+        ServerData.SaveBackUp ();
+    }
+
+    // Update is called once per frame
+    void Update () {
         MatchMakingClass.matches.RemoveAll (match => match.finished);
 	}
 }

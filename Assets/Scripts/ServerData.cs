@@ -22,6 +22,13 @@ public class ServerData : MonoBehaviour {
         }
         return path;
     }
+    static public string BackUpPath () {
+        string path = @"C:/TokenBattleHexBackUp/";
+        if (!Directory.Exists (path)) {
+            Directory.CreateDirectory (path);
+        }
+        return path;
+    }
 
     static public string RatingPath () {
         string path = ServerPath () + "Rating/";
@@ -31,8 +38,97 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public void SaveBackUp () {
+        int backUpCount = Directory.GetFiles (BackUpPath ()).Length;
+        DirectoryCopy (ServerPath (), BackUpPath () + "/" + backUpCount.ToString (), true);
+    }
+
+    private static void DirectoryCopy (string sourceDirName, string destDirName, bool copySubDirs) {
+        // Get the subdirectories for the specified directory.
+        DirectoryInfo dir = new DirectoryInfo (sourceDirName);
+
+        if (!dir.Exists) {
+            throw new DirectoryNotFoundException (
+                "Source directory does not exist or could not be found: "
+                + sourceDirName);
+        }
+
+        DirectoryInfo [] dirs = dir.GetDirectories ();
+        // If the destination directory doesn't exist, create it.
+        if (!Directory.Exists (destDirName)) {
+            Directory.CreateDirectory (destDirName);
+        }
+
+        // Get the files in the directory and copy them to the new location.
+        FileInfo [] files = dir.GetFiles ();
+        foreach (FileInfo file in files) {
+            string temppath = Path.Combine (destDirName, file.Name);
+            file.CopyTo (temppath, false);
+        }
+
+        // If copying subdirectories, copy them and their contents to new location.
+        if (copySubDirs) {
+            foreach (DirectoryInfo subdir in dirs) {
+                string temppath = Path.Combine (destDirName, subdir.Name);
+                DirectoryCopy (subdir.FullName, temppath, copySubDirs);
+            }
+        }
+    }
+
     static public string SaveRatingPlayerWinRatio (string [] lines) {
         string path = RatingPath () + "PlayerWinRatio.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string SaveRatingWinnerScore (string [] lines) {
+        string path = RatingPath () + "WinnerScore.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string SaveRatingLoserScore (string [] lines) {
+        string path = RatingPath () + "LoserScore.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string SaveRatingAbilityOnStack (string [] lines) {
+        string path = RatingPath () + "AbilityOnStack.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string RatingAbilityOnRowPath () {
+        return RatingPath () + "AbilityOnRow.txt";
+    }
+
+    static public string SaveRatingAbilityOnRow (string [] lines) {
+        string path = RatingAbilityOnRowPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingAbilityOnRow () {
+        string path = RatingAbilityOnRowPath ();
+        string [] lines = File.ReadAllLines (path);
+        return lines;
+    }
+
+    static public string SaveRatingSurroundDanger (string [] lines) {
+        string path = RatingPath () + "SurroundDanger.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string SaveRatingMultiTargetDanger (string [] lines) {
+        string path = RatingPath () + "MultiTargetDanger.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string SaveRatingEdgeDanger (string [] lines) {
+        string path = RatingPath () + "EdgeDanger.txt";
         File.WriteAllLines (path, lines);
         return path;
     }

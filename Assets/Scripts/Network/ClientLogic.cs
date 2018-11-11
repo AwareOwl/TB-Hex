@@ -7,5 +7,8 @@ public class ClientLogic : MonoBehaviour {
     static public ClientInterface MyInterface;
 
     static public void LogIn () {
+        //BoardEditorMenu.ShowBoardEditorMenu ();
+        //CardPoolEditor.ShowCardPoolEditorMenu ();
+        //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
     }
 }

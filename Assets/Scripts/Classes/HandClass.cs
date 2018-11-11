@@ -51,7 +51,7 @@ public class HandClass  {
         }
 
         bool [] finished = new bool [numberOfStacks];
-        float SumOfValues = 0;
+        float SumOfValues = -1;
 
         for (int y = 0; y < 5; y++) {
             if (SumOfValues == 0) {
@@ -62,8 +62,9 @@ public class HandClass  {
                     continue;
                 }
                 SumOfValues = 0;
-                foreach (float value in CardValue) {
-                    SumOfValues += value;
+                for (int z = 0; z < CardValue.Length; z++) {
+                    SumOfValues +=
+                        CardValue [z] * RatingClass.AbilityOnRow [CardPool.Card [z].abilityType, 0, 0];
                 }
                 if (SumOfValues == 0) {
                     break;
@@ -84,7 +85,18 @@ public class HandClass  {
                 }
             }
         }
+        Debug.Log (ToString ());
+    }
 
+    override public string ToString () {
+        string s = "";
+        for (int x = 0; x < numberOfStacks; x++) {
+            for (int y = 0; y < stack [x].card.Count; y++) {
+                s += GetCard (x, y) + " ";
+            }
+            s += System.Environment.NewLine;
+        }
+        return s;
     }
 
 }

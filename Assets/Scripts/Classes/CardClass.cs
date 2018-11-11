@@ -26,6 +26,19 @@ public class CardClass : VisualClass {
         SetState (value, tokenType, abilityArea, abilityType);
     }
 
+    public int AreaSize () {
+        switch (abilityArea) {
+            case 1:
+            case 2:
+            case 3:
+                return 1;
+            case 4:
+                return 2;
+            default:
+                return 0;
+        }
+    }
+
     public CardClass SetCardNumber (int cardNumber) {
         this.cardNumber = cardNumber;
         return this;
@@ -35,7 +48,15 @@ public class CardClass : VisualClass {
         this.tokenType = tokenType;
         this.value = value;
         this.abilityType = abilityType;
-        this.abilityArea = abilityArea;
+        switch (abilityType) {
+            case 0:
+            case 11:
+                this.abilityArea = 0;
+                break;
+            default:
+                this.abilityArea = abilityArea;
+                break;
+        }
     }
 
     public string ToString () {

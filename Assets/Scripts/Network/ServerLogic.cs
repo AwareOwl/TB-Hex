@@ -9,7 +9,7 @@ public class ServerLogic : MonoBehaviour {
         if (userName != null && userName != "") {
             if (ServerData.UserExists (userName)) {
                 if (VerifyUserPassword (userName, password)) {
-                    JoinGameAgainstAI (client);
+                    //JoinGameAgainstAI (client);
                     CompleteLogIn (client, userName);
 
                 } else {
