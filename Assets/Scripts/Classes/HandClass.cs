@@ -40,6 +40,15 @@ public class HandClass  {
         }
     }
 
+    public float Normalize (float value, float scale) {
+        float output = value * 2;
+        output += 100 / scale - 100f;
+        output *= scale;
+        output -= 100 / scale - 100f;
+        output = Mathf.Max (value, 0.4f);
+        return output;
+    }
+
     public void GenerateRandomHand () {
         CardPoolClass CardPool = new CardPoolClass ();
         CardPool.LoadFromFile (1);
@@ -63,8 +72,10 @@ public class HandClass  {
                 }
                 SumOfValues = 0;
                 for (int z = 0; z < CardValue.Length; z++) {
+                    CardClass card = CardPool.Card [z];
                     SumOfValues +=
-                        CardValue [z] * RatingClass.AbilityOnRow [CardPool.Card [z].abilityType, 0, 0];
+                        CardValue [z] * 
+                        Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 10);
                 }
                 if (SumOfValues == 0) {
                     break;
@@ -72,20 +83,31 @@ public class HandClass  {
                 float rng = Random.Range (0f, SumOfValues);
                 int id = -1;
                 for (int z = 0; z < count; z++) {
-                    rng -= CardValue [z];
+                    CardClass card = CardPool.Card [z];
+                    rng -= CardValue [z] *
+                        Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 10);
                     if (rng <= 0) {
-                        CardValue [z] = 0;
                         id = z;
                         break;
                     }
                 }
+                CardValue [id] = 0;
+                int abilityType = CardPool.Card [id].abilityType;
+                for (int z = 0; z < count; z++) {
+                    int abilityType2 = CardPool.Card [z].abilityType;
+                    CardValue [z] *= Normalize (RatingClass.abilityAbilitySynergy [Mathf.Min (abilityType, abilityType2), Mathf.Max (abilityType, abilityType2)], 4);
+                }
+
                 stack [x].Add (new CardClass (CardPool.Card [id]));
+                CardClass newCard = stack [x].card [y];
+                if (newCard.abilityArea == 1) {
+                    newCard.abilityArea = Random.Range (1, 4);
+                }
                 if (y > 0) {
                     finished [x] = Random.Range (0, 2) == 0;
                 }
             }
         }
-        Debug.Log (ToString ());
     }
 
     override public string ToString () {

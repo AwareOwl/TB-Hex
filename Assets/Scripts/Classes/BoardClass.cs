@@ -7,6 +7,8 @@ public class BoardClass {
 
     bool visualised = false;
 
+    public int boardTemplateId;
+
     public TileClass [,] tile;
     public List<TileClass> tileList = new List<TileClass> ();
 
@@ -126,6 +128,10 @@ public class BoardClass {
         ServerData.SaveNewBoard (userName, boardName, BoardToString ().ToArray ());
     }
 
+    public void SaveBoard (int id) {
+        ServerData.SetBoard (id, BoardToString ().ToArray ());
+    }
+
     public List <string> BoardToString () {
         List<string> s = new List<string> ();
         string s3 = "";
@@ -148,6 +154,7 @@ public class BoardClass {
 
     public void LoadFromFile (int id) {
         LoadBoard (ServerData.GetBoard (id), 8, 8);
+        boardTemplateId = id;
     }
 
     public void LoadBoard (string [] board, int x, int y) {

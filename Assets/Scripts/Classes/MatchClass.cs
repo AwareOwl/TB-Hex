@@ -210,6 +210,11 @@ public class MatchClass {
                         vector.target.token.SetType (0);
                     }
                     break;
+                case 13:
+                    if (vector.target != null && vector.target.IsFilledTile ()) {
+                        ModifyTempValue (vector.target, tile.token.value - vector.target.token.value);
+                    }
+                    break;
             }
         }
         switch (abilityType) {

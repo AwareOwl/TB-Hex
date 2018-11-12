@@ -29,8 +29,10 @@ public class CardPoolEditor : GOUI {
 
     private void Start () {
         instance = this;
+        NumberOfButtons [4] = AppDefaults.AvailableAbilities;
         CreateCardPoolEditorMenu ();
         CurrentGUI = this;
+
 
         EditedCardPool = new CardPoolClass ();
         EditedCardPool.LoadFromFile (1);

@@ -39,7 +39,7 @@ public class ServerData : MonoBehaviour {
     }
 
     static public void SaveBackUp () {
-        int backUpCount = Directory.GetFiles (BackUpPath ()).Length;
+        int backUpCount = Directory.GetDirectories (BackUpPath ()).Length;
         DirectoryCopy (ServerPath (), BackUpPath () + "/" + backUpCount.ToString (), true);
     }
 
@@ -111,8 +111,11 @@ public class ServerData : MonoBehaviour {
 
     static public string [] GetRatingAbilityOnRow () {
         string path = RatingAbilityOnRowPath ();
-        string [] lines = File.ReadAllLines (path);
-        return lines;
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
     }
 
     static public string SaveRatingSurroundDanger (string [] lines) {
@@ -138,6 +141,38 @@ public class ServerData : MonoBehaviour {
         File.WriteAllLines (path, lines);
         return path;
     }
+
+    static public string SaveRatingMapPlayer (string [] lines) {
+        string path = RatingPath () + "MapPlayer.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string SaveRatingNumberOfCards (string [] lines) {
+        string path = RatingPath () + "NumberOfCards.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string RatingAbilityAbilitySynergyPath () {
+        return RatingPath () + "AbilityAbilitySynergy.txt";
+    }
+
+    static public string [] GetRatingAbilityAbilitySynergy () {
+        string path = RatingAbilityAbilitySynergyPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
+    static public string SaveRatingAbilityAbilitySynergy (string [] lines) {
+        string path = RatingAbilityAbilitySynergyPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
 
     static public string ContentPath () {
         string path = ServerPath () + "Content/";

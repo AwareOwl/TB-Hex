@@ -166,10 +166,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
                         // BoardEditor
                         case "SaveBoard":
-                            BoardEditorMenu.EditedBoard.SaveBoard ("1", "Test");
+                            BoardEditorMenu.SaveBoard ();
                             break;
                         case "LoadBoard":
-                            BoardEditorMenu.EditedBoard.LoadFromFile (1);
+                            BoardEditorMenu.LoadBoard (2);
                             break;
                         case "BoardEditorTileType":
                             BoardEditorMenu.SelectButton (1, number);

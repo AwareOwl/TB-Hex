@@ -5,7 +5,7 @@ using UnityEngine;
 public class AppDefaults {
 
     static public int AvailableTokens = 2; 
-    static public int AvailableAbilities = 13; // Always + 1, to include null
+    static public int AvailableAbilities = 14; // Always + 1, to include null
 
     static public Object Tile;
 
@@ -69,6 +69,7 @@ public class AppDefaults {
             // Yellow
             case 4:
             case 6:
+            case 13:
                 return new Color (1, 1, 0);
             // Purple
             case 7:
