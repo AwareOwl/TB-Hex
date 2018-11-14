@@ -201,7 +201,7 @@ public class MatchClass {
                     }
                     break;
                 case 8:
-                    if (vector.target != null && vector.target.IsFilledTile () && LastPlayedToken () != null) {
+                    if (vector.target != null && vector.target.IsFilledTile () && vector.target.token.owner != playerNumber && LastPlayedToken () != null) {
                         ModifyTempValue (LastPlayedToken ().tile, -1);
                     }
                     break;

@@ -126,8 +126,10 @@ public class AIClass {
                 riskValue *= Mathf.Min (1, (
                     dangerCount * surroundDanger +
                     edgeCount * edgeDanger) / 100f);
+                tokenValue -= riskValue;
+                value += tokenType;
             } else {
-                riskValue *= multiDangerCount * multiTargetDanger / 100f;
+                riskValue *= multiDangerCount * multiTargetDanger / 200f;
                 value -= riskValue;
             }
         }

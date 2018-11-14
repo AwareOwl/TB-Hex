@@ -173,6 +173,25 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string RatingAbilityAfterAbilityPath () {
+        return RatingPath () + "AbilityAfterAbility.txt";
+    }
+
+    static public string [] GetRatingAbilityAfterAbility () {
+        string path = RatingAbilityAfterAbilityPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
+    static public string SaveRatingAbilityAfterAbility (string [] lines) {
+        string path = RatingAbilityAfterAbilityPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
 
     static public string ContentPath () {
         string path = ServerPath () + "Content/";

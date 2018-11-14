@@ -23,7 +23,9 @@ public class RatingClass {
 
     static public float [,,] abilityOnStack; // AbilityType, AbilityArea (0, 2, 6 fields), stackNumber;
     static public float [,,] abilityOnRow;
+
     static public float [,] abilityAbilitySynergy;
+    static public float [,] abilityAfterAbility;
 
     static RatingClass () {
         int availableAbilities = AppDefaults.AvailableAbilities;
@@ -40,6 +42,9 @@ public class RatingClass {
             }
         }
         LoadAbilityOnRow ();
+        for (int x = 0; x < numberOfCards.Length; x++) {
+            numberOfCards [x] = 0.5f;
+        }
         for (int x = 0; x < edgeDanger.Length; x++) {
             edgeDanger [x] = 0.5f;
             multiTargetDanger [x] = 0.5f;
@@ -51,6 +56,7 @@ public class RatingClass {
             }
         }
         LoadAbilityAbilitySynergy ();
+        LoadAbilityAfterAbility ();
     }
 
     static public void AnalyzeStatistics (MatchClass match) { // anal...
@@ -87,6 +93,13 @@ public class RatingClass {
                         abilityAbilitySynergy [Mathf.Min (abilityType, usedCard.abilityType), Mathf.Max (abilityType, usedCard.abilityType)] *= 0.999f;
                         if (winnerNumber == x) {
                             abilityAbilitySynergy [Mathf.Min (abilityType, usedCard.abilityType), Mathf.Max (abilityType, usedCard.abilityType)] += 0.001f;
+                        }
+                    }
+                    if (z > 0) {
+                        CardClass prevCard = stack.card [z - 1];
+                        abilityAfterAbility [abilityType, prevCard.abilityType] *= 0.999f;
+                        if (winnerNumber == x) {
+                            abilityAfterAbility [abilityType, prevCard.abilityType] += 0.001f;
                         }
                     }
                     usedCards.Add (card);
@@ -131,6 +144,7 @@ public class RatingClass {
         SaveMapPlayer ();
         SaveNumberOfCards ();
         SaveAbilityAbilitySynergy ();
+        SaveAbilityAfterAbility ();
     }
 
     static public void SaveAbilityOnStack () {
@@ -270,6 +284,7 @@ public class RatingClass {
         }
         ServerData.SaveRatingAbilityAbilitySynergy (lines.ToArray ());
     }
+
     static public void LoadAbilityAbilitySynergy () {
         string [] lines = ServerData.GetRatingAbilityAbilitySynergy ();
         for (int x = 0; x < abilityAbilitySynergy.GetLength (0); x++) {
@@ -283,6 +298,36 @@ public class RatingClass {
                     abilityAbilitySynergy [x, y] = float.Parse (word [number]);
                 } else {
                     abilityAbilitySynergy [x, y] = 0.5f;
+                }
+            }
+        }
+    }
+
+    static public void SaveAbilityAfterAbility () {
+        List<string> lines = new List<string> ();
+        for (int x = 0; x < abilityAfterAbility.GetLength (0); x++) {
+            string s = "[" + x.ToString () + "] ";
+            for (int y = 0; y < abilityAfterAbility.GetLength (1); y++) {
+                s += abilityAfterAbility [x, y].ToString () + " ";
+            }
+            lines.Add (s);
+        }
+        ServerData.SaveRatingAbilityAfterAbility (lines.ToArray ());
+    }
+
+    static public void LoadAbilityAfterAbility () {
+        string [] lines = ServerData.GetRatingAbilityAfterAbility ();
+        for (int x = 0; x < abilityAfterAbility.GetLength (0); x++) {
+            string [] word = null;
+            if (lines != null && x < lines.Length) {
+                word = lines [x].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            for (int y = 0; y < abilityAfterAbility.GetLength (1); y++) {
+                int number = 1 + y;
+                if (word != null && number < word.Length) {
+                    abilityAfterAbility [x, y] = float.Parse (word [number]);
+                } else {
+                    abilityAfterAbility [x, y] = 0.5f;
                 }
             }
         }
