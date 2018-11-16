@@ -24,14 +24,15 @@ public class RatingClass {
     static public float [,,] abilityOnStack; // AbilityType, AbilityArea (0, 2, 6 fields), stackNumber;
     static public float [,,] abilityOnRow;
 
-    static public float [,] abilityAbilitySynergy;
-    static public float [,] abilityAfterAbility;
+    static public float [,,,] abilityAbilitySynergy;// AbilityType, AbilityArea (0, 2, 6 fields), AbilityType, AbilityArea (0, 2, 6 fields);
+    static public float [,,,] abilityAfterAbility;
 
     static RatingClass () {
         int availableAbilities = AppDefaults.AvailableAbilities;
         abilityOnStack = new float [availableAbilities, 3, 10];
         abilityOnRow = new float [availableAbilities, 3, 10];
-        abilityAbilitySynergy = new float [availableAbilities, availableAbilities];
+        abilityAbilitySynergy = new float [availableAbilities, 3, availableAbilities, 3];
+        abilityAfterAbility = new float [availableAbilities, 3, availableAbilities, 3];
 
         for (int x = 0; x < abilityOnStack.GetLength (0); x++) {
             for (int y = 0; y < abilityOnStack.GetLength (1); y++) {
@@ -74,32 +75,27 @@ public class RatingClass {
                 numberOfCards += cardCount;
                 for (int z = 0; z < cardCount; z++) {
                     CardClass card = stack.card [z];
-                    int abilityArea = card.abilityArea;
+                    int abilityArea = card.AreaSize ();
                     int abilityType = card.abilityType;
-                    switch (card.abilityArea) {
-                        case 0:
-                            abilityArea = 0;
-                            break;
-                        case 1:
-                        case 2:
-                        case 3:
-                            abilityArea = 1;
-                            break;
-                        case 4:
-                            abilityArea = 2;
-                            break;
-                    }
                     foreach (CardClass usedCard in usedCards) {
-                        abilityAbilitySynergy [Mathf.Min (abilityType, usedCard.abilityType), Mathf.Max (abilityType, usedCard.abilityType)] *= 0.999f;
+                        abilityAbilitySynergy [
+                            Mathf.Min (abilityType, usedCard.abilityType),
+                            Mathf.Min (abilityArea, usedCard.AreaSize ()), 
+                            Mathf.Max (abilityType, usedCard.abilityType),
+                            Mathf.Min (abilityArea, usedCard.AreaSize ())] *= 0.999f;
                         if (winnerNumber == x) {
-                            abilityAbilitySynergy [Mathf.Min (abilityType, usedCard.abilityType), Mathf.Max (abilityType, usedCard.abilityType)] += 0.001f;
+                            abilityAbilitySynergy [
+                            Mathf.Min (abilityType, usedCard.abilityType),
+                            Mathf.Min (abilityArea, usedCard.AreaSize ()),
+                            Mathf.Max (abilityType, usedCard.abilityType),
+                            Mathf.Min (abilityArea, usedCard.AreaSize ())] += 0.001f;
                         }
                     }
                     if (z > 0) {
                         CardClass prevCard = stack.card [z - 1];
-                        abilityAfterAbility [abilityType, prevCard.abilityType] *= 0.999f;
+                        abilityAfterAbility [abilityType, abilityArea, prevCard.abilityType, prevCard.AreaSize ()] *= 0.999f;
                         if (winnerNumber == x) {
-                            abilityAfterAbility [abilityType, prevCard.abilityType] += 0.001f;
+                            abilityAfterAbility [abilityType, abilityArea, prevCard.abilityType, prevCard.AreaSize ()] += 0.001f;
                         }
                     }
                     usedCards.Add (card);
@@ -277,10 +273,17 @@ public class RatingClass {
         List<string> lines = new List<string> ();
         for (int x = 0; x < abilityAbilitySynergy.GetLength (0); x++) {
             string s = "[" + x.ToString () + "] ";
-            for (int y = 0; y < abilityAbilitySynergy.GetLength (1); y++) {
-                s += abilityAbilitySynergy [x, y].ToString () + " ";
-            }
             lines.Add (s);
+            for (int x2 = 0; x2 < abilityAbilitySynergy.GetLength (1); x2++) {
+                s = "[" + x2.ToString () + "] ";
+                for (int y = 0; y < abilityAbilitySynergy.GetLength (2); y++) {
+                    s += "[" + y.ToString () + "] ";
+                    for (int y2 = 0; y2 < abilityAbilitySynergy.GetLength (3); y2++) {
+                        s += abilityAbilitySynergy [x, x2, y, y2].ToString () + " ";
+                    }
+                }
+                lines.Add (s);
+            }
         }
         ServerData.SaveRatingAbilityAbilitySynergy (lines.ToArray ());
     }
@@ -289,15 +292,21 @@ public class RatingClass {
         string [] lines = ServerData.GetRatingAbilityAbilitySynergy ();
         for (int x = 0; x < abilityAbilitySynergy.GetLength (0); x++) {
             string [] word = null;
-            if (lines != null && x < lines.Length) {
-                word = lines [x].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            }
-            for (int y = 0; y < abilityAbilitySynergy.GetLength (1); y++) {
-                int number = 1 + y;
-                if (word != null && number < word.Length) {
-                    abilityAbilitySynergy [x, y] = float.Parse (word [number]);
-                } else {
-                    abilityAbilitySynergy [x, y] = 0.5f;
+            int l1 = abilityAbilitySynergy.GetLength (1);
+            for (int x2 = 0; x2 < l1; x2++) {
+                if (lines != null && x < lines.Length) {
+                    word = lines [1 + x * (l1 + 1) + x2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                }
+                for (int y = 0; y < abilityAbilitySynergy.GetLength (2); y++) {
+                    int l2 = abilityAbilitySynergy.GetLength (3);
+                    for (int y2 = 0; y2 < l2; y2++) {
+                        int number = 2 + y * (l2 + 1) + y2;
+                        if (word != null && number < word.Length) {
+                            abilityAbilitySynergy [x, x2, y, y2] = float.Parse (word [number]);
+                        } else {
+                            abilityAbilitySynergy [x, x2, y, y2] = 0.5f;
+                        }
+                    }
                 }
             }
         }
@@ -307,10 +316,17 @@ public class RatingClass {
         List<string> lines = new List<string> ();
         for (int x = 0; x < abilityAfterAbility.GetLength (0); x++) {
             string s = "[" + x.ToString () + "] ";
-            for (int y = 0; y < abilityAfterAbility.GetLength (1); y++) {
-                s += abilityAfterAbility [x, y].ToString () + " ";
-            }
             lines.Add (s);
+            for (int x2 = 0; x2 < abilityAfterAbility.GetLength (1); x2++) {
+                s = "[" + x2.ToString () + "] ";
+                for (int y = 0; y < abilityAfterAbility.GetLength (2); y++) {
+                    s += "[" + y.ToString () + "] ";
+                    for (int y2 = 0; y2 < abilityAfterAbility.GetLength (3); y2++) {
+                        s += abilityAfterAbility [x, x2, y, y2].ToString () + " ";
+                    }
+                }
+                lines.Add (s);
+            }
         }
         ServerData.SaveRatingAbilityAfterAbility (lines.ToArray ());
     }
@@ -319,15 +335,21 @@ public class RatingClass {
         string [] lines = ServerData.GetRatingAbilityAfterAbility ();
         for (int x = 0; x < abilityAfterAbility.GetLength (0); x++) {
             string [] word = null;
-            if (lines != null && x < lines.Length) {
-                word = lines [x].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            }
-            for (int y = 0; y < abilityAfterAbility.GetLength (1); y++) {
-                int number = 1 + y;
-                if (word != null && number < word.Length) {
-                    abilityAfterAbility [x, y] = float.Parse (word [number]);
-                } else {
-                    abilityAfterAbility [x, y] = 0.5f;
+            int l1 = abilityAfterAbility.GetLength (1);
+            for (int x2 = 0; x2 < l1; x2++) {
+                if (lines != null && x < lines.Length) {
+                    word = lines [1 + x * (l1 + 1) + x2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                }
+                for (int y = 0; y < abilityAfterAbility.GetLength (2); y++) {
+                    int l2 = abilityAfterAbility.GetLength (3);
+                    for (int y2 = 0; y2 < l2; y2++) {
+                        int number = 2 + y * (l2 + 1) + y2;
+                        if (word != null && number < word.Length) {
+                            abilityAfterAbility [x, x2, y, y2] = float.Parse (word [number]);
+                        } else {
+                            abilityAfterAbility [x, x2, y, y2] = 0.5f;
+                        }
+                    }
                 }
             }
         }

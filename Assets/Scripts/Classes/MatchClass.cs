@@ -16,7 +16,7 @@ public class MatchClass {
     public bool finished;
     public bool real = true;
 
-    MoveHistoryClass LastMove;
+    public MoveHistoryClass LastMove;
 
     public MatchPropertiesClass Properties;
 
@@ -151,7 +151,7 @@ public class MatchClass {
         prevMatch = new MatchClass (this);
         PlayerClass player = Player [playerNumber];
         TokenClass token = PlayToken (tile, card, playerNumber);
-        UseAbility (playerNumber, card.abilityArea, card.abilityType, tile);
+        UseAbility (tile, playerNumber, card.abilityArea, card.abilityType);
         SaveLastMove (tile.x, tile.y, card, token, playerNumber);
         UpdateBoard ();
         player.MoveTopCard (stackNumber);
@@ -169,7 +169,18 @@ public class MatchClass {
         }
     }
 
-    public void UseAbility (int playerNumber, int abilityArea, int abilityType, TileClass tile) {
+    public VectorInfo GetVectorInfo (int x, int y, int playerNumber, int abilityArea, int abilityType) {
+        return GetVectorInfo (Board.tile [x, y], abilityArea, abilityType);
+    }
+
+    public VectorInfo GetVectorInfo (TileClass tile, int abilityArea, int abilityType) {
+        AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea).ToArray ();
+        VectorInfo info = new VectorInfo (vectors);
+        info.CheckTriggers (this, tile, abilityType);
+        return info;
+    }
+
+    public void UseAbility (TileClass tile, int playerNumber, int abilityArea, int abilityType) {
         if (abilityType == 7) {
             if (LastMove != null && LastMove.usedCard.abilityType != abilityType) {
                 abilityType = LastMove.usedCard.abilityType;
@@ -177,7 +188,60 @@ public class MatchClass {
         }
         AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea).ToArray ();
         VectorInfo info = new VectorInfo (vectors);
-        foreach (AbilityVector vector in vectors) {
+        info.CheckTriggers (this, tile, abilityType);
+        foreach (TileClass target in info.Triggered1) {
+            switch (abilityType) {
+                case 1:
+                    ModifyTempValue (target, -1);
+                    break;
+                case 2:
+                    ModifyTempValue (target, 1);
+                    break;
+                case 3:
+                    DisableEmptyTile (target);
+                    break;
+                case 4:
+                    Player [playerNumber].AddScore (GetTokenValue (target));
+                    break;
+                case 6:
+                    ModifyTempValue (tile, -1);
+                    break;
+                case 8:
+                    ModifyTempValue (LastPlayedToken ().tile, -1);
+                    break;
+                case 9:
+                    ModifyTempValue (target, 2);
+                    break;
+                case 10:
+                    target.token.SetType (0);
+                    break;
+                case 11:
+                    SwapToken (tile, target);
+                    break;
+                case 12:
+                    ModifyTempValue (target, -4);
+                    break;
+                case 13:
+                    ModifyTempValue (target, tile.token.value - target.token.value);
+                    break;
+            }
+        }
+        foreach (TileClass target in info.Triggered2) {
+            switch (abilityType) {
+                case 2:
+                    CreateToken (target, 0, 1, playerNumber);
+                    break;
+            }
+        }
+        foreach (AbilityVector vector in info.TriggeredVector) {
+            switch (abilityType) {
+                case 5:
+                    MoveToken (vector.target, vector.pushTarget);
+                    break;
+            }
+        }
+
+        /*foreach (AbilityVector vector in vectors) {
             switch (abilityType) {
                 case 1:
                     ModifyTempValue (vector.target, -1);
@@ -232,7 +296,7 @@ public class MatchClass {
                 }
                 break;
 
-        }
+        }*/
     }
 
     public TileClass LastPlayedTile () {
@@ -310,10 +374,8 @@ public class MatchClass {
         if (sourceTile != null && sourceTile.token != null) {
             TokenClass sourceToken = sourceTile.token;
             if (destinationTile != null && destinationTile.enabled) {
-                TokenClass destinationToken = destinationTile.token;
-                if (destinationToken == null) {
+                if (destinationTile.token == null) {
                     sourceTile.AttachToken (null);
-                    //CreateToken (destinationTile, sourceToken);
                     destinationTile.AttachToken (sourceToken);
                 }
             } else {

@@ -65,6 +65,13 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (!Pressed) {
             SetOnMouseOverSprite ();
         }
+        if (!EventSystem.current.IsPointerOverGameObject ()) {
+            switch (name) {
+                case "Tile":
+                    OnMouseOverTileAction ();
+                    break;
+            }
+        }
     }
 
     private void OnMouseExit () {
@@ -119,11 +126,6 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private void OnMouseOver () {
         if (!EventSystem.current.IsPointerOverGameObject ()) {
-            switch (name) {
-                case "Tile":
-                    OnMouseOverTileAction ();
-                    break;
-            }
             if (Input.GetMouseButtonDown (0)) {
                 SetOnMouseClickSprite ();
                 Pressed = true;

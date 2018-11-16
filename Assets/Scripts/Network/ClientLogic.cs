@@ -9,6 +9,6 @@ public class ClientLogic : MonoBehaviour {
     static public void LogIn () {
         //BoardEditorMenu.ShowBoardEditorMenu ();
         //CardPoolEditor.ShowCardPoolEditorMenu ();
-        //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+        ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
     }
 }

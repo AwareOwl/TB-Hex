@@ -50,7 +50,7 @@ public class VisualTile {
     }
 
     static public Vector3 TilePosition (int x, float y, int z) {
-        return new Vector3 (-3.75f + x + (z % 2) * 0.5f, 0 + y, -3.5f + z * Mathf.Sqrt (3) / 2);
+        return new Vector3 (-3.75f + x + (Mathf.Abs (z) % 2) * 0.5f, 0 + y, -3.5f + z * Mathf.Sqrt (3) / 2);
     }
 
     public VisualEffectScript GetAnchorEffect () {

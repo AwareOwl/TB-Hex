@@ -16,6 +16,9 @@ public class InGameUI : GOUI {
 
     static public int NumberOfPlayers = 2;
 
+    static public int CurrentlyOverX = -1;
+    static public int CurrentlyOverY = -1;
+
     override public void DestroyThis () {
         DestroyVisuals ();
     }
@@ -49,15 +52,20 @@ public class InGameUI : GOUI {
         instance = this;
         CurrentGUI = this;
 
-        //CreatePlayersUI ();
-        //PlayedMatch.Board.EnableVisualisation ();
+        CreatePlayersUI ();
+        PlayedMatch.Board.EnableVisualisation ();
+    }
+
+    static public void SelectStack (int x) {
+        SelectedStack = x;
+        RefreshHovers ();
     }
 
 
     public void Update () {
         for (int x = 1; x <= 4; x++) {
             if (Input.GetKeyDown (x.ToString ())) {
-                SelectedStack = x - 1;
+                SelectStack (x - 1);
                 //PlayedMatch.MoveTopCard (MyPlayerNumber, x - 1);
             }
         }
@@ -95,6 +103,7 @@ public class InGameUI : GOUI {
 
     static public void TileAction (int x, int y) {
         PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
+        RefreshHovers ();
     }
 
     static public void ShowInGameUI () {
@@ -127,18 +136,22 @@ public class InGameUI : GOUI {
         }
         int sx = PlayedMatch.Board.tile.GetLength (0);
         int sy = PlayedMatch.Board.tile.GetLength (1);
-        VisualEffectAnchor = new GameObject [sx, sy];
-        for (int x = 0; x < sx; x++) {
-            for (int y = 0; y < sy; y++) {
+        VisualEffectAnchor = new GameObject [sx + 2, sy + 2];
+        for (int x = 0; x < sx + 2; x++) {
+            for (int y = 0; y < sy + 2; y++) {
                 VisualEffectAnchor [x, y] = new GameObject ();
-                VisualEffectAnchor [x, y].transform.localPosition = VisualTile.TilePosition (x, 0.2f, y);
-                VisualEffectAnchor [x, y].transform.localEulerAngles = new Vector3 (x, y, 0);
+                VisualEffectAnchor [x, y].transform.localPosition = VisualTile.TilePosition (x - 1, 0.2f, y - 1);
                 VisualEffectAnchor [x, y].name = "VisualEffectAnchor";
             }
         }
     }
 
+    static public GameObject GetAnchor (int x, int y) {
+        return VisualEffectAnchor [x + 1, y + 1];
+    }
+
     static public void HideAreaHovers () {
+        CurrentlyOverX = -1;
         foreach (GameObject anchor in VisualEffectAnchor) {
             Transform [] childs = new Transform [anchor.transform.childCount];
             for (int c = 0; c < childs.Length; c++) {
@@ -150,17 +163,55 @@ public class InGameUI : GOUI {
         }
     }
 
+    static public void RefreshHovers () {
+        SetAreaHovers (CurrentlyOverX, CurrentlyOverY);
+    }
+
 
     static public void SetAreaHovers (int x, int y) {
+        if (x  < 0) {
+            return;
+        }
         HideAreaHovers ();
-        if (PlayedMatch.Board.tile [x, y].enabled) {
-            List<AbilityVector> list = PlayedMatch.Board.GetAbilityVectors (x, y, GetSelectedCard ().abilityArea);
-            foreach (AbilityVector vector in list) {
-                if (PlayedMatch.Board.IsTileEnabled (vector.x, vector.y)) {
-                    VisualEffectInterface.CreateEffect (VisualEffectAnchor [vector.x, vector.y], GetSelectedCard ().abilityType, true, false);
-                    /*if (PlayedMatch.Board.IsTileInBounds (vector.pushX, vector.pushY)) {
-                        VisualEffectInterface.CreateEffect (VisualEffectAnchor [vector.pushX, vector.pushY], GetSelectedCard ().abilityType, true, false);
-                    }*/
+        CurrentlyOverX = x;
+        CurrentlyOverY = y;
+
+        if (PlayedMatch.Board.tile [x, y].IsEmptyTile ()) {
+            CardClass card = GetSelectedCard ();
+            int abilityType = card.abilityType;
+            int abilityArea = card.abilityArea;
+
+            VisualToken token = new VisualToken ();
+            token.SetState (MyPlayerNumber, card.tokenType, card.value);
+            token.SetParent (GetAnchor (x, y));
+            switch (abilityType) {
+                case 7:
+                    VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, false, false);
+                    if (PlayedMatch.LastMove != null) {
+                        abilityType = PlayedMatch.LastMove.usedCard.abilityType;
+                    }
+                    break;
+            }
+            VectorInfo info = PlayedMatch.GetVectorInfo (x, y, MyPlayerNumber, abilityArea, abilityType);
+            foreach (AbilityVector vector in info.TriggeredVector) {
+                VisualEffectInterface.CreateEffectPointingAt (
+                    GetAnchor (vector.x, vector.y), GetAnchor (vector.pushX, vector.pushY).transform.position, abilityType, true, false);
+                VisualEffectInterface.CreateEffect2 (GetAnchor (vector.pushX, vector.pushY), abilityType, true, false);
+            }
+            foreach (AbilityVector vector in info.NotTriggeredVector) {
+                VisualEffectInterface.CreateEffectPointingAt (
+                    GetAnchor (vector.x, vector.y), GetAnchor (vector.pushX, vector.pushY).transform.position, abilityType, false, false);
+                VisualEffectInterface.CreateEffect2 (GetAnchor (vector.pushX, vector.pushY), abilityType, false, false);
+            }
+            foreach (TileClass tile in info.Triggered1) {
+                VisualEffectInterface.CreateEffect1 (GetAnchor (tile.x, tile.y), abilityType, true, false);
+            }
+            foreach (TileClass tile in info.Triggered2) {
+                VisualEffectInterface.CreateEffect2 (GetAnchor (tile.x, tile.y), abilityType, true, false);
+            }
+            foreach (TileClass tile in info.NotTriggered) {
+                if (tile.enabled) {
+                    VisualEffectInterface.CreateEffect1 (GetAnchor (tile.x, tile.y), abilityType, false, false);
                 }
             }
         }

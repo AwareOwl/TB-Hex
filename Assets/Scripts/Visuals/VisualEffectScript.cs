@@ -27,7 +27,11 @@ public class VisualEffectScript : MonoBehaviour {
 
     Renderer [] renderers;
 
-    public void Init (Color color, int endPhase, bool destroyOnEnd, bool triggered) {
+    public void Init (Color color, int endPhase, bool triggered, bool destroyOnEnd) {
+        this.endPhase = endPhase;
+        this.triggered = triggered;
+        this.destroyOnEnd = destroyOnEnd;
+        SetColor (color);
 	}
 
     public void Init () {
@@ -138,13 +142,13 @@ public class VisualEffectScript : MonoBehaviour {
     public void UpdateColor () {
         if (basicColor != null && basicColor.Count > 0) {
             Color newColor;
-            newColor = basicColor [currentPhase] * percentageTimer
-                + basicColor [Mathf.Min (currentPhase + 1, endPhase)] * (1 - percentageTimer);
+            newColor = basicColor [currentPhase] * (1 - percentageTimer)
+            + basicColor [Mathf.Min (currentPhase + 1, endPhase)] * percentageTimer;
             foreach (Renderer renderer in renderers) {
                 if (triggered) {
                     renderer.material.color = newColor;
                 } else {
-                    renderer.material.color = new Color (0.75f, 0.75f, 0.75f, newColor.a) * 0.8f + newColor * 0.2f;
+                    renderer.material.color = new Color (0.25f, 0.25f, 0.25f, newColor.a) * 0.7f + newColor * 0.3f;
                 }
             }
         }

@@ -20,13 +20,23 @@ public class VisualToken {
     public VisualToken (TokenClass tokenClass) {
         this.tokenClass = tokenClass;
         CreateToken ();
-        Anchor.transform.parent = tokenClass.tile.visualTile.Anchor.transform;
-        Anchor.transform.localPosition = new Vector3 (0, 0.4f, 0);
+        SetParent (tokenClass.tile.visualTile.Anchor);
         SetState ();
+    }
+
+    public void SetParent (GameObject parent) {
+        Anchor.transform.parent = parent.transform;
+        Anchor.transform.localPosition = new Vector3 (0, 0.4f, 0);
     }
 
     public void DestroyToken () {
         GameObject.Destroy (Anchor);
+    }
+
+    public void SetState (int owner, int type, int value) {
+        SetOwner (owner);
+        SetValue (value);
+        SetType (type);
     }
 
     public void SetState () {
@@ -36,7 +46,11 @@ public class VisualToken {
     }
 
     public void SetOwner () {
-        Base.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.PlayerColor [tokenClass.owner]);
+        SetOwner (tokenClass.owner);
+    }
+
+    public void SetOwner (int owner) {
+        Base.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.PlayerColor [owner]);
     }
 
     public void SetValue () {
@@ -49,6 +63,10 @@ public class VisualToken {
 
     public void SetType () {
         SetType (tokenClass.type);
+    }
+    public void SetType (int type) {
+        Border.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetBorderColorMain (type));
+        Type = type;
     }
 
     public void CreateToken () {
@@ -94,9 +112,5 @@ public class VisualToken {
         Anchor.GetComponent<VisualEffectScript> ().lerpPosition = true;
     }
 
-    public void SetType (int type) {
-        Border.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetBorderColorMain (type));
-        Type = type;
-    }
 
 }

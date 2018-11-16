@@ -16,6 +16,11 @@ public class AbilityVector {
     public int flipY;
     public TileClass flipTarget;
 
+
+    public AbilityVector (TileClass tile) {
+        target = tile;
+    }
+
     public AbilityVector (BoardClass board, int sx, int sy, int relativeNumber) {
         switch (relativeNumber) {
             case 1:

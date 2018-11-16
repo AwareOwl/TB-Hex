@@ -16,7 +16,7 @@ public class InputController : MonoBehaviour {
 	void Update () {
         timer += Time.deltaTime;
         //Debug.Log (ClientLogic.MyInterface.AccountName);
-        if (autoRunAI) {
+        /*if (autoRunAI) {
             if (ClientLogic.MyInterface.AccountName != null && ClientLogic.MyInterface.AccountName != "") {
                 for (int x = 0; x < 2; x++) {
                     ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
@@ -27,6 +27,6 @@ public class InputController : MonoBehaviour {
                 timer -= 20;
                 RatingClass.SaveEverything ();
             }
-        }
+        }*/
 	}
 }
