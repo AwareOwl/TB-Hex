@@ -6,7 +6,8 @@ public class VisualEffectScript : MonoBehaviour {
     
 	public bool triggered = true;
     public bool destroyOnEnd = false;
-	public int endPhase = 1;
+    public bool destroyThisOnEnd = false;
+    public int endPhase = 1;
     
 	float timer;
     float percentageTimer;
@@ -220,6 +221,14 @@ public class VisualEffectScript : MonoBehaviour {
         UpdateColor ();
         UpdatePosition ();
         UpdateScale ();
+        if (currentPhase == endPhase) {
+            if (destroyThisOnEnd) {
+                GameObject.DestroyImmediate (this);
+            }
+            if (destroyOnEnd) {
+                GameObject.DestroyImmediate (gameObject);
+            }
+        }
     }
 
     public void PushToHeight (float height) {

@@ -1,0 +1,14 @@
+[0] No ability
+[1] Injure
+[2] Aid
+[3] Collapse
+[4] Claim the territory
+[5] Knockback
+[6] Cover
+[7] Mirror reflection
+[8] Barrage
+[9] Promote
+[10] Cleanse
+[11] Swap positions
+[12] Thunder
+[13] Equality

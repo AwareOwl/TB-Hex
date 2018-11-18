@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class VisualTile {
 
+    public TileClass tile;
+
     public GameObject Anchor;
     public GameObject Tile;
     public GameObject Collider;
@@ -12,9 +14,10 @@ public class VisualTile {
     public VisualTile () {
     }
 
-    public VisualTile (TileClass field) {
-        CreateTile (field.x, field.y);
-        EnableTile (field.enabled);
+    public VisualTile (TileClass tile) {
+        this.tile = tile;
+        CreateTile (tile.x, tile.y);
+        EnableTile (tile.enabled);
     }
 
     void CreateTile (int x, int y) {
@@ -26,6 +29,7 @@ public class VisualTile {
         Collider.transform.localScale = new Vector3 (0.5f, 0.5f, 0.2f);
         Collider.name = "Tile";
         Collider.AddComponent<UIController> ();
+        Collider.GetComponent<UIController> ().tile = this.tile;
         Collider.GetComponent<UIController> ().x = x;
         Collider.GetComponent<UIController> ().y = y;
         Collider.GetComponent<UIController> ().HoverObject = Collider.transform.Find ("Hover").gameObject;

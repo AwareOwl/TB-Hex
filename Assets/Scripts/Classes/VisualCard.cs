@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class VisualCard {
 
+    CardClass card;
     public GameObject Anchor;
     public GameObject Background;
     GameObject AbilityTile;
@@ -16,6 +17,7 @@ public class VisualCard {
     }
 
     public VisualCard (CardClass card) {
+        this.card = card;
         NewCard ();
         SetState (card);
     }
@@ -107,6 +109,7 @@ public class VisualCard {
         Background.transform.localScale = new Vector3 (1.2f, 0.05f, 1.4f);
         Background.transform.localPosition = new Vector3 (0, 0, -0.2f);
         Background.GetComponent<Renderer> ().material.color = Color.black;
+        Background.AddComponent<UIController> ().card = card;
         Background.name = "Card";
 
         Area = new VisualArea ();

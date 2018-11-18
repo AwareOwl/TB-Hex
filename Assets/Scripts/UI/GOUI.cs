@@ -9,6 +9,7 @@ public class GOUI : MonoBehaviour {
     static public GameObject CurrentCanvas;
     static public GameObject UICanvas;
     static public GOUI CurrentGUI;
+    static public GameObject CurrentTooltip;
 
     static float globalScale = 2;
 
@@ -91,13 +92,20 @@ public class GOUI : MonoBehaviour {
         SetInPixScale (Clone, sx, sy);
         return Clone;
     }
+    static public void SetInPixPosition (GameObject Clone, int x, int y, int z) {
+        SetInPixPosition (Clone, x, y, z, true);
+    }
 
-	static public void SetInPixPosition (GameObject Clone, int x, int y, int z) {
-		Clone.transform.localPosition = new Vector3 (globalScale * (x - 720f) / 1080, globalScale * (540f - y) / 1080, 0);
-        Clone.GetComponent<Renderer> ().sortingOrder = z;
-        AddColider (Clone);
-        if (Clone.GetComponent<BoxCollider> () != null) {
-            Clone.GetComponent<BoxCollider> ().center = new Vector3 (0, 0, -z * 0.01f);
+    static public void SetInPixPosition (GameObject Clone, int x, int y, int z, bool updateCollider) {
+        Clone.transform.localPosition = new Vector3 (globalScale * (x - 720f) / 1080, globalScale * (540f - y) / 1080, 0);
+        if (Clone.GetComponent<Renderer> () != null) {
+            Clone.GetComponent<Renderer> ().sortingOrder = z;
+        }
+        if (updateCollider) {
+            AddColider (Clone);
+            if (Clone.GetComponent<BoxCollider> () != null) {
+                Clone.GetComponent<BoxCollider> ().center = new Vector3 (0, 0, -z * 0.01f);
+            }
         }
     }
 
@@ -113,12 +121,6 @@ public class GOUI : MonoBehaviour {
             Clone.AddComponent<BoxCollider> ().size = (Vector3) Clone.GetComponent<SpriteRenderer> ().size + new Vector3 (0, 0, 0.05f);
             Clone.GetComponent<BoxCollider> ().center = center;
             Clone.GetComponent<BoxCollider> ().enabled = enabled;
-            /*if (Clone.GetComponent<BoxCollider2D> () != null) {
-				enabled = Clone.GetComponent<BoxCollider2D> ().enabled;
-				DestroyImmediate (Clone.GetComponent<BoxCollider2D> ());
-			}
-			Clone.AddComponent<BoxCollider2D> ().size = Clone.GetComponent<SpriteRenderer> ().size;
-			Clone.GetComponent<BoxCollider2D> ().enabled = enabled;*/
         }
 	}
 
@@ -132,15 +134,21 @@ public class GOUI : MonoBehaviour {
 
 	static public float GetInPixPositionY (int y) {
 		return 10f * (y - 540) / 1080;
-	}
+    }
 
-	static public void SetInPixScale (GameObject Clone, int x, int y) {
+    static public void SetInPixScale (GameObject Clone, int x, int y) {
+        SetInPixScale (Clone, x, y, true);
+    }
+
+    static public void SetInPixScale (GameObject Clone, int x, int y, bool updateCollider) {
         Clone.GetComponent<SpriteRenderer> ().size = new Vector2 (10f * x / 1080f, 10f * y / 1080f);
         Clone.transform.localScale = new Vector3 (globalScale * 0.1f, globalScale * 0.1f, 0.1f); //new Vector3 (Mathf.Min (x, y) / 1080f, Mathf.Min (x, y) / 1080f, 1);
-        AddColider (Clone);
-	}
+        if (updateCollider) {
+            AddColider (Clone);
+        }
+    }
 
-	static public void SetSpriteScale (GameObject Clone, int x, int y) {
+    static public void SetSpriteScale (GameObject Clone, int x, int y) {
 		Clone.GetComponent<SpriteRenderer> ().size = new Vector2 (x / 180f, y / 180f);
 		AddColider (Clone);
 	}
@@ -187,7 +195,7 @@ public class GOUI : MonoBehaviour {
         clone = Instantiate (Resources.Load ("Prefabs/PreUIButton")) as GameObject;
         clone.transform.SetParent (UICanvas.transform);
         clone.GetComponent<Image> ().sprite = GetSprite (assetName);
-        clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px - 720, -py + 540);
+        SetAnchoredPosition (clone, px, py);
         clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (sx, sy);
         clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
         clone.AddComponent<UIController> ();
@@ -203,7 +211,7 @@ public class GOUI : MonoBehaviour {
 
         clone = Instantiate (Resources.Load ("Prefabs/PreInputField")) as GameObject;
         clone.transform.SetParent (UICanvas.transform);
-        clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px - 720, -py + 540);
+        SetAnchoredPosition (clone, px, py);
         clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (sx, sy);
         clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
         clone.transform.Find ("Placeholder").GetComponent<Text> ().fontSize = sy / 2;
@@ -219,8 +227,12 @@ public class GOUI : MonoBehaviour {
         Clone.GetComponent<Text> ().text = text;
         Clone.transform.SetParent (UICanvas.transform);
         Clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
-        Clone.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px - 720, -py + 540);
+        SetAnchoredPosition (Clone, px, py);
         return Clone;
+    }
+
+    static public void SetAnchoredPosition (GameObject obj, int px, int py) {
+        obj.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (px - 720, -py + 540);
     }
 
     static public void AddTextToGameObject (GameObject obj, GameObject text) {
@@ -259,15 +271,7 @@ public class GOUI : MonoBehaviour {
             Debug.Log ("Wut");
             DestroyImmediate (Background);
         });
-        /*
-        Background = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 20, textWidth + 150, textHeight + 210, false);
 
-        Button = CreateSprite ("UI/Butt_M_EmptySquare", 720, 540 + textHeight / 2 + 15, 21, 90, 60, false);
-        Button.name = "CloseMessage";
-        Clone = CreateText ("Ok", 720, 540 + textHeight / 2 + 15, 22, 0.03f);
-        AddTextToGameObject (Button, Clone);
-        AddReferences (Button, new GameObject [] { Background, Text, Clone });
-        */
         return Background;
     }
 }

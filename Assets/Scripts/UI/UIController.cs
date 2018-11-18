@@ -16,7 +16,13 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public GameObject Text;
     public GameObject HoverObject;
 
+    public CardClass card;
+    public TileClass tile;
+
     public List<GameObject> references = new List<GameObject> ();
+
+    public float timer = 0f;
+    public float timeToTooltip = 0.25f;
 
     public bool Over = false;
     public bool Pressed;
@@ -61,6 +67,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 
     private void OnMouseEnter () {
+        timer = 0;
         Over = true;
         if (!Pressed) {
             SetOnMouseOverSprite ();
@@ -75,6 +82,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
 
     private void OnMouseExit () {
+        Tooltip.DestroyTooltip ();
         switch (name) {
             case "Tile":
                 OnMouseLeaveTileAction ();
@@ -124,8 +132,23 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
+    public void CreateTooltip () {
+        if (card != null) {
+            Tooltip.NewTooltip (transform, card);
+        }
+        if (tile != null && tile.token != null) {
+            Tooltip.NewTooltip (transform, tile.token);
+        }
+    }
+
     private void OnMouseOver () {
         if (!EventSystem.current.IsPointerOverGameObject ()) {
+            if (Over) {
+                if (timer < timeToTooltip && timer + Time.deltaTime >= timeToTooltip) {
+                    CreateTooltip ();
+                }
+                timer += Time.deltaTime;
+            }
             if (Input.GetMouseButtonDown (0)) {
                 SetOnMouseClickSprite ();
                 Pressed = true;

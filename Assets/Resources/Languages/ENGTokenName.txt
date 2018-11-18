@@ -1,0 +1,2 @@
+[0] Normal Token
+[1] Golden Token

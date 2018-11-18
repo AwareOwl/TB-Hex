@@ -12,7 +12,6 @@ public class VisualEffectInterface : MonoBehaviour {
     static public void CreateEffectPointingAt (GameObject anchor, Vector3 lookAtPosition, int effectNumber, bool triggered, bool autoDestroy) {
 
         GameObject Clone = CreateEffect (anchor, VisualCard.GetIconPath (effectNumber), AppDefaults.GetAbilityColor (effectNumber), triggered, autoDestroy);
-        Debug.Log (anchor.transform.position + " " + lookAtPosition);
         Clone.transform.LookAt (lookAtPosition);
         Clone.transform.localEulerAngles += new Vector3 (-90, -90, 0);
     }

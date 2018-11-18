@@ -22,6 +22,8 @@ public class MatchClass {
 
     public MatchClass prevMatch;
 
+    public VisualMatch visualMatch;
+
 
     public MatchClass () {
 
@@ -139,6 +141,7 @@ public class MatchClass {
         if (!finished && turnOfPlayer == playerNumber && tile.enabled && tile.token == null) {
             PlayerClass player = Player [playerNumber];
             CardClass card = player.GetTopCard (stackNumber);
+            VisualPlayCard (playerNumber, card);
             PlayCard (x, y, playerNumber, stackNumber, card);
         }
     }
@@ -156,6 +159,12 @@ public class MatchClass {
         UpdateBoard ();
         player.MoveTopCard (stackNumber);
         EndTurn ();
+    }
+
+    public void VisualPlayCard (int playerNumber, CardClass card) {
+        if (visualMatch != null) {
+            visualMatch.PlayCard (playerNumber, card);
+        }
     }
 
     public void SaveLastMove (int x, int y, CardClass playedCard, TokenClass token, int playerNumber) {
@@ -206,17 +215,11 @@ public class MatchClass {
                 case 6:
                     ModifyTempValue (tile, -1);
                     break;
-                case 8:
-                    ModifyTempValue (LastPlayedToken ().tile, -1);
-                    break;
                 case 9:
                     ModifyTempValue (target, 2);
                     break;
                 case 10:
                     target.token.SetType (0);
-                    break;
-                case 11:
-                    SwapToken (tile, target);
                     break;
                 case 12:
                     ModifyTempValue (target, -4);
@@ -230,6 +233,12 @@ public class MatchClass {
             switch (abilityType) {
                 case 2:
                     CreateToken (target, 0, 1, playerNumber);
+                    break;
+                case 8:
+                    ModifyTempValue (LastPlayedToken ().tile, -1);
+                    break;
+                case 11:
+                    SwapToken (tile, target);
                     break;
             }
         }
@@ -430,6 +439,11 @@ public class MatchClass {
     }
 
     public void EnableVisuals () {
+        if (visualMatch == null) {
+            visualMatch = new VisualMatch ();
+            visualMatch.EnableVisual ();
+        }
+        Board.EnableVisualisation ();
         for (int x = 1; x < Player.Length; x++) {
             Player [x].EnableVisuals ();
         }

@@ -7,6 +7,8 @@ public class AppDefaults {
     static public int AvailableTokens = 2; 
     static public int AvailableAbilities = 14; // Always + 1, to include null
 
+
+    static public Shader sprite;
     static public Object Tile;
 
     static public float TokenSpawnHeight = 10f;
@@ -16,6 +18,7 @@ public class AppDefaults {
     static AppDefaults () {
         LoadPlayerColors ();
         Tile = Resources.Load ("Prefabs/Tile");
+        sprite = Shader.Find ("Sprites/Default");
     }
     static public Color GetBorderColorMain (int type) {
         switch (type) {

@@ -1,0 +1,14 @@
+[0] Brak umiejêtnoœci
+[1] Uszkodzenie
+[2] Wsparcie
+[3] Collapse
+[4] Terytorialne roszczenia
+[5] Odrzucenie
+[6] Os³ona
+[7] Lustrzane odbicie
+[8] Ogieñ zaporowy
+[9] Awans
+[10] Oczyszczenie
+[11] Podmiana pozycji
+[12] Grzmot
+[13] Równoœæ

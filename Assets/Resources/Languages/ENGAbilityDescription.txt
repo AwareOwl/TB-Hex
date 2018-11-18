@@ -1,0 +1,14 @@
+[0] 
+[1] Reduces value of target tokens by %d1.
+[2] Increases values of target tokens by %d1 and creates Normal Tokens with value %d2 on target empty tiles.
+[3] Destroys target empty tiles.
+[4] Increases your current score by sum of values of target tokens.
+[5] Pushes target tokens away from played token unless their path is blocked by another token.
+[6] Reduces value of played token by %d1 for every target empty field.
+[7] This ability has the same effect as the last played ability.
+[8] Reduces value of last played token by %d1 for every target enemy token.
+[9] Increases value of weakest target token by %d1.
+[10] Changes types of target tokens to Normal Tokens.
+[11] Swaps positions of played token with last played token.
+[12] Reduces value of strongest target token by %d1.
+[13] Sets values of target tokens to value of played token.

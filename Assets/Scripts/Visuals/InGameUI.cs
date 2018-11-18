@@ -53,7 +53,7 @@ public class InGameUI : GOUI {
         CurrentGUI = this;
 
         CreatePlayersUI ();
-        PlayedMatch.Board.EnableVisualisation ();
+        PlayedMatch.EnableVisuals ();
     }
 
     static public void SelectStack (int x) {
@@ -182,6 +182,7 @@ public class InGameUI : GOUI {
             int abilityArea = card.abilityArea;
 
             VisualToken token = new VisualToken ();
+            token.AddCreateAnimation ();
             token.SetState (MyPlayerNumber, card.tokenType, card.value);
             token.SetParent (GetAnchor (x, y));
             switch (abilityType) {

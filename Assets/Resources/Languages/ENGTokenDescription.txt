@@ -1,0 +1,2 @@
+[0] No special properties.
+[1] Generates double score income.

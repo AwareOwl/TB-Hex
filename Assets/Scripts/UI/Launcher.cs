@@ -16,12 +16,6 @@ public class Launcher : GOUI {
         //VisualCard.Make4Cards ();
         //InGameUI.CreatePlayersUI ();
         CreateLauncherGUI ();
-
-        //ShowMessage ("test.");
-        //ShowMessage ("Some error occured, please try again.");
-        /*ShowMessage ("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin scelerisque sodales mi et accumsan. " +
-            "Aliquam erat volutpat. Donec est turpis, interdum ut risus nec, congue viverra nulla. Morbi fermentum massa a lorem pulvinar ornare eu at neque. " +
-            "Quisque id hendrerit lorem.");*/
     }
 
     public void Test () {

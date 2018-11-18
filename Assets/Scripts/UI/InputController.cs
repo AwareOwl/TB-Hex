@@ -14,6 +14,7 @@ public class InputController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        //Tooltip.CreateComplexTooltip (null);
         timer += Time.deltaTime;
         //Debug.Log (ClientLogic.MyInterface.AccountName);
         /*if (autoRunAI) {
