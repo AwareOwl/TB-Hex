@@ -139,6 +139,14 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (tile != null && tile.token != null) {
             Tooltip.NewTooltip (transform, tile.token);
         }
+        switch (name) {
+            case "StartHost":
+                Tooltip.NewTooltip (transform, Language.CreateLocalNetworkTooltip);
+                break;
+            case "StartClient":
+                Tooltip.NewTooltip (transform, Language.JoinLocalNetworkTooltip);
+                break;
+        }
     }
 
     private void OnMouseOver () {

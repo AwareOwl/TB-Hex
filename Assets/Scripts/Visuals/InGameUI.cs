@@ -24,6 +24,7 @@ public class InGameUI : GOUI {
     }
 
     public void DestroyVisuals () {
+        DestroyImmediate (VisualMatch.instance);
         if (VisualEffectAnchor != null) {
             foreach (GameObject obj in VisualEffectAnchor) {
                 if (obj != null) {
@@ -55,6 +56,7 @@ public class InGameUI : GOUI {
         CreatePlayersUI ();
         PlayedMatch.EnableVisuals ();
     }
+    
 
     static public void SelectStack (int x) {
         SelectedStack = x;

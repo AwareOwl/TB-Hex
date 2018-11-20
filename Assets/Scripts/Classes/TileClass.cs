@@ -88,21 +88,6 @@ public class TileClass {
         return token;
     }
 
-    public TokenClass CreateToken (TokenClass token) {
-        if (token != null) {
-            return CreateToken (token.type, token.value, token.owner);
-        }
-        return null;
-    }
-
-    public TokenClass CreateToken (CardClass card, int owner) {
-        if (card != null) {
-            return CreateToken (card.tokenType, card.value, owner);
-        }
-        return null;
-    }
-
-
     public TokenClass CreateToken (int type, int value, int owner) {
         if (enabled && token == null) {
             token = new TokenClass (this, type, value, owner);

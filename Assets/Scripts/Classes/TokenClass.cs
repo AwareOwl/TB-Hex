@@ -37,19 +37,20 @@ public class TokenClass {
     public void EnableVisual () {
         if (visualToken == null) {
             visualToken = new VisualToken (this);
-            visualToken.AddCreateAnimation ();
+            visualToken.DelayedAddCreateAnimation ();
+            //visualToken.DelayedAddCreateAnimation ();
         }
     }
 
     public void RefreshVisual () {
         if (visualToken != null) {
-            visualToken.SetState ();
+            visualToken.DelayedSetState ();
         }
     }
 
     public void DestroyVisual () {
         if (visualToken != null) {
-            visualToken.DestroyToken ();
+            visualToken.DelayedDestroyToken ();
             visualToken = null;
         }
     }

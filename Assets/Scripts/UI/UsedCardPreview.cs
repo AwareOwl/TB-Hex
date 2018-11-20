@@ -67,7 +67,7 @@ public class UsedCardPreview : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        timer += Time.deltaTime * ExistingPreviews [PlayerNumber].Count;
+        timer += Time.deltaTime * ExistingPreviews [PlayerNumber].Count * ExistingPreviews [PlayerNumber].Count;
         RefreshPosition ();
         /*if (PlayerScript.CScript () == null && gameObject != null) {
             DestroyImmediate (gameObject);

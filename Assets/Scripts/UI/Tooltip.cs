@@ -53,6 +53,12 @@ public class Tooltip : GOUI {
         garbage = new List<GameObject> ();
     }
 
+    static public void NewTooltip (Transform transform, string s) {
+        NewTooltip ();
+        AddFragment (null, s, false);
+        FinalizeTooltip (transform);
+    }
+
     static public void NewTooltip (Transform transform, CardClass card) {
         NewTooltip ();
         AddFragment (null, Language.AbilityName [card.abilityType], true);

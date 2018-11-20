@@ -101,7 +101,7 @@ public class MatchClass {
             }
         }
         if (real) {
-            RatingClass.AnalyzeStatistics (this);
+            //RatingClass.AnalyzeStatistics (this);
             //Debug.Log ("GameFinished: " + winner.playerNumber + " " + Player [1].score + " " + Player [2].score + " " + turn);
         }
     }
@@ -157,7 +157,7 @@ public class MatchClass {
         UseAbility (tile, playerNumber, card.abilityArea, card.abilityType);
         SaveLastMove (tile.x, tile.y, card, token, playerNumber);
         UpdateBoard ();
-        player.MoveTopCard (stackNumber);
+        /*player.MoveTopCard (stackNumber);*/
         EndTurn ();
     }
 
@@ -337,18 +337,12 @@ public class MatchClass {
 
     public TokenClass PlayToken (TileClass tile, CardClass card, int playerNumber) {
         if (tile != null) {
-            TokenClass token = CreateToken (tile, card, playerNumber);
+            TokenClass token = CreateToken (tile, card.tokenType, card.value, playerNumber);
+            //TokenClass token = tile.CreateToken (card, playerNumber);
             if (tile.visualTile != null) {
-                tile.token.visualToken.AddPlayAnimation ();
+                tile.token.visualToken.DelayedAddPlayAnimation ();
             }
             return token;
-        }
-        return null;
-    }
-
-    public TokenClass CreateToken (TileClass tile, CardClass card, int playerNumber) {
-        if (tile != null) {
-            return tile.CreateToken (card, playerNumber);
         }
         return null;
     }
@@ -356,13 +350,6 @@ public class MatchClass {
     public TokenClass CreateToken (TileClass tile, int type, int value, int playerNumber) {
         if (tile != null) {
             return tile.CreateToken (type, value, playerNumber);
-        }
-        return null;
-    }
-
-    public TokenClass CreateToken (TileClass tile, TokenClass token) {
-        if (tile != null) {
-            return tile.CreateToken (token);
         }
         return null;
     }
@@ -440,7 +427,7 @@ public class MatchClass {
 
     public void EnableVisuals () {
         if (visualMatch == null) {
-            visualMatch = new VisualMatch ();
+            visualMatch = InGameUI.instance.gameObject.AddComponent<VisualMatch> ();
             visualMatch.EnableVisual ();
         }
         Board.EnableVisualisation ();

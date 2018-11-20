@@ -1,0 +1,2 @@
+[0] Utwórz w³asny serwer dziêki któremu bêdziesz móg³ graæ w Token Battle Hex. Gracze z Twojej sieci lokalnej bêd¹ mogli siê pod³¹czyæ do tego serwera.
+[1] Do³¹cz siê do serwera w Twojej sieci lokalnej, aby móc graæ w Token Battle Hex ze znajomymi. Jedna osoba z sieci musi za³o¿yæ serwer abyœ móg³ skorzystaæ z tej opcji.

@@ -8,6 +8,7 @@ public class Language {
     static string SelectedLanguageKey = "SelectedLanguage";
 
     static string UIKey = "UI";
+    static string UITooltipKey = "UITooltip";
     static string TokenNameKey = "TokenName";
     static string TokenDescriptionKey = "TokenDescription";
     static string AbilityNameKey = "AbilityName";
@@ -20,13 +21,16 @@ public class Language {
     static public string [] FileName = new string [2] { "ENG", "PL" };
 
     static public string [] UI;
+    static public string [] UITooltip;
     static public string [] AbilityName;
     static public string [] AbilityDescription;
     static public string [] TokenName;
     static public string [] TokenDescription;
 
     static public string CreateLocalNetwork;
+    static public string CreateLocalNetworkTooltip;
     static public string JoinLocalNetwork;
+    static public string JoinLocalNetworkTooltip;
 
     static public string AccountName;
     static public string Password;
@@ -87,6 +91,23 @@ public class Language {
         AccountNameCantBeNullKey = 12;
         AccountWithThisNameAlreadyExistsKey = 13;
         AccountCreatedKey = 14;
+
+        path = "Languages/" + FileName [language] + UITooltipKey;
+        asset = Resources.Load (path) as TextAsset;
+        allLines = asset.text;
+        lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
+        UITooltip = new string [lines.Length];
+        for (int x = 0; x < lines.Length; x++) {
+            int index = lines [x].IndexOf (']');
+            if (lines [x].Length > index + 2) {
+                UITooltip [x] = lines [x].Substring (index + 2);
+            } else {
+                UITooltip [x] = "";
+            }
+        }
+
+        CreateLocalNetworkTooltip = UITooltip [0];
+        JoinLocalNetworkTooltip = UITooltip [1];
 
         LoadNamesAndDescriptions (language);
     }

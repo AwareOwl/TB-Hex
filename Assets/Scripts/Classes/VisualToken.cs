@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class VisualToken {
 
-    public TokenClass tokenClass;
+    public TokenClass token;
 
     public GameObject Anchor;
     public GameObject Base;
@@ -18,10 +18,22 @@ public class VisualToken {
     }
 
     public VisualToken (TokenClass tokenClass) {
-        this.tokenClass = tokenClass;
+        this.token = tokenClass;
+        DelayedInit ();
+    }
+
+    public void DelayedInit () {
+        Anchor = new GameObject ();
+        VisualMatch.instance.Init (this, token.tile.visualTile.Anchor, 
+            token.owner,
+            token.type,
+            token.value);
+    }
+
+    public void Init (GameObject parent, int owner, int type, int value) {
         CreateToken ();
-        SetParent (tokenClass.tile.visualTile.Anchor);
-        SetState ();
+        SetParent (token.tile.visualTile.Anchor);
+        SetState (owner, type, value);
     }
 
     public void SetParent (GameObject parent) {
@@ -29,8 +41,18 @@ public class VisualToken {
         Anchor.transform.localPosition = new Vector3 (0, 0.4f, 0);
     }
 
-    public void DestroyToken () {
-        GameObject.Destroy (Anchor);
+    public void DestroyToken (GameObject anchor) {
+        //if (anchor != null) {
+            VisualEffectScript VEScript = anchor.AddComponent<VisualEffectScript> ();
+            VEScript.SetScale (new Vector3 [] { new Vector3 (1, 1, 1), new Vector3 (0, 0, 0) });
+            VEScript.SetPhaseTimer (0.5f);
+            VEScript.destroyOnEnd = true;
+        //}
+        //GameObject.Destroy (anchor);
+    }
+
+    public void DelayedDestroyToken () {
+        VisualMatch.instance.DestroyToken (this, Anchor);
     }
 
     public void SetState (int owner, int type, int value) {
@@ -38,15 +60,19 @@ public class VisualToken {
         SetValue (value);
         SetType (type);
     }
-
+    /*
     public void SetState () {
         SetOwner ();
         SetValue ();
         SetType ();
+    }*/
+
+    public void DelayedSetState () {
+        VisualMatch.instance.SetState (this, token.owner, token.type, token.value);
     }
 
     public void SetOwner () {
-        SetOwner (tokenClass.owner);
+        SetOwner (token.owner);
     }
 
     public void SetOwner (int owner) {
@@ -54,7 +80,7 @@ public class VisualToken {
     }
 
     public void SetValue () {
-        SetValue (tokenClass.value);
+        SetValue (token.value);
     }
 
     public void SetValue (int value) {
@@ -62,7 +88,7 @@ public class VisualToken {
     }
 
     public void SetType () {
-        SetType (tokenClass.type);
+        SetType (token.type);
     }
     public void SetType (int type) {
         Border.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetBorderColorMain (type));
@@ -70,7 +96,9 @@ public class VisualToken {
     }
 
     public void CreateToken () {
-        Anchor = new GameObject ();
+        if (Anchor == null) {
+            Anchor = new GameObject ();
+        }
 
         Base = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBase")) as GameObject;
         Base.AddComponent<VisualEffectScript> ().SetColor (new Color (0.8f, 0.8f, 0.8f));
@@ -94,9 +122,17 @@ public class VisualToken {
         Anchor.AddComponent<VisualEffectScript> ().SetPhaseTimer (0.5f);
     }
 
+    public void DelayedCreateToken () {
+        VisualMatch.instance.CreateToken (this);
+    }
+
     public void AddCreateAnimation () {
         Anchor.GetComponent<VisualEffectScript> ().SetScale (new Vector3 [2] {
         new Vector3 (0, 0, 0), new Vector3 (1, 1, 1) });
+    }
+
+    public void DelayedAddCreateAnimation () {
+        VisualMatch.instance.AddCreateAnimation (this);
     }
 
     public void AddPlayAnimation () {
@@ -106,6 +142,10 @@ public class VisualToken {
         float height = 2;
         VEScript.SetDeltaPosition (new Vector3 [3] {
         new Vector3 (0, height, 0), new Vector3 (0, height, 0), new Vector3 (0, 0, 0) });
+    }
+
+    public void DelayedAddPlayAnimation () {
+        VisualMatch.instance.AddPlayAnimation (this);
     }
 
     public void AddLerpAnimation () {

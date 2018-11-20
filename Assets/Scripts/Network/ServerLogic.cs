@@ -59,7 +59,7 @@ public class ServerLogic : MonoBehaviour {
         hand1.GenerateRandomHand ();
         hand2.GenerateRandomHand ();
         MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
-            new PlayerPropertiesClass (1, false, client.AccountName, hand1),
+            new PlayerPropertiesClass (1, true, client.AccountName, hand1),
             new PlayerPropertiesClass (2, true, "Doge2", hand2) });
     }
 }
