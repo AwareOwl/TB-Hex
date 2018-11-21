@@ -10,7 +10,8 @@ public class RegisterMenu : GOUI {
 
     static public GameObject BackgroundObject;
 
-    static public GameObject UsernameObject;
+    static public GameObject AccountNameObject;
+    static public GameObject UserNameObject;
     static public GameObject PasswordObject;
     static public GameObject ConfirmPasswordObject;
     static public GameObject EmailObject;
@@ -18,7 +19,8 @@ public class RegisterMenu : GOUI {
     static public GameObject LoginObject;
     static public GameObject RegisterObject;
 
-    static public InputField usernameInput;
+    static public InputField accountNameInput;
+    static public InputField userNameInput;
     static public InputField passwordInput;
     static public InputField confirmPasswordInput;
     static public InputField emailInput;
@@ -41,7 +43,8 @@ public class RegisterMenu : GOUI {
         if (instance != null) {
             DestroyImmediate (BackgroundObject);
 
-            DestroyImmediate (UsernameObject);
+            DestroyImmediate (AccountNameObject);
+            DestroyImmediate (UserNameObject);
             DestroyImmediate (PasswordObject);
             DestroyImmediate (ConfirmPasswordObject);
             DestroyImmediate (EmailObject);
@@ -57,15 +60,17 @@ public class RegisterMenu : GOUI {
         if (Input.GetKeyDown (KeyCode.Tab)) {
             GameObject obj = EventSystem.current.currentSelectedGameObject;
             if (obj == null) {
-                usernameInput.Select ();
-            } else if (obj == UsernameObject) {
+                accountNameInput.Select ();
+            } else if (obj == AccountNameObject) {
+                userNameInput.Select ();
+            } else if (obj == UserNameObject) {
                 passwordInput.Select ();
             } else if (obj == PasswordObject) {
                 confirmPasswordInput.Select ();
             } else if (obj == ConfirmPasswordObject) {
                 emailInput.Select ();
             } else {
-                usernameInput.Select ();
+                accountNameInput.Select ();
             }
         }
     }
@@ -73,7 +78,7 @@ public class RegisterMenu : GOUI {
 
     static public void Register () {
         if (passwordInput.text == confirmPasswordInput.text) {
-            ClientLogic.MyInterface.CmdRegister (usernameInput.text, passwordInput.text, emailInput.text);
+            ClientLogic.MyInterface.CmdRegister (accountNameInput.text, userNameInput.text, passwordInput.text, emailInput.text);
         } else {
             ShowMessage ("Passwords don't match.");
         }
@@ -89,16 +94,23 @@ public class RegisterMenu : GOUI {
         int sy;
 
         px = 720;
-        py = 315;
+        py = 285;
         sx = 400;
         sy = 60;
 
-        BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", px, 540, 10, sx + 120, 630, false);
+        BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", px, 540, 10, sx + 120, 705, false);
 
         Clone = CreateInputField (Language.AccountName, px, py, sx, sy);
-        usernameInput = Clone.GetComponent<InputField> ();
-        UsernameObject = Clone;
-        Clone.name = "UsernameObject";
+        accountNameInput = Clone.GetComponent<InputField> ();
+        AccountNameObject = Clone;
+        Clone.name = "AccountNameObject";
+
+        py += 75;
+
+        Clone = CreateInputField (Language.UserName, px, py, sx, sy);
+        userNameInput = Clone.GetComponent<InputField> ();
+        UserNameObject = Clone;
+        Clone.name = "UserNameObject";
 
         py += 75;
 

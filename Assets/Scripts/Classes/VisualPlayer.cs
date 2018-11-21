@@ -18,6 +18,7 @@ public class VisualPlayer {
 
     GameObject HealthBar;
     GameObject ScoreText;
+    GameObject UserNameText;
 
     public VisualPlayer () {
 
@@ -60,14 +61,23 @@ public class VisualPlayer {
         Clone = GOUI.CreateText ("", barPosition, 20, 13, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         ScoreText = Clone;
+
+        Clone = GOUI.CreateText ("", barPosition, 60, 13, 0.03f);
+        Clone.GetComponent<TextMesh> ().color = Color.black;
+        Clone.GetComponent<TextMesh> ().text = player.properties.displayName;
+        UserNameText = Clone;
     }
 
     public void UpdateVisuals (MatchClass match) {
-        SetPlayerHealthBar (match, player);
+        DelayedSetPlayerHealthBar (match, player);
     }
 
     public void SetPlayerHealthBar (MatchClass match, PlayerClass player) {
         SetPlayerHealthBar (player.score, player.scoreIncome, match.Properties.scoreLimit);
+    }
+
+    public void DelayedSetPlayerHealthBar (MatchClass match, PlayerClass player) {
+        DelayedSetPlayerHealthBar (player.score, player.scoreIncome, match.Properties.scoreLimit);
     }
 
     public void SetPlayerHealthBar (int score, int scoreIncome, int scoreLimit) {
@@ -87,6 +97,10 @@ public class VisualPlayer {
             GOUI.SetInPixPosition (HealthBar, barPosition + (int) ((barLength * (1 - percentage) + 1) / 2), 20, 12);
         }
         ScoreText.GetComponent<TextMesh> ().text = score.ToString () + " (+" + scoreIncome.ToString () + ")";
+    }
+
+    public void DelayedSetPlayerHealthBar (int score, int scoreIncome, int scoreLimit) {
+        VisualMatch.instance.SetPlayerHealthBar (this, score, scoreIncome, scoreLimit);
     }
 
 }

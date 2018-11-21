@@ -33,6 +33,7 @@ public class Language {
     static public string JoinLocalNetworkTooltip;
 
     static public string AccountName;
+    static public string UserName;
     static public string Password;
     static public string ConfirmPassword;
     static public string Email;
@@ -64,6 +65,7 @@ public class Language {
 
     static public void LoadLanguage (int language) {
         string path = "Languages/" + FileName [language] + UIKey;
+        //string path = "Languages/ENGUI";
         TextAsset asset = Resources.Load (path) as TextAsset;
         string allLines = asset.text;
         string [] lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
@@ -91,6 +93,7 @@ public class Language {
         AccountNameCantBeNullKey = 12;
         AccountWithThisNameAlreadyExistsKey = 13;
         AccountCreatedKey = 14;
+        UserName = UI [15];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;
@@ -179,6 +182,27 @@ public class Language {
         string s = AbilityDescription [abilityType];
         for (int x = 0; x < AbilityClass.AbilityValue [abilityType].Count; x++) {
             s = s.Replace ("%d" + (x + 1).ToString (), AbilityClass.AbilityValue [abilityType] [x].ToString());
+        }
+        return s;
+    }
+
+    static public string GetMatchResult (string winner, int winCondition, int limit) {
+        string s = "";
+        switch (winCondition) {
+            case 1:
+                s += UI [17].Replace ("%d", limit.ToString());
+                break;
+            case 2:
+                s += UI [18].Replace ("%d", limit.ToString ());
+                break;
+            case 3:
+                s += UI [19];
+                break;
+        }
+        if (winner != null && winner != "") {
+            s += " " + UI [16].Replace ("%s", winner);
+        } else {
+            s += " " + UI [20];
         }
         return s;
     }

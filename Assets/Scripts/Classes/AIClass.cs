@@ -37,9 +37,9 @@ public class AIClass {
                 float tempValue = CalculateMatchValue (tempMatch, playerNumber);
                 if (tempMatch.finished) {
                     if (tempMatch.winner.playerNumber == playerNumber) {
-                        tempValue += 10000000;
+                        tempValue += 100000;
                     } else {
-                        tempValue -= 10000000;
+                        tempValue -= 100000;
                     }
                 }
                 if (bestTile == null || bestValue < tempValue) {
@@ -71,14 +71,14 @@ public class AIClass {
                 //value += myScoreIncome - match.Player [x].scoreIncome;
             }
         }
-        value += playerValue;
+        //value += playerValue;
         value += CalculateBoardValue (match, playerNumber);
         return value;
     }
 
     public float CalculateBoardValue (MatchClass match, int playerNumber) {
         float value = 0;
-        TileClass [] tiles = match.Board.GetEmptyTiles ().ToArray ();
+        TileClass [] tiles = match.Board.tileList.ToArray ();
         foreach (TileClass tile in tiles) {
             float tempValue = 0;
             float dangerCount = 0;
@@ -119,15 +119,15 @@ public class AIClass {
                         tokenValue *= 1.9f;
                         break;
                 }
+                riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);
+                riskValue *= Mathf.Min (1f, (
+                    dangerCount * surroundDanger +
+                    edgeCount * edgeDanger) / 100f);
                 if (tile.token.owner != playerNumber) {
                     tokenValue *= -1;
                 }
-                riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);
-                riskValue *= Mathf.Min (1, (
-                    dangerCount * surroundDanger +
-                    edgeCount * edgeDanger) / 100f);
                 tokenValue -= riskValue;
-                value += tokenType;
+                value += tokenValue;
             } else {
                 riskValue *= multiDangerCount * multiTargetDanger / 200f;
                 value -= riskValue;

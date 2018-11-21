@@ -99,13 +99,17 @@ public class TokenClass {
     public void SetTile (TileClass tile) {
         this.tile = tile;
         if (visualToken != null) {
-            if (tile.visualTile == null || tile.visualTile.Anchor == null) {
-                Debug.Log (tile.x + " " + tile.y);
-            }
-            visualToken.Anchor.transform.SetParent (tile.visualTile.Anchor.transform);
-            visualToken.Anchor.GetComponent<VisualEffectScript> ().SetPosition (new Vector3 (0, 0.4f, 0));
-            visualToken.Anchor.GetComponent<VisualEffectScript> ().lerpPosition = true;
+            visualToken.DelayedSetTile (tile.visualTile.Anchor);
         }
+    }
+
+
+    public void MoveToDisabledTile (int x, int y) {
+        if (visualToken != null) {
+            visualToken.DelayedMoveToDisabledTile (x, y);
+            visualToken = null;
+        }
+        DestroyToken ();
     }
 
     public void DestroyToken () {

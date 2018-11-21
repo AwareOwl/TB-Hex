@@ -14,6 +14,7 @@ public class MatchClass {
 
     public PlayerClass winner;
     public bool finished;
+    public int winCondition;
     public bool real = true;
 
     public MoveHistoryClass LastMove;
@@ -79,29 +80,42 @@ public class MatchClass {
     public void CheckFinishCondition () {
         for (int x = 1; x <= numberOfPlayers; x++) {
             if (Player [x].score >= Properties.scoreLimit) {
-                FinishGame ();
+                FinishGame (1, Properties.scoreLimit);
                 return;
             }
         }
         if (turn >= Properties.turnLimit) {
-            FinishGame ();
+            FinishGame (2, Properties.turnLimit);
             return;
         }
         if (Board.GetEmptyTiles ().Count == 0) {
-            FinishGame ();
+            FinishGame (3, 0);
             return;
         }
     }
 
-    public void FinishGame () {
+    public void FinishGame (int winCondition, int limit) {
+        this.winCondition = winCondition;
         finished = true;
         for (int x = 1; x <= numberOfPlayers; x++) {
-            if (winner == null || winner.score < Player [x].score) {
+            if (winner == null) {
                 winner = Player [x];
+            } else {
+                if (winner.score < Player [x].score) {
+                    winner = Player [x];
+                } else if (winner.score == Player [x].score) {
+                    winner = null;
+                }
+            }
+        }
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            ClientInterface client = Player [x].properties.client;
+            if (client != null) {
+                ServerLogic.ShowMatchResult (client, winner.properties.displayName, winCondition, limit);
             }
         }
         if (real) {
-            //RatingClass.AnalyzeStatistics (this);
+            RatingClass.AnalyzeStatistics (this);
             //Debug.Log ("GameFinished: " + winner.playerNumber + " " + Player [1].score + " " + Player [2].score + " " + turn);
         }
     }
@@ -245,7 +259,7 @@ public class MatchClass {
         foreach (AbilityVector vector in info.TriggeredVector) {
             switch (abilityType) {
                 case 5:
-                    MoveToken (vector.target, vector.pushTarget);
+                    MoveToken (vector.target, vector.pushX, vector.pushY);
                     break;
             }
         }
@@ -366,7 +380,8 @@ public class MatchClass {
         }
     }
 
-    public void MoveToken (TileClass sourceTile, TileClass destinationTile) {
+    public void MoveToken (TileClass sourceTile, int destX, int destY) {
+        TileClass destinationTile = Board.GetTile (destX, destY);
         if (sourceTile != null && sourceTile.token != null) {
             TokenClass sourceToken = sourceTile.token;
             if (destinationTile != null && destinationTile.enabled) {
@@ -375,7 +390,8 @@ public class MatchClass {
                     destinationTile.AttachToken (sourceToken);
                 }
             } else {
-                DestroyToken (sourceTile);
+                sourceToken.MoveToDisabledTile (destX, destY);
+                //DestroyToken (sourceTile);
             }
         }
     }
@@ -435,5 +451,19 @@ public class MatchClass {
             Player [x].EnableVisuals ();
         }
     }
-    
+
+    public void DestroyVisuals () {
+        foreach (TileClass tile in Board.tile) {
+            if (tile.visualTile != null) {
+                tile.DestroyVisual ();
+            }
+        }
+        foreach (PlayerClass player in Player) {
+            player.DestroyVisuals ();
+        }
+        if (visualMatch != null) {
+            GameObject.Destroy (visualMatch);
+        }
+    }
+
 }

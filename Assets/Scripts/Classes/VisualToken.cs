@@ -24,15 +24,22 @@ public class VisualToken {
 
     public void DelayedInit () {
         Anchor = new GameObject ();
-        VisualMatch.instance.Init (this, token.tile.visualTile.Anchor, 
-            token.owner,
-            token.type,
-            token.value);
+        if (VisualMatch.instance != null) {
+            VisualMatch.instance.Init (this, token.tile.visualTile.Anchor,
+                token.owner,
+                token.type,
+                token.value);
+        } else {
+            Init (token.tile.visualTile.Anchor,
+                token.owner,
+                token.type,
+                token.value);
+        }
     }
 
     public void Init (GameObject parent, int owner, int type, int value) {
         CreateToken ();
-        SetParent (token.tile.visualTile.Anchor);
+        SetParent (parent);
         SetState (owner, type, value);
     }
 
@@ -52,7 +59,11 @@ public class VisualToken {
     }
 
     public void DelayedDestroyToken () {
-        VisualMatch.instance.DestroyToken (this, Anchor);
+        if (VisualMatch.instance != null) {
+            VisualMatch.instance.DestroyToken (this, Anchor);
+        } else {
+            DestroyToken (Anchor);
+        }
     }
 
     public void SetState (int owner, int type, int value) {
@@ -68,7 +79,11 @@ public class VisualToken {
     }*/
 
     public void DelayedSetState () {
-        VisualMatch.instance.SetState (this, token.owner, token.type, token.value);
+        if (VisualMatch.instance != null) {
+            VisualMatch.instance.SetState (this, token.owner, token.type, token.value);
+        } else {
+            SetState (token.owner, token.type, token.value);
+        }
     }
 
     public void SetOwner () {
@@ -132,7 +147,11 @@ public class VisualToken {
     }
 
     public void DelayedAddCreateAnimation () {
-        VisualMatch.instance.AddCreateAnimation (this);
+        if (VisualMatch.instance != null) {
+            VisualMatch.instance.AddCreateAnimation (this);
+        } else {
+            AddCreateAnimation ();
+        }
     }
 
     public void AddPlayAnimation () {
@@ -148,8 +167,33 @@ public class VisualToken {
         VisualMatch.instance.AddPlayAnimation (this);
     }
 
-    public void AddLerpAnimation () {
-        Anchor.GetComponent<VisualEffectScript> ().lerpPosition = true;
+    public void SetTile (GameObject tile) {
+        Anchor.transform.SetParent (tile.transform);
+        Anchor.GetComponent<VisualEffectScript> ().SetPosition (new Vector3 (0, 0.4f, 0));
+        Anchor.GetComponent<VisualEffectScript> ().SetLerpPosition (true);
+    }
+
+    public void DelayedSetTile (GameObject tile) {
+        VisualMatch.instance.SetTile (this, tile);
+    }
+
+    public void MoveToDisabledTile (int x, int y) {
+        VisualEffectScript VEScript = Anchor.GetComponent<VisualEffectScript> ();
+        GameObject tile = EnvironmentScript.BackgroundTiles [x + 1, y + 1];
+        VEScript.AddPhase ();
+        Anchor.transform.SetParent (tile.transform);
+        float deltaPosition = Mathf.Abs (tile.transform.position.y / tile.transform.lossyScale.y);
+        VEScript.SetPosition (new Vector3 (0, 0.4f + deltaPosition, 0));
+        VEScript.SetLerpPosition (true);
+        //VEScript.basicPosition [VEScript.endPhase] = VisualTile.TilePosition (x, 0.4f, y) - token.tile.visualTile.Anchor.transform.position;
+        VEScript.AddPhase ();
+        VEScript.basicPosition [VEScript.endPhase] = new Vector3 (0, 0.4f, 0);
+        VEScript.lerpPosition [VEScript.endPhase - 1] = false;
+        VEScript.SetPhaseTimer (VEScript.endPhase, deltaPosition * 2);
+    }
+
+    public void DelayedMoveToDisabledTile (int x, int y) {
+        VisualMatch.instance.MoveToDisabledTile (this, x, y);
     }
 
 

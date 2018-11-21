@@ -48,7 +48,7 @@ public class TileClass {
             DestroyToken ();
         }
         if (visualTile != null) {
-            visualTile.EnableTile (enable);
+            visualTile.DelayedEnableTile (enable);
         }
     }
 
@@ -99,9 +99,13 @@ public class TileClass {
     }
 
     public void AttachToken (TokenClass token) {
-        this.token = token;
-        if (token != null) {
-            token.SetTile (this);
+        if (enabled) {
+            this.token = token;
+            if (token != null) {
+                token.SetTile (this);
+            }
+        } else {
+            token.DestroyToken ();
         }
     }
 

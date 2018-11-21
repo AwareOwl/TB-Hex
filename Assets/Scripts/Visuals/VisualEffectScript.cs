@@ -13,7 +13,7 @@ public class VisualEffectScript : MonoBehaviour {
     float percentageTimer;
     float timerScale = AppSettings.AnimationDuration;
     int currentPhase = 0;
-    List <float> phaseTimer;
+    public List <float> phaseTimer;
     
     public List <Color> basicColor = null;
     public List <Vector3> basicScale;
@@ -22,7 +22,7 @@ public class VisualEffectScript : MonoBehaviour {
     
     public List <bool> drift;
 
-    public bool lerpPosition;
+    public List<bool> lerpPosition;
     float driftHeight = 0f;
     float driftDestination = 0f;
 
@@ -100,7 +100,14 @@ public class VisualEffectScript : MonoBehaviour {
             basicScale.Add (scale [Mathf.Min (scale.Length - 1, x)]);
         }
     }
-    
+
+    public void SetLerpPosition (bool lerpPosition) {
+        this.lerpPosition = new List<bool> ();
+        for (int x = 0; x <= endPhase; x++) {
+            this.lerpPosition.Add (lerpPosition);
+        }
+    }
+
     public void AddPhase () {
         if (phaseTimer != null) {
             phaseTimer.Add (phaseTimer [endPhase] * 2 - phaseTimer [endPhase - 1]);
@@ -110,6 +117,12 @@ public class VisualEffectScript : MonoBehaviour {
         }
         if (basicPosition != null) {
             basicPosition.Add (basicPosition [endPhase]);
+        }
+        if (deltaPosition != null) {
+            deltaPosition.Add (deltaPosition [endPhase]);
+        }
+        if (lerpPosition != null) {
+            lerpPosition.Add (lerpPosition [endPhase]);
         }
         if (basicScale != null) {
             basicScale.Add (basicScale [endPhase]);
@@ -126,6 +139,10 @@ public class VisualEffectScript : MonoBehaviour {
         for (int x = 1; x <= endPhase; x++) {
             phaseTimer.Add (duration + phaseTimer [x - 1]);
         }
+    }
+
+    public void SetPhaseTimer (int index, float duration) {
+        phaseTimer [index] = phaseTimer [index - 1] + duration;
     }
 
     void Start () {
@@ -164,9 +181,9 @@ public class VisualEffectScript : MonoBehaviour {
             Position2 += deltaPosition [Mathf.Min (currentPhase + 1, endPhase)];
         }
 
-        if (lerpPosition) {
+        if (lerpPosition != null && lerpPosition [currentPhase]) {
 
-            transform.localPosition = Vector3.Lerp (transform.localPosition, Position2, 0.1f);
+            transform.localPosition = Vector3.Lerp (transform.localPosition, Position2, 0.15f);
 
         } else {
 
@@ -232,6 +249,7 @@ public class VisualEffectScript : MonoBehaviour {
     }
 
     public void PushToHeight (float height) {
+        AddPhase ();
         AutoSetPosition ();
         Vector3 pos = basicPosition [endPhase];
         pos = new Vector3 (pos.x, height, pos.z);

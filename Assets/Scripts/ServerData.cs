@@ -7,9 +7,10 @@ using System.IO;
 
 public class ServerData : MonoBehaviour {
 
-    static string UserNameKey = "UserName";
-    static string BoardNameKey = "BoardName";
-    static string GameModeNameKey = "GameModeName";
+    static public string AccountNameKey = "AccountName";
+    static public string UserNameKey = "UserName";
+    static public string BoardNameKey = "BoardName";
+    static public string GameModeNameKey = "GameModeName";
 
     static string BoardProperty = "Board";
     static string GameModeProperty = "GameMode";
@@ -543,14 +544,18 @@ public class ServerData : MonoBehaviour {
         return key;
     }
 
-    static public void CreateAccount (string userName, string password, string email) {
-        Directory.CreateDirectory (UserPath (userName));
+    static public void CreateAccount (string accountName, string userName, string password, string email) {
+        Directory.CreateDirectory (UserPath (accountName));
         List<string> Lines = new List<string> ();
         Lines.Add ("***Password");
         Lines.Add (password);
         Lines.Add ("***Email");
         Lines.Add (email);
-        File.WriteAllLines (UserDataPath (userName), Lines.ToArray ());
+        if (userName != null && userName != "") {
+            Lines.Add ("***" + UserNameKey);
+            Lines.Add (userName);
+        }
+        File.WriteAllLines (UserDataPath (accountName), Lines.ToArray ());
     }
 
 }

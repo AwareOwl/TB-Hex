@@ -18,7 +18,7 @@ public class EnvironmentScript : MonoBehaviour {
         }
     }
 
-    static GameObject [,,] BackgroundTiles;
+    static public GameObject [,] BackgroundTiles;
 
     static int Theme = 1;
 
@@ -41,12 +41,12 @@ public class EnvironmentScript : MonoBehaviour {
             case 1:
                 CreateWaterBackground ();
                 break;
-            case 2:
+            /*case 2:
                 CreateTowerBackground ();
                 break;
             case 3:
                 CreateLavaBackground ();
-                break;
+                break;*/
         }
     }
 
@@ -126,11 +126,11 @@ public class EnvironmentScript : MonoBehaviour {
 
     static private void CreateWaterBackground () {
         int minX = -1;
-        int maxX = 10;
+        int maxX = 8;
         int minY = -5;
         int maxY = -1;
         int minZ = -1;
-        int maxZ = 10;
+        int maxZ = 8;
         /*GameObject water = Instantiate (Resources.Load ("Prefabs/PreWater")) as GameObject;
         water.transform.localPosition = new Vector3 (0, 0, 0);
         water.transform.parent = Background.transform;
@@ -145,22 +145,16 @@ public class EnvironmentScript : MonoBehaviour {
             water.transform.localPosition = new Vector3 (0, -x * 0.75f, 0);
             water.transform.parent = Background.transform;
         }
-        BackgroundTiles = new GameObject [maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1];
-        for (int x = 0; x < 100; x++) {
-            int px = Random.Range (minX, maxX);
-            int py = Random.Range (minY, maxY);
-            int pz = Random.Range (minZ, maxZ);
-            int rx = px - minX;
-            int ry = py - minY;
-            int rz = pz - minZ;
-            if (BackgroundTiles [rx, ry, rz] == null) {
-                GameObject hex = CreateAttachedTile (px, py, pz);
-                BackgroundTiles [rx, ry, rz] = hex;
-            } else {
-                x--;
+        BackgroundTiles = new GameObject [maxX - minX + 1, maxZ - minZ + 1];
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minZ; y <= maxZ; y++) {
+                int py = Random.Range (minY, maxY);
+                GameObject hex = CreateAttachedTile (x, py, y);
+                BackgroundTiles [x - minX, y - minZ] = hex;
             }
         }
     }
+    /*
     static private void CreateTowerBackground () {
         int minX = -1;
         int maxX = 10;
@@ -223,7 +217,7 @@ public class EnvironmentScript : MonoBehaviour {
                 x--;
             }
         }
-    }
+    }*/
 
     static public GameObject CreateAttachedTile (int x, int y, int z) {
         GameObject hex = CreateTile (x, y, z);
@@ -244,6 +238,7 @@ public class EnvironmentScript : MonoBehaviour {
         Color col;
 
         VisualEffectScript AEffect = tile.AddComponent<VisualEffectScript> ();
+        AEffect.endPhase = 0;
         VisualEffectScript TEffect = tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ();
         switch (Theme) {
             case 1:

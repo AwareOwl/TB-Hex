@@ -45,7 +45,7 @@ public class HandClass  {
         output += 100 / scale - 100f;
         output *= scale;
         output -= 100 / scale - 100f;
-        output = Mathf.Max (value, 0.3f);
+        output = Mathf.Max (value, 0.275f);
         return output;
     }
 
@@ -75,7 +75,7 @@ public class HandClass  {
                 for (int z = 0; z < CardValue.Length; z++) {
                     CardClass card = CardPool.Card [z];
                     modifier [z] = CardValue [z];
-                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 20);
+                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 30);
                     if (y > 0) {
                         CardClass prevCard = stack [x].card [y - 1];
                         modifier [z] *= Normalize (RatingClass.abilityAfterAbility [

@@ -176,6 +176,14 @@ public class BoardClass {
         }
     }
 
+    public TileClass GetTile (int x, int y) {
+        if (IsTileInBounds (x, y)) {
+            return tile [x, y];
+        } else {
+            return null;
+        }
+    }
+
     public bool IsTileInBounds (int x, int y) {
         if (x >= 0 && y >= 0 && x < tile.GetLength (0) && y < tile.GetLength (1)) {
             return true;

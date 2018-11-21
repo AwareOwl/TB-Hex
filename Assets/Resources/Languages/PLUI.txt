@@ -13,3 +13,9 @@
 [12] Nazwa konta nie może być pusta.
 [13] Konto o tej nazwie już istnieje.
 [14] Konto utworzone.
+[15] Nazwa użytkownika
+[16] Gracz %s wygrał ten match.
+[17] Próg %d punktów został osiągnięty.
+[18] Upłynęło %d tur.
+[19] Plansza została zapełniona.
+[20] Gra zakończyła się remisem.

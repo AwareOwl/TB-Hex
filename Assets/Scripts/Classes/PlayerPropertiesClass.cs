@@ -11,6 +11,8 @@ public class PlayerPropertiesClass {
 
     public HandClass hand;
 
+    public ClientInterface client;
+
     public int team;
 
 
@@ -24,10 +26,12 @@ public class PlayerPropertiesClass {
         this.hand = hand;
     }*/
 
-    public PlayerPropertiesClass (int team, bool AI, string accountName, HandClass hand) {
+    public PlayerPropertiesClass (int team, bool AI, string accountName, string userName, HandClass hand, ClientInterface client) {
         this.team = team;
         this.accountName = accountName;
+        this.displayName = userName;
         this.hand = hand;
+        this.client = client;
         if (AI) {
             this.AI = new AIClass ();
         }

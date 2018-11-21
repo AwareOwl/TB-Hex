@@ -32,6 +32,18 @@ public class VisualMatch : MonoBehaviour {
         new GameObject ().AddComponent<UsedCardPreview> ().Init (playerNumber, card);
     }
 
+
+
+    public void EnableTile (VisualTile tile, bool enable) {
+        StartCoroutine (IEEnableTile (tile, enable));
+    }
+
+    public IEnumerator IEEnableTile (VisualTile tile, bool enable) {
+        yield return new WaitForSeconds (GlobalTimer);
+        tile.EnableTile (enable);
+    }
+
+
     public void Init (VisualToken token, GameObject parent, int owner, int type, int value) {
         StartCoroutine (IEInit (token, parent, owner, type, value));
     }
@@ -83,5 +95,33 @@ public class VisualMatch : MonoBehaviour {
     public IEnumerator IEDestroyToken (VisualToken token, GameObject anchor) {
         yield return new WaitForSeconds (GlobalTimer);
         token.DestroyToken (anchor);
+    }
+
+    public void SetTile (VisualToken token, GameObject tile) {
+        StartCoroutine (IESetTile (token, tile));
+    }
+
+    public IEnumerator IESetTile (VisualToken token, GameObject tile) {
+        yield return new WaitForSeconds (GlobalTimer);
+        token.SetTile (tile);
+    }
+
+    public void MoveToDisabledTile (VisualToken token, int x, int y) {
+        StartCoroutine (IEMoveToDisabledTile (token, x, y));
+    }
+
+    public IEnumerator IEMoveToDisabledTile (VisualToken token, int x, int y) {
+        yield return new WaitForSeconds (GlobalTimer);
+        token.MoveToDisabledTile (x, y);
+    }
+
+
+    public void SetPlayerHealthBar (VisualPlayer player, int score, int scoreIncome, int scoreLimit) {
+        StartCoroutine (IESetPlayerHealthBar (player, score, scoreIncome, scoreLimit));
+    }
+
+    public IEnumerator IESetPlayerHealthBar (VisualPlayer player, int score, int scoreIncome, int scoreLimit) {
+        yield return new WaitForSeconds (GlobalTimer);
+        player.SetPlayerHealthBar (score, scoreIncome, scoreLimit);
     }
 }

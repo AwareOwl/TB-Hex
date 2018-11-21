@@ -13,3 +13,9 @@
 [12] Account name can't be null.
 [13] Account with this name already exists.
 [14] Account created.
+[15] User name
+[16] Player %s has won the match.
+[17] %d score have been reached.
+[18] %d turns have passed.
+[19] Board is full.
+[20] Game has ended with draw.

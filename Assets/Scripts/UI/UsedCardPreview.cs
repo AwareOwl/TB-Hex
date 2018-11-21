@@ -32,7 +32,7 @@ public class UsedCardPreview : MonoBehaviour {
 
     public void Init (int playerNumber, CardClass card) {
         timerScale = AppSettings.AnimationDuration;
-        destroyTime = timerScale + 10f * AppSettings.CardPreviewDuration;
+        destroyTime = timerScale + 20f * AppSettings.CardPreviewDuration;
         if (AppSettings.CardPreviewDuration >= 1) {
             destroyTime += 10000f;
         }

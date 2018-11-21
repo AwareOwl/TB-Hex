@@ -30,7 +30,7 @@ public class BoardEditorMenu : GOUI {
         EditedBoard = new BoardClass ();
         EditedBoard.EnableVisualisation ();
         //EditedBoard.CreateNewBoard ();
-        LoadBoard (4);
+        LoadBoard (2);
     }
 
     static public void LoadBoard (int id) {

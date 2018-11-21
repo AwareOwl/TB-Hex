@@ -53,6 +53,14 @@ public class VisualTile {
         }
     }
 
+    public void DelayedEnableTile (bool enable) {
+        if (VisualMatch.instance != null) {
+            VisualMatch.instance.EnableTile (this, enable);
+        } else {
+            EnableTile (enable);
+        }
+    }
+
     static public Vector3 TilePosition (int x, float y, int z) {
         return new Vector3 (-3.75f + x + (Mathf.Abs (z) % 2) * 0.5f, 0 + y, -3.5f + z * Mathf.Sqrt (3) / 2);
     }

@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class ClientInterface : NetworkBehaviour {
 
     public string AccountName;
+    public string UserName;
     public int GameMode = 1;
 
     public void Start () {
@@ -24,8 +25,8 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdRegister (string username, string password, string email) {
-        ServerLogic.Register (this, username, password, email);
+    public void CmdRegister (string accountName, string userName, string password, string email) {
+        ServerLogic.Register (this, accountName, userName, password, email);
     }
 
     [TargetRpc]
@@ -34,8 +35,13 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetLogIn (NetworkConnection target) {
-        ClientLogic.LogIn ();
+    public void TargetShowMatchResult (NetworkConnection target, string winnerName, int winCondition, int limit) {
+        GOUI.ShowMessage (Language.GetMatchResult (winnerName, winCondition, limit));
+    }
+
+    [TargetRpc]
+    public void TargetLogIn (NetworkConnection target, string accountName, string userName) {
+        ClientLogic.LogIn (accountName, userName);
     }
 
     [Command]
