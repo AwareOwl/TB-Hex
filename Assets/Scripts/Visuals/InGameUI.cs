@@ -5,6 +5,7 @@ using UnityEngine;
 public class InGameUI : GOUI {
 
     static public GameObject [,] VisualEffectAnchor;
+    static public GameObject [,] RealVisualEffectAnchor;
 
     static public InGameUI instance;
 
@@ -130,17 +131,24 @@ public class InGameUI : GOUI {
         int sx = PlayedMatch.Board.tile.GetLength (0);
         int sy = PlayedMatch.Board.tile.GetLength (1);
         VisualEffectAnchor = new GameObject [sx + 2, sy + 2];
+        RealVisualEffectAnchor = new GameObject [sx + 2, sy + 2];
         for (int x = 0; x < sx + 2; x++) {
             for (int y = 0; y < sy + 2; y++) {
                 VisualEffectAnchor [x, y] = new GameObject ();
                 VisualEffectAnchor [x, y].transform.localPosition = VisualTile.TilePosition (x - 1, 0.2f, y - 1);
                 VisualEffectAnchor [x, y].name = "VisualEffectAnchor";
+                RealVisualEffectAnchor [x, y] = new GameObject ();
+                RealVisualEffectAnchor [x, y].transform.localPosition = VisualTile.TilePosition (x - 1, 0.2f, y - 1);
             }
         }
     }
 
     static public GameObject GetAnchor (int x, int y) {
         return VisualEffectAnchor [x + 1, y + 1];
+    }
+
+    static public GameObject GetRealAnchor (int x, int y) {
+        return RealVisualEffectAnchor [x + 1, y + 1];
     }
 
     static public void HideAreaHovers () {

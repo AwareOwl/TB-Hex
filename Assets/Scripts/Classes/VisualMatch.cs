@@ -62,7 +62,6 @@ public class VisualMatch : MonoBehaviour {
 
     public void AddPlayAnimation (VisualToken token) {
         StartCoroutine (IEAddPlayAnimation (token));
-        GlobalTimer += 0.5f;
     }
 
     public IEnumerator IEAddPlayAnimation (VisualToken token) {
@@ -124,4 +123,30 @@ public class VisualMatch : MonoBehaviour {
         yield return new WaitForSeconds (GlobalTimer);
         player.SetPlayerHealthBar (score, scoreIncome, scoreLimit);
     }
+
+
+
+
+
+    public void CreateRealEffects (VectorInfo info, int abilityType) {
+        StartCoroutine (IECreateRealEffects (info, abilityType));
+    }
+
+    public IEnumerator IECreateRealEffects (VectorInfo info, int abilityType) {
+        yield return new WaitForSeconds (GlobalTimer);
+        VisualEffectInterface.CreateRealEffects (info, abilityType);
+    }
+
+
+
+
+    public void ShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {
+        StartCoroutine (IEShowMatchResult (client, winnerName, winCondition, limit));
+    }
+
+    public IEnumerator IEShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {
+        yield return new WaitForSeconds (GlobalTimer);
+        ServerLogic.ShowMatchResult (client, winnerName, winCondition, limit);
+    }
+
 }

@@ -268,7 +268,6 @@ public class GOUI : MonoBehaviour {
         //Button.GetComponent<Button> ().OnPointerEnter (PointerEventData eventData);
 
         Button.GetComponent <Button>().onClick.AddListener (delegate {
-            Debug.Log ("Wut");
             DestroyImmediate (Background);
         });
 

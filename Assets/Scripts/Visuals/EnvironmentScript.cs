@@ -233,7 +233,8 @@ public class EnvironmentScript : MonoBehaviour {
 
     static public GameObject CreateTile () {
         GameObject tile = Instantiate (AppDefaults.Tile) as GameObject;
-        tile.transform.localScale = new Vector3 (1, 0.3f, 1);
+        tile.transform.localScale = new Vector3 (1, 1, 1);
+        tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.15f);
         GameObject add;
         Color col;
 

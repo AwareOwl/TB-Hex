@@ -64,8 +64,12 @@ public class ServerLogic : MonoBehaviour {
         hand1.GenerateRandomHand ();
         hand2.GenerateRandomHand ();
         MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
-            new PlayerPropertiesClass (1, false, client.AccountName, client.UserName, hand1, client),
+            new PlayerPropertiesClass (1, true, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "Doge2", "Doge2", hand2, null) });
+    }
+
+    static public void DelayedShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {
+        VisualMatch.instance.ShowMatchResult (client, winnerName, winCondition, limit);
     }
 
     static public void ShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {

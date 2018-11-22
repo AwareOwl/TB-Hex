@@ -45,7 +45,7 @@ public class VisualToken {
 
     public void SetParent (GameObject parent) {
         Anchor.transform.parent = parent.transform;
-        Anchor.transform.localPosition = new Vector3 (0, 0.4f, 0);
+        Anchor.transform.localPosition = new Vector3 (0, 0.1f, 0);
     }
 
     public void DestroyToken (GameObject anchor) {
@@ -117,12 +117,12 @@ public class VisualToken {
 
         Base = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBase")) as GameObject;
         Base.AddComponent<VisualEffectScript> ().SetColor (new Color (0.8f, 0.8f, 0.8f));
-        Base.transform.localScale = new Vector3 (0.72f, 0.05f, 0.72f);
+        Base.transform.localScale = new Vector3 (0.72f, 0.025f, 0.72f);
         Base.transform.parent = Anchor.transform;
 
         Border = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBorder")) as GameObject;
         Border.AddComponent<VisualEffectScript> ().SetColor (new Color (0.1f, 0.1f, 0.1f));
-        Border.transform.localScale = new Vector3 (0.8f, 0.1f, 0.8f);
+        Border.transform.localScale = new Vector3 (0.8f, 0.05f, 0.8f);
         Border.transform.parent = Anchor.transform;
 
         Text = GameObject.Instantiate (Resources.Load ("Prefabs/PreText")) as GameObject;
@@ -169,7 +169,7 @@ public class VisualToken {
 
     public void SetTile (GameObject tile) {
         Anchor.transform.SetParent (tile.transform);
-        Anchor.GetComponent<VisualEffectScript> ().SetPosition (new Vector3 (0, 0.4f, 0));
+        Anchor.GetComponent<VisualEffectScript> ().SetPosition (new Vector3 (0, 0.1f, 0));
         Anchor.GetComponent<VisualEffectScript> ().SetLerpPosition (true);
     }
 
@@ -182,12 +182,12 @@ public class VisualToken {
         GameObject tile = EnvironmentScript.BackgroundTiles [x + 1, y + 1];
         VEScript.AddPhase ();
         Anchor.transform.SetParent (tile.transform);
-        float deltaPosition = Mathf.Abs (tile.transform.position.y / tile.transform.lossyScale.y);
-        VEScript.SetPosition (new Vector3 (0, 0.4f + deltaPosition, 0));
+        float deltaPosition = Mathf.Abs (tile.transform.position.y);
+        VEScript.SetPosition (new Vector3 (0, 0.1f + deltaPosition, 0));
         VEScript.SetLerpPosition (true);
         //VEScript.basicPosition [VEScript.endPhase] = VisualTile.TilePosition (x, 0.4f, y) - token.tile.visualTile.Anchor.transform.position;
         VEScript.AddPhase ();
-        VEScript.basicPosition [VEScript.endPhase] = new Vector3 (0, 0.4f, 0);
+        VEScript.basicPosition [VEScript.endPhase] = new Vector3 (0, 0.1f, 0);
         VEScript.lerpPosition [VEScript.endPhase - 1] = false;
         VEScript.SetPhaseTimer (VEScript.endPhase, deltaPosition * 2);
     }

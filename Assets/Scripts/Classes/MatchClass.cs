@@ -108,13 +108,13 @@ public class MatchClass {
                 }
             }
         }
-        for (int x = 1; x <= numberOfPlayers; x++) {
-            ClientInterface client = Player [x].properties.client;
-            if (client != null) {
-                ServerLogic.ShowMatchResult (client, winner.properties.displayName, winCondition, limit);
-            }
-        }
         if (real) {
+            for (int x = 1; x <= numberOfPlayers; x++) {
+                ClientInterface client = Player [x].properties.client;
+                if (client != null) {
+                    ServerLogic.DelayedShowMatchResult (client, winner.properties.displayName, winCondition, limit);
+                }
+            }
             RatingClass.AnalyzeStatistics (this);
             //Debug.Log ("GameFinished: " + winner.playerNumber + " " + Player [1].score + " " + Player [2].score + " " + turn);
         }
@@ -171,7 +171,7 @@ public class MatchClass {
         UseAbility (tile, playerNumber, card.abilityArea, card.abilityType);
         SaveLastMove (tile.x, tile.y, card, token, playerNumber);
         UpdateBoard ();
-        /*player.MoveTopCard (stackNumber);*/
+        player.MoveTopCard (stackNumber);
         EndTurn ();
     }
 
@@ -212,6 +212,10 @@ public class MatchClass {
         AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea).ToArray ();
         VectorInfo info = new VectorInfo (vectors);
         info.CheckTriggers (this, tile, abilityType);
+        if (visualMatch != null) {
+            VisualEffectInterface.DelayedCreateRealEffects (info, abilityType);
+            VisualMatch.GlobalTimer += 0.5f;
+        }
         foreach (TileClass target in info.Triggered1) {
             switch (abilityType) {
                 case 1:

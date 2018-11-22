@@ -12,6 +12,8 @@ public class VectorInfo {
     public int weakestValue = 999;
     public List<TileClass> WeakestTargets = new List<TileClass> ();
 
+    public TileClass PlayedTokenTile;
+
     public List<AbilityVector> TriggeredVector = new List<AbilityVector> ();
     public List<AbilityVector> NotTriggeredVector = new List<AbilityVector> ();
 
@@ -70,6 +72,7 @@ public class VectorInfo {
     }
 
     public void CheckTriggers (MatchClass match, TileClass playToken, int abilityType) {
+        this.PlayedTokenTile = playToken;
         foreach (AbilityVector vector in vectors) {
             switch (abilityType) {
                 case 1:

@@ -23,8 +23,12 @@ public class VisualEffectScript : MonoBehaviour {
     public List <bool> drift;
 
     public List<bool> lerpPosition;
+    public List<bool> jumpAnimation;
     float driftHeight = 0f;
     float driftDestination = 0f;
+
+    public bool rotateToCamera;
+    public bool rotateToCameraVertical;
 
     Renderer [] renderers;
 
@@ -46,6 +50,10 @@ public class VisualEffectScript : MonoBehaviour {
         }
     }
 
+    public void SetLastColor (Color color) {
+        basicColor [endPhase] = color;
+    }
+
     public void AutoSetPosition () {
         if (basicPosition == null) {
             SetPosition (transform.localPosition);
@@ -57,6 +65,14 @@ public class VisualEffectScript : MonoBehaviour {
         for (int x = 0; x <= endPhase; x++) {
             basicPosition.Add (position);
         }
+    }
+
+    public void SetLastPosition (Vector3 position) {
+        if (basicPosition == null) {
+            SetPosition (position);
+            return;
+        }
+        basicPosition [endPhase] = position;
     }
 
     public void SetDeltaPosition (Vector3 position) {
@@ -71,6 +87,13 @@ public class VisualEffectScript : MonoBehaviour {
         for (int x = 0; x <= endPhase; x++) {
             basicScale.Add (scale);
         }
+    }
+
+    public void SetLastScale (Vector3 scale) {
+        if (basicScale == null) {
+            SetScale (scale);
+        }
+        basicScale [endPhase] = scale;
     }
 
     public void SetDrift (bool driftValue) {
@@ -108,6 +131,13 @@ public class VisualEffectScript : MonoBehaviour {
         }
     }
 
+    public void SetJumpAnimation (bool jumpAnimation) {
+        this.jumpAnimation = new List<bool> ();
+        for (int x = 0; x <= endPhase; x++) {
+            this.jumpAnimation.Add (jumpAnimation);
+        }
+    }
+
     public void AddPhase () {
         if (phaseTimer != null) {
             phaseTimer.Add (phaseTimer [endPhase] * 2 - phaseTimer [endPhase - 1]);
@@ -123,6 +153,9 @@ public class VisualEffectScript : MonoBehaviour {
         }
         if (lerpPosition != null) {
             lerpPosition.Add (lerpPosition [endPhase]);
+        }
+        if (jumpAnimation != null) {
+            jumpAnimation.Add (jumpAnimation [endPhase]);
         }
         if (basicScale != null) {
             basicScale.Add (basicScale [endPhase]);
@@ -143,6 +176,10 @@ public class VisualEffectScript : MonoBehaviour {
 
     public void SetPhaseTimer (int index, float duration) {
         phaseTimer [index] = phaseTimer [index - 1] + duration;
+    }
+
+    public void SetLastPhaseTimer (float duration) {
+        SetPhaseTimer (endPhase, duration);
     }
 
     void Start () {
@@ -181,6 +218,8 @@ public class VisualEffectScript : MonoBehaviour {
             Position2 += deltaPosition [Mathf.Min (currentPhase + 1, endPhase)];
         }
 
+        float magnitude = (Position2 - Position1).magnitude;
+
         if (lerpPosition != null && lerpPosition [currentPhase]) {
 
             transform.localPosition = Vector3.Lerp (transform.localPosition, Position2, 0.15f);
@@ -188,6 +227,10 @@ public class VisualEffectScript : MonoBehaviour {
         } else {
 
             newPosition = Position1 * (1 - percentageTimer) + Position2 * (percentageTimer);
+
+            if (jumpAnimation != null && jumpAnimation [currentPhase]) {
+                newPosition += new Vector3 (0, Mathf.Sin (percentageTimer * Mathf.PI) * magnitude, 0);
+            }
 
 
             if (drift != null && drift [currentPhase]) {
@@ -228,6 +271,19 @@ public class VisualEffectScript : MonoBehaviour {
         }
     }
 
+    public void UpdateRotation () {
+        if (rotateToCameraVertical) {
+            Vector3 dPos = transform.position - Camera.main.transform.position;
+            float atan = Mathf.Atan2 (dPos.y, dPos.x);
+            transform.localEulerAngles = new Vector3 (0, atan * 180 / Mathf.PI + 90, 0);
+        }
+        if (rotateToCamera) {
+            Vector3 dPos = transform.position - Camera.main.transform.position;
+            Quaternion rotation = Quaternion.LookRotation (dPos, Vector3.up);
+            transform.rotation = rotation;
+        }
+    }
+
 	// Update is called once per frame
 	void Update () {
         UpdateEverything ();
@@ -238,6 +294,7 @@ public class VisualEffectScript : MonoBehaviour {
         UpdateColor ();
         UpdatePosition ();
         UpdateScale ();
+        UpdateRotation ();
         if (currentPhase == endPhase) {
             if (destroyThisOnEnd) {
                 GameObject.DestroyImmediate (this);
