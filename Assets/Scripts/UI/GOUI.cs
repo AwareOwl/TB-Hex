@@ -246,7 +246,7 @@ public class GOUI : MonoBehaviour {
         }
     }
 
-    static public GameObject ShowMessage (string s) {
+    static public GameObject ShowMessage (string s, string optionName) {
         GameObject Background;
         GameObject Button;
         GameObject Text;
@@ -261,16 +261,28 @@ public class GOUI : MonoBehaviour {
         Button = CreateUIButton ("UI/Butt_M_EmptySquare", 720, 540 + textHeight / 2 + 15, 90, 60, true);
         Button.transform.SetParent (Background.transform);
 
-        Text = CreateUIText ("Ok", 720, 540 +textHeight / 2 + 15);
+        Text = CreateUIText ("Ok", 720, 540 + textHeight / 2 + 15);
         Text.transform.SetParent (Background.transform);
         AddTextToGameObject (Button, Text);
 
-        //Button.GetComponent<Button> ().OnPointerEnter (PointerEventData eventData);
-
-        Button.GetComponent <Button>().onClick.AddListener (delegate {
-            DestroyImmediate (Background);
-        });
+        switch (optionName) {
+            case "Destroy":
+                Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    DestroyImmediate (Background);
+                });
+                break;
+            case "StartGameVsAI":
+                Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+                    DestroyImmediate (Background);
+                });
+                break;
+        }
 
         return Background;
+    }
+
+    static public GameObject ShowMessage (string s) {
+         return ShowMessage (s, "Destroy");
     }
 }

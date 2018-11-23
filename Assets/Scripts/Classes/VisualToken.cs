@@ -190,6 +190,7 @@ public class VisualToken {
         VEScript.basicPosition [VEScript.endPhase] = new Vector3 (0, 0.1f, 0);
         VEScript.lerpPosition [VEScript.endPhase - 1] = false;
         VEScript.SetPhaseTimer (VEScript.endPhase, deltaPosition * 2);
+        VisualMatch.garbage.Add (Anchor);
     }
 
     public void DelayedMoveToDisabledTile (int x, int y) {

@@ -36,7 +36,7 @@ public class ClientInterface : NetworkBehaviour {
 
     [TargetRpc]
     public void TargetShowMatchResult (NetworkConnection target, string winnerName, int winCondition, int limit) {
-        GOUI.ShowMessage (Language.GetMatchResult (winnerName, winCondition, limit));
+        GOUI.ShowMessage (Language.GetMatchResult (winnerName, winCondition, limit), "StartGameVsAI");
     }
 
     [TargetRpc]

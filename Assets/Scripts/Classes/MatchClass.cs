@@ -115,7 +115,7 @@ public class MatchClass {
                     ServerLogic.DelayedShowMatchResult (client, winner.properties.displayName, winCondition, limit);
                 }
             }
-            RatingClass.AnalyzeStatistics (this);
+            //RatingClass.AnalyzeStatistics (this);
             //Debug.Log ("GameFinished: " + winner.playerNumber + " " + Player [1].score + " " + Player [2].score + " " + turn);
         }
     }
@@ -466,7 +466,7 @@ public class MatchClass {
             player.DestroyVisuals ();
         }
         if (visualMatch != null) {
-            GameObject.Destroy (visualMatch);
+            visualMatch.DestroyVisuals ();
         }
     }
 

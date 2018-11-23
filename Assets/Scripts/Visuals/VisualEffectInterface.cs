@@ -100,7 +100,7 @@ public class VisualEffectInterface : MonoBehaviour {
                 break;
             case 8:
                 VES = CreateSimpleEffect (anchor, "Textures/Effects/Dot", col, triggered, autoDestroy);
-                VES.SetLastScale (new Vector3 (0.5f, 2f, 0.5f));
+                VES.SetLastScale (new Vector3 (0.35f, 2f, 0.35f));
                 VES.SetLastPosition (new Vector3 (0, 0, 0));
                 VES.AddPhase ();
                 VES.SetPhaseTimer (0.5f);
@@ -165,7 +165,7 @@ public class VisualEffectInterface : MonoBehaviour {
                 break;
             case 8:
                 VES = CreateSimpleEffect (anchor, "Textures/Ability/Ability08", col, triggered, autoDestroy);
-                VES.SetLastScale (new Vector3 (1, 1, 1));
+                VES.SetLastScale (new Vector3 (1.25f, 1.25f, 1.25f));
                 VES.SetLastPosition (new Vector3 (0, 10, 0));
                 VES.AddPhase ();
                 VES.SetPhaseTimer (1);

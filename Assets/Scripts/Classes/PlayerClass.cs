@@ -72,20 +72,31 @@ public class PlayerClass {
         topCardNumber [stackNumber] = (topCard + 1) % stackSize;
         if (visualPlayer != null) {
             for (int x = 0; x < stackSize; x++) {
-                UpdateCardVisuals (stackNumber, x);
+                DelayedUpdateCardVisuals (stackNumber, x);
             }
-            ShuffleCardVisual (stackNumber, topCard);
+            DelayedShuffleCardVisual (stackNumber, topCard);
         }
     }
-    
-    public void UpdateCardVisuals (int stackNumber, int cardNumber) {
+
+    public void DelayedUpdateCardVisuals (int stackNumber, int cardNumber) {
+        CardClass card = GetCard (stackNumber, cardNumber);
+        int stackSize = GetStackSize (stackNumber);
+        int position = (stackSize - topCardNumber [stackNumber] + cardNumber) % stackSize;
+        if (card.visualCard != null) {
+            if (VisualMatch.instance != null) {
+                VisualMatch.instance.UpdateCardVisuals (this, stackNumber, cardNumber, position);
+            } else {
+                UpdateCardVisuals (stackNumber, cardNumber, position);
+            }
+        } 
+    }
+
+    public void UpdateCardVisuals (int stackNumber, int cardNumber, int position) {
         CardClass card = GetCard (stackNumber, cardNumber);
         if (card.visualCard == null) {
             return;
         }
         GameObject anchor = card.visualCard.Anchor;
-        int stackSize = GetStackSize (stackNumber);
-        int position = (stackSize - topCardNumber [stackNumber] + cardNumber) % stackSize;
         if (anchor.GetComponent<CardAnimation> () == null) {
             anchor.AddComponent<CardAnimation> ().Init (stackNumber, GetNumberOfStacks (), position);
         } else {
@@ -93,11 +104,14 @@ public class PlayerClass {
         }
     }
 
-    public void ShuffleCardVisual (int stackNumber, int cardNumber) {
+    public void DelayedShuffleCardVisual (int stackNumber, int cardNumber) {
         CardClass card = GetCard (stackNumber, cardNumber);
-        if (card.visualCard == null) {
-            return;
+        if (card.visualCard != null) {
+            VisualMatch.instance.ShuffleCardVisual (this, card);
         }
+    }
+
+    public void ShuffleCardVisual (CardClass card) {
         GameObject anchor = card.visualCard.Anchor;
         anchor.GetComponent<CardAnimation> ().shuffleTimer = CardAnimation.shuffleTime;
     }
@@ -125,7 +139,7 @@ public class PlayerClass {
                     for (int y = 0; y < GetStackSize (x); y++) {
                         CardClass card = GetCard (x, y);
                         card.EnableVisual ();
-                        UpdateCardVisuals (x, y);
+                        DelayedUpdateCardVisuals (x, y);
                     }
                 }
             }

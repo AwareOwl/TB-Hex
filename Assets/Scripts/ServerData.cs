@@ -12,12 +12,14 @@ public class ServerData : MonoBehaviour {
     static public string BoardNameKey = "BoardName";
     static public string GameModeNameKey = "GameModeName";
 
+    static public string VersionKey = "Version";
+
     static string BoardProperty = "Board";
     static string GameModeProperty = "GameMode";
     static string CardSetProperty = "CardSet";
 
     static public string ServerPath () {
-        string path = @"C:/TokenBattleHex/";
+        string path = Application.persistentDataPath + "/";
         if (!Directory.Exists (path)) {
             Directory.CreateDirectory (path);
         }
@@ -522,13 +524,16 @@ public class ServerData : MonoBehaviour {
     }
 
     static public string GetKeyData (string path, string key) {
-        string [] Lines = File.ReadAllLines (path);
-        int index = Array.IndexOf (Lines, "***" + key);
-        if (index >= 0) {
-            return Lines [index + 1];
-        } else {
-            return null;
+        if (File.Exists (path)) {
+            string [] Lines = File.ReadAllLines (path);
+            int index = Array.IndexOf (Lines, "***" + key);
+            if (index >= 0) {
+                return Lines [index + 1];
+            } else {
+                return null;
+            }
         }
+        return null;
     }
 
     static public string SetKeyData (string path, string key, string value) {
@@ -541,6 +546,7 @@ public class ServerData : MonoBehaviour {
             Lines.Add (KeyCode);
             Lines.Add (value);
         }
+        File.WriteAllLines (path, Lines.ToArray ());
         return key;
     }
 
@@ -556,6 +562,15 @@ public class ServerData : MonoBehaviour {
             Lines.Add (userName);
         }
         File.WriteAllLines (UserDataPath (accountName), Lines.ToArray ());
+    }
+    
+    static public string GetServerKeyData (string key) {
+        return GetKeyData (KeyDataPath (ServerPath ()), key);
+    }
+
+    static public void SetServerKeyData (string key, string value) {
+        Debug.Log (KeyDataPath (ServerPath ()));
+        SetKeyData (KeyDataPath (ServerPath ()), key, value);
     }
 
 }

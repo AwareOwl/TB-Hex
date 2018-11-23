@@ -7,7 +7,9 @@ public class ServerManagement : MonoBehaviour {
     bool AutoDeleteAllFinished = true;
 
     private void Start () {
-        ServerData.SaveBackUp ();
+        //ServerData.SaveBackUp ();
+        VersionManager.CheckServerVersion ();
+        VersionManager.FinalizeServerVersion ();
     }
 
     // Update is called once per frame

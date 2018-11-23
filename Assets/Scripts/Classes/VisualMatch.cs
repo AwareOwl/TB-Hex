@@ -7,7 +7,8 @@ public class VisualMatch : MonoBehaviour {
 
     static public float GlobalTimer = 0;
     static public VisualMatch instance;
-    MatchClass match;
+
+    static public List<GameObject> garbage = new List<GameObject> ();
 
     private void Awake () {
         instance = this;
@@ -20,6 +21,13 @@ public class VisualMatch : MonoBehaviour {
 
     public void EnableVisual () {
         //usedCardPreview = GOUI.CurrentCanvas.AddComponent<UsedCardPreview> ();
+    }
+
+    public void DestroyVisuals () {
+        foreach (GameObject obj in garbage) {
+            DestroyImmediate (obj);
+        }
+        DestroyImmediate (this);
     }
 
     public void PlayCard (int playerNumber, CardClass card) {
@@ -148,5 +156,26 @@ public class VisualMatch : MonoBehaviour {
         yield return new WaitForSeconds (GlobalTimer);
         ServerLogic.ShowMatchResult (client, winnerName, winCondition, limit);
     }
+
+
+
+
+    public void ShuffleCardVisual (PlayerClass player, CardClass card) {
+        StartCoroutine (IEShuffleCardVisual (player, card));
+    }
+
+    public IEnumerator IEShuffleCardVisual (PlayerClass client, CardClass card) {
+        yield return new WaitForSeconds (GlobalTimer);
+        client.ShuffleCardVisual (card);
+    }
+    public void UpdateCardVisuals (PlayerClass player, int stackNumber, int cardNumber, int position) {
+        StartCoroutine (IEUpdateCardVisuals (player, stackNumber, cardNumber, position));
+    }
+
+    public IEnumerator IEUpdateCardVisuals (PlayerClass client, int stackNumber, int cardNumber, int position) {
+        yield return new WaitForSeconds (GlobalTimer);
+        client.UpdateCardVisuals (stackNumber, cardNumber, position);
+    }
+
 
 }
