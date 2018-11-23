@@ -9,9 +9,7 @@ public class ClientController : MonoBehaviour {
 
         GOUI.UICanvas = GameObject.Find ("Canvas");
         EnvironmentScript.CreateNewBackground (1);
-
-        //gameObject.AddComponent<LoginMenu> ();
+        
         GOUI.CreateNewCanvas ();
-        LoginMenu.ShowLoginMenu ();
     }
 }

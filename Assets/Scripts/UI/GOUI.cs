@@ -277,6 +277,11 @@ public class GOUI : MonoBehaviour {
                     DestroyImmediate (Background);
                 });
                 break;
+            case "ExitGame":
+                Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    Application.Quit ();
+                });
+                break;
         }
 
         return Background;

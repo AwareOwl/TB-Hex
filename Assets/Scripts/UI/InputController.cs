@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InputController : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
+    
 
     float timer = 0;
     bool autoRunAI = true;

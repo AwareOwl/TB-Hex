@@ -41,6 +41,9 @@ public class Language {
     static public string LogIn;
     static public string Register;
 
+    static public string AvailableCardPool;
+    static public string YourCardSet;
+
     static public int PasswordIsIncorrectKey;
     static public int AccountDoesntExistKey;
     static public int PleaseEnterAccountNameKey;
@@ -48,6 +51,7 @@ public class Language {
     static public int AccountNameCantBeNullKey;
     static public int AccountWithThisNameAlreadyExistsKey;
     static public int AccountCreatedKey;
+    static public int InvalidGameVersion;
 
     static public void SetLanguage (int languageKey) {
         PlayerPrefs.SetInt (SelectedLanguageKey, languageKey);
@@ -94,6 +98,9 @@ public class Language {
         AccountWithThisNameAlreadyExistsKey = 13;
         AccountCreatedKey = 14;
         UserName = UI [15];
+        InvalidGameVersion = 21;
+        AvailableCardPool = UI [22];
+        YourCardSet = UI [23];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;
@@ -205,5 +212,9 @@ public class Language {
             s += " " + UI [20];
         }
         return s;
+    }
+
+    static public string GetInvalidGameVersionMessage (string serverVersion) {
+        return UI [21].Replace ("%s", serverVersion);
     }
 }

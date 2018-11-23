@@ -10,12 +10,13 @@ public class ClientInterface : NetworkBehaviour {
     public int GameMode = 1;
 
     public void Start () {
+        if (isServer) {
+            gameObject.AddComponent<ServerManagement> ();
+        }
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-        }
-        if (isServer) {
-            gameObject.AddComponent<ServerManagement> ();
+            CmdCompareServerVersion ("0.0.0.34");
         }
     }
 
@@ -47,6 +48,21 @@ public class ClientInterface : NetworkBehaviour {
     [Command]
     public void CmdJoinGameAgainstAI () {
         ServerLogic.JoinGameAgainstAI (this);
+    }
+
+    [Command]
+    public void CmdCompareServerVersion (string version) {
+        ServerLogic.CompareServerVersion (this, version);
+    }
+
+    [TargetRpc]
+    public void TargetShowLoginMenu (NetworkConnection target) {
+        LoginMenu.ShowLoginMenu ();
+    }
+
+    [TargetRpc]
+    public void TargetInvalidVersionMessage (NetworkConnection target, string serverVersion) {
+        GOUI.ShowMessage (Language.GetInvalidGameVersionMessage (serverVersion), "ExitGame");
     }
     /*
     [TargetRpc]

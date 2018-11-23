@@ -13,6 +13,7 @@ public class ClientLogic : MonoBehaviour {
         Time.timeScale = 1f;
         //BoardEditorMenu.ShowBoardEditorMenu ();
         //CardPoolEditor.ShowCardPoolEditorMenu ();
-        ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+        //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+        SetEditor.ShowSetEditorMenu ();
     }
 }

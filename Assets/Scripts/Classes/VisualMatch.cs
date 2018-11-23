@@ -144,6 +144,14 @@ public class VisualMatch : MonoBehaviour {
         yield return new WaitForSeconds (GlobalTimer);
         VisualEffectInterface.CreateRealEffects (info, abilityType);
     }
+    public void RealEffect (int x, int y, int abilityType, bool triggered) {
+        StartCoroutine (IERealEffect (x, y, abilityType, triggered));
+    }
+
+    public IEnumerator IERealEffect (int x, int y, int abilityType, bool triggered) {
+        yield return new WaitForSeconds (GlobalTimer);
+        VisualEffectInterface.RealEffect (x, y, abilityType, triggered);
+    }
 
 
 

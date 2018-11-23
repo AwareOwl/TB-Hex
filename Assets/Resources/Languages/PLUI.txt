@@ -14,8 +14,11 @@
 [13] Konto o tej nazwie już istnieje.
 [14] Konto utworzone.
 [15] Nazwa użytkownika
-[16] Gracz %s wygrał ten match.
+[16] Gracz %s wygrał ten mecz.
 [17] Próg %d punktów został osiągnięty.
 [18] Upłynęło %d tur.
 [19] Plansza została zapełniona.
 [20] Gra zakończyła się remisem.
+[21] Wersja gry na serwerze jest inna. Jeśli chcesz połączyć się z serwerem, musisz uruchomić wersję %s.
+[22] Dostępna pula kart.
+[23] Twój zestaw kart.

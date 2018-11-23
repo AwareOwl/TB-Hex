@@ -8,8 +8,23 @@ public class VisualEffectInterface : MonoBehaviour {
         return InGameUI.GetRealAnchor (x, y);
     }
 
-    static public VisualTile GetTile (int x, int y) {
-        return InGameUI.PlayedMatch.Board.tile [x, y].visualTile;
+    static public void DelayedRealEffect (int x, int y, int abilityType, bool triggered) {
+        VisualMatch.instance.RealEffect (x, y, abilityType, triggered);
+    }
+
+    static public void RealEffect (int x, int y, int abilityType, bool triggered) {
+        Color col = AppDefaults.GetAbilityColor (abilityType);
+        VisualEffectScript VES;
+        switch (abilityType) {
+            case 7:
+                VES = CreateSimpleEffect (GetRealAnchor (x, y), "Textures/Ability/Ability07", col, triggered, true);
+                VES.rotateToCamera = true;
+                VES.SetLastPosition (new Vector3 (0, 1, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 2, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                break;
+        }
     }
 
     static public void DelayedCreateRealEffects (VectorInfo info, int abilityType) {

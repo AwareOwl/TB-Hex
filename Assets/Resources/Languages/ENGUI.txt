@@ -19,3 +19,6 @@
 [18] %d turns have passed.
 [19] Board is full.
 [20] Game has ended with draw.
+[21] Game version on server is different. You need to run version %s if you want to connect to this server.
+[22] Available card pool.
+[23] Your card set.

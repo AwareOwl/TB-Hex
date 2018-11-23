@@ -19,6 +19,12 @@ public class VersionManager  {
             PathVersion = 0;
             HotfixVersion = 0;
             DevelopVersion = 0;
+        } else {
+            string [] words = version.Split ('.');
+            GameVersion = int.Parse (words [0]);
+            PathVersion = int.Parse (words [1]);
+            HotfixVersion = int.Parse (words [2]);
+            DevelopVersion = int.Parse (words [3]);
         }
 
         if (GameVersion < 1) {
@@ -64,5 +70,8 @@ public class VersionManager  {
         return GameVersion + "." + PathVersion + "." + HotfixVersion + "." + DevelopVersion;
     }
 
+    static public bool CompareServerVersion (string reference) {
+        return reference == GetServerVersion ();
+    }
 
 }

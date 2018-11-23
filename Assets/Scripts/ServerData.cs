@@ -569,7 +569,6 @@ public class ServerData : MonoBehaviour {
     }
 
     static public void SetServerKeyData (string key, string value) {
-        Debug.Log (KeyDataPath (ServerPath ()));
         SetKeyData (KeyDataPath (ServerPath ()), key, value);
     }
 

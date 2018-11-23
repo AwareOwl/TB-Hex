@@ -205,8 +205,12 @@ public class MatchClass {
 
     public void UseAbility (TileClass tile, int playerNumber, int abilityArea, int abilityType) {
         if (abilityType == 7) {
-            if (LastMove != null && LastMove.usedCard.abilityType != abilityType) {
-                abilityType = LastMove.usedCard.abilityType;
+            if (visualMatch != null) {
+                bool triggered = LastMove != null && LastMove.usedCard.abilityType != abilityType;
+                VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, triggered);
+                if (triggered) {
+                    abilityType = LastMove.usedCard.abilityType;
+                }
             }
         }
         AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea).ToArray ();

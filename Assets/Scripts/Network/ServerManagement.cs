@@ -6,7 +6,7 @@ public class ServerManagement : MonoBehaviour {
 
     bool AutoDeleteAllFinished = true;
 
-    private void Start () {
+    private void Awake () {
         //ServerData.SaveBackUp ();
         VersionManager.CheckServerVersion ();
         VersionManager.FinalizeServerVersion ();

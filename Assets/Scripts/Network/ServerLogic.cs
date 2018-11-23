@@ -64,7 +64,7 @@ public class ServerLogic : MonoBehaviour {
         hand1.GenerateRandomHand ();
         hand2.GenerateRandomHand ();
         MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
-            new PlayerPropertiesClass (1, true, client.AccountName, client.UserName, hand1, client),
+            new PlayerPropertiesClass (1, false, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
     }
 
@@ -74,5 +74,13 @@ public class ServerLogic : MonoBehaviour {
 
     static public void ShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {
         client.TargetShowMatchResult (client.connectionToClient, winnerName, winCondition, limit);
+    }
+
+    static public void CompareServerVersion (ClientInterface client, string clientVersion) {
+        if (VersionManager.CompareServerVersion (clientVersion)) {
+            client.TargetShowLoginMenu (client.connectionToClient);
+        } else {
+            client.TargetInvalidVersionMessage (client.connectionToClient, VersionManager.GetServerVersion ());
+        }
     }
 }
