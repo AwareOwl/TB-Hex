@@ -125,14 +125,14 @@ public class BoardClass {
     }
 
     public void SaveBoard (string userName, string boardName) {
-        ServerData.SaveNewBoard (userName, boardName, BoardToString ().ToArray ());
+        ServerData.SaveNewBoard (userName, boardName, BoardToString ());
     }
 
     public void SaveBoard (int id) {
-        ServerData.SetBoard (id, BoardToString ().ToArray ());
+        ServerData.SetBoard (id, BoardToString ());
     }
 
-    public List <string> BoardToString () {
+    public string [] BoardToString () {
         List<string> s = new List<string> ();
         string s3 = "";
         foreach (TileClass tile in this.tile) {
@@ -148,8 +148,7 @@ public class BoardClass {
             s.Add (s2);
             s3 += s2 + Environment.NewLine;
         }
-        Debug.Log (s3);
-        return s;
+        return s.ToArray();
     }
 
     public void LoadFromFile (int id) {

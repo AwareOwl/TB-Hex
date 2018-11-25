@@ -20,5 +20,17 @@
 [19] Plansza została zapełniona.
 [20] Gra zakończyła się remisem.
 [21] Wersja gry na serwerze jest inna. Jeśli chcesz połączyć się z serwerem, musisz uruchomić wersję %s.
-[22] Dostępna pula kart.
-[23] Twój zestaw kart.
+[22] Dostępna pula kart
+[23] Twój zestaw kart
+[24] Graj
+[25] Gra przeciwko AI
+[26] Edytuj zestaw kart
+[27] Zestaw został zapisany.
+[28] Zestaw został zapisany, ale nie będziesz mógł go użyć w trakcie gry.
+[29] Nie można rozpocząć gry, ponieważ twój zestaw kart jest niepoprawny.
+[30] Twój zestaw powinien zawierać co najmniej 2 karty na każdym stosie.
+[31] Wyłącz aplikację.
+[32] Zapisz zestaw.
+[33] Wróć do menu.
+[34] Pozwól SI wygenerować losowy zestaw.
+[35] W tym edytorze możesz wybrać karty z których będziesz korzystał w trakcie gry. Każda kolumna twojego zestawu kart reprezentuje jeden stos kart dostępny w trakcie gry. Kliknij na kartę prawym przyciskiem myszy aby obrócić jej obszar umiejętności.

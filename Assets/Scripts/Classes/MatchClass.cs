@@ -25,6 +25,21 @@ public class MatchClass {
 
     public VisualMatch visualMatch;
 
+    public string [] MatchToString () {
+        List<string> s = new List<string> ();
+        s.Add (turn.ToString ());
+        s.Add (turnOfPlayer.ToString ());
+        s.Add (numberOfPlayers.ToString ());
+        return s.ToArray ();
+    }
+
+    public void LoadFromString (string [] lines) {
+        turn = int.Parse (lines [0]);
+        turnOfPlayer = int.Parse (lines [1]);
+        numberOfPlayers = int.Parse (lines [2]);
+        Player = new PlayerClass [numberOfPlayers + 1];
+    }
+
 
     public MatchClass () {
 
@@ -67,11 +82,6 @@ public class MatchClass {
         turnOfPlayer = Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1));
         turn++;
         CheckFinishCondition ();
-        PlayerClass nextPlayer = Player [turnOfPlayer];
-        AIClass AI = nextPlayer.properties.AI;
-        if (!finished && real && AI != null) {
-            RunAI ();
-        }
 
         //AIClass AI = Player [1].properties.AI;
        // Debug.Log (AI.TurnToWinPredict (this, 1) + " " + AI.TurnToWinPredict (this, 2) + " " + AI.CalculateMatchValue (this, 1) + " " + AI.CalculateMatchValue (this, 2));
@@ -157,6 +167,29 @@ public class MatchClass {
             CardClass card = player.GetTopCard (stackNumber);
             VisualPlayCard (playerNumber, card);
             PlayCard (x, y, playerNumber, stackNumber, card);
+
+            FinishMove (x, y, playerNumber, stackNumber);
+        }
+    }
+
+    public void FinishMove (int x, int y, int playerNumber, int stackNumber) {
+        if (real) {
+            foreach (PlayerClass player2 in Player) {
+                if (player2 == null || player2.properties == null) {
+                    continue;
+                }
+                ClientInterface client = player2.properties.client;
+                if (client != null) {
+                    ServerLogic.TargetCurrentGameMakeAMove (client, x, y, playerNumber, stackNumber);
+                    //Debug.Log ("Test " + x + " " + y + " " + playerNumber + " " + stackNumber);
+                }
+            }
+        }
+
+        PlayerClass nextPlayer = Player [turnOfPlayer];
+        AIClass AI = nextPlayer.properties.AI;
+        if (!finished && real && AI != null) {
+            RunAI ();
         }
     }
 
@@ -237,6 +270,9 @@ public class MatchClass {
                 case 6:
                     ModifyTempValue (tile, -1);
                     break;
+                case 8:
+                    ModifyTempValue (LastPlayedToken ().tile, -1);
+                    break;
                 case 9:
                     ModifyTempValue (target, 2);
                     break;
@@ -255,9 +291,6 @@ public class MatchClass {
             switch (abilityType) {
                 case 2:
                     CreateToken (target, 0, 1, playerNumber);
-                    break;
-                case 8:
-                    ModifyTempValue (LastPlayedToken ().tile, -1);
                     break;
                 case 11:
                     SwapToken (tile, target);

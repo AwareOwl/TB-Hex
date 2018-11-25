@@ -9,6 +9,7 @@ public class VisualCard {
     public GameObject Background;
     GameObject AbilityTile;
     GameObject AbilityIcon;
+    GameObject Highlight;
     VisualToken Token;
     VisualArea Area;
 
@@ -101,6 +102,24 @@ public class VisualCard {
         icon.GetComponent<Renderer> ().material.color = new Color (0, 0, 0);
     }
 
+    public void EnableHighlight () {
+        GameObject Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
+        GameObject.Destroy (AbilityIcon.GetComponent<Collider> ());
+        Renderer renderer = Clone.GetComponent<Renderer> ();
+        renderer.material.shader = Shader.Find ("Sprites/Default");
+        renderer.material.mainTexture = Resources.Load ("Textures/Other/Selection") as Texture;
+        renderer.material.color = Color.green;
+        Clone.transform.SetParent (Background.transform, true);
+        Clone.transform.localPosition = new Vector3 (0, 0, 0);
+        Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+        Clone.transform.localScale = new Vector3 (1.4f, 1.4f, 1.4f);
+        Highlight = Clone;
+    }
+
+    public void DisableHighlight () {
+        GameObject.DestroyImmediate (Highlight);
+    }
+
     GameObject NewCard () {
         Anchor = new GameObject ();
 
@@ -115,13 +134,6 @@ public class VisualCard {
         Area = new VisualArea ();
         Area.Anchor.transform.SetParent (Anchor.transform);
         Area.Anchor.transform.localPosition = new Vector3 (0, 0.05f, -0.3f);
-
-
-        /*ManaTile = GameObject.Instantiate (Resources.Load ("Prefabs/Hex")) as GameObject;
-        ManaTile.transform.localScale = new Vector3 (0.5f, 0.35f, 0.5f);
-        ManaTile.transform.localPosition = new Vector3 (-0.375f, 0.1f, 0.6f);
-        ManaTile.transform.localEulerAngles = new Vector3 (0, 30, 0);
-        ManaTile.transform.parent = Background.transform;*/
 
         AbilityTile = GameObject.Instantiate (AppDefaults.Tile) as GameObject;
         AbilityTile.AddComponent<VisualEffectScript> ().SetColor (new Color (0, 0, 0));

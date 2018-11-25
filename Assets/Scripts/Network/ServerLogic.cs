@@ -40,8 +40,9 @@ public class ServerLogic : MonoBehaviour {
         }
     }
 
-    static public bool VerifyUserPassword (string userName, string password) {
-        string userPassword = ServerData.GetUserKeyData (userName, "Password");
+    static public bool VerifyUserPassword (string accountName, string password) {
+        password = ServerData.EncryptString (password);
+        string userPassword = ServerData.UserPassword (accountName);
         if (password.CompareTo (userPassword) == 0) {
             return true;
         }
@@ -60,12 +61,40 @@ public class ServerLogic : MonoBehaviour {
 
     static public void JoinGameAgainstAI (ClientInterface client) {
         HandClass hand1 = new HandClass ();
+        hand1.LoadFromFile (client.AccountName, client.GameMode, 1);
+        if (!hand1.IsValid ()) {
+            client.TargetInvalidSet (client.connectionToClient);
+            return;
+        }
         HandClass hand2 = new HandClass ();
-        hand1.GenerateRandomHand ();
         hand2.GenerateRandomHand ();
-        MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
+        MatchClass match = MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
             new PlayerPropertiesClass (1, false, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
+        client.currentMatch = match;
+        DownloadGame (client, match);
+    }
+
+    static public void DownloadGame (ClientInterface client, MatchClass match) {
+        client.TargetDownloadCurrentGameMatch (client.connectionToClient, match.MatchToString ());
+        client.TargetDownloadCurrentGameMatchProperties (client.connectionToClient, 
+            match.Properties.MatchPropertiesToString ());
+        client.TargetDownloadCurrentGameBoard (client.connectionToClient,
+            match.Board.BoardToString ());
+        for (int x = 0; x <= match.numberOfPlayers; x++) {
+            PlayerClass player = match.Player [x];
+            client.TargetDownloadCurrentGamePlayer (client.connectionToClient, 
+                x, player.PlayerToString ());
+            PlayerPropertiesClass playerProperties = player.properties;
+            if (playerProperties != null) {
+                client.TargetDownloadCurrentGamePlayerProperties (client.connectionToClient,
+                    x, playerProperties.PlayerPropertiesToString ());
+                HandClass hand = playerProperties.hand;
+                client.TargetDownloadCurrentGameHand (client.connectionToClient,
+                    x, hand.HandToString ());
+            }
+        }
+        client.TargetFinishDownloadCurrentGame (client.connectionToClient);
     }
 
     static public void DelayedShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {
@@ -82,5 +111,41 @@ public class ServerLogic : MonoBehaviour {
         } else {
             client.TargetInvalidVersionMessage (client.connectionToClient, VersionManager.GetServerVersion ());
         }
+    }
+
+
+    static public void DownloadCardPoolToEditor (ClientInterface client) {
+        client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (1));
+    }
+
+
+    static public void SavePlayerModeSet (ClientInterface client, string [] lines) {
+        ServerData.SavePlayerModeSet (client.AccountName, client.GameMode, 1, lines);
+        HandClass hand = new HandClass ();
+        hand.LoadFromString (lines);
+        if (hand.IsValid ()) {
+            client.TargetShowMessage (client.connectionToClient, Language.SetSavedKey);
+        } else {
+            client.TargetInvalidSavedSet (client.connectionToClient);
+        }
+        //client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (1));
+    }
+
+
+    static public void DownloadSetToEditor (ClientInterface client) {
+        client.TargetDownloadSetToEditor (client.connectionToClient, 
+            ServerData.GetPlayerModeSet (client.AccountName, client.GameMode, 1));
+    }
+
+
+    static public void CurrentGameMakeAMove (ClientInterface client, int x, int y, int playerNumber, int stackNumber) {
+        client.currentMatch.PlayCard (x, y, playerNumber, stackNumber);
+        //VisualMatch.instance.ShowMatchResult (client, winnerName, winCondition, limit);
+    }
+
+
+    static public void TargetCurrentGameMakeAMove (ClientInterface client, int x, int y, int playerNumber, int stackNumber) {
+        client.TargetCurrentGameMakeAMove (client.connectionToClient, x, y, playerNumber, stackNumber);
+        //VisualMatch.instance.ShowMatchResult (client, winnerName, winCondition, limit);
     }
 }

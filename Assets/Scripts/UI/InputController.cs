@@ -10,6 +10,7 @@ public class InputController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        //Debug.Log (Input.mousePosition.x * 1080/Screen.height);
         //Tooltip.CreateComplexTooltip (null);
         timer += Time.deltaTime;
         //Debug.Log (ClientLogic.MyInterface.AccountName);

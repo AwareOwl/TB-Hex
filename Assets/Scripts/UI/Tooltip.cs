@@ -101,12 +101,14 @@ public class Tooltip : GOUI {
     }
 
     static public void FinalizeUpperTooltip (Transform transform) {
-        background = CreateSprite ("UI/Panel_PopUp_01_Sliced", false);
+        background = CreateUIImage ("UI/Panel_PopUp_01_Sliced", false);
         GameObject.DestroyImmediate (background.GetComponent<BoxCollider> ());
         GameObject.DestroyImmediate (background.GetComponent<UIController> ());
-        pointer = CreateSprite ("UI/Panel_PopUp_01_Sliced_Tip", false);
+        background.GetComponent<Image> ().raycastTarget = false;
+        pointer = CreateUIImage ("UI/Panel_PopUp_01_Sliced_Tip", false);
         GameObject.DestroyImmediate (pointer.GetComponent<BoxCollider> ());
         GameObject.DestroyImmediate (pointer.GetComponent<UIController> ());
+        background.GetComponent<Image> ().raycastTarget = false;
         garbage.Add (background);
         garbage.Add (pointer);
 
@@ -120,12 +122,13 @@ public class Tooltip : GOUI {
             someAnchor.transform.localPosition *= SR.size.y;
         }
 
-        anchor = new Vector3 ((int) Input.mousePosition.x,
+        anchor = new Vector3 ((int) (Input.mousePosition.x/* - 540 * Screen.width / Screen.height + 720*/),// - 1440 * (1 - Screen.width / Screen.height)),
             (int) (Camera.main.WorldToScreenPoint (someAnchor.transform.position)).y);
         DestroyImmediate (someAnchor);
 
         //anchor = Input.mousePosition;
         anchor *= 1080f / Screen.height;
+        anchor.x = (int) (anchor.x - 540 * Screen.width / Screen.height + 720);
         anchor.y = 1080f - anchor.y;
 
         height = 30;
@@ -154,17 +157,17 @@ public class Tooltip : GOUI {
             return;
         }
 
-        SetInPixPosition (background, (int) anchor.x, (int) (anchor.y - 15 - height / 2), 30, false);
-        SetInPixPosition (pointer, (int) anchor.x, (int) (anchor.y - 15 - anchor.y % 2), 31, false);
+        SetInPixPosition (background, (int) (anchor.x), (int) (anchor.y - 15 - height / 2), 30, false);
+        SetInPixPosition (pointer, (int) (anchor.x), (int) (anchor.y - 15 - anchor.y % 2), 31, false);
         SetInPixScale (background, (int) width, (int) height, false);
         SetInPixScale (pointer, 30, 30, false);
     }
 
     static public void FinalizeSideTooltip (Transform transform) {
-        background = CreateSprite ("UI/Panel_PopUp_01_Sliced", false);
+        background = CreateUIImage ("UI/Panel_PopUp_01_Sliced", false);
         GameObject.DestroyImmediate (background.GetComponent<BoxCollider> ());
         GameObject.DestroyImmediate (background.GetComponent<UIController> ());
-        pointer = CreateSprite ("UI/Panel_PopUp_01_Sliced_Tip", false);
+        pointer = CreateUIImage ("UI/Panel_PopUp_01_Sliced_Tip", false);
         GameObject.DestroyImmediate (pointer.GetComponent<BoxCollider> ());
         GameObject.DestroyImmediate (pointer.GetComponent<UIController> ());
         garbage.Add (background);
@@ -192,6 +195,7 @@ public class Tooltip : GOUI {
 
         //anchor = Input.mousePosition;
         anchor *= 1080f / Screen.height;
+        anchor.x = (int) (anchor.x - 540 * Screen.width / Screen.height + 720);
         anchor.y = 1080f - anchor.y;
 
         height = 30;

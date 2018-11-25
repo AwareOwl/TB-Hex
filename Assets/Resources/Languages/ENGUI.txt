@@ -20,5 +20,17 @@
 [19] Board is full.
 [20] Game has ended with draw.
 [21] Game version on server is different. You need to run version %s if you want to connect to this server.
-[22] Available card pool.
-[23] Your card set.
+[22] Available card pool
+[23] Your card set
+[24] Play
+[25] Play against AI
+[26] Modify card set
+[27] Set has been saved.
+[28] Set has been saved, but you won't be able to use it in game.
+[29] You can't start the game, because your set is not valid.
+[30] Your set has to have at least 2 cards in each stack.
+[31] Exit application.
+[32] Save set.
+[33] Go back to menu.
+[34] Let AI generate random set for you.
+[35] In this editor you can chose what cards will you use during game. Each column of your set represents one stack of cards.Click on card with right mouse button to rotate its ability area.

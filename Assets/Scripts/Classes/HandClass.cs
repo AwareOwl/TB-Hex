@@ -23,12 +23,31 @@ public class HandClass  {
         return stack [stackNumber];
     }
 
+    public bool IsValid () {
+        bool valid = true;
+        for (int x = 0; x < stack.Length; x++) {
+            if (stack [x].card.Count < 2) {
+                valid = false;
+            }
+        }
+
+        return valid;
+    }
+
     public int GetStackSize (int stackNumber) {
         return stack [stackNumber].card.Count;
     }
 
     public CardClass GetCard (int stackNumber, int cardNumber) {
         return stack [stackNumber].card [cardNumber];
+    }
+
+    public void RemoveCard (int stackNumber, int cardNumber) {
+        stack [stackNumber].RemoveCard (cardNumber);
+    }
+
+    public void SetCard (int stackNumber, int cardNumber, CardClass card) {
+        stack [stackNumber].SetCard (cardNumber, card);
     }
 
     public void Init (int numberOfStacks) {
@@ -42,16 +61,19 @@ public class HandClass  {
 
     public float Normalize (float value, float scale) {
         float output = value * 2;
-        output += 100 / scale - 100f;
+        output += 1 / scale - 1f;
         output *= scale;
-        output -= 100 / scale - 100f;
-        output = Mathf.Max (value, 0.25f);
+        output -= 1 / scale - 1f;
+        output = Mathf.Max (output, 0.25f);
         return output;
     }
-
     public void GenerateRandomHand () {
         CardPoolClass CardPool = new CardPoolClass ();
         CardPool.LoadFromFile (1);
+        GenerateRandomHand (CardPool);
+    }
+
+    public void GenerateRandomHand (CardPoolClass CardPool) {
         int count = CardPool.Card.Count;
 
         float [] CardValue = new float [count];
@@ -75,12 +97,12 @@ public class HandClass  {
                 for (int z = 0; z < CardValue.Length; z++) {
                     CardClass card = CardPool.Card [z];
                     modifier [z] = CardValue [z];
-                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 35);
+                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 25);
                     if (y > 0) {
                         CardClass prevCard = stack [x].card [y - 1];
                         modifier [z] *= Normalize (RatingClass.abilityAfterAbility [
                             card.abilityType, card.AreaSize(),
-                            prevCard.abilityType, prevCard.AreaSize()], 25);
+                            prevCard.abilityType, prevCard.AreaSize()], 10);
                     }
                     SumOfValues += modifier [z];
                 }
@@ -121,15 +143,40 @@ public class HandClass  {
         }
     }
 
-    override public string ToString () {
-        string s = "";
+    public string [] HandToString () {
+        List<string> s = new List<string> ();
         for (int x = 0; x < numberOfStacks; x++) {
+            string s2 = "";
             for (int y = 0; y < stack [x].card.Count; y++) {
-                s += GetCard (x, y) + " ";
+                CardClass card = GetCard (x, y);
+                if (card != null) {
+                    s2 += card.cardNumber + " " + card.abilityArea + " ";
+                }
             }
-            s += System.Environment.NewLine;
+            s.Add (s2);
         }
-        return s;
+        return s.ToArray();
+    }
+
+    public void LoadFromFile (string accountName, int gameMode, int setId) {
+        LoadFromString (ServerData.GetPlayerModeSet (accountName, gameMode, setId));
+    }
+
+    public void LoadFromString (string [] lines) {
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromFile (1);
+        stack = new StackClass [4];
+        for (int x = 0; x < 4; x++) {
+            stack [x] = new StackClass ();
+            if (lines.Length <= x) {
+                continue;
+            }
+            string [] word = lines [x].Split (new char [] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+            for (int y = 0; y < word.Length / 2; y++) {
+                stack [x].card.Add (cardPool.Card [int.Parse (word [y * 2])]);
+                stack [x].card [y].abilityArea = int.Parse (word [y * 2 + 1]);
+            }
+        }
     }
 
 }

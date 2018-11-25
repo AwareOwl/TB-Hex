@@ -43,6 +43,21 @@ public class Language {
 
     static public string AvailableCardPool;
     static public string YourCardSet;
+    static public string SetSavedButInvalid;
+    static public string SaveSet;
+    static public string GoBackToMenu;
+    static public string GenerateRandomSet;
+    static public string SetEditorDescription;
+
+    static public string CantStartTheGame;
+
+    static public string YourSetNeedsDCardsInEachStack;
+
+    static public string ExitApp;
+
+    // main menu
+    static public string PlayAgainstAI;
+    static public string EditSet;
 
     static public int PasswordIsIncorrectKey;
     static public int AccountDoesntExistKey;
@@ -52,6 +67,7 @@ public class Language {
     static public int AccountWithThisNameAlreadyExistsKey;
     static public int AccountCreatedKey;
     static public int InvalidGameVersion;
+    static public int SetSavedKey;
 
     static public void SetLanguage (int languageKey) {
         PlayerPrefs.SetInt (SelectedLanguageKey, languageKey);
@@ -101,6 +117,17 @@ public class Language {
         InvalidGameVersion = 21;
         AvailableCardPool = UI [22];
         YourCardSet = UI [23];
+        PlayAgainstAI = UI [25];
+        EditSet = UI [26];
+        SetSavedKey = 27;
+        SetSavedButInvalid = UI [28];
+        CantStartTheGame = UI [29];
+        YourSetNeedsDCardsInEachStack = UI [30];
+        ExitApp = UI [31];
+        SaveSet = UI [32];
+        GoBackToMenu = UI [33];
+        GenerateRandomSet = UI [34];
+        SetEditorDescription = UI [35];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;
@@ -216,5 +243,13 @@ public class Language {
 
     static public string GetInvalidGameVersionMessage (string serverVersion) {
         return UI [21].Replace ("%s", serverVersion);
+    }
+
+    static public string GetInvalidSetMessage () {
+        return CantStartTheGame + " " + YourSetNeedsDCardsInEachStack;
+    }
+
+    static public string GetInvalidSavedSetMessage () {
+        return SetSavedButInvalid + " " + YourSetNeedsDCardsInEachStack;
     }
 }

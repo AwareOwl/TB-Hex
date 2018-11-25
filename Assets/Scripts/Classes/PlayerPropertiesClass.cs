@@ -7,14 +7,26 @@ public class PlayerPropertiesClass {
     public string displayName;
     public string accountName;
 
+    public int team;
+
     public AIClass AI;
 
     public HandClass hand;
 
     public ClientInterface client;
 
-    public int team;
 
+    public string [] PlayerPropertiesToString () {
+        List<string> s = new List<string> ();
+        s.Add (displayName);
+        s.Add (team.ToString());
+        return s.ToArray ();
+    }
+
+    public void LoadFromString (string [] lines) {
+        displayName = lines [0];
+        team = int.Parse (lines [1]);
+    }
 
     public PlayerPropertiesClass () {
 

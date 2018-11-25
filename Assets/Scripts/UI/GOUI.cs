@@ -33,6 +33,10 @@ public class GOUI : MonoBehaviour {
         CurrentCanvas.transform.localPosition = new Vector3 (0, 0, 0.8655f * globalScale);
         CurrentCanvas.transform.localEulerAngles = new Vector3 (0, 0, 0);
         CurrentCanvas.name = "CurrentCanvas";
+
+        GameObject Clone;
+        Clone = CreateSprite ("UI/Butt_S_Value", 1410, 30, 11, 60, 60, true);
+        Clone.name = UIString.ExitApp;
     }
 
     static public GameObject CreateText (string s, int px, int py, int layer, float scale) {
@@ -97,7 +101,13 @@ public class GOUI : MonoBehaviour {
     }
 
     static public void SetInPixPosition (GameObject Clone, int x, int y, int z, bool updateCollider) {
-        Clone.transform.localPosition = new Vector3 (globalScale * (x - 720f) / 1080, globalScale * (540f - y) / 1080, 0);
+        RectTransform rTransform = Clone.GetComponent<RectTransform> ();
+        if (rTransform != null) {
+            rTransform.anchoredPosition = new Vector2 (x /*- 540 * Screen.width / Screen.height,*/ - 720, -y + 540);
+        } else {
+
+            Clone.transform.localPosition = new Vector3 (globalScale * (x - 720f) / 1080, globalScale * (540f - y) / 1080, 0);
+        }
         if (Clone.GetComponent<Renderer> () != null) {
             Clone.GetComponent<Renderer> ().sortingOrder = z;
         }
@@ -141,10 +151,17 @@ public class GOUI : MonoBehaviour {
     }
 
     static public void SetInPixScale (GameObject Clone, int x, int y, bool updateCollider) {
-        Clone.GetComponent<SpriteRenderer> ().size = new Vector2 (10f * x / 1080f, 10f * y / 1080f);
-        Clone.transform.localScale = new Vector3 (globalScale * 0.1f, globalScale * 0.1f, 0.1f); //new Vector3 (Mathf.Min (x, y) / 1080f, Mathf.Min (x, y) / 1080f, 1);
-        if (updateCollider) {
-            AddColider (Clone);
+        SpriteRenderer sRenderer = Clone.GetComponent<SpriteRenderer> ();
+        if (sRenderer != null) {
+            Clone.GetComponent<SpriteRenderer> ().size = new Vector2 (10f * x / 1080f, 10f * y / 1080f);
+            Clone.transform.localScale = new Vector3 (globalScale * 0.1f, globalScale * 0.1f, 0.1f); //new Vector3 (Mathf.Min (x, y) / 1080f, Mathf.Min (x, y) / 1080f, 1);
+            if (updateCollider) {
+                AddColider (Clone);
+            }
+        }
+        RectTransform rTransform = Clone.GetComponent<RectTransform> ();
+        if (rTransform != null) {
+            rTransform.sizeDelta = new Vector2 (x, y);
         }
     }
 
@@ -188,6 +205,36 @@ public class GOUI : MonoBehaviour {
 	static public Sprite GetSprite (string assetName){
 		return Resources.Load (assetName, typeof (Sprite)) as Sprite;
 	}
+    static public GameObject CreateUIImage (string assetName, bool onMouseOver) {
+        GameObject clone;
+
+        clone = Instantiate (Resources.Load ("Prefabs/PreUIImage")) as GameObject;
+        clone.transform.SetParent (UICanvas.transform);
+        clone.GetComponent<Image> ().sprite = GetSprite (assetName);
+        clone.GetComponent<Image> ().type = Image.Type.Tiled;
+        clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
+        clone.AddComponent<UIController> ();
+
+        SetSprite (clone, assetName, onMouseOver);
+
+        return clone;
+    }
+
+    static public GameObject CreateUIImage (string assetName, int px, int py, int sx, int sy, bool onMouseOver) {
+        GameObject clone;
+
+        clone = Instantiate (Resources.Load ("Prefabs/PreUIImage")) as GameObject;
+        clone.transform.SetParent (UICanvas.transform);
+        clone.GetComponent<Image> ().sprite = GetSprite (assetName);
+        SetAnchoredPosition (clone, px, py);
+        clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (sx, sy);
+        clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
+        clone.AddComponent<UIController> ();
+
+        SetSprite (clone, assetName, onMouseOver);
+
+        return clone;
+    }
 
     static public GameObject CreateUIButton (string assetName, int px, int py, int sx, int sy, bool onMouseOver) {
         GameObject clone;
@@ -267,6 +314,11 @@ public class GOUI : MonoBehaviour {
 
         switch (optionName) {
             case "Destroy":
+                Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    DestroyImmediate (Background);
+                });
+                break;
+            case "MainMenu":
                 Button.GetComponent<Button> ().onClick.AddListener (delegate {
                     DestroyImmediate (Background);
                 });

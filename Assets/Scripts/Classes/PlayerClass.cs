@@ -20,6 +20,32 @@ public class PlayerClass {
 
     }
 
+    public string [] PlayerToString () {
+        List <string> s = new List<string> ();
+        s.Add (playerNumber.ToString ());
+        s.Add (score.ToString ());
+        s.Add (scoreIncome.ToString ());
+        if (topCardNumber == null) {
+            s.Add (0.ToString ());
+        } else {
+            s.Add (topCardNumber.Length.ToString ());
+            for (int x = 0; x < topCardNumber.Length; x++) {
+                s.Add (topCardNumber [x].ToString ());
+            }
+        }
+        return s.ToArray ();
+    }
+
+    public void LoadFromString (string [] lines) {
+        playerNumber = int.Parse (lines [0]);
+        score = int.Parse (lines [1]);
+        scoreIncome = int.Parse (lines [2]);
+        topCardNumber = new int [int.Parse (lines [3])];
+        for (int x = 0; x < topCardNumber.Length; x++) {
+            topCardNumber [x] = int.Parse (lines [4 + x]);
+        }
+    }
+
     public PlayerClass (PlayerPropertiesClass properties) {
         this.properties = properties;
         this.topCardNumber = new int [properties.hand.stack.Length];
@@ -139,6 +165,9 @@ public class PlayerClass {
                     for (int y = 0; y < GetStackSize (x); y++) {
                         CardClass card = GetCard (x, y);
                         card.EnableVisual ();
+                        VisualCard vCard = card.visualCard;
+                        vCard.Background.GetComponent<UIController> ().x = x;
+                        vCard.Background.name = UIString.InGameHandCard;
                         DelayedUpdateCardVisuals (x, y);
                     }
                 }

@@ -8,6 +8,7 @@ public class ServerManagement : MonoBehaviour {
 
     private void Awake () {
         //ServerData.SaveBackUp ();
+        ServerData.SetInitVector ();
         VersionManager.CheckServerVersion ();
         VersionManager.FinalizeServerVersion ();
     }

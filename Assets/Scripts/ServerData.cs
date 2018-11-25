@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Security.Cryptography;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,12 +9,16 @@ using System.IO;
 
 public class ServerData : MonoBehaviour {
 
+    static public string PasswordKey = "Password";
+
     static public string AccountNameKey = "AccountName";
     static public string UserNameKey = "UserName";
     static public string BoardNameKey = "BoardName";
     static public string GameModeNameKey = "GameModeName";
 
     static public string VersionKey = "Version";
+    static public string InitVectorKey = "InitVector";
+    static public string EncryptPasswordKey = "EncryptPassword";
 
     static string BoardProperty = "Board";
     static string GameModeProperty = "GameMode";
@@ -429,12 +435,70 @@ public class ServerData : MonoBehaviour {
         return true;
     }
 
+    static public string PlayerModePath (string owner) {
+        string path = UserPath (owner) + "GameMode/";
+        if (!Directory.Exists (path)) {
+            Directory.CreateDirectory (path);
+        }
+        return path;
+    }
+
+    static public string PlayerModePath (string owner, int gameModeId) {
+        string path = PlayerModePath (owner) + gameModeId + "/";
+        if (!Directory.Exists (path)) {
+            Directory.CreateDirectory (path);
+        }
+        return path;
+    }
+
+    static public string PlayerModeSetPath (string owner, int gameModeId) {
+        string path = PlayerModePath (owner, gameModeId) + "Sets/";
+        if (!Directory.Exists (path)) {
+            Directory.CreateDirectory (path);
+        }
+        return path;
+    }
+
+    static public string PlayerModeSetPath (string owner, int gameModeId, int setId) {
+        string path = PlayerModeSetPath (owner, gameModeId) + setId + "/";
+        if (!Directory.Exists (path)) {
+            Directory.CreateDirectory (path);
+        }
+        return path;
+    }
+
+
+    static public string [] SavePlayerModeSet (string owner, int gameModeId, int setId, string [] lines) {
+        string path = PlayerModeSetPath (owner, gameModeId, setId) + "Set.txt";
+        File.WriteAllLines (path, lines);
+        return lines;
+    }
+
+    static public string [] GetPlayerModeSet (string owner, int gameModeId, int setId) {
+        string path = PlayerModeSetPath (owner, gameModeId, setId) + "Set.txt";
+        string [] lines;
+        if (File.Exists (path)) {
+            lines = File.ReadAllLines (path);
+        } else {
+            lines = new string [0];
+        }
+        return lines;
+    }
+
     static public string UsersPath () {
         string path = ServerPath () + "Users/";
         if (!Directory.Exists (path)) {
             Directory.CreateDirectory (path);
         }
         return path;
+    }
+
+    static public string [] GetAllUsers () {
+        string [] s = Directory.GetDirectories (UsersPath ());
+        for (int x = 0; x < s.Length; x++) {
+            s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+        }
+        return s;
     }
 
     static public bool UserExists (string userName) {
@@ -510,6 +574,10 @@ public class ServerData : MonoBehaviour {
         return GetKeyData (UserDataPath (userName), key);
     }
 
+    static public string SetUserKeyData (string userName, string key, string data) {
+        return SetKeyData (UserDataPath (userName), key, data);
+    }
+
     static public string [] GetAllKeyData (string path) {
         if (File.Exists (path)) {
             string [] Lines = File.ReadAllLines (path);
@@ -554,7 +622,7 @@ public class ServerData : MonoBehaviour {
         Directory.CreateDirectory (UserPath (accountName));
         List<string> Lines = new List<string> ();
         Lines.Add ("***Password");
-        Lines.Add (password);
+        Lines.Add (EncryptString (password));
         Lines.Add ("***Email");
         Lines.Add (email);
         if (userName != null && userName != "") {
@@ -562,6 +630,9 @@ public class ServerData : MonoBehaviour {
             Lines.Add (userName);
         }
         File.WriteAllLines (UserDataPath (accountName), Lines.ToArray ());
+        HandClass hand = new HandClass ();
+        hand.GenerateRandomHand ();
+        ServerData.SavePlayerModeSet (accountName, 1, 1, hand.HandToString ());
     }
     
     static public string GetServerKeyData (string key) {
@@ -571,5 +642,70 @@ public class ServerData : MonoBehaviour {
     static public void SetServerKeyData (string key, string value) {
         SetKeyData (KeyDataPath (ServerPath ()), key, value);
     }
+
+    static public void SetInitVector () {
+        string IV = GetServerKeyData (InitVectorKey);
+        if (IV == null) {
+            IV = generateRandomInitVector ();
+            SetServerKeyData (InitVectorKey, IV);
+        }
+        initVector = IV;
+        string EP = GetServerKeyData (EncryptPasswordKey);
+        if (EP == null) {
+            EP = generateRandomInitVector ();
+            SetServerKeyData (EncryptPasswordKey, EP);
+        }
+        encryptPassword = EP;
+    }
+
+
+    static public string generateRandomInitVector () {
+        string s = "";
+        for (int x = 0; x < 16; x++) {
+            s += (char) ('a' + UnityEngine.Random.Range (0, 26));
+        }
+        return s;
+    }
+
+    static private string initVector = "pemgail9uzpgzl88";
+    static private string encryptPassword = "Doge";
+    private const int keysize = 256;
+
+    static public string UserPassword (string accountName) {
+        return GetUserKeyData (accountName, PasswordKey);
+    }
+
+    public static string EncryptString (string plainText) {
+        return EncryptString (plainText, encryptPassword);
+    }
+
+    //https://tekeye.uk/visual_studio/encrypt-decrypt-c-sharp-string
+        public static string EncryptString (string plainText, string passPhrase) {
+        byte [] initVectorBytes = Encoding.UTF8.GetBytes (initVector);
+        byte [] plainTextBytes = Encoding.UTF8.GetBytes (plainText);
+        PasswordDeriveBytes password = new PasswordDeriveBytes (passPhrase, null);
+        byte [] keyBytes = password.GetBytes (keysize / 8);
+        RijndaelManaged symmetricKey = new RijndaelManaged ();
+        symmetricKey.Mode = CipherMode.CBC;
+        ICryptoTransform encryptor = symmetricKey.CreateEncryptor (keyBytes, initVectorBytes);
+        MemoryStream memoryStream = new MemoryStream ();
+        CryptoStream cryptoStream = new CryptoStream (memoryStream, encryptor, CryptoStreamMode.Write);
+        cryptoStream.Write (plainTextBytes, 0, plainTextBytes.Length);
+        cryptoStream.FlushFinalBlock ();
+        byte [] cipherTextBytes = memoryStream.ToArray ();
+        memoryStream.Close ();
+        cryptoStream.Close ();
+        return Convert.ToBase64String (cipherTextBytes);
+    }
+
+    /*
+    static public  string Crypt (this string text) {
+        Encrypt.EncryptString (textBoxString.Text, textBoxPassword.Text);
+        return Convert.ToBase64String (
+            System.Security.Cryptography.ProtectedData.Protect (
+                Encoding.Unicode.GetBytes (text)));
+    }*/
+
+
 
 }

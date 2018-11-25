@@ -1,14 +1,14 @@
-[0] 
-[1] Redukuje wartoœci ¿etonów bêd¹cych celem o %d1.
-[2] Zwiêksza wartoœci ¿etonów bêd¹cych celem o %d1 i tworzy Zwyk³e ¯etony o wartoœci %d2 na pustych polach bêd¹cych celem.
-[3] Niszczy puste pola bêd¹ce celem.
-[4] Zwiêksza twoj¹ aktualn¹ iloœæ punktów o sumê wartoœci ¿etonów bêd¹cych celem.
-[5] Odpycha rzetony bêd¹ce celem od zagrywanego ¿etonu, o ile inny ¿eton nie blokuje drogi.
-[6] Redukuje wartoœæ zagrywanego ¿etonu o %d1 za ka¿de puste pole bêd¹ce celem.
-[7] Ta umiejêtnoœæ ma dok³adnie taki sam efekt co ostatnio zagrana umiejêtnoœæ.
-[8] Redukuje wartoœæ ostatnio zagranego ¿etonu o %d1 za ka¿dy wrogi ¿eton bêd¹cy celem.
-[9] Zwiêksza wartoœæ najs³abszego ¿etonu bêd¹cego celem o %d1.
-[10] Zmienia typy ¿etonów bêd¹cych celem na Zwyk³e ¯etony.
-[11] Zamienia pozycje zagrywanego ¿etonu z ostatnio zagranym ¿etonem.
-[12] Redukuje wartoœæ najsilniejszego ¿etonu bêd¹cego celem o %d1.
-[13] Ustawia wartoœci ¿etonów bêd¹cych celem na wartoœæ zagrywanego ¿etonu.
+ï»¿[0] 
+[1] Redukuje wartoÅ›ci Å¼etonÃ³w bÄ™dÄ…cych celem o %d1.
+[2] ZwiÄ™ksza wartoÅ›ci Å¼etonÃ³w bÄ™dÄ…cych celem o %d1 i tworzy ZwykÅ‚e Å»etony o wartoÅ›ci %d2 na pustych polach bÄ™dÄ…cych celem.
+[3] Niszczy puste pola bÄ™dÄ…ce celem.
+[4] ZwiÄ™ksza twojÄ… aktualnÄ… iloÅ›Ä‡ punktÃ³w o sumÄ™ wartoÅ›ci Å¼etonÃ³w bÄ™dÄ…cych celem.
+[5] Odpycha Å¼etony bÄ™dÄ…ce celem od zagrywanego Å¼etonu, o ile inny Å¼eton nie blokuje drogi.
+[6] Redukuje wartoÅ›Ä‡ zagrywanego Å¼etonu o %d1 za kaÅ¼de puste pole bÄ™dÄ…ce celem.
+[7] Ta umiejÄ™tnoÅ›Ä‡ ma dokÅ‚adnie taki sam efekt co ostatnio zagrana umiejÄ™tnoÅ›Ä‡.
+[8] Redukuje wartoÅ›Ä‡ ostatnio zagranego Å¼etonu o %d1 za kaÅ¼dy wrogi Å¼eton bÄ™dÄ…cy celem.
+[9] ZwiÄ™ksza wartoÅ›Ä‡ najsÅ‚abszego Å¼etonu bÄ™dÄ…cego celem o %d1.
+[10] Zmienia typy Å¼etonÃ³w bÄ™dÄ…cych celem na ZwykÅ‚e Å¼etony.
+[11] Zamienia pozycje zagrywanego Å¼etonu z ostatnio zagranym Å¼etonem.
+[12] Redukuje wartoÅ›Ä‡ najsilniejszego Å¼etonu bÄ™dÄ…cego celem o %d1.
+[13] Ustawia wartoÅ›ci Å¼etonÃ³w bÄ™dÄ…cych celem na wartoÅ›Ä‡ zagrywanego Å¼etonu.

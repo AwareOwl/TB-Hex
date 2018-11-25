@@ -33,6 +33,9 @@ public class VersionManager  {
                     if (DevelopVersion < 34) {
                         ConvertTo0_0_0_34 ();
                     }
+                    if (DevelopVersion < 37) {
+                        ConvertTo0_0_0_37 ();
+                    }
                 }
             }
         }
@@ -44,6 +47,18 @@ public class VersionManager  {
         RatingClass.LoadAbilityAbilitySynergy ();
         RatingClass.LoadAbilityAfterAbility ();
         RatingClass.LoadAbilityOnRow ();
+    }
+
+    static public void ConvertTo0_0_0_37 () {
+        string [] s = ServerData.GetAllUsers ();
+        foreach (string s2 in s) {
+            ServerData.SetUserKeyData (s2, ServerData.PasswordKey, 
+                ServerData.EncryptString (ServerData.UserPassword (s2)));
+            HandClass hand = new HandClass ();
+            hand.GenerateRandomHand ();
+            ServerData.SavePlayerModeSet (s2, 1, 1, hand.HandToString ());
+        }
+        DevelopVersion = 37;
     }
 
     static public void ConvertTo0_0_0_34 () {

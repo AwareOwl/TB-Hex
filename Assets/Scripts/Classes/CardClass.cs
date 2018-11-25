@@ -44,6 +44,13 @@ public class CardClass : VisualClass {
         return this;
     }
 
+    public void RotateArea () {
+        if (abilityArea > 0 && abilityArea < 4) {
+            abilityArea = (abilityArea % 3 + 1);
+        }
+        SetState (value, tokenType, abilityArea, abilityType);
+    }
+
     public void SetState (int value, int tokenType, int abilityArea, int abilityType) {
         this.tokenType = tokenType;
         this.value = value;

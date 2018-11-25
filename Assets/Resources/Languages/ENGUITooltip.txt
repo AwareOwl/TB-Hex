@@ -1,2 +1,2 @@
-[0] Create your own Token Battle Hex server. Other players from your local area network will be able to join this server and play with you.
-[1] Join to server from your local area network to be able to play with your friends. Server in this network is required to use this option.
+[0] Create your own Token Battle Hex server. Other players from your local area network will be able to join this server.
+[1] Join to server from your local area network. Server in this network is required to use this option.

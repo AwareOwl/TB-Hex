@@ -47,11 +47,14 @@ public class InGameUI : GOUI {
 
         CreatePlayersUI ();
         PlayedMatch.EnableVisuals ();
+        SelectStack (0);
     }
     
 
     static public void SelectStack (int x) {
+        GetSelectedCard ().visualCard.DisableHighlight ();
         SelectedStack = x;
+        GetSelectedCard ().visualCard.EnableHighlight ();
         RefreshHovers ();
     }
 
@@ -96,13 +99,14 @@ public class InGameUI : GOUI {
     }
 
     static public void TileAction (int x, int y) {
-        PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
+        ClientLogic.MyInterface.CmdCurrentGameMakeAMove (x, y, MyPlayerNumber, SelectedStack);
+        //PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
         RefreshHovers ();
     }
 
     static public void ShowInGameUI () {
         DestroyMenu ();
-        PlayedMatch = MatchMakingClass.FindMatch (ClientLogic.MyInterface.AccountName);
+       // PlayedMatch = MatchMakingClass.FindMatch (ClientLogic.MyInterface.AccountName);
         CurrentCanvas.AddComponent<InGameUI> ();
     }
 

@@ -26,6 +26,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public bool Over = false;
     public bool Pressed;
+    public bool Pressed1;
     public bool PressedAndLocked;
 
     // Use this for initialization
@@ -146,6 +147,21 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case "StartClient":
                 Tooltip.NewTooltip (transform, Language.JoinLocalNetworkTooltip);
                 break;
+
+            case UIString.ExitApp:
+                Tooltip.NewTooltip (transform, Language.ExitApp);
+                break;
+
+            case UIString.SetEditorGenerateRandomSet:
+                Tooltip.NewTooltip (transform, Language.GenerateRandomSet);
+                break;
+            case UIString.SetEditorSaveSet:
+                Tooltip.NewTooltip (transform, Language.SaveSet);
+                break;
+            case UIString.ShowMainMenu:
+                Tooltip.NewTooltip (transform, Language.GoBackToMenu);
+                break;
+
         }
     }
 
@@ -161,6 +177,23 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 SetOnMouseClickSprite ();
                 Pressed = true;
             }
+            if (Input.GetMouseButtonDown (1)) {
+                Pressed1 = true;
+            }
+            if (Input.GetMouseButtonUp (1)) {
+                if (Pressed1) {
+                    switch (name) {
+                        case UIString.SetEditorSetCard:
+                            SetEditor.RotateCardInSet (x, y);
+                            break;
+                        case UIString.SetEditorCollectionCard:
+                            SetEditor.RotateCardInCollection (x, y);
+                            break;
+                    }
+                }
+                Pressed1 = false;
+            }
+
             if (Input.GetMouseButtonUp (0)) {
                 if (Pressed) {
                     switch (name) {
@@ -238,7 +271,40 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             CardPoolEditor.SaveCardPool (1);
                             break;
 
+                        // Set editor
+                        case UIString.SetEditorGenerateRandomSet:
+                            SetEditor.LoadRandomSet ();
+                            break;
+                        case UIString.SetEditorSaveSet:
+                            SetEditor.SaveSet ();
+                            break;
+                        case UIString.SetEditorCollectionCard:
+                            SetEditor.SelectCardInCollection (x, y);
+                            break;
+                        case UIString.SetEditorSetCard:
+                            SetEditor.LoadCardInSet (x, y);
+                            break;
 
+
+                        case UIString.ShowMainMenu:
+                            MainMenu.ShowMainMenu ();
+                            break;
+
+                        // Main menu
+                        case UIString.MainMenuStartGameVsAI:
+                            ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+                            break;
+                        case UIString.MainMenuShowSetEditor:
+                            SetEditor.ShowSetEditorMenu ();
+                            break;
+
+                        case UIString.InGameHandCard:
+                            InGameUI.SelectStack (x);
+                            break;
+
+                        case UIString.ExitApp:
+                            Application.Quit ();
+                            break;
 
                         // Other
                         default:

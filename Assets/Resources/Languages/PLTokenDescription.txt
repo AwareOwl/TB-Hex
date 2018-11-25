@@ -1,2 +1,2 @@
-[0] Brak specjalnych w³aœciwoœci.
-[1] Generuje podwójn¹ liczbê punktów.
+ï»¿[0] Brak specjalnych wÅ‚aÅ›ciwoÅ›ci.
+[1] Generuje podwÃ³jnÄ… liczbÄ™ punktÃ³w.
