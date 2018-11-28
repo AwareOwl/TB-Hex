@@ -156,13 +156,13 @@ public class VisualMatch : MonoBehaviour {
 
 
 
-    public void ShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {
-        StartCoroutine (IEShowMatchResult (client, winnerName, winCondition, limit));
+    public void ShowMatchResult (string winnerName, int winCondition, int limit) {
+        StartCoroutine (IEShowMatchResult (winnerName, winCondition, limit));
     }
 
-    public IEnumerator IEShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {
+    public IEnumerator IEShowMatchResult (string winnerName, int winCondition, int limit) {
         yield return new WaitForSeconds (GlobalTimer);
-        ServerLogic.ShowMatchResult (client, winnerName, winCondition, limit);
+        GOUI.ShowMessage (Language.GetMatchResult (winnerName, winCondition, limit), "MainMenu");
     }
 
 

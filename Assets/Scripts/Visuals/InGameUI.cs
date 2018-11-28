@@ -52,9 +52,13 @@ public class InGameUI : GOUI {
     
 
     static public void SelectStack (int x) {
-        GetSelectedCard ().visualCard.DisableHighlight ();
+        /*HandClass hand = GetPlayer ().properties.hand;
+        StackClass stack = hand.stack [SelectedStack];
+        foreach (CardClass card in stack.card) {
+            card.visualCard.DisableHighlight ();
+        }*/
         SelectedStack = x;
-        GetSelectedCard ().visualCard.EnableHighlight ();
+        //GetSelectedCard ().visualCard.EnableHighlight ();
         RefreshHovers ();
     }
 
@@ -69,7 +73,7 @@ public class InGameUI : GOUI {
         if (Input.GetKeyDown ("f5")) {
             ShowInGameUI ();
         }
-        if (Input.GetKeyDown ("r")) {
+        /*if (Input.GetKeyDown ("r")) {
             ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
         }
         if (Input.GetKeyDown ("p")) {
@@ -88,14 +92,14 @@ public class InGameUI : GOUI {
         }
         if (Input.GetKeyDown ("t")) {
             Debug.Log (PlayedMatch.turn);
-        }
-        if (Input.GetKeyDown ("z")) {
+        }*/
+        /*if (Input.GetKeyDown ("z")) {
             if (PlayedMatch.prevMatch != null) {
                 DestroyVisuals ();
                 PlayedMatch = PlayedMatch.prevMatch;
                 ShowInGameUI (PlayedMatch);
             }
-        }
+        }*/
     }
 
     static public void TileAction (int x, int y) {

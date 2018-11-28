@@ -1,0 +1,11 @@
+[0] Terminem "zagrany ¿eton" okreœla siê ¿eton powsta³y w wyniku zagrania karty podczas obecnej tury.
+[1] Terminem "utworzony ¿eton" okreœla siê ka¿dy ¿eton powsta³y w trakcie obecnej tury.
+[2] ¯etony powsta³e wskutek efektów ¿etonów i umiejêtnoœci nie s¹ traktowane jako zagrane ¿etony.
+[3] Jeœli opis efektu okreœla cel w liczbie mnogiej, to celem s¹ wszystkie obiekty spe³niaj¹ce pozosta³e warunki.
+[4] Jeœli opis efektu okreœla cel w liczbie pojedynczej, celem mo¿e byæ tylko jeden obiekt spe³niaj¹cy pozosta³e warunki. Jeœli pozosta³e warunki spe³nia kilka obiektów, ¿aden nie mo¿e byæ obrany za cel.
+[5] Terminem "ostatnio zagrany" okreœla siê element zagrany w poprzedniej turze przez dowolnego z graczy.
+[6] Najs³abszymi ¿etonami bêd¹cymi celem okreœla siê ¿etony maj¹ce najmniejsz¹ wartoœæ spoœród wszystkich celów.
+[7] Najsilniejszymi ¿etonami bêd¹cymi celem okreœla siê ¿eton maj¹ce najwiêksz¹ wartoœæ spoœród wszystkich celów.
+[8] S³abszymi ¿etonami bêd¹cym celem okreœla siê ¿etony maj¹ce mniejsz¹ wartoœæ od zagrywanego ¿etonu.
+[9] Silniejszymi ¿etonami bêd¹cymi celem okreœla siê ¿etony maj¹ce wiêksz¹ wartoœæ od zagrywanego ¿etonu.
+[10] Efekty ustawiaj¹ce wartoœæ ¿etonów zwiêkszaj¹ jego wartoœæ o ró¿nice miêdzy wartoœci¹ docelow¹ a obecn¹ wartoœci¹.

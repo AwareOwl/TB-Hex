@@ -11,6 +11,8 @@ public class GOUI : MonoBehaviour {
     static public GOUI CurrentGUI;
     static public GameObject CurrentTooltip;
 
+    static public GameObject ExitButton;
+
     static float globalScale = 2;
 
 
@@ -37,6 +39,7 @@ public class GOUI : MonoBehaviour {
         GameObject Clone;
         Clone = CreateSprite ("UI/Butt_S_Value", 1410, 30, 11, 60, 60, true);
         Clone.name = UIString.ExitApp;
+        ExitButton = Clone;
     }
 
     static public GameObject CreateText (string s, int px, int py, int layer, float scale) {
@@ -299,7 +302,7 @@ public class GOUI : MonoBehaviour {
         GameObject Text;
 
         Text = CreateUIText (s, 720, 540 - 40);
-        int textWidth = (int) Mathf.Min (Mathf.Max (Text.GetComponent<Text> ().preferredWidth, 125), 330);
+        int textWidth = (int) Mathf.Min (Mathf.Max (Text.GetComponent<Text> ().preferredWidth, 125), 380);
         int textHeight = (int) Text.GetComponent<Text> ().preferredHeight;
 
         Background = CreateUIButton ("UI/Panel_Window_01_Sliced", 720, 540, textWidth + 150, textHeight + 210, false);
@@ -320,6 +323,7 @@ public class GOUI : MonoBehaviour {
                 break;
             case "MainMenu":
                 Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    MainMenu.ShowMainMenu ();
                     DestroyImmediate (Background);
                 });
                 break;

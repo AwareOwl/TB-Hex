@@ -1,2 +1,5 @@
 ﻿[0] Brak specjalnych właściwości.
 [1] Generuje podwójną liczbę punktów.
+[2] Zamiast generować punkty odejmuje je.
+[3] Po turach właściciela zwiększa wartość najsłabszego pobliskiego żetonu o 1.
+[4] Po turach właściciela zmniejsza wartość najsilniejszego pobliskiego żetonu o 1.

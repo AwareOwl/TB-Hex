@@ -33,4 +33,5 @@
 [32] Save set.
 [33] Go back to menu.
 [34] Let AI generate random set for you.
-[35] In this editor you can chose what cards will you use during game. Each column of your set represents one stack of cards.Click on card with right mouse button to rotate its ability area.
+[35] In this editor you can chose what cards will you use during game. Each column of your set represents one stack of cards. You need at least 2 cards in each stack if you want to play this set. Click on card with right mouse button to rotate its ability area.
+[36] Click to learn more about this editor.

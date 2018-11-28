@@ -25,9 +25,17 @@ public class VectorInfo {
 
     }
 
+    public VectorInfo (BoardClass board, TileClass tile) {
+        board.GetAbilityVectors (tile.x, tile.y, 4).ToArray ();
+    }
+
     public VectorInfo (AbilityVector [] vectors) {
+        Init (vectors);
+    }
+
+    public void Init (AbilityVector [] vectors) {
         foreach (AbilityVector vector in vectors) {
-            if (vector.target != null){
+            if (vector.target != null) {
                 this.vectors.Add (vector);
                 if (vector.target.IsFilledTile ()) {
                     int value = vector.target.token.value;
@@ -71,7 +79,32 @@ public class VectorInfo {
         }
     }
 
-    public void CheckTriggers (MatchClass match, TileClass playToken, int abilityType) {
+    public void CheckTokenAfterTurnTriggers (MatchClass match, TileClass tokenTile, int tokenType) {
+        switch (tokenType) {
+            case 3:
+            case 4:
+                break;
+            default:
+                return;
+        }
+        switch (tokenType) {
+            case 3:
+                if (WeakestTargets.Count == 1) {
+                    Triggered1.Add (WeakestTargets [0]);
+                }
+                break;
+            case 4:
+                if (StrongestTargets.Count == 1) {
+                    Triggered1.Add (StrongestTargets [0]);
+                }
+                break;
+            default:
+                return;
+        }
+
+    }
+
+    public void CheckAbilityTriggers (MatchClass match, TileClass playToken, int abilityType) {
         this.PlayedTokenTile = playToken;
         foreach (AbilityVector vector in vectors) {
             switch (abilityType) {

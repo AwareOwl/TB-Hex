@@ -124,7 +124,7 @@ public class PlayerClass {
         }
         GameObject anchor = card.visualCard.Anchor;
         if (anchor.GetComponent<CardAnimation> () == null) {
-            anchor.AddComponent<CardAnimation> ().Init (stackNumber, GetNumberOfStacks (), position);
+            anchor.AddComponent<CardAnimation> ().Init (card.visualCard, stackNumber, GetNumberOfStacks (), position);
         } else {
             anchor.GetComponent<CardAnimation> ().position = position;
         }

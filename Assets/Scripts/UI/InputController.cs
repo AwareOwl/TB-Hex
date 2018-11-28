@@ -8,8 +8,12 @@ public class InputController : MonoBehaviour {
     float timer = 0;
     bool autoRunAI = true;
 
-	// Update is called once per frame
-	void Update () {
+    private void Start () {
+    }
+
+    // Update is called once per frame
+    void Update () {
+        Time.timeScale = 10;
         //Debug.Log (Input.mousePosition.x * 1080/Screen.height);
         //Tooltip.CreateComplexTooltip (null);
         timer += Time.deltaTime;

@@ -1,2 +1,5 @@
 [0] No special properties.
 [1] Generates double score income.
+[2] Instead of generating score income, decreases it.
+[3] After owner turns increases value of neraby weakest token by %d.
+[4] After owner turns decreases value of nearby strongest token by %d.

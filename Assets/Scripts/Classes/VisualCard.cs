@@ -103,17 +103,19 @@ public class VisualCard {
     }
 
     public void EnableHighlight () {
-        GameObject Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
-        GameObject.Destroy (AbilityIcon.GetComponent<Collider> ());
-        Renderer renderer = Clone.GetComponent<Renderer> ();
-        renderer.material.shader = Shader.Find ("Sprites/Default");
-        renderer.material.mainTexture = Resources.Load ("Textures/Other/Selection") as Texture;
-        renderer.material.color = Color.green;
-        Clone.transform.SetParent (Background.transform, true);
-        Clone.transform.localPosition = new Vector3 (0, 0, 0);
-        Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-        Clone.transform.localScale = new Vector3 (1.4f, 1.4f, 1.4f);
-        Highlight = Clone;
+        if (Highlight == null) {
+            GameObject Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
+            GameObject.Destroy (AbilityIcon.GetComponent<Collider> ());
+            Renderer renderer = Clone.GetComponent<Renderer> ();
+            renderer.material.shader = Shader.Find ("Sprites/Default");
+            renderer.material.mainTexture = Resources.Load ("Textures/Other/Selection") as Texture;
+            renderer.material.color = Color.green;
+            Clone.transform.SetParent (Background.transform, true);
+            Clone.transform.localPosition = new Vector3 (0, 0, 0);
+            Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+            Clone.transform.localScale = new Vector3 (1.4f, 1.4f, 1.4f);
+            Highlight = Clone;
+        }
     }
 
     public void DisableHighlight () {

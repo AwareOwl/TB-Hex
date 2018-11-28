@@ -32,7 +32,7 @@ public class SetEditor : GOUI {
         CurrentGUI = this;
         ClientLogic.MyInterface.CmdDownloadCardPoolToEditor ();
         ClientLogic.MyInterface.CmdDownloadSetToEditor ();
-        GOUI.ShowMessage (Language.SetEditorDescription);
+        DestroyImmediate (ExitButton);
     }
 
     static public void ShowSetEditorMenu () {
@@ -213,7 +213,7 @@ public class SetEditor : GOUI {
         VisualCard vCard = new VisualCard (card);
         vCard.Anchor.transform.SetParent (CurrentCanvas.transform);
         vCard.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-        vCard.Anchor.transform.localScale = Vector3.one * 0.15f;
+        vCard.Anchor.transform.localScale = Vector3.one * 0.14f;
         DestroyImmediate (vCard.Background.GetComponent<Collider> ());
         return vCard;
     }
@@ -241,6 +241,9 @@ public class SetEditor : GOUI {
         Clone = CreateSprite ("UI/Butt_S_SetRandomize", 990 + 60 * 6, 90, 11, 64, 64, true);
         Clone.name = UIString.SetEditorGenerateRandomSet;
 
+        Clone = CreateSprite ("UI/Butt_S_Help", 990 + 60 * 5, 90, 11, 64, 64, true);
+        Clone.name = UIString.SetEditorAbout;
+
         Clone = CreateSprite ("UI/Shadow_Butt_M_Rectangle_Sliced", 660, 960, 10, 120, 120, false);
         Clone = CreateSprite ("UI/Shadow_Butt_M_Rectangle_Sliced", 660 + 120, 960, 10, 120, 120, false);
 
@@ -251,7 +254,7 @@ public class SetEditor : GOUI {
 
         for (int x = 0; x < 4; x++) {
 
-            Clone = CreateSprite ("UI/Panel_Slot_01_SetRow", 960 + 120 * x, 540, 11, 122, 780, false);
+            Clone = CreateSprite ("UI/Panel_Slot_01_SetRow", 960 + 120 * x, 535, 11, 122, 780, false);
 
             Clone = CreateText (x.ToString (), 960 + 120 * x, 990, 11, 0.03f);
 

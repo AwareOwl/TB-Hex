@@ -19,6 +19,7 @@ public class UIString {
     public const string SetEditorCollectionCard = "SetEditorCollectionCard";
     public const string SetEditorSetCard = "SetEditorSetCard";
     public const string SetEditorSaveSet = "SetEditorSaveSet";
+    public const string SetEditorAbout = "SetEditorAbout";
 
     public const string ShowMainMenu = "ShowMenu";
 

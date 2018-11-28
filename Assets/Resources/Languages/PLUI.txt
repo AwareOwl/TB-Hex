@@ -33,4 +33,5 @@
 [32] Zapisz zestaw.
 [33] Wróć do menu.
 [34] Pozwól SI wygenerować losowy zestaw.
-[35] W tym edytorze możesz wybrać karty z których będziesz korzystał w trakcie gry. Każda kolumna twojego zestawu kart reprezentuje jeden stos kart dostępny w trakcie gry. Kliknij na kartę prawym przyciskiem myszy aby obrócić jej obszar umiejętności.
+[35] W tym edytorze możesz wybrać karty z których będziesz korzystał w trakcie gry. Każda kolumna twojego zestawu kart reprezentuje jeden stos kart dostępny w trakcie gry. Musisz mieć co najmniej 2 karty w każdym stosie aby móc zagrać tym zestawem kart. Kliknij na kartę prawym przyciskiem myszy aby obrócić jej obszar umiejętności.
+[36] Kliknij aby dowiedzieć się więcej o tym edytorze.

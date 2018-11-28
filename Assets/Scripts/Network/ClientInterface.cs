@@ -37,10 +37,11 @@ public class ClientInterface : NetworkBehaviour {
         GOUI.ShowMessage (Language.UI [messageID]);
     }
 
+    /*
     [TargetRpc]
     public void TargetShowMatchResult (NetworkConnection target, string winnerName, int winCondition, int limit) {
         GOUI.ShowMessage (Language.GetMatchResult (winnerName, winCondition, limit), "MainMenu");
-    }
+    }*/
 
     [TargetRpc]
     public void TargetLogIn (NetworkConnection target, string accountName, string userName) {

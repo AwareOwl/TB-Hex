@@ -1,0 +1,12 @@
+[0] Tury graczy wykonywane s¹ naprzemiennie.
+[1] Ka¿dy gracz posiada %d stosów kart.
+[2] W trakcie swojej truy trzeba wybraæ jeden ze swoich stosów kart, a nastêpnie zagraæ kartê z jego szczytu na dowolnym pustym polu.
+[3] Po zagraniu karty na wybranym polu pojawia siê tam ¿eton okreœlony przez kartê, a nastêpnie aktywowana jest umiejêtnoœæ okreœlona przez kartê.
+[4] Umiejêtnoœæ zagranej karty obiera za cel okoliczne pola s¹siaduj¹ce z zagranym ¿etonem. Jeœli okoliczne pole nie istnieje, nie mo¿e byæ obrane za cel.
+[5] U¿yte karty s¹ odk³adane na spód stosu na którym siê znajdowa³y.
+[6] Na koniec tury ¿etony znajduj¹ce siê na planszy generuj¹ liczbê punktów równ¹ ich wartoœci.
+[7] Wartoœæ ¿etonu jest okreœlana przez liczbê wyœwieltan¹ na tym ¿etonie.
+[8] Gdy wartoœæ ¿etonu spadnie poni¿ej wartoœci 1, zostanie on usuniêty z planszy.
+[9] Ró¿ne typy ¿etonów i umiejêtnoœci mog¹ posiadaæ ró¿ne efekty, które mog¹ naginaæ zasady gry - przyk³adowo ¿eton mo¿e generowaæ podwójn¹ iloœæ punktów jeœli tak wynika z jego opisu.
+[10] Mecz jest zakoñczony, gdy któryœ z graczy osi¹gnie %d punktów lub minie %d2 tur lub wszystkie pola na planszy zostan¹ zape³nione.
+[11] Gdy mecz zostaje zakoñczony, wygrywa gracz który ma najwiêksz¹ liczbê punktów. Jeœli najwiêksz¹ liczbê punktów osi¹gn¹³ wiêcej ni¿ 1 gracz, wynikiem jest remis.

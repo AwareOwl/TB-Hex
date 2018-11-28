@@ -161,6 +161,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ShowMainMenu:
                 Tooltip.NewTooltip (transform, Language.GoBackToMenu);
                 break;
+            case UIString.SetEditorAbout:
+                Tooltip.NewTooltip (transform, Language.ClickToLearnMore);
+                break;
 
         }
     }
@@ -284,7 +287,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                         case UIString.SetEditorSetCard:
                             SetEditor.LoadCardInSet (x, y);
                             break;
-
+                        case UIString.SetEditorAbout:
+                            GOUI.ShowMessage (Language.SetEditorDescription);
+                            break;
 
                         case UIString.ShowMainMenu:
                             MainMenu.ShowMainMenu ();

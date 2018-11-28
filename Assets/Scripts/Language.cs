@@ -53,6 +53,8 @@ public class Language {
 
     static public string YourSetNeedsDCardsInEachStack;
 
+    static public string ClickToLearnMore;
+
     static public string ExitApp;
 
     // main menu
@@ -128,6 +130,7 @@ public class Language {
         GoBackToMenu = UI [33];
         GenerateRandomSet = UI [34];
         SetEditorDescription = UI [35];
+        ClickToLearnMore = UI [36];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;
