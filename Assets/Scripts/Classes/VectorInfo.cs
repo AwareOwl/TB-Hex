@@ -26,7 +26,7 @@ public class VectorInfo {
     }
 
     public VectorInfo (BoardClass board, TileClass tile) {
-        board.GetAbilityVectors (tile.x, tile.y, 4).ToArray ();
+        Init (board.GetAbilityVectors (tile.x, tile.y, 4));
     }
 
     public VectorInfo (AbilityVector [] vectors) {
@@ -79,7 +79,11 @@ public class VectorInfo {
         }
     }
 
-    public void CheckTokenAfterTurnTriggers (MatchClass match, TileClass tokenTile, int tokenType) {
+    public void CheckTokenAfterTurnTriggers (MatchClass match, TileClass tokenTile) {
+        if (!tokenTile.IsFilledTile ()) {
+            return;
+        }
+        int tokenType = tokenTile.token.type;
         switch (tokenType) {
             case 3:
             case 4:

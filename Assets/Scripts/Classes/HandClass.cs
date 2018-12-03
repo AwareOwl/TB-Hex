@@ -69,7 +69,7 @@ public class HandClass  {
     }
     public void GenerateRandomHand () {
         CardPoolClass CardPool = new CardPoolClass ();
-        CardPool.LoadFromFile (1);
+        CardPool.LoadFromFile (2);
         GenerateRandomHand (CardPool);
     }
 
@@ -164,7 +164,7 @@ public class HandClass  {
 
     public void LoadFromString (string [] lines) {
         CardPoolClass cardPool = new CardPoolClass ();
-        cardPool.LoadFromFile (1);
+        cardPool.LoadFromFile (2);
         stack = new StackClass [4];
         for (int x = 0; x < 4; x++) {
             stack [x] = new StackClass ();

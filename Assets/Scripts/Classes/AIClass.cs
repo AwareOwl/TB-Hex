@@ -88,7 +88,7 @@ public class AIClass {
                 if (tile.IsFilledTile ()) {
                     x = 4;
                 }
-                List <AbilityVector> vectors = match.Board.GetAbilityVectors (tile.x, tile.y, x);
+                AbilityVector [] vectors = match.Board.GetAbilityVectors (tile.x, tile.y, x);
                 float enemies = 0;
                 float allies = 0;
                 foreach (AbilityVector vector in vectors) {

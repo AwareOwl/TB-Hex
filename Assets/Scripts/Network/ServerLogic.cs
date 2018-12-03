@@ -61,7 +61,7 @@ public class ServerLogic : MonoBehaviour {
 
     static public void JoinGameAgainstAI (ClientInterface client) {
         HandClass hand1 = new HandClass ();
-        hand1.LoadFromFile (client.AccountName, client.GameMode, 1);
+        hand1.LoadFromFile (client.AccountName, client.GameMode, client.GameMode);
         if (!hand1.IsValid ()) {
             client.TargetInvalidSet (client.connectionToClient);
             return;
@@ -69,7 +69,7 @@ public class ServerLogic : MonoBehaviour {
         HandClass hand2 = new HandClass ();
         hand2.GenerateRandomHand ();
         MatchClass match = MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
-            new PlayerPropertiesClass (1, true, client.AccountName, client.UserName, hand1, client),
+            new PlayerPropertiesClass (1, false, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
         client.currentMatch = match;
         DownloadGame (client, match);
@@ -115,7 +115,7 @@ public class ServerLogic : MonoBehaviour {
 
 
     static public void DownloadCardPoolToEditor (ClientInterface client) {
-        client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (1));
+        client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (client.GameMode));
     }
 
 

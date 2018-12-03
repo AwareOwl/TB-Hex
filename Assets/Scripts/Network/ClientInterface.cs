@@ -7,7 +7,7 @@ public class ClientInterface : NetworkBehaviour {
 
     public string AccountName;
     public string UserName;
-    public int GameMode = 1;
+    public int GameMode = 2;
 
     public MatchClass currentMatch;
 

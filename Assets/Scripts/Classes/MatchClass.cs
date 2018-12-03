@@ -66,8 +66,13 @@ public class MatchClass {
             TokenClass token = tile.token;
             if (token != null) {
                 int value = token.value;
-                if (token.type == 1) {
-                    value *= 2;
+                switch (token.type) {
+                    case 1:
+                        value *= 2;
+                        break;
+                    case 2:
+                        value *= -1;
+                        break;
                 }
                 playerIncome [token.owner] += value;
             }
@@ -79,12 +84,37 @@ public class MatchClass {
             player.UpdateVisuals (this);
         }
 
-        turnOfPlayer = Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1));
-        turn++;
         CheckFinishCondition ();
+        AfterTurn ();
 
         //AIClass AI = Player [1].properties.AI;
-       // Debug.Log (AI.TurnToWinPredict (this, 1) + " " + AI.TurnToWinPredict (this, 2) + " " + AI.CalculateMatchValue (this, 1) + " " + AI.CalculateMatchValue (this, 2));
+        // Debug.Log (AI.TurnToWinPredict (this, 1) + " " + AI.TurnToWinPredict (this, 2) + " " + AI.CalculateMatchValue (this, 1) + " " + AI.CalculateMatchValue (this, 2));
+    }
+
+    public void AfterTurn () {
+        foreach (TileClass tile in Board.tileList) {
+            if (!tile.IsFilledTile ()) {
+                continue;
+            }
+            int tokenType = tile.token.type;
+            VectorInfo info = new VectorInfo (Board, tile);
+            info.CheckTokenAfterTurnTriggers (this, tile);
+            foreach (TileClass target in info.Triggered1) {
+                switch (tokenType) {
+                    case 3:
+                        ModifyTempValue (target, 1);
+                        break;
+                    case 4:
+                        ModifyTempValue (target, -1);
+                        break;
+                }
+            }
+        }
+
+        UpdateBoard ();
+
+        turnOfPlayer = Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1));
+        turn++;
     }
 
     public void CheckFinishCondition () {
@@ -232,7 +262,7 @@ public class MatchClass {
     }
 
     public VectorInfo GetVectorInfo (TileClass tile, int abilityArea, int abilityType) {
-        AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea).ToArray ();
+        AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea);
         VectorInfo info = new VectorInfo (vectors);
         info.CheckAbilityTriggers (this, tile, abilityType);
         return info;
@@ -248,7 +278,7 @@ public class MatchClass {
                 }
             }
         }
-        AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea).ToArray ();
+        AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea);
         VectorInfo info = new VectorInfo (vectors);
         info.CheckAbilityTriggers (this, tile, abilityType);
         if (visualMatch != null) {

@@ -1,2 +1,5 @@
-﻿[0] Zwykły żeton
-[1] Złoty żeton
+﻿[0] Zwykły Żeton
+[1] Złoty Żeton
+[2] Pasożytniczy Żeton
+[3] Inspirujący Żeton
+[4] ... Żeton

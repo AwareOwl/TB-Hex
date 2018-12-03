@@ -35,7 +35,7 @@ public class CardPoolEditor : GOUI {
 
 
         EditedCardPool = new CardPoolClass ();
-        EditedCardPool.LoadFromFile (1);
+        EditedCardPool.LoadFromFile (2);
 
         CreateSampleCards ();
         //EditedCardPool.EnableVisualisation ();

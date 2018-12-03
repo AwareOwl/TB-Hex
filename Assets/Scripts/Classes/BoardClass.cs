@@ -204,7 +204,7 @@ public class BoardClass {
         return false;
     }
 
-    public List <AbilityVector> GetAbilityVectors (int x, int y, int abilityArea) {
+    public AbilityVector [] GetAbilityVectors (int x, int y, int abilityArea) {
         List <AbilityVector> list = new List<AbilityVector> ();
         if (abilityArea == 1 || abilityArea == 4) {
             list.Add (new AbilityVector (this, x, y, 1));
@@ -218,6 +218,6 @@ public class BoardClass {
             list.Add (new AbilityVector (this, x, y, 5));
             list.Add (new AbilityVector (this, x, y, 6));
         }
-        return list;
+        return list.ToArray ();
     }
 }

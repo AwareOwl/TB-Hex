@@ -1,2 +1,5 @@
 [0] Normal Token
 [1] Golden Token
+[2] Parasite Token
+[3] Inspiring Token
+[4] ... Tokens
