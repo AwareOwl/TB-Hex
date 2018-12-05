@@ -80,7 +80,6 @@ public class AIClass {
         float value = 0;
         TileClass [] tiles = match.Board.tileList.ToArray ();
         foreach (TileClass tile in tiles) {
-            float tempValue = 0;
             float dangerCount = 0;
             float edgeCount = 0;
             float multiDangerCount = 0;
@@ -112,11 +111,35 @@ public class AIClass {
             }
             float riskValue = 2;
             if (tile.IsFilledTile ()) {
+                VectorInfo info = new VectorInfo (match.Board, tile);
+                info.CheckTokenAfterTurnTriggers (match, tile);
                 float tokenValue = tile.token.value;
                 int tokenType = tile.token.type;
+                int tokenOwner = tile.token.owner;
                 switch (tokenType) {
                     case 1:
                         tokenValue *= 1.9f;
+                        break;
+                    case 2:
+                        tokenValue *= -0.9f;
+                        break;
+                    case 3:
+                        if (info.WeakestTargets.Count == 1) {
+                            if (info.WeakestTargets [0].token.owner == tokenOwner) {
+                                tokenValue += 1f;
+                            } else {
+                                tokenValue -= 1f;
+                            }
+                        }
+                        break;
+                    case 4:
+                        if (info.StrongestTargets.Count == 1) {
+                            if (info.StrongestTargets [0].token.owner == tokenOwner) {
+                                tokenValue -= 1f;
+                            } else {
+                                tokenValue += 1f;
+                            }
+                        }
                         break;
                 }
                 riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);

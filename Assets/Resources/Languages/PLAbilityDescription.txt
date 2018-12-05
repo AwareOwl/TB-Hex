@@ -12,3 +12,10 @@
 [11] Zamienia pozycje zagrywanego żetonu z ostatnio zagranym żetonem.
 [12] Redukuje wartość najsilniejszego żetonu będącego celem o %d1.
 [13] Ustawia wartości żetonów będących celem na wartość zagrywanego żetonu.
+[14] Niszczy słabszy żeton będący celem.
+[15] Kradnie wartości twoich żetonów będących celem.
+[16] Typ najsłabszego żetonu będącego celem staje się taki sam co typ zagrywanego żetonu.
+[17] Zamienia typ najsłabszego żetonu będącego celem z typem zagrywanego żetonu.
+[18] Tworzy kopię ostatnio zagranego żetonu na pustym polu będącym celem. Kopia należy do ciebie.
+[19] Zamienia pozycję zagrywanego żetonu z twoim żetonem będącym celem.
+[20] Właściciele żetonów będących celem kładą karty z wierzchów swoich stosów kart na spód tych stosów.

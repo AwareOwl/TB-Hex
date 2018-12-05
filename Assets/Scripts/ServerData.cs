@@ -15,6 +15,7 @@ public class ServerData : MonoBehaviour {
     static public string UserNameKey = "UserName";
     static public string BoardNameKey = "BoardName";
     static public string GameModeNameKey = "GameModeName";
+    static public string UserSelectedGameModeKey = "UserSelectedGameMode";
 
     static public string VersionKey = "Version";
     static public string InitVectorKey = "InitVector";
@@ -23,6 +24,8 @@ public class ServerData : MonoBehaviour {
     static string BoardProperty = "Board";
     static string GameModeProperty = "GameMode";
     static string CardSetProperty = "CardSet";
+
+    static int DefaultGameMode = 2;
 
     static public string ServerPath () {
         string path = Application.persistentDataPath + "/";
@@ -90,6 +93,12 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string SaveRatingCardNumberWinRatio (string [] lines) {
+        string path = RatingPath () + "CardNumberWinRatio.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
     static public string SaveRatingWinnerScore (string [] lines) {
         string path = RatingPath () + "WinnerScore.txt";
         File.WriteAllLines (path, lines);
@@ -120,6 +129,25 @@ public class ServerData : MonoBehaviour {
 
     static public string [] GetRatingAbilityOnRow () {
         string path = RatingAbilityOnRowPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
+    static public string RatingTokenOnRowPath () {
+        return RatingPath () + "TokenOnRow.txt";
+    }
+
+    static public string SaveRatingTokenOnRow (string [] lines) {
+        string path = RatingTokenOnRowPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingTokenOnRow () {
+        string path = RatingTokenOnRowPath ();
         if (File.Exists (path)) {
             string [] lines = File.ReadAllLines (path);
             return lines;
@@ -362,7 +390,7 @@ public class ServerData : MonoBehaviour {
         string [] lines = File.ReadAllLines (path);
         return lines;
     }
-    
+
     static public string SetBoard (int id, string [] s) {
         string path = BoardContentPath (id) + "Board.txt";
         File.WriteAllLines (path, s);
@@ -396,11 +424,11 @@ public class ServerData : MonoBehaviour {
         if (index == -1) {
             lines.Add (keyName);
             lines.Add (keyValue);
-        } else{
+        } else {
             lines [index + 1] = keyValue;
         }
         SaveBoardInfo (id, lines.ToArray ());
-        return index == -1 ? false: true;
+        return index == -1 ? false : true;
     }
 
     static public string BoardOwnerPath (int id) {
@@ -425,7 +453,7 @@ public class ServerData : MonoBehaviour {
     }
 
     static public bool AddBoardOwners (int id, string owner) {
-        List <string> lines = new List<string> (GetBoardOwners (id));
+        List<string> lines = new List<string> (GetBoardOwners (id));
         if (lines.Exists (x => x == owner)) {
             return false;
         }
@@ -634,7 +662,7 @@ public class ServerData : MonoBehaviour {
         hand.GenerateRandomHand ();
         ServerData.SavePlayerModeSet (accountName, 1, 1, hand.HandToString ());
     }
-    
+
     static public string GetServerKeyData (string key) {
         return GetKeyData (KeyDataPath (ServerPath ()), key);
     }
@@ -673,6 +701,15 @@ public class ServerData : MonoBehaviour {
 
     static public string UserPassword (string accountName) {
         return GetUserKeyData (accountName, PasswordKey);
+    }
+
+    static public int GetUserSelectedGameMode (string accountName) {
+        string gameMode = GetUserKeyData (accountName, UserSelectedGameModeKey);
+        if (gameMode == null || gameMode == "") {
+            SetUserKeyData (accountName, UserSelectedGameModeKey, DefaultGameMode.ToString ());
+            return DefaultGameMode;
+        }
+        return int.Parse (gameMode);
     }
 
     public static string EncryptString (string plainText) {

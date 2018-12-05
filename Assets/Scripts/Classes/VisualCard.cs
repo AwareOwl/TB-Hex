@@ -23,25 +23,6 @@ public class VisualCard {
         SetState (card);
     }
 
-    static public void Make4Cards () {
-        for (int x = 0; x < 4; x++) {
-            for (int y = 0; y < 4; y++) {
-                VisualCard card = new VisualCard ();
-                card.Background.transform.localPosition = new Vector3 (-1.95f + x * 1.3f, 2 - 0.15f * y, -5.75f - 0.025f * y);
-                card.Background.transform.localEulerAngles = new Vector3 (-25, 0, 0);
-                card.Area.SetAbilityArea (x);
-                if (y == 0) {
-                    card.SetAbilityIcon (x % 4 + 1);
-                } else {
-                    card.SetAbilityIcon (Random.Range (1, 5));
-                }
-                if (Random.Range (0, 3) == 0) {
-                    //break;
-                }
-            }
-        }
-    }
-
     public void SetState (CardClass card) {
         SetState (card.tokenType, card.value, card.abilityArea, card.abilityType);
     }
@@ -104,7 +85,8 @@ public class VisualCard {
 
     public void EnableHighlight () {
         if (Highlight == null) {
-            GameObject Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
+            //GameObject Clone = GOUI.CreateSprite
+            /*GameObject Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
             GameObject.Destroy (AbilityIcon.GetComponent<Collider> ());
             Renderer renderer = Clone.GetComponent<Renderer> ();
             renderer.material.shader = Shader.Find ("Sprites/Default");
@@ -114,7 +96,7 @@ public class VisualCard {
             Clone.transform.localPosition = new Vector3 (0, 0, 0);
             Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
             Clone.transform.localScale = new Vector3 (1.4f, 1.4f, 1.4f);
-            Highlight = Clone;
+            Highlight = Clone;*/
         }
     }
 

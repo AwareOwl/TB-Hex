@@ -146,7 +146,9 @@ public class ClientInterface : NetworkBehaviour {
 
     [TargetRpc]
     public void TargetCurrentGameMakeAMove (NetworkConnection target, int x, int y, int playerNumber, int stackNumber) {
-        InGameUI.PlayedMatch.PlayCard (x, y, playerNumber, stackNumber);
+        if (InGameUI.PlayedMatch != null) {
+            InGameUI.PlayedMatch.PlayCard (x, y, playerNumber, stackNumber);
+        }
     }
 
 

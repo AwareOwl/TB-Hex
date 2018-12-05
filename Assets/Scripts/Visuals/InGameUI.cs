@@ -45,9 +45,9 @@ public class InGameUI : GOUI {
         instance = this;
         CurrentGUI = this;
 
-        CreatePlayersUI ();
+        /*CreatePlayersUI ();
         PlayedMatch.EnableVisuals ();
-        SelectStack (0);
+        SelectStack (0);*/
     }
     
 
@@ -202,7 +202,7 @@ public class InGameUI : GOUI {
                     }
                     break;
             }
-            VectorInfo info = PlayedMatch.GetVectorInfo (x, y, MyPlayerNumber, abilityArea, abilityType);
+            VectorInfo info = PlayedMatch.GetVectorInfo (x, y, MyPlayerNumber, abilityArea, abilityType, new TokenClass (null, card.tokenType, card.value, MyPlayerNumber));
             foreach (AbilityVector vector in info.TriggeredVector) {
                 VisualEffectInterface.CreateEffectPointingAt (
                     GetAnchor (vector.x, vector.y), GetAnchor (vector.pushX, vector.pushY).transform.position, abilityType, true, false);

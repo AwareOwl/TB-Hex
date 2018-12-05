@@ -19,6 +19,8 @@ public class CardPoolEditor : GOUI {
     static int maxX = 5;
     static int maxY = 4;
 
+    static int page;
+
     static int [] NumberOfButtons = new int [] { 4, 8, 6, 2, 13 };
     static int [] Selected = new int [] { 0, 1, 0, 0, 1 };
     static GameObject [] [] Buttons;
@@ -42,19 +44,43 @@ public class CardPoolEditor : GOUI {
         //EditedCardPool.LoadFromFile (1);
     }
 
+    private void Update () {
+        for (int x = 1; x <= 9; x++) {
+            if (Input.GetKeyDown (x.ToString ())) {
+                page = Mathf.Min (x - 1, EditedCardPool.Card.Count / CardCountOnPage ());
+                RefreshPage ();
+            }
+        }
+    }
+
+    static public int CardCountOnPage () {
+        return maxX * maxY;
+    }
+
+    static public int DeltaNumber () {
+        return CardCountOnPage () * page;
+    }
+
     static public void CardAction (int number) {
-        EditedCardPool.SetCard (number, Selected [1] + 1, Selected [2], Selected [3] * 3 + 1, Selected [4]);
-        UpdateCard (number);
+        EditedCardPool.SetCard (number + DeltaNumber (), Selected [1] + 1, Selected [2], Selected [3] * 3 + 1, Selected [4]);
+        RefreshPage ();
+        /*UpdateCard (number);
+        if (number == EditedCardPool.Card.Count - 1) {
+            SetEmptySlot (number + 1);
+        }*/
     }
 
 
     static public void CreateSampleCards () {
         CardSlot = new VisualCard [maxX * maxY];
         EmptyCardSlot = CreateEmptySlot ();
-        SetEmptySlot (0);
-        int x = 0;
-        foreach (CardClass card in EditedCardPool.Card) {
-            UpdateCard (x++);
+        //SetEmptySlot (0);
+        RefreshPage ();
+    }
+
+    static public void RefreshPage () {
+        for (int x = 0; x < CardCountOnPage (); x++) {
+            UpdateCard (x);
         }
     }
 
@@ -71,16 +97,26 @@ public class CardPoolEditor : GOUI {
         card.Anchor.transform.localPosition = new Vector3 (-1.7f + x * 1.3f, 3.1f - 1.4f * y, 5);
         card.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
         card.Background.name = UIString.CardPoolEditorCard;
-        card.Background.AddComponent<UIController> ().number = number;
+        card.Background.GetComponent<UIController> ().number = number;
         CardSlot [number] = card;
     }
 
     static void UpdateCard (int number) {
-        if (CardSlot [number] == null) {
-            CreateCard (number);
-            SetEmptySlot (number + 1);
+        int cardNumber = number + DeltaNumber ();
+        if (cardNumber < EditedCardPool.Card.Count) {
+            if (CardSlot [number] == null) {
+                CreateCard (number);
+            }
+            CardSlot [number].SetState (EditedCardPool.Card [number + page * CardCountOnPage ()]);
+        } else {
+            if (CardSlot [number] != null) {
+                CardSlot [number].DestroyVisual ();
+                CardSlot [number] = null;
+            }
+            if (cardNumber == EditedCardPool.Card.Count) {
+                SetEmptySlot (number);
+            }
         }
-        CardSlot [number].SetState (EditedCardPool.Card [number]);
     }
 
     static GameObject CreateEmptySlot () {
@@ -264,6 +300,7 @@ public class CardPoolEditor : GOUI {
                             }
                             break;
                         case 4:
+                            BackgroundObject.GetComponent<UIController> ().abilityType = number;
                             BackgroundObject.name = UIString.CardPoolEditorAbilityType;
                             Clone = CreateSprite (VisualCard.GetIconPath (number), npx, npy, 12, 45, 45, false);
                             Clone.GetComponent<SpriteRenderer> ().color = AppDefaults.GetAbilityColor (number);

@@ -12,3 +12,10 @@
 [11] Podmiana pozycji
 [12] Grzmot
 [13] Równość
+[14] Zmiażdżenie
+[15] Eksploatacja
+[16] Inspiracja
+[17] Kradzież tożsamości
+[18] Replikacja
+[19] Roszada
+[20] Dekoncentracja

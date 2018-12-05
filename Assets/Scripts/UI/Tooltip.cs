@@ -69,6 +69,20 @@ public class Tooltip : GOUI {
         FinalizeTooltip (transform);
     }
 
+    static public void NewAbilityTypeTooltip (Transform transform, int abilityType) {
+        NewTooltip ();
+        AddFragment (null, Language.AbilityName [abilityType], true);
+        AddFragment (null, Language.GetAbilityDescription (abilityType), false);
+        FinalizeTooltip (transform);
+    }
+
+    static public void NewTokenTypeTooltip (Transform transform, int tokenType) {
+        NewTooltip ();
+        AddFragment (null, Language.TokenName [tokenType], true);
+        AddFragment (null, Language.TokenDescription [tokenType], false);
+        FinalizeTooltip (transform);
+    }
+
     static public void NewTooltip (Transform transform, TokenClass token) {
         NewTooltip ();
         AddFragment (null, Language.TokenName [token.type], true);

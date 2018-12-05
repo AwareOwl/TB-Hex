@@ -18,6 +18,8 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public CardClass card;
     public TileClass tile;
+    public int abilityType = -1;
+    public int tokenType = -1;
 
     public List<GameObject> references = new List<GameObject> ();
 
@@ -139,6 +141,12 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
         if (tile != null && tile.token != null) {
             Tooltip.NewTooltip (transform, tile.token);
+        }
+        if (abilityType > -1) {
+            Tooltip.NewAbilityTypeTooltip (transform, abilityType);
+        }
+        if (tokenType > -1) {
+            Tooltip.NewTokenTypeTooltip (transform, tokenType);
         }
         switch (name) {
             case "StartHost":
@@ -271,7 +279,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             break;
 
                         case UIString.CardPoolEditorSaveCardPool:
-                            CardPoolEditor.SaveCardPool (1);
+                            CardPoolEditor.SaveCardPool (ClientLogic.MyInterface.GameMode);
                             break;
 
                         // Set editor

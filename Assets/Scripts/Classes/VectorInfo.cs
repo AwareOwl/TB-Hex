@@ -9,8 +9,19 @@ public class VectorInfo {
     public int strongestValue = 0;
     public List<TileClass> StrongestTargets = new List<TileClass> ();
 
+
     public int weakestValue = 999;
     public List<TileClass> WeakestTargets = new List<TileClass> ();
+
+    public int strongerCount = 0;
+    public int weakerCount = 0;
+
+    public int emptyTileCount = 0;
+
+    public int allyCount = 0;
+    public int enemyCount = 0;
+
+    public List<int> TargetPlayers = new List<int> ();
 
     public TileClass PlayedTokenTile;
 
@@ -26,19 +37,20 @@ public class VectorInfo {
     }
 
     public VectorInfo (BoardClass board, TileClass tile) {
-        Init (board.GetAbilityVectors (tile.x, tile.y, 4));
+        Init (board.GetAbilityVectors (tile.x, tile.y, 4), tile.token);
     }
 
-    public VectorInfo (AbilityVector [] vectors) {
-        Init (vectors);
+    public VectorInfo (AbilityVector [] vectors, TokenClass token) {
+        Init (vectors, token);
     }
 
-    public void Init (AbilityVector [] vectors) {
+    public void Init (AbilityVector [] vectors, TokenClass token) {
         foreach (AbilityVector vector in vectors) {
             if (vector.target != null) {
                 this.vectors.Add (vector);
                 if (vector.target.IsFilledTile ()) {
                     int value = vector.target.token.value;
+                    int owner = vector.target.token.owner;
                     if (strongestValue < value) {
                         StrongestTargets = new List<TileClass> ();
                         strongestValue = value;
@@ -46,6 +58,7 @@ public class VectorInfo {
                     if (strongestValue == value) {
                         StrongestTargets.Add (vector.target);
                     }
+
                     if (weakestValue > value) {
                         WeakestTargets = new List<TileClass> ();
                         weakestValue = value;
@@ -53,6 +66,26 @@ public class VectorInfo {
                     if (weakestValue == value) {
                         WeakestTargets.Add (vector.target);
                     }
+
+                    if (token.value > value) {
+                        weakerCount++;
+                    }
+                    if (token.value < value) {
+                        strongerCount++;
+                    }
+
+
+                    if (token.owner == owner) {
+                        allyCount++;
+                    } else {
+                        enemyCount++;
+                    }
+                    if (!TargetPlayers.Contains (owner)) {
+                        TargetPlayers.Add (owner);
+                    }
+                }
+                if (vector.target.IsEmptyTile ()) {
+                    emptyTileCount++;
                 }
             }
 
@@ -108,14 +141,15 @@ public class VectorInfo {
 
     }
 
-    public void CheckAbilityTriggers (MatchClass match, TileClass playToken, int abilityType) {
-        this.PlayedTokenTile = playToken;
+    public void CheckAbilityTriggers (MatchClass match, TileClass playTile, int abilityType, TokenClass token) {
+        this.PlayedTokenTile = playTile;
         foreach (AbilityVector vector in vectors) {
             switch (abilityType) {
                 case 1:
                 case 4:
                 case 10:
                 case 13:
+                case 20:
                     if (IsFilledTile (vector.target)) {
                         Triggered1.Add (vector.target);
                     } else {
@@ -166,11 +200,42 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
+                case 14:
+                case 16:
+                case 17:
+                    if (IsFilledTile (vector.target) && weakerCount == 1 && vector.target.token.value < token.value) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 15:
+                    if (IsFilledTile (vector.target) && vector.target.token.owner == token.owner) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 18:
+                    if (IsFilledTile (vector.target) && emptyTileCount == 1 && match.LastPlayedToken () != null) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 19:
+                    if (IsFilledTile (vector.target) && vector.target.token.owner == token.owner && allyCount == 1) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
             }
         }
         switch (abilityType) {
             case 8:
             case 11:
+            case 18:
                 if (match.LastPlayedToken () != null) {
                     Triggered2.Add (match.LastPlayedTile ());
                 }

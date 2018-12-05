@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class AppDefaults {
 
-    static public int AvailableTokens = 2; 
-    static public int AvailableAbilities = 14; // Always + 1, to include null
+    static public int AvailableTokens = 5; 
+    static public int AvailableAbilities = 21; // Always + 1, to include null
 
 
     static public Shader sprite;
@@ -25,8 +25,9 @@ public class AppDefaults {
             case 1:
                 return new Color (0.8f, 0.6f, 0.1f);
             case 2:
-                return new Color (0.6f, 0.6f, 0.6f);
+                return new Color (1f, 0.6f, 0.6f);
             case 3:
+                return new Color (0.0f, 0.6f, 0.2f);
             case 4:
                 return new Color (0.0f, 0.2f, 0.6f);
             case 6:
@@ -59,25 +60,34 @@ public class AppDefaults {
             case 1:
             case 8:
             case 12:
+            case 14:
                 return Color.red;
             // Green
             case 2:
             case 9:
+            case 18:
                 return new Color (0, 0.95f, 0);
             // Orange
             case 3:
             case 5:
             case 11:
+            case 19:
                 return new Color (1, 0.5f, 0);
             // Yellow
             case 4:
             case 6:
             case 13:
+            case 15:
                 return new Color (1, 1, 0);
             // Purple
             case 7:
             case 10:
+            case 16:
+            case 17:
                 return new Color (0.8f, 0, 1);
+            // Blue
+            case 20:
+                return new Color (0, 0, 1);
         }
         return Color.white;
     }

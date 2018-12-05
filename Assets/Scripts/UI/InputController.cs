@@ -18,17 +18,19 @@ public class InputController : MonoBehaviour {
         //Tooltip.CreateComplexTooltip (null);
         timer += Time.deltaTime;
         //Debug.Log (ClientLogic.MyInterface.AccountName);
-        /*if (autoRunAI) {
+        if (autoRunAI) {
             if (ClientLogic.MyInterface.AccountName != null && ClientLogic.MyInterface.AccountName != "") {
                 for (int x = 0; x < 2; x++) {
-                    ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
-                    InGameUI.PlayedMatch.RunAI ();
+                    //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+                    ServerLogic.JoinGameAgainstAI (ClientLogic.MyInterface).RunAI ();
+                    //Debug.Log (InGameUI.PlayedMatch);
+                    //InGameUI.PlayedMatch.RunAI ();
                 }
             }
             if (timer > 5) {
                 timer -= 20;
                 RatingClass.SaveEverything ();
             }
-        }*/
+        }
 	}
 }
