@@ -295,10 +295,16 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                         case UIString.SetEditorSetCard:
                             SetEditor.LoadCardInSet (x, y);
                             break;
+                        case UIString.SetEditorPageButton:
+                            SetEditor.LoadPage (number);
+                            break;
                         case UIString.SetEditorAbout:
                             GOUI.ShowMessage (Language.SetEditorDescription);
                             break;
 
+                        case UIString.ShowSetList:
+                            SetList.ShowSetList ();
+                            break;
                         case UIString.ShowMainMenu:
                             MainMenu.ShowMainMenu ();
                             break;

@@ -71,10 +71,12 @@ public class ServerLogic : MonoBehaviour {
         HandClass hand2 = new HandClass ();
         hand2.GenerateRandomHand ();
         MatchClass match = MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
-            new PlayerPropertiesClass (1, true, client.AccountName, client.UserName, hand1, client),
+            new PlayerPropertiesClass (1, InputController.autoRunAI, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
         client.currentMatch = match;
-        //DownloadGame (client, match);
+        if (!InputController.autoRunAI) {
+            DownloadGame (client, match);
+        }
         return match;
     }
 
@@ -119,6 +121,20 @@ public class ServerLogic : MonoBehaviour {
 
     static public void DownloadCardPoolToEditor (ClientInterface client) {
         client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (client.GameMode));
+    }
+
+
+    static public void DownloadSetList (ClientInterface client) {
+        string [] ids = ServerData.GetAllPlayerModeSets (client.AccountName, client.GameMode);
+        int count = ids.Length;
+        int [] intIds = new int [count];
+        string [] setNames = new string [count];
+        for (int x = 0; x < count; x++) {
+            intIds [x] = int.Parse (ids [x]);
+            setNames [x] = ServerData.GetPlayerModeSetName (client.AccountName, client.GameMode, intIds [x]);
+
+        }
+        client.TargetDownloadSetList (client.connectionToClient, setNames, intIds);
     }
 
 

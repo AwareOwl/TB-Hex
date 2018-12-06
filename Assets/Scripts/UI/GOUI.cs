@@ -21,6 +21,9 @@ public class GOUI : MonoBehaviour {
             CurrentGUI.DestroyThis ();
             CreateNewCanvas ();
         }
+        foreach (Transform child in UICanvas.transform) {
+            GameObject.Destroy (child.gameObject);
+        }
     }
 
     virtual public void DestroyThis () {
@@ -298,6 +301,7 @@ public class GOUI : MonoBehaviour {
 
     static public GameObject ShowMessage (string s, string optionName) {
         GameObject Background;
+        GameObject Collider;
         GameObject Button;
         GameObject Text;
 
@@ -307,6 +311,9 @@ public class GOUI : MonoBehaviour {
 
         Background = CreateUIButton ("UI/Panel_Window_01_Sliced", 720, 540, textWidth + 150, textHeight + 210, false);
         Text.transform.SetParent (Background.transform);
+
+        Collider = CreateUIImage ("UI/Transparent", 720, 540, 10000, 10000, false);
+        Collider.transform.SetParent (Background.transform);
 
         Button = CreateUIButton ("UI/Butt_M_EmptySquare", 720, 540 + textHeight / 2 + 15, 90, 60, true);
         Button.transform.SetParent (Background.transform);

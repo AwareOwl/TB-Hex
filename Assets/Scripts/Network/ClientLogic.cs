@@ -15,7 +15,9 @@ public class ClientLogic : MonoBehaviour {
         //CardPoolEditor.ShowCardPoolEditorMenu ();
         //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
         //SetEditor.ShowSetEditorMenu ();
-        //MainMenu.ShowMainMenu ();
+        if (!InputController.autoRunAI) {
+            MainMenu.ShowMainMenu ();
+        }
     }
 
     static public void LoadCurrentGameMatch (string [] lines) {

@@ -35,3 +35,7 @@
 [34] Let AI generate random set for you.
 [35] In this editor you can chose what cards will you use during game. Each column of your set represents one stack of cards. You need at least 2 cards in each stack if you want to play this set. Click on card with right mouse button to rotate its ability area.
 [36] Click to learn more about this editor.
+[37] Select card set:
+[38] Empty slot
+[39] AI opponent
+[40] Starting set

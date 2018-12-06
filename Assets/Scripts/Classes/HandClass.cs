@@ -39,7 +39,12 @@ public class HandClass  {
     }
 
     public CardClass GetCard (int stackNumber, int cardNumber) {
-        return stack [stackNumber].card [cardNumber];
+        StackClass stack2 = stack [stackNumber];
+        if (stack2.card.Count > cardNumber) {
+            return stack2.card [cardNumber];
+        } else {
+            return null;
+        }
     }
 
     public void RemoveCard (int stackNumber, int cardNumber) {
@@ -64,7 +69,7 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output = Mathf.Max (output, 0.25f);
+        output = Mathf.Max (output, 0.4f);
         return output;
     }
     public void GenerateRandomHand () {
@@ -97,8 +102,8 @@ public class HandClass  {
                 for (int z = 0; z < CardValue.Length; z++) {
                     CardClass card = CardPool.Card [z];
                     modifier [z] = CardValue [z];
-                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 20)
-                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.value, y], 20);
+                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 15)
+                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.value, y], 15);
                     if (y > 0) {
                         CardClass prevCard = stack [x].card [y - 1];
                         modifier [z] *= Normalize (RatingClass.abilityAfterAbility [

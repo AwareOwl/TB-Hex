@@ -122,7 +122,7 @@ public class Tooltip : GOUI {
         pointer = CreateUIImage ("UI/Panel_PopUp_01_Sliced_Tip", false);
         GameObject.DestroyImmediate (pointer.GetComponent<BoxCollider> ());
         GameObject.DestroyImmediate (pointer.GetComponent<UIController> ());
-        background.GetComponent<Image> ().raycastTarget = false;
+        pointer.GetComponent<Image> ().raycastTarget = false;
         garbage.Add (background);
         garbage.Add (pointer);
 

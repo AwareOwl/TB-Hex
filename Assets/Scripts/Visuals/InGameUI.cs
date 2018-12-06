@@ -45,9 +45,9 @@ public class InGameUI : GOUI {
         instance = this;
         CurrentGUI = this;
 
-        /*CreatePlayersUI ();
+        CreatePlayersUI ();
         PlayedMatch.EnableVisuals ();
-        SelectStack (0);*/
+        SelectStack (0);
     }
     
 

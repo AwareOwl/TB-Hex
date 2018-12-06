@@ -18,7 +18,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.0.0.37");
+            CmdCompareServerVersion ("0.1.1.4");
         }
     }
 
@@ -86,6 +86,17 @@ public class ClientInterface : NetworkBehaviour {
     [TargetRpc]
     public void TargetDownloadCardPoolToEditor (NetworkConnection target, string [] lines) {
         SetEditor.LoadCardPool (lines);
+    }
+
+
+    [Command]
+    public void CmdDownloadSetList () {
+        ServerLogic.DownloadSetList (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadSetList (NetworkConnection target, string [] setName, int [] setNumber) {
+        SetList.LoadSetList (setName, setNumber);
     }
 
     [Command]

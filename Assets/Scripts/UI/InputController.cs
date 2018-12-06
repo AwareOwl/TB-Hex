@@ -6,7 +6,7 @@ public class InputController : MonoBehaviour {
     
 
     float timer = 0;
-    bool autoRunAI = true;
+    static public bool autoRunAI = false;
 
     private void Start () {
     }

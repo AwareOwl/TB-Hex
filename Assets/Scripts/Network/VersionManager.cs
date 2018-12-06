@@ -36,6 +36,16 @@ public class VersionManager  {
                     if (DevelopVersion < 37) {
                         ConvertTo0_0_0_37 ();
                     }
+                    DevelopVersion = 0;
+                }
+                HotfixVersion = 1;
+            }
+            PathVersion = 1;
+            if (PathVersion < 2) {
+                if (HotfixVersion < 2) {
+                    if (DevelopVersion < 4) {
+                        ConvertTo0_1_1_4 ();
+                    }
                 }
             }
         }
@@ -47,6 +57,27 @@ public class VersionManager  {
         RatingClass.LoadAbilityAbilitySynergy ();
         RatingClass.LoadAbilityAfterAbility ();
         RatingClass.LoadAbilityOnRow ();
+        RatingClass.LoadTokenOnRow ();
+    }
+    static public void ConvertTo0_1_1_4 () {
+        Debug.Log ("wut");
+        string [] s = ServerData.GetAllUsers ();
+
+        foreach (string s2 in s) {
+            string [] s3 = ServerData.GetAllPlayerModes (s2);
+            foreach (string s4 in s3) {
+                int i4 = int.Parse (s4);
+                string [] s5 = ServerData.GetAllPlayerModeSets (s2, i4);
+                foreach (string s6 in s5) {
+                    int i6 = int.Parse (s6);
+
+                    ServerData.SetPlayerModeSetName (s2, i4, i6, Language.StartingSet);
+                }
+            }
+        }
+        PathVersion = 1;
+        HotfixVersion = 1;
+        DevelopVersion = 4;
     }
 
     static public void ConvertTo0_0_0_37 () {

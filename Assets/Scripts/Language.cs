@@ -61,6 +61,12 @@ public class Language {
     static public string PlayAgainstAI;
     static public string EditSet;
 
+    static public string SelectCardSet;
+    static public string EmptySlot;
+    static public string StartingSet;
+
+    static public string AIOpponent;
+
     static public int PasswordIsIncorrectKey;
     static public int AccountDoesntExistKey;
     static public int PleaseEnterAccountNameKey;
@@ -131,6 +137,10 @@ public class Language {
         GenerateRandomSet = UI [34];
         SetEditorDescription = UI [35];
         ClickToLearnMore = UI [36];
+        SelectCardSet = UI [37];
+        EmptySlot = UI [38];
+        AIOpponent = UI [39];
+        StartingSet = UI [40];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -17,10 +18,13 @@ public class SetEditor : GOUI {
     static GameObject [,] CollectionCollider;
     static GameObject [,] SetCollider;
 
+    static GameObject [] PageButton;
+
     static public int SelectedCollectionX = -1;
     static public int SelectedCollectionY;
 
-    public int Page;
+    static public int Page;
+    static public int PageCount = 20;
 
     private void Start () {
         instance = this;
@@ -45,6 +49,7 @@ public class SetEditor : GOUI {
         cardPool.LoadFromString (s);
         available = new bool [cardPool.Card.Count];
         SetAllAvailable ();
+        LoadPageUI ();
         LoadPage (0);
     }
 
@@ -55,6 +60,8 @@ public class SetEditor : GOUI {
     }
 
     static public void LoadPage (int page) {
+        SelectedCollectionX = -1;
+        Page = page;
         int MaxX = 4;
         for (int x = 0; x < MaxX; x++) {
             for (int y = 0; y < 5; y++) {
@@ -62,11 +69,19 @@ public class SetEditor : GOUI {
                     Collection [x, y].DestroyVisual ();
                     Collection [x, y] = null;
                 }
-                int number = y * MaxX + x;
+                int number = y * MaxX + x + page * PageCount;
                 if (number < cardPool.Card.Count && available [number]) {
                     LoadCardInCollection (x, y, number);
                 }
             }
+        }
+        foreach (GameObject button in PageButton) {
+            if (button != null) {
+                button.GetComponent<UIController> ().FreeAndUnlcok ();
+            }
+        }
+        if (PageButton [page] != null) {
+            PageButton [page].GetComponent<UIController> ().PressAndLock ();
         }
     }
 
@@ -87,7 +102,7 @@ public class SetEditor : GOUI {
         int MaxX = 4;
         for (int x = 0; x < MaxX; x++) {
             for (int y = 0; y < 5; y++) {
-                if (number == y * MaxX + x) {
+                if (number == y * MaxX + x + Page * PageCount) {
                     LoadCardInCollection (x, y, number);
                 }
             }
@@ -107,21 +122,21 @@ public class SetEditor : GOUI {
         hand = new HandClass ();
         hand.GenerateRandomHand (cardPool);
         LoadSet (hand);
-        LoadPage (0);
+        LoadPage (Page);
     }
 
     static public void LoadSet (string [] lines) {
         hand = new HandClass ();
         hand.LoadFromString (lines);
         LoadSet (hand);
-        LoadPage (0);
+        LoadPage (Page);
     }
 
     static public void RemoveCardFromCollection (int number) {
         int MaxX = 4;
         for (int x = 0; x < MaxX; x++) {
             for (int y = 0; y < 5; y++) {
-                int number2 = y * MaxX + x;
+                int number2 = y * MaxX + x + Page * PageCount;
                 if (number2 == number) {
                     if (Collection [x, y] != null) {
                         Collection [x, y].DestroyVisual ();
@@ -153,7 +168,11 @@ public class SetEditor : GOUI {
         if (Set [x, y] != null) {
             Set [x, y].DestroyVisual ();
         }
-        int number = hand.GetCard (x, y).cardNumber;
+        CardClass card = hand.GetCard (x, y);
+        if (card == null) {
+            return;
+        }
+        int number = card.cardNumber;
         hand.RemoveCard (x, y);
         available [number] = true;
         LoadCardInCollection (number);
@@ -181,7 +200,7 @@ public class SetEditor : GOUI {
 
     static public CardClass GetSelectedCard () {
         if (SelectedCollectionX != -1) {
-            return cardPool.Card [SelectedCollectionX + SelectedCollectionY * 4];
+            return cardPool.Card [SelectedCollectionX + SelectedCollectionY * 4 + Page * PageCount];
         } else {
             return null;
         }
@@ -189,11 +208,12 @@ public class SetEditor : GOUI {
 
     static public void LoadCardInSet (int x, int y) {
         CardClass selected = GetSelectedCard ();
+        RemoveCardFromSet (x, y);
         if (selected != null) {
             LoadCardInSet (x, y, GetSelectedCard ());
             SelectedCollectionX = -1;
         } else {
-            RemoveCardFromSet (x, y);
+            //RemoveCardFromSet (x, y);
         }
     }
 
@@ -229,20 +249,27 @@ public class SetEditor : GOUI {
 
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 300, 540, 10, 600, 1080, false);
 
-        Clone = CreateText (Language.AvailableCardPool, 60, 60, 11, 0.04f);
-        Clone.GetComponent<TextMesh> ().anchor = TextAnchor.UpperLeft;
+        Clone = CreateUIText (Language.AvailableCardPool, 165, 100);
+        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
+        Clone.GetComponent<Text> ().fontSize = 36;
+        Clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (200, 200);
 
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 1140, 540, 10, 600, 1080, false);
 
-        Clone = CreateText (Language.YourCardSet, 900, 60, 11, 0.04f);
-        Clone.GetComponent<TextMesh> ().anchor = TextAnchor.UpperLeft;
+        Clone = CreateUIText (Language.YourCardSet, 1005, 100);
+        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
+        Clone.GetComponent<Text> ().fontSize = 36;
+        Clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (200, 200);
 
 
+        Clone = CreateSprite ("UI/Butt_S_Help", 990 + 60 * 4, 90, 11, 64, 64, true);
+        Clone.name = UIString.SetEditorAbout;
+        Clone = CreateSprite ("UI/Butt_S_Name", 990 + 60 * 5, 90, 11, 64, 64, true);
+        Clone.name = UIString.SetEditorRenameSet;
         Clone = CreateSprite ("UI/Butt_S_SetRandomize", 990 + 60 * 6, 90, 11, 64, 64, true);
         Clone.name = UIString.SetEditorGenerateRandomSet;
-
-        Clone = CreateSprite ("UI/Butt_S_Help", 990 + 60 * 5, 90, 11, 64, 64, true);
-        Clone.name = UIString.SetEditorAbout;
+        /*Clone = CreateSprite ("UI/Butt_S_SetList", 990 + 60 * 6, 90, 11, 64, 64, true);
+        Clone.name = UIString.SetEditorShowSetList;*/
 
         Clone = CreateSprite ("UI/Shadow_Butt_M_Rectangle_Sliced", 660, 960, 10, 120, 120, false);
         Clone = CreateSprite ("UI/Shadow_Butt_M_Rectangle_Sliced", 660 + 120, 960, 10, 120, 120, false);
@@ -262,7 +289,7 @@ public class SetEditor : GOUI {
                 UIController UIC;
                 Clone = CreateSprite ("UI/Panel_Slot_01_CollectionCard", 120 + 120 * x, 225 + 156 * y, 11, 120, 150, false);
 
-                Clone = 
+                Clone =
                     CreateSprite ("UI/Panel_Slot_01_CollectionCard", 120 + 120 * x, 225 + 156 * y, 12, 120, 150, false);
                 DestroyImmediate (Clone.GetComponent<SpriteRenderer> ());
                 Clone.name = UIString.SetEditorCollectionCard;
@@ -282,7 +309,24 @@ public class SetEditor : GOUI {
                 UIC.y = y;
                 SetCollider [x, y] = Clone;
             }
-            
+
+        }
+    }
+
+    static public void LoadPageUI () {
+        GameObject Clone;
+        GameObject Background;
+        int pageLimit = (cardPool.Card.Count - 1) / PageCount + 1;
+        PageButton = new GameObject [pageLimit];
+        if (pageLimit > 1) {
+            for (int x = 0; x < pageLimit; x++) {
+                Background = CreateSprite ("UI/Butt_M_EmptyRect_Sliced", 90 + 60 * x, 990, 11, 60, 60, true);
+                Background.GetComponent<UIController> ().number = x;
+                Background.name = "SetEditorPageButton";
+                Clone = CreateText ((x + 1).ToString (), 90 + 60 * x, 990, 12, 0.03f);
+                AddTextToGameObject (Background, Clone);
+                PageButton [x] = Background;
+            }
         }
     }
         

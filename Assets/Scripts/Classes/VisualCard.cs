@@ -85,7 +85,16 @@ public class VisualCard {
 
     public void EnableHighlight () {
         if (Highlight == null) {
-            //GameObject Clone = GOUI.CreateSprite
+            GameObject Clone = GOUI.CreateSprite ("Textures/Other/Selection");
+            Clone.transform.SetParent (Background.transform, true);
+            Clone.transform.localPosition = new Vector3 (0, 0, 0);
+            Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+            Clone.GetComponent<Renderer> ().sortingOrder = 20;
+            Clone.GetComponent<SpriteRenderer> ().color = Color.green;
+            Clone.GetComponent<SpriteRenderer> ().size = new Vector2 (1, 1);
+            Clone.transform.localScale = new Vector3 (1.4f, 1.4f, 1.4f);
+            Highlight = Clone;
+
             /*GameObject Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
             GameObject.Destroy (AbilityIcon.GetComponent<Collider> ());
             Renderer renderer = Clone.GetComponent<Renderer> ();

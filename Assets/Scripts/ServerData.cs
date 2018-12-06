@@ -16,6 +16,7 @@ public class ServerData : MonoBehaviour {
     static public string BoardNameKey = "BoardName";
     static public string GameModeNameKey = "GameModeName";
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
+    static public string SetNameKey = "SetName";
 
     static public string VersionKey = "Version";
     static public string InitVectorKey = "InitVector";
@@ -471,6 +472,14 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string [] GetAllPlayerModes (string owner) {
+        string [] s = Directory.GetDirectories (PlayerModePath (owner));
+        for (int x = 0; x < s.Length; x++) {
+            s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+        }
+        return s;
+    }
+
     static public string PlayerModePath (string owner, int gameModeId) {
         string path = PlayerModePath (owner) + gameModeId + "/";
         if (!Directory.Exists (path)) {
@@ -493,6 +502,26 @@ public class ServerData : MonoBehaviour {
             Directory.CreateDirectory (path);
         }
         return path;
+    }
+
+    static public string [] GetAllPlayerModeSets (string owner, int gameModeId) {
+        string [] s = Directory.GetDirectories (PlayerModeSetPath (owner, gameModeId));
+        for (int x = 0; x < s.Length; x++) {
+            s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+        }
+        return s;
+    }
+
+    static public string GetPlayerModeSetName (string owner, int gameModeId, int setId) {
+        string path = PlayerModeSetPath (owner, gameModeId, setId);
+        string s = GetKeyData (KeyDataPath (path), SetNameKey);
+        return s;
+    }
+
+    static public string SetPlayerModeSetName (string owner, int gameModeId, int setId, string name) {
+        string path = PlayerModeSetPath (owner, gameModeId, setId);
+        string s = SetKeyData (KeyDataPath (path), SetNameKey, name);
+        return s;
     }
 
 

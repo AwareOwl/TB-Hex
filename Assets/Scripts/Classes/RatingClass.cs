@@ -48,6 +48,7 @@ public class RatingClass {
             }
         }
         LoadAbilityOnRow ();
+        LoadTokenOnRow ();
         for (int x = 0; x < cardNumberWinRatio.Length; x++) {
             cardNumberWinRatio [x] = 0.5f;
         }
