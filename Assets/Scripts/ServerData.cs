@@ -17,6 +17,7 @@ public class ServerData : MonoBehaviour {
     static public string GameModeNameKey = "GameModeName";
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
     static public string SetNameKey = "SetName";
+    static public string SetIconNumberKey = "SetIconNumber";
 
     static public string VersionKey = "Version";
     static public string InitVectorKey = "InitVector";
@@ -255,28 +256,47 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string GetNextIdPath (string path) {
+        return path + "NextId.txt";
+    }
+
     static void SetGameModeNextId (int id) {
-        string path = GameModeContentPath () + "NextId.txt";
-        if (!File.Exists (path)) {
-            File.WriteAllText (path, "1");
-        } else {
-            File.WriteAllText (path, id.ToString ());
-        }
+        string path = GetNextIdPath (GameModeContentPath ());
+        SetNextId (path, id);
     }
 
     static int GetGameModeNextId () {
-        string path = GameModeContentPath () + "NextId.txt";
-        if (!File.Exists (path)) {
-            SetGameModeNextId (1);
-        }
-        string Line = File.ReadAllText (path);
-        return int.Parse (Line);
+        string path = GetNextIdPath (GameModeContentPath ());
+        return GetNextId (path);
     }
 
     static public int IncrementGameModeNextId () {
-        int CurrentId = GetGameModeNextId ();
-        SetGameModeNextId (CurrentId + 1);
+        string path = GetNextIdPath (GameModeContentPath ());
+        return IncrementNextId (path);
+    }
+
+    static int GetNextId (string path) {
+        if (!File.Exists (path)) {
+            SetNextId (path, 1);
+        }
+        string Line = File.ReadAllText (path);
+        int nextId = int.Parse (Line);
+        string prePath = path.Remove (path.LastIndexOf ('/') + 1);
+        while (Directory.Exists (prePath + nextId.ToString())) {
+            nextId++;
+            SetNextId (path, nextId);
+        }
+        return nextId;
+    }
+
+    static public int IncrementNextId (string path) {
+        int CurrentId = GetNextId (path);
+        SetNextId (path, CurrentId + 1);
         return CurrentId;
+    }
+
+    static void SetNextId (string path, int id) {
+        File.WriteAllText (path, id.ToString ());
     }
 
     static public void CreateNewGameMode (string userName) {
@@ -496,6 +516,11 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public int GetPlayerModeSetNextId (string owner, int gameModeId) {
+        return GetNextId (GetNextIdPath (PlayerModeSetPath (owner, gameModeId)));
+    }
+
+
     static public string PlayerModeSetPath (string owner, int gameModeId, int setId) {
         string path = PlayerModeSetPath (owner, gameModeId) + setId + "/";
         if (!Directory.Exists (path)) {
@@ -522,6 +547,34 @@ public class ServerData : MonoBehaviour {
         string path = PlayerModeSetPath (owner, gameModeId, setId);
         string s = SetKeyData (KeyDataPath (path), SetNameKey, name);
         return s;
+    }
+
+    static public int GetPlayerModeSetIconNumber (string owner, int gameModeId, int setId) {
+        string path = PlayerModeSetPath (owner, gameModeId, setId);
+        string s = GetKeyData (KeyDataPath (path), SetIconNumberKey);
+        return int.Parse (s);
+    }
+
+    static public string SetPlayerModeSetIconNumber (string owner, int gameModeId, int setId, int number) {
+        string path = PlayerModeSetPath (owner, gameModeId, setId);
+        string s = SetKeyData (KeyDataPath (path), SetIconNumberKey, number.ToString ());
+        return s;
+    }
+
+
+    static public string [] CreatePlayerModeSet (string owner, int gameModeId, string [] lines, string name) {
+        int id = GetPlayerModeSetNextId (owner, gameModeId);
+        SavePlayerModeSet (owner, gameModeId, id, lines);
+        SetPlayerModeSetName (owner, gameModeId, id, name);
+        SetPlayerModeSetIconNumber (owner, gameModeId, id, 1);
+        return lines;
+    }
+
+    static public void DeletePlayerModeSet (string owner, int gameModeId, int setId) {
+        string path = PlayerModeSetPath (owner, gameModeId, setId);
+        if (Directory.Exists (path)) {
+            Directory.Delete (path, true);
+        }
     }
 
 

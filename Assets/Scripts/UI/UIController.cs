@@ -309,6 +309,18 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             MainMenu.ShowMainMenu ();
                             break;
 
+                        case UIString.CreateNewSet:
+                            ClientLogic.MyInterface.CmdCreateNewSet (Language.NewSet);
+                            break;
+
+                        case UIString.DeleteSet:
+                            SetList.DeleteSet (number);
+                            break;
+
+                        case UIString.SelectSet:
+                            SetList.SelectSet (number);
+                            break;
+
                         // Main menu
                         case UIString.MainMenuStartGameVsAI:
                             ClientLogic.MyInterface.CmdJoinGameAgainstAI ();

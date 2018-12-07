@@ -95,8 +95,20 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadSetList (NetworkConnection target, string [] setName, int [] setNumber) {
-        SetList.LoadSetList (setName, setNumber);
+    public void TargetDownloadSetList (NetworkConnection target, string [] setName, int [] setNumber, int [] iconNumber) {
+        SetList.LoadSetList (setName, setNumber, iconNumber);
+    }
+
+
+    [Command]
+    public void CmdCreateNewSet (string setName) {
+        ServerLogic.CreateNewSet (this, setName);
+    }
+
+
+    [Command]
+    public void CmdDeleteSet (int id) {
+        ServerLogic.DeleteSet (this, id);
     }
 
     [Command]

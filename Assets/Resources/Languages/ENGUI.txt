@@ -39,3 +39,4 @@
 [38] Empty slot
 [39] AI opponent
 [40] Starting set
+[41] New set

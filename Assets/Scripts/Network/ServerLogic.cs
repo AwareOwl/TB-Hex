@@ -62,12 +62,12 @@ public class ServerLogic : MonoBehaviour {
 
     static public MatchClass JoinGameAgainstAI (ClientInterface client) {
         HandClass hand1 = new HandClass ();
-        //hand1.LoadFromFile (client.AccountName, client.GameMode, 1);
-        hand1.GenerateRandomHand ();
-        /*if (!hand1.IsValid ()) {
+        //hand1.GenerateRandomHand ();
+        hand1.LoadFromFile (client.AccountName, client.GameMode, 1);
+        if (!hand1.IsValid ()) {
             client.TargetInvalidSet (client.connectionToClient);
-            return;
-        }*/
+            return null;
+        }
         HandClass hand2 = new HandClass ();
         hand2.GenerateRandomHand ();
         MatchClass match = MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
@@ -129,14 +129,28 @@ public class ServerLogic : MonoBehaviour {
         int count = ids.Length;
         int [] intIds = new int [count];
         string [] setNames = new string [count];
+        int [] iconNumbers = new int [count];
         for (int x = 0; x < count; x++) {
             intIds [x] = int.Parse (ids [x]);
             setNames [x] = ServerData.GetPlayerModeSetName (client.AccountName, client.GameMode, intIds [x]);
+            iconNumbers [x] = ServerData.GetPlayerModeSetIconNumber (client.AccountName, client.GameMode, intIds [x]);
 
         }
-        client.TargetDownloadSetList (client.connectionToClient, setNames, intIds);
+        client.TargetDownloadSetList (client.connectionToClient, setNames, intIds, iconNumbers);
     }
 
+
+    static public void CreateNewSet (ClientInterface client, string name) {
+        HandClass hand = new HandClass ();
+        ServerData.CreatePlayerModeSet (client.AccountName, client.GameMode, hand.HandToString(), name);
+        DownloadSetList (client);
+    }
+
+
+    static public void DeleteSet (ClientInterface client, int id) {
+        ServerData.DeletePlayerModeSet (client.AccountName, client.GameMode, id);
+        DownloadSetList (client);
+    }
 
     static public void SavePlayerModeSet (ClientInterface client, string [] lines) {
         ServerData.SavePlayerModeSet (client.AccountName, client.GameMode, 1, lines);

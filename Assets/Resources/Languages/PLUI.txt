@@ -39,3 +39,4 @@
 [38] Wolna pozycja
 [39] Przeciwnik SI
 [40] Zestaw początkowy
+[41] Nowy zestaw

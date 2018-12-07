@@ -92,7 +92,7 @@ public class GOUI : MonoBehaviour {
 
 	static public GameObject CreateSprite (string assetName, bool onMouseOver) {
 		GameObject Clone = CreateSprite ();
-		SetSprite (Clone, assetName, true);
+		SetSprite (Clone, assetName, onMouseOver);
 		return Clone;
 	}
 
@@ -202,7 +202,7 @@ public class GOUI : MonoBehaviour {
 				CS.OnMouseClickSprite = CS.NormalSprite;
 			}
 		}
-		if (CS != null) {
+		if (CS != null && onMouseOver) {
 			CS.OnMouseOverSprite = GetSprite (assetName + "_H");
 			CS.OnMouseClickSprite = GetSprite (assetName + "_P");
 		}

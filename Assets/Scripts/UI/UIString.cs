@@ -27,6 +27,9 @@ public class UIString {
     public const string ShowMainMenu = "ShowMenu";
 
     public const string ShowSetList = "ShowSetList";
+    public const string CreateNewSet = "CreateNewSet";
+    public const string SelectSet = "SelectSet";
+    public const string DeleteSet = "DeleteSet";
 
     public const string InGameHandCard = "InGameHandCard";
 

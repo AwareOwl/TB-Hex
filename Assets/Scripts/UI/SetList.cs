@@ -7,7 +7,7 @@ public class SetList : GOUI {
 
     static GameObject Background;
 
-    static int SelectedSet;
+    static int SelectedId;
 
     static SetRowClass [] setRow;
 
@@ -34,19 +34,34 @@ public class SetList : GOUI {
         CurrentCanvas.AddComponent<SetList> ();
     }
 
-    static public void LoadSetList (string [] setName, int [] setId) {
+    static public void LoadSetList (string [] setName, int [] setId, int [] iconNumber) {
         SetList.setName = setName;
         SetList.setId = setId;
-        int count = setName.Length;
+        int count = Mathf.Min (setName.Length, setRow.Length);
         for (int x = 0; x < count; x++) {
-            setRow [x].SetState (setName [x], setId [x], 0);
+            setRow [x].SetState (setName [x], setId [x], iconNumber [x]);
         }
         if (count < setRow.Length) {
             setRow [count].SetState (1);
         }
         for (int x = count + 1; x < setRow.Length; x++) {
-            setRow [count].SetState (2);
+            setRow [x].SetState (2);
         }
+        SelectSet (SelectedId);
+    }
+
+    static public void SelectSet (int id) {
+        SelectedId = id;
+        for (int x = 0; x < setRow.Length; x++) {
+            setRow [x].FreeRow ();
+            if (setRow [x].setId == id && SelectedId > 0) {
+                setRow [x].SelectRow ();
+            }
+        }
+    }
+
+    static public void DeleteSet (int id) {
+        ClientLogic.MyInterface.CmdDeleteSet (id);
     }
     
 

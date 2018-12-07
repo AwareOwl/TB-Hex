@@ -64,6 +64,7 @@ public class Language {
     static public string SelectCardSet;
     static public string EmptySlot;
     static public string StartingSet;
+    static public string NewSet;
 
     static public string AIOpponent;
 
@@ -141,6 +142,7 @@ public class Language {
         EmptySlot = UI [38];
         AIOpponent = UI [39];
         StartingSet = UI [40];
+        NewSet = UI [41];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;
