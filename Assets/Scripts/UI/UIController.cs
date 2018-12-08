@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler {
 
+    public int id;
     public int number;
     public int x;
     public int y;
@@ -314,19 +315,19 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             break;
 
                         case UIString.DeleteSet:
-                            SetList.DeleteSet (number);
+                            SetList.DeleteSet (id);
                             break;
 
                         case UIString.SelectSet:
-                            SetList.SelectSet (number);
+                            SetList.SelectSet (id);
                             break;
 
                         // Main menu
                         case UIString.MainMenuStartGameVsAI:
                             ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
                             break;
-                        case UIString.MainMenuShowSetEditor:
-                            SetEditor.ShowSetEditorMenu ();
+                        case UIString.ShowSetEditor:
+                            SetEditor.ShowSetEditorMenu (id);
                             break;
 
                         case UIString.InGameHandCard:

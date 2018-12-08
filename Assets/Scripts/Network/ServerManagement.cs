@@ -9,8 +9,8 @@ public class ServerManagement : MonoBehaviour {
     private void Awake () {
         ServerData.SaveBackUp ();
         ServerData.SetInitVector ();
-        VersionManager.CheckServerVersion ();
-        VersionManager.FinalizeServerVersion ();
+        ServerVersionManager.CheckServerVersion ();
+        ServerVersionManager.FinalizeServerVersion ();
     }
 
     // Update is called once per frame

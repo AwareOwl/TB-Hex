@@ -18,6 +18,7 @@ public class ServerData : MonoBehaviour {
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
     static public string SetNameKey = "SetName";
     static public string SetIconNumberKey = "SetIconNumber";
+    static public string SelectedSetKey = "SelectedSet";
 
     static public string VersionKey = "Version";
     static public string InitVectorKey = "InitVector";
@@ -282,7 +283,7 @@ public class ServerData : MonoBehaviour {
         string Line = File.ReadAllText (path);
         int nextId = int.Parse (Line);
         string prePath = path.Remove (path.LastIndexOf ('/') + 1);
-        while (Directory.Exists (prePath + nextId.ToString())) {
+        while (Directory.Exists (prePath + nextId.ToString ())) {
             nextId++;
             SetNextId (path, nextId);
         }
@@ -686,6 +687,35 @@ public class ServerData : MonoBehaviour {
 
     static public string SetUserKeyData (string userName, string key, string data) {
         return SetKeyData (UserDataPath (userName), key, data);
+    }
+
+    static public string GetPlayerModeKeyData (string userName, int gameMode, string key) {
+        return GetKeyData (PlayerModePath (userName, gameMode), key);
+    }
+
+    static public string SetPlayerModeKeyData (string userName, int gameMode, string key, string data) {
+        return SetKeyData (PlayerModePath (userName, gameMode), key, data);
+    }
+
+
+    static public int GetPlayerModeSelectedSet (string accountName, int gameMode) {
+        string selectedSet = GetPlayerModeKeyData (accountName, gameMode, SelectedSetKey);
+        if (selectedSet == null || selectedSet == "") {
+            SetPlayerModeKeyData (accountName, gameMode, SelectedSetKey, "1");
+            return 1;
+        }
+        return int.Parse (selectedSet);
+    }
+
+
+    static public int SetPlayerModeSelectedSet (string accountName, int gameMode, int selectedSet) {
+        SetPlayerModeKeyData (accountName, gameMode, SelectedSetKey, selectedSet.ToString());
+        return selectedSet;
+    }
+
+
+    static public string SetUserKeyData (string userName, string key, int data) {
+        return SetKeyData (UserDataPath (userName), key, data.ToString());
     }
 
     static public string [] GetAllKeyData (string path) {

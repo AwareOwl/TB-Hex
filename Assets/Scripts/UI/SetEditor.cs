@@ -26,6 +26,8 @@ public class SetEditor : GOUI {
     static public int Page;
     static public int PageCount = 20;
 
+    static public int setId;
+
     private void Start () {
         instance = this;
         Collection = new VisualCard [4, 5];
@@ -35,11 +37,12 @@ public class SetEditor : GOUI {
         CreateCardPoolEditorMenu ();
         CurrentGUI = this;
         ClientLogic.MyInterface.CmdDownloadCardPoolToEditor ();
-        ClientLogic.MyInterface.CmdDownloadSetToEditor ();
+        ClientLogic.MyInterface.CmdDownloadSetToEditor (setId);
         DestroyImmediate (ExitButton);
     }
 
-    static public void ShowSetEditorMenu () {
+    static public void ShowSetEditorMenu (int setId) {
+        SetEditor.setId = setId;
         DestroyMenu ();
         CurrentCanvas.AddComponent<SetEditor> ();
     }
@@ -239,7 +242,7 @@ public class SetEditor : GOUI {
     }
     
     static public void SaveSet () {
-        ClientLogic.MyInterface.CmdSavePlayerModeSet (hand.HandToString ());
+        ClientLogic.MyInterface.CmdSavePlayerModeSet (hand.HandToString (), setId);
     }
 
 

@@ -58,6 +58,8 @@ public class ServerLogic : MonoBehaviour {
         client.UserName = userName;
         client.GameMode = ServerData.GetUserSelectedGameMode (accountName);
         client.TargetLogIn (client.connectionToClient, accountName, userName);
+
+        AccountVersionManager.CheckAccountVersion (client);
     }
 
     static public MatchClass JoinGameAgainstAI (ClientInterface client) {
@@ -111,11 +113,15 @@ public class ServerLogic : MonoBehaviour {
     }*/
 
     static public void CompareServerVersion (ClientInterface client, string clientVersion) {
-        if (VersionManager.CompareServerVersion (clientVersion)) {
+        if (ServerVersionManager.CompareVersion (clientVersion)) {
             client.TargetShowLoginMenu (client.connectionToClient);
         } else {
-            client.TargetInvalidVersionMessage (client.connectionToClient, VersionManager.GetServerVersion ());
+            client.TargetInvalidVersionMessage (client.connectionToClient, VersionManager.GetVersion ());
         }
+    }
+
+    static public void SaveSelectedSet (ClientInterface client, int selectedSetId) {
+        ServerData.SetPlayerModeSelectedSet (client.AccountName, client.GameMode, selectedSetId);
     }
 
 
@@ -125,18 +131,25 @@ public class ServerLogic : MonoBehaviour {
 
 
     static public void DownloadSetList (ClientInterface client) {
-        string [] ids = ServerData.GetAllPlayerModeSets (client.AccountName, client.GameMode);
+        string accountName = client.AccountName;
+        int gameMode = client.GameMode;
+        string [] ids = ServerData.GetAllPlayerModeSets (accountName, gameMode);
         int count = ids.Length;
         int [] intIds = new int [count];
         string [] setNames = new string [count];
         int [] iconNumbers = new int [count];
+        bool [] legal = new bool [count];
         for (int x = 0; x < count; x++) {
             intIds [x] = int.Parse (ids [x]);
-            setNames [x] = ServerData.GetPlayerModeSetName (client.AccountName, client.GameMode, intIds [x]);
-            iconNumbers [x] = ServerData.GetPlayerModeSetIconNumber (client.AccountName, client.GameMode, intIds [x]);
+            setNames [x] = ServerData.GetPlayerModeSetName (accountName, gameMode, intIds [x]);
+            iconNumbers [x] = ServerData.GetPlayerModeSetIconNumber (accountName, gameMode, intIds [x]);
+            HandClass hand = new HandClass ();
+            hand.LoadFromFile (accountName, gameMode, intIds [x]);
+            legal [x] = hand.IsValid ();
 
         }
-        client.TargetDownloadSetList (client.connectionToClient, setNames, intIds, iconNumbers);
+        int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
+        client.TargetDownloadSetList (client.connectionToClient, setNames, intIds, iconNumbers, legal, selectedSet);
     }
 
 
@@ -152,8 +165,8 @@ public class ServerLogic : MonoBehaviour {
         DownloadSetList (client);
     }
 
-    static public void SavePlayerModeSet (ClientInterface client, string [] lines) {
-        ServerData.SavePlayerModeSet (client.AccountName, client.GameMode, 1, lines);
+    static public void SavePlayerModeSet (ClientInterface client, string [] lines, int setId) {
+        ServerData.SavePlayerModeSet (client.AccountName, client.GameMode, setId, lines);
         HandClass hand = new HandClass ();
         hand.LoadFromString (lines);
         if (hand.IsValid ()) {
@@ -165,9 +178,9 @@ public class ServerLogic : MonoBehaviour {
     }
 
 
-    static public void DownloadSetToEditor (ClientInterface client) {
+    static public void DownloadSetToEditor (ClientInterface client, int setId) {
         client.TargetDownloadSetToEditor (client.connectionToClient, 
-            ServerData.GetPlayerModeSet (client.AccountName, client.GameMode, 1));
+            ServerData.GetPlayerModeSet (client.AccountName, client.GameMode, setId));
     }
 
 

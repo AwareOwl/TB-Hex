@@ -34,12 +34,12 @@ public class SetList : GOUI {
         CurrentCanvas.AddComponent<SetList> ();
     }
 
-    static public void LoadSetList (string [] setName, int [] setId, int [] iconNumber) {
+    static public void LoadSetList (string [] setName, int [] setId, int [] iconNumber, bool [] legal, int selectedSet) {
         SetList.setName = setName;
         SetList.setId = setId;
         int count = Mathf.Min (setName.Length, setRow.Length);
         for (int x = 0; x < count; x++) {
-            setRow [x].SetState (setName [x], setId [x], iconNumber [x]);
+            setRow [x].SetState (setName [x], setId [x], iconNumber [x], legal [x]);
         }
         if (count < setRow.Length) {
             setRow [count].SetState (1);
@@ -47,7 +47,7 @@ public class SetList : GOUI {
         for (int x = count + 1; x < setRow.Length; x++) {
             setRow [x].SetState (2);
         }
-        SelectSet (SelectedId);
+        SelectSet (selectedSet);
     }
 
     static public void SelectSet (int id) {
@@ -58,6 +58,10 @@ public class SetList : GOUI {
                 setRow [x].SelectRow ();
             }
         }
+    }
+
+    static public void SaveSelection () {
+        ClientLogic.MyInterface.CmdSaveSelectedSet (SelectedId);
     }
 
     static public void DeleteSet (int id) {
@@ -89,6 +93,7 @@ public class SetList : GOUI {
 
         Clone = CreateSprite ("UI/Butt_M_Discard", 945, 810, 11, 90, 90, true);
         Clone.transform.SetParent (Background.transform);
+        Clone.name = UIString.ShowMainMenu;
 
         return Background;
     }

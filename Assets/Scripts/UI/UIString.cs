@@ -33,7 +33,7 @@ public class UIString {
 
     public const string InGameHandCard = "InGameHandCard";
 
-    public const string MainMenuShowSetEditor = "MainMenuShowSetEditor";
+    public const string ShowSetEditor = "ShowSetEditor";
     public const string MainMenuStartGameVsAI = "MainMenuStartGameVsAI";
 
     public const string ExitApp = "ExitApp";

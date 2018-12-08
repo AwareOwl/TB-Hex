@@ -32,6 +32,7 @@ public class SetRowClass : GOUI {
         Icon.GetComponent<Collider> ().enabled = false;
 
         Edit = CreateSprite ("UI/Butt_S_Name", 945 - 60, py, 12, 60, 60, true);
+        Edit.name = UIString.ShowSetEditor;
 
         Option = CreateSprite ("UI/Butt_S_Delete", 945, py, 12, 60, 60, true);
 
@@ -46,7 +47,7 @@ public class SetRowClass : GOUI {
         RowBackground.GetComponent<UIController> ().FreeAndUnlcok ();
     }
 
-    public void SetState (string setName, int setId, int iconNumber) {
+    public void SetState (string setName, int setId, int iconNumber, bool legal) {
         SpriteRenderer editRenderer = Edit.GetComponent<SpriteRenderer> ();
         Text.GetComponent<TextMesh> ().text = setName;
         SetSprite (Icon, VisualCard.GetIconPath (iconNumber));
@@ -54,9 +55,12 @@ public class SetRowClass : GOUI {
 
         SetState (0);
         this.setId = setId;
-        RowBackground.GetComponent<UIController> ().number = setId;
-        Edit.GetComponent<UIController> ().number = setId;
-        Option.GetComponent<UIController> ().number = setId;
+        RowBackground.GetComponent<UIController> ().id = setId;
+        Edit.GetComponent<UIController> ().id = setId;
+        Option.GetComponent<UIController> ().id = setId;
+        if (!legal) {
+            RowBackground.GetComponent<SpriteRenderer> ().color = new Color (1, 0.65f, 0.65f);
+        }
     }
 
     public void SetState (int mode) {
@@ -93,10 +97,11 @@ public class SetRowClass : GOUI {
                 break;
 
         }
-        RowBackground.GetComponent<UIController> ().number = -1;
-        Edit.GetComponent<UIController> ().number = -1;
-        Option.GetComponent<UIController> ().number = -1;
+        RowBackground.GetComponent<UIController> ().id = -1;
+        Edit.GetComponent<UIController> ().id = -1;
+        Option.GetComponent<UIController> ().id = -1;
         setId = -1;
+        RowBackground.GetComponent<SpriteRenderer> ().color = Color.white;
     }
 
     }

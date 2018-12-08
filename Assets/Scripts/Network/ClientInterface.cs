@@ -18,7 +18,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.1.1.4");
+            CmdCompareServerVersion ("0.1.1.0");
         }
     }
 
@@ -90,13 +90,19 @@ public class ClientInterface : NetworkBehaviour {
 
 
     [Command]
+    public void CmdSaveSelectedSet (int selectedSet) {
+        ServerLogic.SaveSelectedSet (this, selectedSet);
+    }
+
+
+    [Command]
     public void CmdDownloadSetList () {
         ServerLogic.DownloadSetList (this);
     }
 
     [TargetRpc]
-    public void TargetDownloadSetList (NetworkConnection target, string [] setName, int [] setNumber, int [] iconNumber) {
-        SetList.LoadSetList (setName, setNumber, iconNumber);
+    public void TargetDownloadSetList (NetworkConnection target, string [] setName, int [] setNumber, int [] iconNumber, bool [] legal, int selectedSet) {
+        SetList.LoadSetList (setName, setNumber, iconNumber, legal, selectedSet);
     }
 
 
@@ -112,13 +118,13 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdSavePlayerModeSet (string [] s) {
-        ServerLogic.SavePlayerModeSet (this, s);
+    public void CmdSavePlayerModeSet (string [] s, int setId) {
+        ServerLogic.SavePlayerModeSet (this, s, setId);
     }
 
     [Command]
-    public void CmdDownloadSetToEditor () {
-        ServerLogic.DownloadSetToEditor (this);
+    public void CmdDownloadSetToEditor (int setId) {
+        ServerLogic.DownloadSetToEditor (this, setId);
     }
 
     [TargetRpc]
@@ -172,6 +178,16 @@ public class ClientInterface : NetworkBehaviour {
         if (InGameUI.PlayedMatch != null) {
             InGameUI.PlayedMatch.PlayCard (x, y, playerNumber, stackNumber);
         }
+    }
+
+    [TargetRpc]
+    public void TargetGetStartingSetName (NetworkConnection target) {
+        CmdSetStartingSetName (Language.StartingSet);
+    }
+
+    [Command]
+    public void CmdSetStartingSetName (string startingSetName) {
+        AccountVersionManager.SetStartingSetNameToAllSets (AccountName, startingSetName);
     }
 
 
