@@ -176,7 +176,7 @@ public class ServerLogic : MonoBehaviour {
 
 
 
-        client.TargetDownloadGameModeLists (null, null);
+        client.TargetDownloadGameModeLists (client.connectionToClient, null, null, null, null, null, null);
     }
 
     static public void CreateNewSet (ClientInterface client, string name) {

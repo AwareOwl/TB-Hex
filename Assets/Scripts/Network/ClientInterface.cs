@@ -138,8 +138,11 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadGameModeLists (string [][] lists, int [][] ids) {
-        GameModeMenu.UpdateLists (lists, ids);
+    public void TargetDownloadGameModeLists (NetworkConnection target, 
+        string [] officialNames, string [] publicNames, string [] yourNames, 
+        int [] officialIds, int [] publicIds, int [] yourIds) {
+        Debug.Log ("Wat");
+        GameModeMenu.UpdateLists (officialNames, publicNames, yourNames, officialIds, publicIds, yourIds);
     }
 
     [TargetRpc]

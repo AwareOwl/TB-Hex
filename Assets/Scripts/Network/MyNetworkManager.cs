@@ -9,24 +9,11 @@ public class MyNetworkManager : NetworkManager {
    /* private void OnFailedToConnect (NetworkConnectionError error) {
         Debug.Log ("Test");
     }*/
-
-
-
-
-
-
-
-
+    
 
     private void OnFailedToConnect (NetworkIdentity error) {
         Debug.Log ("Test");
     }
-
-
-
-
-
-
 
     static public void StartNewHost () {
         singleton.StartHost ();

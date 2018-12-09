@@ -16,7 +16,8 @@ public class GameModeMenu : GOUI {
         ClientLogic.MyInterface.CmdDownloadGameModeLists ();
     }
 
-    static public void UpdateLists (string [][] lists, int [][] ids) {
+    static public void UpdateLists (string [] officialNames, string [] publicNames, string [] yourNames,
+        int [] officialIds, int [] publicIds, int [] yourIds) {
 
     }
 
