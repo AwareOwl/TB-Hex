@@ -501,6 +501,15 @@ public class ServerData : MonoBehaviour {
         return s;
     }
 
+
+    static public string [] GetAllGameModes () {
+        string [] s = Directory.GetDirectories (GameModeContentPath ());
+        for (int x = 0; x < s.Length; x++) {
+            s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+        }
+        return s;
+    }
+
     static public string PlayerModePath (string owner, int gameModeId) {
         string path = PlayerModePath (owner) + gameModeId + "/";
         if (!Directory.Exists (path)) {

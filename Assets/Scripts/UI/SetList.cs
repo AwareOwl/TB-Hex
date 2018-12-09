@@ -13,20 +13,13 @@ public class SetList : GOUI {
 
     static string [] setName;
     static int [] setId;
-
-    //static GameObject
-
+    
 	// Use this for initialization
 	void Start () {
         CreateSetList ();
         CurrentGUI = this;
         ClientLogic.MyInterface.CmdDownloadSetList ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-
-    }
 
     static public void ShowSetList () {
 

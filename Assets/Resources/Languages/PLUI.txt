@@ -53,3 +53,8 @@
 [52] Usuń zestaw kart
 [53] Utwórz nowy zestaw kart
 [54] Zamknij
+[55] Zmień wersję gry
+[56] Oficjalne wersje gry
+[57] Publiczne wersje gry
+[58] Własne wersje gry
+[59] Lista wersji gry:

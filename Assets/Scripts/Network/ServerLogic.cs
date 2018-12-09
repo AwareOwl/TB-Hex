@@ -164,6 +164,20 @@ public class ServerLogic : MonoBehaviour {
         client.TargetDownloadSetList (client.connectionToClient, setNames, intIds, iconNumbers, legal, selectedSet);
     }
 
+    static public void DownloadGameModeLists (ClientInterface client) {
+        string accountName = client.AccountName;
+        string [] list = ServerData.GetAllGameModes ();
+        List<int> officialIds = new List<int> ();
+        List<int> publicIds = new List<int> ();
+        List<int> yourIds = new List<int> ();
+        List<string> officialNames = new List<string> ();
+        List<string> publicNames = new List<string> ();
+        List<string> yourNames = new List<string> ();
+
+
+
+        client.TargetDownloadGameModeLists (null, null);
+    }
 
     static public void CreateNewSet (ClientInterface client, string name) {
         HandClass hand = new HandClass ();

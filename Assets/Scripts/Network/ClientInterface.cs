@@ -132,6 +132,16 @@ public class ClientInterface : NetworkBehaviour {
         ServerLogic.DownloadSetToEditor (this, setId);
     }
 
+    [Command]
+    public void CmdDownloadGameModeLists () {
+        ServerLogic.DownloadGameModeLists (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadGameModeLists (string [][] lists, int [][] ids) {
+        GameModeMenu.UpdateLists (lists, ids);
+    }
+
     [TargetRpc]
     public void TargetDownloadSetToEditor (NetworkConnection target, string [] lines, string name, int iconNumber) {
         SetEditor.LoadSet (lines, name, iconNumber);

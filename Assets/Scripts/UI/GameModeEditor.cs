@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameModeEditor : MonoBehaviour {
+public class GameModeEditor : GOUI {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    int gameModeId;
+
+    // Use this for initialization
+    void Start () {
+        CreateGameModeEditor ();
+        CurrentGUI = this;
+    }
+
+    static public void ShowGameModeEditor () {
+        DestroyMenu ();
+        CurrentCanvas.AddComponent<GameModeEditor> ();
+    }
+
+    static public void CreateGameModeEditor () {
+
+    }
 }

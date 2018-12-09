@@ -53,3 +53,8 @@
 [52] Delete card set
 [53] Create new card set
 [54] Close
+[55] Change game version
+[56] Official game versions
+[57] Public game versions
+[58] Your game versions
+[59] List of game versions:

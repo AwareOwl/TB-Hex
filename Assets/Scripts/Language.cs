@@ -52,6 +52,8 @@ public class Language {
     static public string SelectCardSetTooltip;
     static public string DeleteSet;
     static public string CreateNewSet;
+    static public string ChangeSetNameOrIcon;
+    static public string SaveSettings;
 
 
     static public string EnterNewSetName;
@@ -76,8 +78,13 @@ public class Language {
     static public string EmptySlot;
     static public string StartingSet;
     static public string NewSet;
-    static public string ChangeSetNameOrIcon;
     static public string ApplySettings;
+
+    static public string ChangeGameVersion;
+    static public string OfficialGameVersions;
+    static public string PublicGameVersions;
+    static public string YourGameVersions;
+    static public string ListOfGameVersions;
 
     static public string Apply;
     static public string Close;
@@ -161,6 +168,8 @@ public class Language {
         StartingSet = UI [40];
         NewSet = UI [41];
         NoSetSelectedKey = 42;
+        ChangeSetNameOrIcon = UI [43];
+        ApplySettings = UI [44];
         EnterNewSetName = UI [45];
         ChoseNewSetIcon = UI [46];
         MainMenuButton = UI [47];
@@ -171,6 +180,11 @@ public class Language {
         DeleteSet = UI [52];
         CreateNewSet = UI [53];
         Close = UI [54];
+        ChangeGameVersion = UI [55];
+        OfficialGameVersions = UI [56];
+        PublicGameVersions = UI [57];
+        YourGameVersions = UI [58];
+        ListOfGameVersions = UI [59];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

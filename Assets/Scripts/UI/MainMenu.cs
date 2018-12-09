@@ -22,9 +22,9 @@ public class MainMenu : GOUI {
         GameObject Button;
         CreateSprite ("UI/Panel_Window_01_Sliced", 700, 540, 10, 120 + 2 * 330, 330, false);
         for (int x = 0; x < 2; x++) {
-            Button = CreateSprite ("UI/Butt_M_EmptySquare", 700 + (int) (330 * (x - 0.5f)), 480, 11, 330, 90, true);
+            Button = CreateSprite ("UI/Butt_M_EmptySquare", 720 + (int) (330 * (x - 0.5f)), 480, 11, 330, 90, true);
             Button.name = UIString.MainMenuStartGameVsAI;
-            Clone = CreateText (Language.PlayAgainstAI, 700 + (int) (330 * (x - 0.5f)), 480, 12, 0.03f);
+            Clone = CreateText (Language.PlayAgainstAI, 720 + (int) (330 * (x - 0.5f)), 480, 12, 0.03f);
             AddTextToGameObject (Button, Clone);
         }
         Button = CreateSprite ("UI/Butt_M_EmptySquare", 700, 600, 11, 330, 90, true);
