@@ -140,14 +140,19 @@ public class ServerLogic : MonoBehaviour {
     static public void DownloadSetList (ClientInterface client) {
         string accountName = client.AccountName;
         int gameMode = client.GameMode;
-        string [] ids = ServerData.GetAllPlayerModeSets (accountName, gameMode);
-        int count = ids.Length;
+        string [] idsToParse = ServerData.GetAllPlayerModeSets (accountName, gameMode);
+        List<int> ids = new List<int> ();
+        foreach (string s in idsToParse) {
+            ids.Add (int.Parse (s));
+        }
+        ids.Sort ();
+        int count = ids.Count;
         int [] intIds = new int [count];
         string [] setNames = new string [count];
         int [] iconNumbers = new int [count];
         bool [] legal = new bool [count];
         for (int x = 0; x < count; x++) {
-            intIds [x] = int.Parse (ids [x]);
+            intIds [x] = ids [x];
             setNames [x] = ServerData.GetPlayerModeSetName (accountName, gameMode, intIds [x]);
             iconNumbers [x] = ServerData.GetPlayerModeSetIconNumber (accountName, gameMode, intIds [x]);
             HandClass hand = new HandClass ();
@@ -184,10 +189,21 @@ public class ServerLogic : MonoBehaviour {
         //client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (1));
     }
 
+    static public void SaveSetProperties (ClientInterface client, int setId, string setName, int iconNumber) {
+        string accountName = client.AccountName;
+        int gameMode = client.GameMode;
+        ServerData.SetPlayerModeSetName (accountName, gameMode, setId, setName);
+        ServerData.SetPlayerModeSetIconNumber (accountName, gameMode, setId, iconNumber);
+    }
+
 
     static public void DownloadSetToEditor (ClientInterface client, int setId) {
-        client.TargetDownloadSetToEditor (client.connectionToClient, 
-            ServerData.GetPlayerModeSet (client.AccountName, client.GameMode, setId));
+        string accountName = client.AccountName;
+        int gameMode = client.GameMode;
+        string [] lines = ServerData.GetPlayerModeSet (accountName, gameMode, setId);
+        string name = ServerData.GetPlayerModeSetName (accountName, gameMode, setId);
+        int iconNumber = ServerData.GetPlayerModeSetIconNumber (accountName, gameMode, setId);
+        client.TargetDownloadSetToEditor (client.connectionToClient, lines, name, iconNumber);
     }
 
 

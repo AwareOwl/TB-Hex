@@ -48,3 +48,8 @@
 [47] Menu główne
 [48] Wyjdź z gry
 [49] Kontynuuj
+[50] Zatwierdź
+[51] Wybierz zestaw kart
+[52] Usuń zestaw kart
+[53] Utwórz nowy zestaw kart
+[54] Zamknij

@@ -87,7 +87,7 @@ public class AppDefaults {
                 return new Color (0.8f, 0, 1);
             // Blue
             case 20:
-                return new Color (0.1f, 0.1f, 1);
+                return new Color (0.2f, 0.2f, 1);
         }
         return Color.white;
     }

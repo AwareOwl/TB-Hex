@@ -260,6 +260,9 @@ public class GOUI : MonoBehaviour {
         clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (sx, sy);
         clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
         clone.AddComponent<UIController> ();
+        clone.GetComponent<Button> ().onClick.AddListener (delegate {
+            clone.GetComponent<UIController> ().OnClickAction ();
+        });
 
         SetSprite (clone, assetName, onMouseOver);
 
@@ -280,6 +283,13 @@ public class GOUI : MonoBehaviour {
         clone.transform.Find ("Text").GetComponent<Text> ().fontSize = sy / 2;
 
         return clone;
+    }
+    static public GameObject CreateUIText (string text, int px, int py, int sx, int fontSize) {
+        GameObject Clone = CreateUIText (text, px, py);
+        RectTransform rTrans = Clone.GetComponent<RectTransform> ();
+        rTrans.sizeDelta = new Vector2 (sx, rTrans.sizeDelta.y);
+        Clone.GetComponent<Text> ().fontSize = fontSize;
+        return Clone;
     }
 
     static public GameObject CreateUIText (string text, int px, int py) {
@@ -314,7 +324,7 @@ public class GOUI : MonoBehaviour {
         GameObject Text;
 
         Text = CreateUIText (s, 720, 540 - 40);
-        int textWidth = (int) Mathf.Min (Mathf.Max (Text.GetComponent<Text> ().preferredWidth, 125), 380);
+        int textWidth = (int) Mathf.Min (Mathf.Max (Text.GetComponent<Text> ().preferredWidth, 125), 430);
         int textHeight = (int) Text.GetComponent<Text> ().preferredHeight;
 
         Background = CreateUIButton ("UI/Panel_Window_01_Sliced", 720, 540, textWidth + 150, textHeight + 210, false);

@@ -48,3 +48,8 @@
 [47] Main Menu
 [48] Exit game
 [49] Continue
+[50] Apply
+[51] Select card set
+[52] Delete card set
+[53] Create new card set
+[54] Close

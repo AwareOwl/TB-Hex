@@ -158,7 +158,7 @@ public class Tooltip : GOUI {
             textC.color = Color.white;
             textC.fontSize = 24;
             float thisHeight = textC.preferredHeight;
-            float thisWidth = Mathf.Min (textC.preferredWidth, 350);
+            float thisWidth = Mathf.Min (textC.preferredWidth, 400);
             height += thisHeight;
             width = Mathf.Max (width, thisWidth + 30);
             SetAnchoredPosition (textObject, (int) anchor.x, (int) (anchor.y - height + thisHeight / 2));
@@ -226,7 +226,7 @@ public class Tooltip : GOUI {
             }
             textC.color = Color.white;
             textC.fontSize = 24;
-            float thisWidth = Mathf.Min (textC.preferredWidth, 350);
+            float thisWidth = Mathf.Min (textC.preferredWidth, 400);
             float thisHeight = textC.preferredHeight;
             height += thisHeight;
             width = Mathf.Max (width, thisWidth + 30);

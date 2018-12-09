@@ -123,13 +123,18 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdSaveSetProperties (int setId, string setName, int iconNumber) {
+        ServerLogic.SaveSetProperties (this, setId, setName, iconNumber);
+    }
+
+    [Command]
     public void CmdDownloadSetToEditor (int setId) {
         ServerLogic.DownloadSetToEditor (this, setId);
     }
 
     [TargetRpc]
-    public void TargetDownloadSetToEditor (NetworkConnection target, string [] lines) {
-        SetEditor.LoadSet (lines);
+    public void TargetDownloadSetToEditor (NetworkConnection target, string [] lines, string name, int iconNumber) {
+        SetEditor.LoadSet (lines, name, iconNumber);
     }
 
     [TargetRpc]

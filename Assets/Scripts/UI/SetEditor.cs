@@ -28,6 +28,13 @@ public class SetEditor : GOUI {
 
     static public int setId;
 
+    static public string setName;
+    static public int iconNumber;
+
+    static public void ApplySetProperties () {
+        ClientLogic.MyInterface.CmdSaveSetProperties (setId, setName, iconNumber);
+    }
+
     private void Start () {
         instance = this;
         Collection = new VisualCard [4, 5];
@@ -128,11 +135,13 @@ public class SetEditor : GOUI {
         LoadPage (Page);
     }
 
-    static public void LoadSet (string [] lines) {
+    static public void LoadSet (string [] lines, string name, int iconNumber) {
         hand = new HandClass ();
         hand.LoadFromString (lines);
         LoadSet (hand);
         LoadPage (Page);
+        SetEditor.setName = name;
+        SetEditor.iconNumber = iconNumber;
     }
 
     static public void RemoveCardFromCollection (int number) {
@@ -268,7 +277,7 @@ public class SetEditor : GOUI {
         Clone = CreateSprite ("UI/Butt_S_Help", 990 + 60 * 4, 90, 11, 64, 64, true);
         Clone.name = UIString.SetEditorAbout;
         Clone = CreateSprite ("UI/Butt_S_Name", 990 + 60 * 5, 90, 11, 64, 64, true);
-        Clone.name = UIString.SetEditorRenameSet;
+        Clone.name = UIString.SetEditorChangeSetProperties;
         Clone = CreateSprite ("UI/Butt_S_SetRandomize", 990 + 60 * 6, 90, 11, 64, 64, true);
         Clone.name = UIString.SetEditorGenerateRandomSet;
         /*Clone = CreateSprite ("UI/Butt_S_SetList", 990 + 60 * 6, 90, 11, 64, 64, true);

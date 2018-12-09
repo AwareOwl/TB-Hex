@@ -174,7 +174,188 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 Tooltip.NewTooltip (transform, Language.ClickToLearnMore);
                 break;
 
+            case UIString.SaveSelectedSet:
+                Tooltip.NewTooltip (transform, Language.Apply);
+                break;
+            case UIString.ShowSetEditor:
+                Tooltip.NewTooltip (transform, Language.EditSet);
+                break;
+            case UIString.DeleteSet:
+                Tooltip.NewTooltip (transform, Language.DeleteSet);
+                break;
+            case UIString.CreateNewSet:
+                Tooltip.NewTooltip (transform, Language.CreateNewSet);
+                break;
+
+            case UIString.SetEditorApplySetProperties:
+                Tooltip.NewTooltip (transform, Language.Apply);
+                break;
+            case UIString.DestroySubMenu:
+                Tooltip.NewTooltip (transform, Language.Close);
+                break;
+
         }
+    }
+
+    public void OnClickAction () {
+        switch (name) {
+            case "SelectPL":
+                Language.SetLanguage (Language.Polish);
+                break;
+            case "SelectENG":
+                Language.SetLanguage (Language.English);
+                break;
+
+            case "StartHost":
+                MyNetworkManager.StartNewHost ();
+                break;
+            case "StartClient":
+                MyNetworkManager.StartNewClient ();
+                break;
+            case "Tile":
+                TileAction ();
+                //transform.parent.GetComponent<VisualEffectScript> ().PushItDown (-1);
+                break;
+            case "LogUserIn":
+                LoginMenu.LogIn ();
+                break;
+            case "RegisterMenu":
+                RegisterMenu.ShowRegisterMenu ();
+                break;
+            case "RegisterUser":
+                RegisterMenu.Register ();
+                break;
+            case "LoginMenu":
+                LoginMenu.ShowLoginMenu ();
+                break;
+            case "CloseMessage":
+                DestroyReferences ();
+                break;
+
+            // BoardEditor
+            case "SaveBoard":
+                BoardEditorMenu.SaveBoard ();
+                break;
+            case "LoadBoard":
+                BoardEditorMenu.LoadBoard (2);
+                break;
+            case "BoardEditorTileType":
+                BoardEditorMenu.SelectButton (1, number);
+                break;
+            case "BoardEditorOwner":
+                BoardEditorMenu.SelectButton (2, number);
+                break;
+            case "BoardEditorValue":
+                BoardEditorMenu.SelectButton (3, number);
+                break;
+            case "BoardEditorTokenType":
+                BoardEditorMenu.SelectButton (4, number);
+                break;
+
+            // CardPoolEditor
+            case UIString.CardPoolEditorValue:
+                CardPoolEditor.SelectButton (1, number);
+                break;
+            case UIString.CardPoolEditorTokenType:
+                CardPoolEditor.SelectButton (2, number);
+                break;
+            case UIString.CardPoolEditorAbilityArea:
+                CardPoolEditor.SelectButton (3, number);
+                break;
+            case UIString.CardPoolEditorAbilityType:
+                CardPoolEditor.SelectButton (4, number);
+                break;
+            case UIString.CardPoolEditorCard:
+                CardPoolEditor.CardAction (number);
+                break;
+
+            case UIString.CardPoolEditorSaveCardPool:
+                CardPoolEditor.SaveCardPool (ClientLogic.MyInterface.GameMode);
+                break;
+
+            // Set editor
+            case UIString.SetEditorGenerateRandomSet:
+                SetEditor.LoadRandomSet ();
+                break;
+            case UIString.SetEditorSaveSet:
+                SetEditor.SaveSet ();
+                break;
+            case UIString.SetEditorCollectionCard:
+                SetEditor.SelectCardInCollection (x, y);
+                break;
+            case UIString.SetEditorSetCard:
+                SetEditor.LoadCardInSet (x, y);
+                break;
+            case UIString.SetEditorPageButton:
+                SetEditor.LoadPage (number);
+                break;
+            case UIString.SetEditorAbout:
+                GOUI.ShowMessage (Language.SetEditorDescription);
+                break;
+
+            case UIString.ShowSetList:
+                SetList.ShowSetList ();
+                break;
+            case UIString.ShowMainMenu:
+                MainMenu.ShowMainMenu ();
+                break;
+
+            case UIString.CreateNewSet:
+                ClientLogic.MyInterface.CmdCreateNewSet (Language.NewSet);
+                break;
+
+            case UIString.DeleteSet:
+                SetList.DeleteSet (id);
+                break;
+
+            case UIString.SelectSet:
+                SetList.SelectSet (id);
+                break;
+
+            case UIString.SaveSelectedSet:
+                SetList.SaveSelection ();
+                break;
+            case UIString.SetEditorChangeSetProperties:
+                SetPropertiesMenu.ShowSetPropertiesMenu ();
+                break;
+            case UIString.SetEditorApplySetProperties:
+                SetPropertiesMenu.ApplySetProperties ();
+                break;
+            case UIString.SetEditorSelectIcon:
+                SetPropertiesMenu.SelectIcon (x, y, number);
+                break;
+
+            // Main menu
+            case UIString.MainMenuStartGameVsAI:
+                ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+                break;
+            case UIString.ShowSetEditor:
+                SetEditor.ShowSetEditorMenu (id);
+                break;
+
+            case UIString.InGameHandCard:
+                InGameUI.SelectStack (x);
+                break;
+
+            case UIString.ShowInGameMenu:
+                InGameMenu.ShowInGameMenu ();
+                break;
+            case UIString.DestroySubMenu:
+                InGameMenu.DestroySubMenu ();
+                break;
+            case UIString.ExitApp:
+                Application.Quit ();
+                break;
+
+            // Other
+            default:
+                Debug.Log (name);
+                break;
+        }
+    }
+
+    void OnMouseOverAction () {
+
     }
 
     private void OnMouseOver () {
@@ -208,151 +389,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
             if (Input.GetMouseButtonUp (0)) {
                 if (Pressed) {
-                    switch (name) {
-                        case "SelectPL":
-                            Language.SetLanguage (Language.Polish);
-                            break;
-                        case "SelectENG":
-                            Language.SetLanguage (Language.English);
-                            break;
-
-                        case "StartHost":
-                            MyNetworkManager.StartNewHost ();
-                            break;
-                        case "StartClient":
-                            MyNetworkManager.StartNewClient ();
-                            break;
-                        case "Tile":
-                            TileAction ();
-                            //transform.parent.GetComponent<VisualEffectScript> ().PushItDown (-1);
-                            break;
-                        case "LogUserIn":
-                            LoginMenu.LogIn ();
-                            break;
-                        case "RegisterMenu":
-                            RegisterMenu.ShowRegisterMenu ();
-                            break;
-                        case "RegisterUser":
-                            RegisterMenu.Register ();
-                            break;
-                        case "LoginMenu":
-                            LoginMenu.ShowLoginMenu ();
-                            break;
-                        case "CloseMessage":
-                            DestroyReferences ();
-                            break;
-
-                        // BoardEditor
-                        case "SaveBoard":
-                            BoardEditorMenu.SaveBoard ();
-                            break;
-                        case "LoadBoard":
-                            BoardEditorMenu.LoadBoard (2);
-                            break;
-                        case "BoardEditorTileType":
-                            BoardEditorMenu.SelectButton (1, number);
-                            break;
-                        case "BoardEditorOwner":
-                            BoardEditorMenu.SelectButton (2, number);
-                            break;
-                        case "BoardEditorValue":
-                            BoardEditorMenu.SelectButton (3, number);
-                            break;
-                        case "BoardEditorTokenType":
-                            BoardEditorMenu.SelectButton (4, number);
-                            break;
-
-                        // CardPoolEditor
-                        case UIString.CardPoolEditorValue:
-                            CardPoolEditor.SelectButton (1, number);
-                            break;
-                        case UIString.CardPoolEditorTokenType:
-                            CardPoolEditor.SelectButton (2, number);
-                            break;
-                        case UIString.CardPoolEditorAbilityArea:
-                            CardPoolEditor.SelectButton (3, number);
-                            break;
-                        case UIString.CardPoolEditorAbilityType:
-                            CardPoolEditor.SelectButton (4, number);
-                            break;
-                        case UIString.CardPoolEditorCard:
-                            CardPoolEditor.CardAction (number);
-                            break;
-
-                        case UIString.CardPoolEditorSaveCardPool:
-                            CardPoolEditor.SaveCardPool (ClientLogic.MyInterface.GameMode);
-                            break;
-
-                        // Set editor
-                        case UIString.SetEditorGenerateRandomSet:
-                            SetEditor.LoadRandomSet ();
-                            break;
-                        case UIString.SetEditorSaveSet:
-                            SetEditor.SaveSet ();
-                            break;
-                        case UIString.SetEditorCollectionCard:
-                            SetEditor.SelectCardInCollection (x, y);
-                            break;
-                        case UIString.SetEditorSetCard:
-                            SetEditor.LoadCardInSet (x, y);
-                            break;
-                        case UIString.SetEditorPageButton:
-                            SetEditor.LoadPage (number);
-                            break;
-                        case UIString.SetEditorAbout:
-                            GOUI.ShowMessage (Language.SetEditorDescription);
-                            break;
-
-                        case UIString.ShowSetList:
-                            SetList.ShowSetList ();
-                            break;
-                        case UIString.ShowMainMenu:
-                            MainMenu.ShowMainMenu ();
-                            break;
-
-                        case UIString.CreateNewSet:
-                            ClientLogic.MyInterface.CmdCreateNewSet (Language.NewSet);
-                            break;
-
-                        case UIString.DeleteSet:
-                            SetList.DeleteSet (id);
-                            break;
-
-                        case UIString.SelectSet:
-                            SetList.SelectSet (id);
-                            break;
-
-                        case UIString.SaveSelectedSet:
-                            SetList.SaveSelection ();
-                            break;
-
-                        // Main menu
-                        case UIString.MainMenuStartGameVsAI:
-                            ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
-                            break;
-                        case UIString.ShowSetEditor:
-                            SetEditor.ShowSetEditorMenu (id);
-                            break;
-
-                        case UIString.InGameHandCard:
-                            InGameUI.SelectStack (x);
-                            break;
-
-                        case UIString.ShowInGameMenu:
-                            InGameMenu.ShowInGameMenu ();
-                            break;
-                        case UIString.DestroySubMenu:
-                            InGameMenu.DestroySubMenu ();
-                            break;
-                        case UIString.ExitApp:
-                            Application.Quit ();
-                            break;
-
-                        // Other
-                        default:
-                            Debug.Log (name);
-                            break;
-                    }
+                    OnClickAction ();
                 }
                 Pressed = false;
             }

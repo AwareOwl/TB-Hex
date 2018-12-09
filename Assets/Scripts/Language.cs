@@ -48,6 +48,14 @@ public class Language {
     static public string GoBackToMenu;
     static public string GenerateRandomSet;
     static public string SetEditorDescription;
+    static public string EditSet;
+    static public string SelectCardSetTooltip;
+    static public string DeleteSet;
+    static public string CreateNewSet;
+
+
+    static public string EnterNewSetName;
+    static public string ChoseNewSetIcon;
 
     static public string CantStartTheGame;
 
@@ -63,7 +71,6 @@ public class Language {
 
     // main menu
     static public string PlayAgainstAI;
-    static public string EditSet;
 
     static public string SelectCardSet;
     static public string EmptySlot;
@@ -72,6 +79,8 @@ public class Language {
     static public string ChangeSetNameOrIcon;
     static public string ApplySettings;
 
+    static public string Apply;
+    static public string Close;
 
     static public string AIOpponent;
 
@@ -152,9 +161,16 @@ public class Language {
         StartingSet = UI [40];
         NewSet = UI [41];
         NoSetSelectedKey = 42;
+        EnterNewSetName = UI [45];
+        ChoseNewSetIcon = UI [46];
         MainMenuButton = UI [47];
         ExitGameButton = UI [48];
         ContinueButton = UI [49];
+        Apply = UI [50];
+        SelectCardSetTooltip = UI [51];
+        DeleteSet = UI [52];
+        CreateNewSet = UI [53];
+        Close = UI [54];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;
