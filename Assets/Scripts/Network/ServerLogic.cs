@@ -65,7 +65,14 @@ public class ServerLogic : MonoBehaviour {
     static public MatchClass JoinGameAgainstAI (ClientInterface client) {
         HandClass hand1 = new HandClass ();
         //hand1.GenerateRandomHand ();
-        hand1.LoadFromFile (client.AccountName, client.GameMode, 1);
+        string accountName = client.AccountName;
+        int gameMode = client.GameMode;
+        int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
+        if (!ServerData.GetPlayerModeSelectedSetExists (accountName, gameMode)) {
+            client.TargetShowMessage (client.connectionToClient, Language.NoSetSelectedKey);
+            return null;
+        }
+        hand1.LoadFromFile (client.AccountName, client.GameMode, selectedSet);
         if (!hand1.IsValid ()) {
             client.TargetInvalidSet (client.connectionToClient);
             return null;

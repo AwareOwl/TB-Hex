@@ -57,6 +57,10 @@ public class Language {
 
     static public string ExitApp;
 
+    static public string MainMenuButton;
+    static public string ExitGameButton;
+    static public string ContinueButton;
+
     // main menu
     static public string PlayAgainstAI;
     static public string EditSet;
@@ -65,6 +69,9 @@ public class Language {
     static public string EmptySlot;
     static public string StartingSet;
     static public string NewSet;
+    static public string ChangeSetNameOrIcon;
+    static public string ApplySettings;
+
 
     static public string AIOpponent;
 
@@ -77,6 +84,7 @@ public class Language {
     static public int AccountCreatedKey;
     static public int InvalidGameVersion;
     static public int SetSavedKey;
+    static public int NoSetSelectedKey;
 
     static public void SetLanguage (int languageKey) {
         PlayerPrefs.SetInt (SelectedLanguageKey, languageKey);
@@ -143,6 +151,10 @@ public class Language {
         AIOpponent = UI [39];
         StartingSet = UI [40];
         NewSet = UI [41];
+        NoSetSelectedKey = 42;
+        MainMenuButton = UI [47];
+        ExitGameButton = UI [48];
+        ContinueButton = UI [49];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

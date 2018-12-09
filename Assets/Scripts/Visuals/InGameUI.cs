@@ -31,6 +31,11 @@ public class InGameUI : GOUI {
                     DestroyImmediate (obj);
                 }
             }
+            foreach (GameObject obj in RealVisualEffectAnchor) {
+                if (obj != null) {
+                    DestroyImmediate (obj);
+                }
+            }
         }
         if (PlayedMatch != null) {
             PlayedMatch.DestroyVisuals ();
@@ -45,9 +50,13 @@ public class InGameUI : GOUI {
         instance = this;
         CurrentGUI = this;
 
+        EnvironmentScript.CreateNewBackground ();
         CreatePlayersUI ();
         PlayedMatch.EnableVisuals ();
         SelectStack (0);
+
+        ExitButton.name = UIString.ShowInGameMenu;
+        GOUI.SetSprite (ExitButton, "UI/Butt_S_Settings", true);
     }
     
 

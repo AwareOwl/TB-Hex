@@ -690,11 +690,11 @@ public class ServerData : MonoBehaviour {
     }
 
     static public string GetPlayerModeKeyData (string userName, int gameMode, string key) {
-        return GetKeyData (PlayerModePath (userName, gameMode), key);
+        return GetKeyData (KeyDataPath (PlayerModePath (userName, gameMode)), key);
     }
 
     static public string SetPlayerModeKeyData (string userName, int gameMode, string key, string data) {
-        return SetKeyData (PlayerModePath (userName, gameMode), key, data);
+        return SetKeyData (KeyDataPath (PlayerModePath (userName, gameMode)), key, data);
     }
 
 
@@ -713,6 +713,14 @@ public class ServerData : MonoBehaviour {
         return selectedSet;
     }
 
+
+    static public bool GetPlayerModeSelectedSetExists (string accountName, int gameMode) {
+        int selectedSet = GetPlayerModeSelectedSet (accountName, gameMode);
+        if (Directory.Exists (PlayerModeSetPath (accountName, gameMode) + selectedSet + "/")) {
+            return true;
+        }
+        return false;
+    }
 
     static public string SetUserKeyData (string userName, string key, int data) {
         return SetKeyData (UserDataPath (userName), key, data.ToString());

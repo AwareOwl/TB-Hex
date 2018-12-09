@@ -62,6 +62,7 @@ public class SetList : GOUI {
 
     static public void SaveSelection () {
         ClientLogic.MyInterface.CmdSaveSelectedSet (SelectedId);
+        MainMenu.ShowMainMenu ();
     }
 
     static public void DeleteSet (int id) {
@@ -90,6 +91,7 @@ public class SetList : GOUI {
 
         Clone = CreateSprite ("UI/Butt_M_Apply", 495, 810, 11, 90, 90, true);
         Clone.transform.SetParent (Background.transform);
+        Clone.name = UIString.SaveSelectedSet;
 
         Clone = CreateSprite ("UI/Butt_M_Discard", 945, 810, 11, 90, 90, true);
         Clone.transform.SetParent (Background.transform);

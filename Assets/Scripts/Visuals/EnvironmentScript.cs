@@ -22,17 +22,23 @@ public class EnvironmentScript : MonoBehaviour {
 
     static int Theme = 1;
 
+    static public float disabledHeight = -0.5f;
+    static public float gravity = 0.5f;
+
     // Use this for initialization
     void Awake () {
     }
 
     private void Start () {
-        CreateNewBackground (1);
     }
 
     // Update is called once per frame
     void Update () {
 
+    }
+    static public void CreateNewBackground () {
+        DestroyImmediate (Background);
+        CreateNewBackground (Random.Range (1, 3));
     }
 
     static public void CreateNewBackground (int theme) {
@@ -41,9 +47,9 @@ public class EnvironmentScript : MonoBehaviour {
             case 1:
                 CreateWaterBackground ();
                 break;
-            /*case 2:
+            case 2:
                 CreateTowerBackground ();
-                break;
+                break;/*
             case 3:
                 CreateLavaBackground ();
                 break;*/
@@ -125,6 +131,8 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static private void CreateWaterBackground () {
+        disabledHeight = -0.5f;
+        gravity = 0.5f;
         int minX = -1;
         int maxX = 8;
         int minY = -5;
@@ -154,21 +162,29 @@ public class EnvironmentScript : MonoBehaviour {
             }
         }
     }
-    /*
     static private void CreateTowerBackground () {
+        disabledHeight = -1f;
+        gravity = 3f;
         int minX = -1;
-        int maxX = 10;
-        int minY = -10;
-        int maxY = -1;
+        int maxX = 8;
+        int minY = -15;
+        int maxY = -3;
         int minZ = -1;
-        int maxZ = 10;
+        int maxZ = 8;
         for (int x = 0; x < (maxY - minY + 1) * 2; x++) {
             GameObject water = Instantiate (Resources.Load ("Prefabs/PreWater")) as GameObject;
-            water.transform.GetComponent<Renderer> ().material.color = new Color (0.2f, 1f, 0.1f, 0.0025f);
+            water.transform.GetComponent<Renderer> ().material.color = new Color (0.125f, 0.225f, 0.075f, 0.002f);
             water.transform.localPosition = new Vector3 (0, -x, 0);
             water.transform.parent = Background.transform;
         }
-        BackgroundTiles = new GameObject [maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1];
+        BackgroundTiles = new GameObject [maxX - minX + 1, maxZ - minZ + 1];
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minZ; y <= maxZ; y++) {
+                int py = Random.Range (minY, maxY);
+                GameObject hex = CreateAttachedTile (x, py, y);
+                BackgroundTiles [x - minX, y - minZ] = hex;
+            }
+        }/*
         for (int x = 0; x < 50; x++) {
             int px = Random.Range (minX, maxX);
             int py = Random.Range (minY, maxY);
@@ -182,9 +198,9 @@ public class EnvironmentScript : MonoBehaviour {
             } else {
                 x--;
             }
-        }
+        }*/
     }
-
+    /*
     static private void CreateLavaBackground () {
         int minX = -1;
         int maxX = 10;
@@ -251,12 +267,16 @@ public class EnvironmentScript : MonoBehaviour {
                 AEffect.SetDrift (true);
                 break;
             case 2:
-                col = new Color (Random.Range (0.49f, 0.53f), Random.Range (0.49f, 0.53f), Random.Range (0.49f, 0.53f));
+                if (Random.Range (0, 2) == 0) {
+                    col = new Color (Random.Range (0.48f, 0.55f), 0.49f, 0.46f);
+                } else {
+                    col = new Color (0.46f, 0.44f, Random.Range (0.46f, 0.53f));
+                }
                 TEffect.SetColor (col);
                 add = Instantiate (AppDefaults.Tile) as GameObject;
                 add.transform.parent = tile.transform;
                 add.transform.localScale = new Vector3 (0.4f, 1000f, 0.4f);
-                add.transform.localPosition = new Vector3 (0, -100, 0);
+                add.transform.localPosition = new Vector3 (0, -250, 0);
                 break;
             case 3:
                 col = new Color (Random.Range (0.39f, 0.43f), Random.Range (0.29f, 0.33f), Random.Range (0.29f, 0.33f));

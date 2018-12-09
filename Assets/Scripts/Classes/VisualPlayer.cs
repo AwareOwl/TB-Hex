@@ -33,7 +33,7 @@ public class VisualPlayer {
         this.numberOfPlayers = numberOfPlayers;
 
         margin = 60;
-        avatarSize = 90;
+        avatarSize = 70;
         shiftLength = (1440 - margin * 2) / numberOfPlayers;
         barLength = shiftLength - avatarSize - 30;
         avatarPosition = margin + avatarSize / 2 + shiftLength * playerNumber;
@@ -50,19 +50,19 @@ public class VisualPlayer {
         GOUI.SetInPixPosition (Clone, avatarPosition, 45, 14);
 
         Clone = GOUI.CreateSprite ("UI/White");
-        GOUI.SetInPixScale (Clone, barLength, 40);
-        GOUI.SetInPixPosition (Clone, barPosition, 20, 11);
+        GOUI.SetInPixScale (Clone, barLength, 30);
+        GOUI.SetInPixPosition (Clone, barPosition, 25, 11);
         GOUI.SetSpriteColor (Clone, AppDefaults.PlayerColor [playerNumber + 1] * 0.5f);
 
         Clone = GOUI.CreateSprite ("UI/White");
         GOUI.SetSpriteColor (Clone, AppDefaults.PlayerColor [playerNumber + 1]);
         HealthBar = Clone;
 
-        Clone = GOUI.CreateText ("", barPosition, 20, 13, 0.03f);
+        Clone = GOUI.CreateText ("", barPosition, 25, 13, 0.025f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         ScoreText = Clone;
 
-        Clone = GOUI.CreateText ("", barPosition, 60, 13, 0.03f);
+        Clone = GOUI.CreateText ("", barPosition, 55, 13, 0.025f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         Clone.GetComponent<TextMesh> ().text = player.properties.displayName;
         UserNameText = Clone;
@@ -90,11 +90,11 @@ public class VisualPlayer {
         }*/
 
         float percentage = Mathf.Min (1f * score / scoreLimit, 1);
-        GOUI.SetInPixScale (HealthBar, (int) (percentage * barLength), 40);
+        GOUI.SetInPixScale (HealthBar, (int) (percentage * barLength), 30);
         if (ally) {
-            GOUI.SetInPixPosition (HealthBar, barPosition - (int) (barLength / 2 * (1 - percentage)), 20, 12);
+            GOUI.SetInPixPosition (HealthBar, barPosition - (int) (barLength / 2 * (1 - percentage)), 25, 12);
         } else {
-            GOUI.SetInPixPosition (HealthBar, barPosition + (int) ((barLength * (1 - percentage) + 1) / 2), 20, 12);
+            GOUI.SetInPixPosition (HealthBar, barPosition + (int) ((barLength * (1 - percentage) + 1) / 2), 25, 12);
         }
         ScoreText.GetComponent<TextMesh> ().text = score.ToString () + " (+" + scoreIncome.ToString () + ")";
     }

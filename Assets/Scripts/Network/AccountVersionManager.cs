@@ -14,7 +14,6 @@ public class AccountVersionManager : VersionManager {
 
 
         ConvertStringToVersion (version);
-        Debug.Log (DevelopVersion);
 
         if (GameVersion <= 0) {
             if (PathVersion <= 1) {

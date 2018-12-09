@@ -322,6 +322,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             SetList.SelectSet (id);
                             break;
 
+                        case UIString.SaveSelectedSet:
+                            SetList.SaveSelection ();
+                            break;
+
                         // Main menu
                         case UIString.MainMenuStartGameVsAI:
                             ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
@@ -334,6 +338,12 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             InGameUI.SelectStack (x);
                             break;
 
+                        case UIString.ShowInGameMenu:
+                            InGameMenu.ShowInGameMenu ();
+                            break;
+                        case UIString.DestroySubMenu:
+                            InGameMenu.DestroySubMenu ();
+                            break;
                         case UIString.ExitApp:
                             Application.Quit ();
                             break;

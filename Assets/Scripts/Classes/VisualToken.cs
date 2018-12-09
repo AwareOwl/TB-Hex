@@ -189,7 +189,7 @@ public class VisualToken {
         VEScript.AddPhase ();
         VEScript.basicPosition [VEScript.endPhase] = new Vector3 (0, 0.1f, 0);
         VEScript.lerpPosition [VEScript.endPhase - 1] = false;
-        VEScript.SetPhaseTimer (VEScript.endPhase, deltaPosition * 2);
+        VEScript.SetPhaseTimer (VEScript.endPhase, deltaPosition / EnvironmentScript.gravity);
         VisualMatch.garbage.Add (Anchor);
     }
 

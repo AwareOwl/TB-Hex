@@ -157,7 +157,9 @@ public class MatchClass {
                 if (client != null) {
                 }
             }*/
-            RatingClass.AnalyzeStatistics (this);
+            if (InputController.autoRunAI) {
+                RatingClass.AnalyzeStatistics (this);
+            }
             //Debug.Log ("GameFinished: " + winner.playerNumber + " " + Player [1].score + " " + Player [2].score + " " + turn);
         }
     }

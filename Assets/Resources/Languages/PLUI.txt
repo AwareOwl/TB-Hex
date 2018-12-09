@@ -40,3 +40,11 @@
 [39] Przeciwnik SI
 [40] Zestaw początkowy
 [41] Nowy zestaw
+[42] Żaden zestaw kart nie jest wybrany. Musisz wybrać zestaw nim rozpoczniesz mecz.
+[43] Zmień nazwę zestawu lub ikonę.
+[44] Zapisz ustawienia
+[45] Wprowadź nową nazwę zestawu:
+[46] Wybierz nową ikonę:
+[47] Menu główne
+[48] Wyjdź z gry
+[49] Kontynuuj

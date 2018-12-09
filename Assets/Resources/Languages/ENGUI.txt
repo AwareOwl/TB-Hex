@@ -40,3 +40,11 @@
 [39] AI opponent
 [40] Starting set
 [41] New set
+[42] No set selected. You need to select set before starting the match.
+[43] Change set name or icon
+[44] Save settings
+[45] Enter new set name:
+[46] Chose new icon:
+[47] Main Menu
+[48] Exit game
+[49] Continue

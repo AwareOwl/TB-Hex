@@ -9,6 +9,7 @@ public class GOUI : MonoBehaviour {
     static public GameObject CurrentCanvas;
     static public GameObject UICanvas;
     static public GOUI CurrentGUI;
+    static public GOUI CurrentSubGUI;
     static public GameObject CurrentTooltip;
 
     static public GameObject ExitButton;
@@ -17,12 +18,19 @@ public class GOUI : MonoBehaviour {
 
 
     static public void DestroyMenu () {
+        DestroySubMenu ();
         if (CurrentGUI != null) {
             CurrentGUI.DestroyThis ();
             CreateNewCanvas ();
         }
         foreach (Transform child in UICanvas.transform) {
             GameObject.Destroy (child.gameObject);
+        }
+    }
+
+    static public void DestroySubMenu () {
+        if (CurrentSubGUI != null) {
+            CurrentSubGUI.DestroyThis ();
         }
     }
 
