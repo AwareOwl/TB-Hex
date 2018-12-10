@@ -337,6 +337,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 InGameUI.SelectStack (x);
                 break;
 
+            case UIString.ShowGameModeMenu:
+                GameModeMenu.ShowGameModeMenu ();
+                break;
+
             case UIString.ShowInGameMenu:
                 InGameMenu.ShowInGameMenu ();
                 break;

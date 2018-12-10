@@ -174,9 +174,16 @@ public class ServerLogic : MonoBehaviour {
         List<string> publicNames = new List<string> ();
         List<string> yourNames = new List<string> ();
 
+        foreach (string s in list) {
+            int id = int.Parse (s);
+            officialIds.Add (id);
+            officialNames.Add (ServerData.GetGameModeName (id));
+        }
 
 
-        client.TargetDownloadGameModeLists (client.connectionToClient, null, null, null, null, null, null);
+
+        client.TargetDownloadGameModeLists (client.connectionToClient, 
+            officialNames.ToArray (), null, null, officialIds.ToArray (), null, null);
     }
 
     static public void CreateNewSet (ClientInterface client, string name) {

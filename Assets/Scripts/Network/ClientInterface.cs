@@ -18,7 +18,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.1.1.0");
+            CmdCompareServerVersion ("0.1.1.10");
         }
     }
 
@@ -141,7 +141,6 @@ public class ClientInterface : NetworkBehaviour {
     public void TargetDownloadGameModeLists (NetworkConnection target, 
         string [] officialNames, string [] publicNames, string [] yourNames, 
         int [] officialIds, int [] publicIds, int [] yourIds) {
-        Debug.Log ("Wat");
         GameModeMenu.UpdateLists (officialNames, publicNames, yourNames, officialIds, publicIds, yourIds);
     }
 

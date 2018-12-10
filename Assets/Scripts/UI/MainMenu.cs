@@ -20,17 +20,25 @@ public class MainMenu : GOUI {
     static public void CreateMainMenu () {
         GameObject Clone;
         GameObject Button;
-        CreateSprite ("UI/Panel_Window_01_Sliced", 700, 540, 10, 120 + 2 * 330, 330, false);
+        CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 105 + 2 * 345, 330, false);
         for (int x = 0; x < 2; x++) {
-            Button = CreateSprite ("UI/Butt_M_EmptySquare", 720 + (int) (330 * (x - 0.5f)), 480, 11, 330, 90, true);
-            Button.name = UIString.MainMenuStartGameVsAI;
-            Clone = CreateText (Language.PlayAgainstAI, 720 + (int) (330 * (x - 0.5f)), 480, 12, 0.03f);
-            AddTextToGameObject (Button, Clone);
+            Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.PlayAgainstAI, 720 + (int) (345 * (x - 0.5f)), 480, 11, 330, 90);
+            switch (x) {
+                case 0:
+                    Button.name = UIString.MainMenuStartGameVsAI;
+                    break;
+                case 1:
+                    Button.name = UIString.MainMenuStartGameVsAI;
+                    Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.QuickOnlineGame;
+                    break;
+            }
         }
-        Button = CreateSprite ("UI/Butt_M_EmptySquare", 700, 600, 11, 330, 90, true);
+        Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.SelectCardSetTooltip, 720, 600, 11, 330, 90);
         Button.name = UIString.ShowSetList;
-        Clone = CreateText (Language.EditSet, 700, 600, 12, 0.03f);
-        AddTextToGameObject (Button, Clone);
+
+        CreateSprite ("UI/Panel_Window_01_Sliced", 1200, 960, 10, 450, 210, false);
+        Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.GameVersion, 1200, 960, 11, 330, 90);
+        Button.name = UIString.ShowGameModeMenu;
 
     }
 }

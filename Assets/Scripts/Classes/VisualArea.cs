@@ -12,16 +12,20 @@ public class VisualArea {
 
         for (int x = 0; x < 6; x++) {
             Tile [x] = GameObject.Instantiate (AppDefaults.Tile) as GameObject;
-            Tile [x].transform.localScale = new Vector3 (0.35f, 0.1f, 0.35f);
+            Tile [x].transform.localScale = new Vector3 (0.35f, 0.05f, 0.35f);
             //Tiles [x].transform.parent = Background.transform;
         }
 
-        Tile [0].transform.localPosition = new Vector3 (-0.4f, 0, 0);
-        Tile [1].transform.localPosition = new Vector3 (-0.2f, 0, 0.35f);
-        Tile [2].transform.localPosition = new Vector3 (0.2f, 0, 0.35f);
-        Tile [3].transform.localPosition = new Vector3 (0.4f, 0, 0);
-        Tile [4].transform.localPosition = new Vector3 (0.2f, 0, -0.35f);
-        Tile [5].transform.localPosition = new Vector3 (-0.2f, 0, -0.35f);
+        float a = 0.38f;
+        float b = a / 2;
+        float c = b * Mathf.Sqrt (3);
+
+        Tile [0].transform.localPosition = new Vector3 (-a, 0, 0);
+        Tile [1].transform.localPosition = new Vector3 (-b, 0, c);
+        Tile [2].transform.localPosition = new Vector3 (b, 0, c);
+        Tile [3].transform.localPosition = new Vector3 (a, 0, 0);
+        Tile [4].transform.localPosition = new Vector3 (b, 0, -c);
+        Tile [5].transform.localPosition = new Vector3 (-b, 0, -c);
         for (int x = 0; x < 6; x++) {
 
             Tile [x].transform.parent = Anchor.transform;

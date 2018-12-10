@@ -58,3 +58,5 @@
 [57] Public game versions
 [58] Your game versions
 [59] List of game versions:
+[60] Quick online game
+[61] Wersje gry

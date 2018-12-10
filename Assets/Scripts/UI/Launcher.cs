@@ -28,22 +28,22 @@ public class Launcher : GOUI {
 
         Clone = CreateSprite ("UI/Butt_M_EmptySquare", true);
         SetInPixScale (Clone, 60, 60);
-        SetInPixPosition (Clone, 1440 - 150, 30, 11);
+        SetInPixPosition (Clone, 1440 - 165, 45, 11);
         Parent = Clone;
         Clone.name = "SelectENG";
 
-        Clone = CreateText ("ENG", 1440 - 150, 30, 12, 0.02f);
+        Clone = CreateText ("ENG", 1440 - 165, 45, 12, 0.02f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
 
 
         Clone = CreateSprite ("UI/Butt_M_EmptySquare", true);
         SetInPixScale (Clone, 60, 60);
-        SetInPixPosition (Clone, 1440 - 90, 30, 11);
+        SetInPixPosition (Clone, 1440 - 105, 45, 11);
         Parent = Clone;
         Clone.name = "SelectPL";
 
-        Clone = CreateText ("PL", 1440 - 90, 30, 12, 0.02f);
+        Clone = CreateText ("PL", 1440 - 105, 45, 12, 0.02f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
 

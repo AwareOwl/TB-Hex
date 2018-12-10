@@ -39,15 +39,16 @@ public class InGameMenu : GOUI {
             Clone.transform.SetParent (Button [x].transform);
             switch (x) {
                 case 0:
-                    Button [x].name = UIString.ShowMainMenu;
-                    break;
-                case 1:
-                    Clone.GetComponent<TextMesh> ().text = Language.ExitGameButton;
-                    Button [x].name = UIString.ExitApp;
-                    break;
-                case 2:
                     Clone.GetComponent<TextMesh> ().text = Language.ContinueButton;
                     Button [x].name = UIString.DestroySubMenu;
+                    break;
+                case 1:
+                    Clone.GetComponent<TextMesh> ().text = Language.MainMenuButton;
+                    Button [x].name = UIString.ShowMainMenu;
+                    break;
+                case 2:
+                    Clone.GetComponent<TextMesh> ().text = Language.ExitGameButton;
+                    Button [x].name = UIString.ExitApp;
                     break;
             }
         }

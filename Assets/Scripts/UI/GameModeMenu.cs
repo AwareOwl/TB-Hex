@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameModeMenu : GOUI {
 
     static GameObject Background;
+
+    static GameObject DropdownObject;
 
     static string [,] lists;
     static int [,] ids;
@@ -19,6 +22,13 @@ public class GameModeMenu : GOUI {
     static public void UpdateLists (string [] officialNames, string [] publicNames, string [] yourNames,
         int [] officialIds, int [] publicIds, int [] yourIds) {
 
+        int count = officialNames.Length;
+        List<Dropdown.OptionData> options = new List<Dropdown.OptionData> ();
+        for (int x = 0; x < count; x++) {
+            Dropdown.OptionData option = new Dropdown.OptionData (officialNames [x]);
+            options.Add (option);
+        }
+        DropdownObject.GetComponent<Dropdown> ().options = options;
     }
 
     static public void ShowGameModeMenu () {
@@ -30,8 +40,20 @@ public class GameModeMenu : GOUI {
         GameObject Button;
         GameObject Clone;
 
-        Background = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 690, 780, false);
+        Background = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 540, 360, false);
 
+        Clone = CreateUIText (Language.OfficialGameVersions + ":", 720, 450, 520, 36);
+
+        Clone = CreateUIDropdown (720, 510, 390, 60);
+        DropdownObject = Clone;
+
+
+        Clone = CreateSprite ("UI/Butt_M_Apply", 555, 615, 11, 90, 90, true);
+
+        Clone = CreateSprite ("UI/Butt_M_Discard", 885, 615, 11, 90, 90, true);
+        Clone.name = UIString.ShowMainMenu;
+
+        /*
         int maxX = 3;
         for (int x = 0; x < 3; x++) {
             string text = "";
@@ -59,6 +81,6 @@ public class GameModeMenu : GOUI {
                     Button.name = UIString.GameModeMenuYourGameModes;
                     break;
             }
-        }
+        }*/
     }
 }

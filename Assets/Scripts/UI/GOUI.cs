@@ -48,7 +48,7 @@ public class GOUI : MonoBehaviour {
         CurrentCanvas.name = "CurrentCanvas";
 
         GameObject Clone;
-        Clone = CreateSprite ("UI/Butt_S_Value", 1410, 30, 11, 60, 60, true);
+        Clone = CreateSprite ("UI/Butt_S_Value", 1395, 45, 11, 60, 60, true);
         Clone.name = UIString.ExitApp;
         ExitButton = Clone;
     }
@@ -110,6 +110,7 @@ public class GOUI : MonoBehaviour {
         GameObject textObject = CreateText (text, px, py, layer + 1, 0.03f);
         AddTextToGameObject (sprite, textObject);
         textObject.transform.SetParent (sprite.transform);
+        textObject.name = "Text";
         return sprite;
     }
 
@@ -185,6 +186,18 @@ public class GOUI : MonoBehaviour {
         RectTransform rTransform = Clone.GetComponent<RectTransform> ();
         if (rTransform != null) {
             rTransform.sizeDelta = new Vector2 (x, y);
+            Transform temp = rTransform.Find ("Template");
+            if (temp != null) {
+                rTransform.Find ("Label").GetComponent<Text> ().fontSize = y / 2;
+                Transform content = temp.Find ("Viewport").Find ("Content");
+                content.GetComponent<RectTransform> ().sizeDelta = new Vector2 (0, y * 0.9f);
+                Transform item = content.Find ("Item");
+                item.GetComponent<RectTransform> ().sizeDelta = new Vector2 (0, y * 0.8f);
+                item.Find ("Item Checkmark").GetComponent<RectTransform> ().anchoredPosition = new Vector2 (y * 0.4f, 0);
+                item.Find ("Item Checkmark").GetComponent<RectTransform> ().sizeDelta = new Vector2  (y * 0.6f, y * 0.6f);
+                item.Find ("Item Label").GetComponent<Text> ().fontSize = y / 3;
+                item.Find ("Item Label").GetComponent<RectTransform> ().anchoredPosition = new Vector2 (y * 0.8f, 0);
+            }
         }
     }
 
@@ -298,6 +311,16 @@ public class GOUI : MonoBehaviour {
         RectTransform rTrans = Clone.GetComponent<RectTransform> ();
         rTrans.sizeDelta = new Vector2 (sx, rTrans.sizeDelta.y);
         Clone.GetComponent<Text> ().fontSize = fontSize;
+        return Clone;
+    }
+
+    static public GameObject CreateUIDropdown (int px, int py, int sx, int sy) {
+        GameObject Clone;
+        Clone = Instantiate (Resources.Load ("Prefabs/PreUIDropdown")) as GameObject;
+        Clone.transform.SetParent (UICanvas.transform);
+        Clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
+        SetAnchoredPosition (Clone, px, py);
+        SetInPixScale (Clone, sx, sy);
         return Clone;
     }
 

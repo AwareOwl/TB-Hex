@@ -34,6 +34,7 @@ public class UIString {
     public const string SaveSelectedSet = "SaveSelectedSet";
     public const string DeleteSet = "DeleteSet";
 
+    public const string ShowGameModeMenu = "ShowGameModeMenu";
     public const string GameModeMenuOfficialGameModes = "GameModeMenuOfficialGameModes";
     public const string GameModeMenuPublicGameModes = "GameModeMenuPublicGameModes";
     public const string GameModeMenuYourGameModes = "GameModeMenuPublicGameModes";

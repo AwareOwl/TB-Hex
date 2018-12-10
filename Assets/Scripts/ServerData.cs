@@ -213,6 +213,25 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string RatingTokenAfterTokenPath () {
+        return RatingPath () + "TokenTokenSynergyPath.txt";
+    }
+
+    static public string SaveRatingTokenAfterToken (string [] lines) {
+        string path = RatingTokenAfterTokenPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingTokenAfterToken () {
+        string path = RatingTokenAfterTokenPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
     static public string RatingAbilityAfterAbilityPath () {
         return RatingPath () + "AbilityAfterAbility.txt";
     }
@@ -302,8 +321,7 @@ public class ServerData : MonoBehaviour {
 
     static public void CreateNewGameMode (string userName) {
         int id = IncrementGameModeNextId ();
-        string path = GameModeContentPath (id);
-        SetKeyData (KeyDataPath (path), GameModeNameKey, "New game mode");
+        SetGameModeName (id, "New game mode");
     }
 
     static public string GameModeOwnerPath (int id) {
@@ -320,6 +338,55 @@ public class ServerData : MonoBehaviour {
         }
         return lines;
     }
+
+    static public string GetGameModeName (int gameModeId) {
+        string path = GameModeContentPath (gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GameModeNameKey);
+        return s;
+    }
+
+    static public string SetGameModeName (int gameModeId, string name) {
+        string path = GameModeContentPath (gameModeId);
+        SetKeyData (KeyDataPath (path), GameModeNameKey, "New game mode");
+        return name;
+    }
+
+    static public string GameModeBoardsPath (int gameModeId) {
+        string path = GameModeContentPath (gameModeId) + "Boards.txt";
+        return path;
+    }
+
+    static public int [] GetAllGameModeBoards (int gameModeId) {
+        string path = GameModeBoardsPath (gameModeId);
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            int count = lines.Length;
+            int [] ids = new int [count];
+            for (int x = 0; x < count; x++) {
+                ids [x] = int.Parse (lines [x]);
+            }
+            return ids;
+        } else {
+            return new int [0];
+        }
+    }
+
+    static public bool SetGameModeBoard (int gameModeId, int boardId) {
+        string path = GameModeBoardsPath (gameModeId);
+        int [] ids = GetAllGameModeBoards (gameModeId);
+        int count = ids.Length;
+        List<string> idString = new List<string> ();
+        for (int x = 0; x < count; x++) {
+            if (ids [x] == boardId) {
+                return false;
+            }
+            idString.Add (ids [x].ToString ());
+        }
+        idString.Add (boardId.ToString ());
+        File.WriteAllLines (path, idString.ToArray ());
+        return true;
+    }
+
     static public string [] SaveGameModeOwners (int id, string [] owners) {
         string path = GameModeOwnerPath (id);
         File.WriteAllLines (path, owners);
@@ -368,11 +435,12 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static public void SaveNewBoard (string userName, string boardName, string [] board) {
+    static public void SaveNewBoard (int gameModeId, string userName, string boardName, string [] board) {
         int id = IncrementBoardNextId ();
         SetBoard (id, board);
         AddBoardOwners (id, userName);
         SetBoardInfoKey (id, BoardNameKey, boardName);
+        SetGameModeBoard (gameModeId, id);
     }
 
     static void SetBoardNextId (int id) {

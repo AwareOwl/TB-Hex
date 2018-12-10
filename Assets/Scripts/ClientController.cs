@@ -8,7 +8,7 @@ public class ClientController : MonoBehaviour {
 	void Start () {
 
         GOUI.UICanvas = GameObject.Find ("Canvas");
-        EnvironmentScript.CreateNewBackground (2);
+        EnvironmentScript.CreateNewBackground (1);
         
         GOUI.CreateNewCanvas ();
     }

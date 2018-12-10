@@ -23,13 +23,16 @@ public class ServerVersionManager : VersionManager {
                 HotfixVersion = 1;
             }
             PathVersion = 1;
-            if (PathVersion < 2) {
-                if (HotfixVersion < 2) {
+            if (PathVersion <= 1) {
+                if (HotfixVersion <= 1) {
                     if (DevelopVersion < 4) {
                         //ConvertTo0_1_1_4 ();
                     }
                     if (DevelopVersion < 5) {
                         //ConvertTo0_1_1_5 ();
+                    }
+                    if (DevelopVersion < 10) {
+                        ConvertTo0_1_1_10 ();
                     }
                 }
             }
@@ -84,6 +87,23 @@ public class ServerVersionManager : VersionManager {
         DevelopVersion = 4;
     }*/
 
+    static public void ConvertTo0_1_1_10 () {
+        ServerData.SetCardPool (2, GetResource ("ExportFolder/v0.2/CardPools/CardPool"));
+        for (int x = 1; x < 3; x++) {
+            for (int y = 1; y < 5; y++) {
+                ServerData.SetGameModeBoard (x, y);
+            }
+        }
+        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
+        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
+        ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
+        GameVersion = 0;
+        PathVersion = 1;
+        HotfixVersion = 1;
+        DevelopVersion = 10;
+    }
+
     static public void ConvertTo0_0_0_37 () {
         string [] s = ServerData.GetAllUsers ();
         foreach (string s2 in s) {
@@ -97,10 +117,10 @@ public class ServerVersionManager : VersionManager {
     }
 
     static public void ConvertTo0_0_0_34 () {
-        ServerData.SaveNewBoard ("Path0.1.0.0", "Board1", GetResource ("ExportFolder/v0.1/Boards/Board1"));
-        ServerData.SaveNewBoard ("Path0.1.0.0", "Board2", GetResource ("ExportFolder/v0.1/Boards/Board2"));
-        ServerData.SaveNewBoard ("Path0.1.0.0", "Board3", GetResource ("ExportFolder/v0.1/Boards/Board3"));
-        ServerData.SaveNewBoard ("Path0.1.0.0", "Board4", GetResource ("ExportFolder/v0.1/Boards/Board4"));
+        ServerData.SaveNewBoard (1, "Path0.1.0.0", "Board1", GetResource ("ExportFolder/v0.1/Boards/Board1"));
+        ServerData.SaveNewBoard (1, "Path0.1.0.0", "Board2", GetResource ("ExportFolder/v0.1/Boards/Board2"));
+        ServerData.SaveNewBoard (1, "Path0.1.0.0", "Board3", GetResource ("ExportFolder/v0.1/Boards/Board3"));
+        ServerData.SaveNewBoard (1, "Path0.1.0.0", "Board4", GetResource ("ExportFolder/v0.1/Boards/Board4"));
         ServerData.SetCardPool (1, GetResource ("ExportFolder/v0.1/CardPools/CardPool"));
         ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
         ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
