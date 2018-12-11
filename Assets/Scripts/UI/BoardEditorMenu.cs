@@ -10,7 +10,7 @@ public class BoardEditorMenu : GOUI {
 
     static public GameObject BackgroundObject;
 
-    static int currentId;
+    static int currentId = 5;
 
     static public int TileType;
     static public int Owner;
@@ -29,8 +29,8 @@ public class BoardEditorMenu : GOUI {
 
         EditedBoard = new BoardClass ();
         EditedBoard.EnableVisualisation ();
-        //EditedBoard.CreateNewBoard ();
-        LoadBoard (2);
+        EditedBoard.CreateNewBoard ();
+        //LoadBoard (5);
     }
 
     static public void LoadBoard (int id) {
@@ -167,23 +167,23 @@ public class BoardEditorMenu : GOUI {
                 if (type == 0) {
                     switch (x) {
                         case 0:
-                            BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, false);
+                            BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, true);
                             BackgroundObject.name = "SaveBoard";
                             break;
                         case 1:
-                            BackgroundObject = CreateSprite ("UI/Butt_S_SetList", npx, npy, 11, 60, 60, false);
+                            BackgroundObject = CreateSprite ("UI/Butt_S_SetList", npx, npy, 11, 60, 60, true);
                             BackgroundObject.name = "LoadBoard";
                             break;
                         case 2:
-                            BackgroundObject = CreateSprite ("UI/Butt_S_Delete", npx, npy, 11, 60, 60, false);
+                            BackgroundObject = CreateSprite ("UI/Butt_S_Delete", npx, npy, 11, 60, 60, true);
                             break;
                         case 3:
-                            BackgroundObject = CreateSprite ("UI/Butt_M_Discard", npx, npy, 11, 60, 60, false);
+                            BackgroundObject = CreateSprite ("UI/Butt_M_Discard", npx, npy, 11, 60, 60, true);
                             break;
                     }
                 }
                 if (type > 0) {
-                    BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx, npy, 11, 60, 60, false);
+                    BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx, npy, 11, 60, 60, true);
                     switch (type) {
                         case 1:
                             BackgroundObject.name = "BoardEditorTileType";

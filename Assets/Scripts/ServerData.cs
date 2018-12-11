@@ -347,7 +347,7 @@ public class ServerData : MonoBehaviour {
 
     static public string SetGameModeName (int gameModeId, string name) {
         string path = GameModeContentPath (gameModeId);
-        SetKeyData (KeyDataPath (path), GameModeNameKey, "New game mode");
+        SetKeyData (KeyDataPath (path), GameModeNameKey, name);
         return name;
     }
 
@@ -907,6 +907,10 @@ public class ServerData : MonoBehaviour {
             return DefaultGameMode;
         }
         return int.Parse (gameMode);
+    }
+
+    static public void SetUserSelectedGameMode (string accountName, int gameMode) {
+        SetUserKeyData (accountName, UserSelectedGameModeKey, gameMode);
     }
 
     public static string EncryptString (string plainText) {

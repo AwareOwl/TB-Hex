@@ -205,7 +205,8 @@ public class InGameUI : GOUI {
             token.SetParent (GetAnchor (x, y));
             switch (abilityType) {
                 case 7:
-                    VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, false, false);
+                    GameObject Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, false, false);
+                    Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
                     if (PlayedMatch.LastMove != null) {
                         abilityType = PlayedMatch.LastMove.usedCard.abilityType;
                     }

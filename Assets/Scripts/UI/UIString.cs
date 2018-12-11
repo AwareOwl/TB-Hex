@@ -39,6 +39,8 @@ public class UIString {
     public const string GameModeMenuPublicGameModes = "GameModeMenuPublicGameModes";
     public const string GameModeMenuYourGameModes = "GameModeMenuPublicGameModes";
 
+    public const string GameModeMenuApply = "GameModeMenuApply";
+
     public const string InGameHandCard = "InGameHandCard";
 
     public const string ShowSetEditor = "ShowSetEditor";

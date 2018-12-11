@@ -9,6 +9,7 @@ public class InputController : MonoBehaviour {
     static public bool autoRunAI = false;
 
     private void Start () {
+        Time.timeScale = 5;
     }
 
     // Update is called once per frame

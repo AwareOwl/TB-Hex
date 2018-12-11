@@ -25,14 +25,14 @@ public class ServerVersionManager : VersionManager {
             PathVersion = 1;
             if (PathVersion <= 1) {
                 if (HotfixVersion <= 1) {
-                    if (DevelopVersion < 4) {
-                        //ConvertTo0_1_1_4 ();
-                    }
-                    if (DevelopVersion < 5) {
-                        //ConvertTo0_1_1_5 ();
-                    }
                     if (DevelopVersion < 10) {
                         ConvertTo0_1_1_10 ();
+                    }
+                    if (DevelopVersion < 11) {
+                        ConvertTo0_1_1_11 ();
+                    }
+                    if (DevelopVersion < 12) {
+                        ConvertTo0_1_1_12 ();
                     }
                 }
             }
@@ -86,6 +86,24 @@ public class ServerVersionManager : VersionManager {
         HotfixVersion = 1;
         DevelopVersion = 4;
     }*/
+
+    static public void ConvertTo0_1_1_12 () {
+        ServerData.SaveNewBoard (1, "Path0.2.0.0", "Board5", GetResource ("ExportFolder/v0.2/Boards/Board5"));
+        ServerData.SetGameModeBoard (2, 5);
+        GameVersion = 0;
+        PathVersion = 1;
+        HotfixVersion = 1;
+        DevelopVersion = 12;
+    }
+
+    static public void ConvertTo0_1_1_11 () {
+        ServerData.SetGameModeName (1, "Version 0.1.0");
+        ServerData.SetGameModeName (2, "Version 0.2.0");
+        GameVersion = 0;
+        PathVersion = 1;
+        HotfixVersion = 1;
+        DevelopVersion = 11;
+    }
 
     static public void ConvertTo0_1_1_10 () {
         ServerData.SetCardPool (2, GetResource ("ExportFolder/v0.2/CardPools/CardPool"));

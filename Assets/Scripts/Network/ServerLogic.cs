@@ -62,6 +62,11 @@ public class ServerLogic : MonoBehaviour {
         AccountVersionManager.CheckAccountVersion (client);
     }
 
+    static public void ChangeGameMode (ClientInterface client, int gameMode) {
+        client.GameMode = gameMode;
+        ServerData.SetUserSelectedGameMode (client.AccountName, gameMode);
+    }
+
     static public MatchClass JoinGameAgainstAI (ClientInterface client) {
         HandClass hand1 = new HandClass ();
         //hand1.GenerateRandomHand ();
@@ -79,7 +84,7 @@ public class ServerLogic : MonoBehaviour {
         }
         HandClass hand2 = new HandClass ();
         hand2.GenerateRandomHand ();
-        MatchClass match = MatchMakingClass.CreateGame (new PlayerPropertiesClass [] {
+        MatchClass match = MatchMakingClass.CreateGame (gameMode, new PlayerPropertiesClass [] {
             new PlayerPropertiesClass (1, InputController.autoRunAI, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
         client.currentMatch = match;
@@ -174,15 +179,20 @@ public class ServerLogic : MonoBehaviour {
         List<string> publicNames = new List<string> ();
         List<string> yourNames = new List<string> ();
 
+        
+
         foreach (string s in list) {
             int id = int.Parse (s);
             officialIds.Add (id);
+        }
+        officialIds.Sort ((a, b) => (b.CompareTo (a)));
+
+        foreach (int id in officialIds) {
             officialNames.Add (ServerData.GetGameModeName (id));
         }
 
 
-
-        client.TargetDownloadGameModeLists (client.connectionToClient, 
+        client.TargetDownloadGameModeLists (client.connectionToClient, client.GameMode,
             officialNames.ToArray (), null, null, officialIds.ToArray (), null, null);
     }
 

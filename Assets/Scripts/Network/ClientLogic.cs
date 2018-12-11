@@ -9,13 +9,12 @@ public class ClientLogic : MonoBehaviour {
     static public void LogIn (string accountName, string userName) {
         MyInterface.AccountName = accountName;
         MyInterface.UserName = userName;
-
-        Time.timeScale = 1f;
-        //BoardEditorMenu.ShowBoardEditorMenu ();
-        //CardPoolEditor.ShowCardPoolEditorMenu ();
-        //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
-        //SetEditor.ShowSetEditorMenu ();
+        
         if (!InputController.autoRunAI) {
+            //BoardEditorMenu.ShowBoardEditorMenu ();
+            //CardPoolEditor.ShowCardPoolEditorMenu ();
+            //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+            //SetEditor.ShowSetEditorMenu ();
             MainMenu.ShowMainMenu ();
         }
     }

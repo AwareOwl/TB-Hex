@@ -237,8 +237,8 @@ public class VisualEffectInterface : MonoBehaviour {
         return Clone.GetComponent<VisualEffectScript> ();
     }
 
-    static public void CreateEffect1 (GameObject anchor, int effectNumber, bool triggered, bool autoDestroy) {
-        CreateEffect (anchor, VisualCard.GetIconPath (effectNumber), AppDefaults.GetAbilityColor (effectNumber), triggered, autoDestroy);
+    static public GameObject CreateEffect1 (GameObject anchor, int effectNumber, bool triggered, bool autoDestroy) {
+        return CreateEffect (anchor, VisualCard.GetIconPath (effectNumber), AppDefaults.GetAbilityColor (effectNumber), triggered, autoDestroy);
     }
     static public void CreateEffect2 (GameObject anchor, int effectNumber, bool triggered, bool autoDestroy) {
         int effectTextureNumber;

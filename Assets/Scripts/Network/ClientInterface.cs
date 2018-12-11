@@ -18,7 +18,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.1.1.10");
+            CmdCompareServerVersion ("0.1.1.12");
         }
     }
 
@@ -35,6 +35,11 @@ public class ClientInterface : NetworkBehaviour {
     [TargetRpc]
     public void TargetShowMessage (NetworkConnection target, int messageID) {
         GOUI.ShowMessage (Language.UI [messageID]);
+    }
+
+    [Command]
+    public void CmdChangeGameMode (int gameModeId) {
+        ServerLogic.ChangeGameMode (this, gameModeId);
     }
 
     /*
@@ -138,10 +143,10 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadGameModeLists (NetworkConnection target, 
+    public void TargetDownloadGameModeLists (NetworkConnection target, int gameMode,
         string [] officialNames, string [] publicNames, string [] yourNames, 
         int [] officialIds, int [] publicIds, int [] yourIds) {
-        GameModeMenu.UpdateLists (officialNames, publicNames, yourNames, officialIds, publicIds, yourIds);
+        GameModeMenu.UpdateLists (gameMode, officialNames, publicNames, yourNames, officialIds, publicIds, yourIds);
     }
 
     [TargetRpc]

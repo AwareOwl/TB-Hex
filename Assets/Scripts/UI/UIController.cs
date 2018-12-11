@@ -341,6 +341,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 GameModeMenu.ShowGameModeMenu ();
                 break;
 
+            case UIString.GameModeMenuApply:
+                GameModeMenu.ApplyGameMode ();
+                break;
+
             case UIString.ShowInGameMenu:
                 InGameMenu.ShowInGameMenu ();
                 break;

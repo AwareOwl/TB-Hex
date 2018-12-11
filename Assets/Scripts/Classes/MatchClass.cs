@@ -85,7 +85,9 @@ public class MatchClass {
         }
 
         CheckFinishCondition ();
-        AfterTurn ();
+        if (!finished) {
+            AfterTurn ();
+        }
 
         //AIClass AI = Player [1].properties.AI;
         // Debug.Log (AI.TurnToWinPredict (this, 1) + " " + AI.TurnToWinPredict (this, 2) + " " + AI.CalculateMatchValue (this, 1) + " " + AI.CalculateMatchValue (this, 2));
@@ -164,13 +166,13 @@ public class MatchClass {
         }
     }
 
-    public void NewMatch (int numberOfPlayers) {
+    public void NewMatch (int gameMode, int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
         Properties = new MatchPropertiesClass ();
         SetPlayers ();
 
         Board = new BoardClass ();
-        Board.LoadFromFile (Random.Range (1, 5));
+        Board.LoadRandomFromGameMode (gameMode);
     }
 
     public void MoveTopCard (int playerNumber, int stackNumber) {

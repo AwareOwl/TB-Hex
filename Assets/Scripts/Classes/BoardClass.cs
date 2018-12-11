@@ -7,7 +7,7 @@ public class BoardClass {
 
     bool visualised = false;
 
-    public int boardTemplateId;
+    public int boardTemplateId = 0;
 
     public TileClass [,] tile;
     public List<TileClass> tileList = new List<TileClass> ();
@@ -149,6 +149,11 @@ public class BoardClass {
             s3 += s2 + Environment.NewLine;
         }
         return s.ToArray();
+    }
+
+    public void LoadRandomFromGameMode (int gameModeId) {
+        int [] ids = ServerData.GetAllGameModeBoards (gameModeId);
+        LoadFromFile (ids [UnityEngine.Random.Range (0, ids.Length)]);
     }
 
     public void LoadFromFile (int id) {
