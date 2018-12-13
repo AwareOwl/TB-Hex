@@ -60,3 +60,4 @@
 [59] Lista wersji gry:
 [60] Szybka gra online
 [61] Wersje gry
+[62] Rozpocznij grę przeciwko SI

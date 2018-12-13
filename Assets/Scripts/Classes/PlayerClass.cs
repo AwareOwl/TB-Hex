@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerClass {
 
-    public int playerNumber;
     public int score;
     public int scoreIncome;
 
@@ -22,7 +21,6 @@ public class PlayerClass {
 
     public string [] PlayerToString () {
         List <string> s = new List<string> ();
-        s.Add (playerNumber.ToString ());
         s.Add (score.ToString ());
         s.Add (scoreIncome.ToString ());
         if (topCardNumber == null) {
@@ -37,12 +35,11 @@ public class PlayerClass {
     }
 
     public void LoadFromString (string [] lines) {
-        playerNumber = int.Parse (lines [0]);
-        score = int.Parse (lines [1]);
-        scoreIncome = int.Parse (lines [2]);
-        topCardNumber = new int [int.Parse (lines [3])];
+        score = int.Parse (lines [0]);
+        scoreIncome = int.Parse (lines [1]);
+        topCardNumber = new int [int.Parse (lines [2])];
         for (int x = 0; x < topCardNumber.Length; x++) {
-            topCardNumber [x] = int.Parse (lines [4 + x]);
+            topCardNumber [x] = int.Parse (lines [3 + x]);
         }
     }
 
@@ -55,7 +52,6 @@ public class PlayerClass {
     }
 
     public PlayerClass (PlayerClass player) {
-        this.playerNumber = player.playerNumber;
         this.score = player.score;
         this.scoreIncome = player.scoreIncome;
         this.properties = player.properties;
@@ -93,6 +89,9 @@ public class PlayerClass {
     }
 
     public void MoveTopCard (int stackNumber) {
+        if (GetHand () == null) {
+            return;
+        }
         int topCard = topCardNumber [stackNumber];
         int stackSize = GetStackSize (stackNumber);
         topCardNumber [stackNumber] = (topCard + 1) % stackSize;
@@ -160,7 +159,7 @@ public class PlayerClass {
         if (visualPlayer == null) {
             visualPlayer = new VisualPlayer ();
 
-            if (playerNumber == InGameUI.MyPlayerNumber) {
+            if (properties.playerNumber == InGameUI.MyPlayerNumber) {
                 for (int x = 0; x < GetNumberOfStacks (); x++) {
                     for (int y = 0; y < GetStackSize (x); y++) {
                         CardClass card = GetCard (x, y);
@@ -177,11 +176,13 @@ public class PlayerClass {
 
     public void DestroyVisuals () {
         if (visualPlayer != null) {
-            for (int x = 0; x < GetNumberOfStacks (); x++) {
-                for (int y = 0; y < GetStackSize (x); y++) {
-                    CardClass card = GetCard (x, y);
-                    if (card.visualCard != null) {
-                        card.DestroyVisual ();
+            if (properties.hand != null) {
+                for (int x = 0; x < GetNumberOfStacks (); x++) {
+                    for (int y = 0; y < GetStackSize (x); y++) {
+                        CardClass card = GetCard (x, y);
+                        if (card.visualCard != null) {
+                            card.DestroyVisual ();
+                        }
                     }
                 }
             }

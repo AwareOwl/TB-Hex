@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class AppDefaults {
 
+    static public Color Green = new Color (0, 0.95f, 0);
+    static public Color Red = Color.red;
+
     static public int AvailableTokens = 5; 
     static public int AvailableAbilities = 21; // Always + 1, to include null
 
@@ -20,22 +23,38 @@ public class AppDefaults {
         Tile = Resources.Load ("Prefabs/Tile");
         sprite = Shader.Find ("Sprites/Default");
     }
+
     static public Color GetBorderColorMain (int type) {
         switch (type) {
+            case 0:
+                return new Color (0.1f, 0.1f, 0.1f);
             case 1:
                 return new Color (0.8f, 0.6f, 0.1f);
             case 2:
-                return new Color (1f, 0.6f, 0.6f);
+                return new Color (0.1f, 0.1f, 0.0f);
             case 3:
-                return new Color (0.0f, 0.6f, 0.2f);
+                return new Color (0.0f, 0.05f, 0.2f);
             case 4:
-                return new Color (0.0f, 0.2f, 0.6f);
+                return new Color (0.0f, 0.05f, 0.2f);
             case 6:
                 return new Color (0.0f, 0.6f, 0.2f);
             case 5:
                 return new Color (0.6f, 0.0f, 0.2f);
             case 7:
                 return new Color (0.5f, 0.7f, 0.2f);
+            default:
+                return Color.black;
+        }
+    }
+
+    static public Color GetBorderColorAccent (int type) {
+        switch (type) {
+            case 2:
+                return new Color (0.6f, 0f, 0.1f);
+            case 3:
+                return new Color (0.0f, 0.9f, 0f);
+            case 4:
+                return new Color (0.9f, 0, 0);;
             default:
                 return Color.black;
         }
@@ -61,12 +80,12 @@ public class AppDefaults {
             case 8:
             case 12:
             case 14:
-                return Color.red;
+                return Red;
             // Green
             case 2:
             case 9:
             case 18:
-                return new Color (0, 0.95f, 0);
+                return Green;
             // Orange
             case 3:
             case 5:

@@ -81,9 +81,7 @@ public class VisualCard {
         icon.GetComponent<Renderer> ().enabled = true;
         icon.GetComponent<Renderer> ().material.mainTexture = abilityTex;
         switch (type) {
-            case 20:
-                icon.GetComponent<Renderer> ().material.color = Color.white;
-                break;
+           
             default:
                 icon.GetComponent<Renderer> ().material.color = new Color (0, 0, 0);
                 break;

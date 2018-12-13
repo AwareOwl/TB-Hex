@@ -45,6 +45,7 @@ public class UIString {
 
     public const string ShowSetEditor = "ShowSetEditor";
     public const string MainMenuStartGameVsAI = "MainMenuStartGameVsAI";
+    public const string MainMenuStartQuickMatch = "MainMenuStartQuickMatch";
 
     public const string ShowInGameMenu = "InGameMenu";
     public const string DestroySubMenu = "DestroySubMenu";

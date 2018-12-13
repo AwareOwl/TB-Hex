@@ -15,6 +15,21 @@ public class HandClass  {
         Init (numberOfStacks);
     }
 
+    public HandClass (ClientInterface client) {
+        string accountName = client.AccountName;
+        int gameMode = client.GameMode;
+        int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
+        if (!ServerData.GetPlayerModeSelectedSetExists (accountName, gameMode)) {
+            client.TargetShowMessage (client.connectionToClient, Language.NoSetSelectedKey);
+            return;
+        }
+        LoadFromFile (client.AccountName, client.GameMode, selectedSet);
+        if (!IsValid ()) {
+            client.TargetInvalidSet (client.connectionToClient);
+            return;
+        }
+    }
+
     public int GetNumberOfStacks () {
         return stack.Length;
     }
@@ -60,7 +75,6 @@ public class HandClass  {
         stack = new StackClass [numberOfStacks];
         for (int x = 0; x < numberOfStacks; x++) {
             stack [x] = new StackClass ();
-            stack [x].stackNumber = x;
         }
     }
 
@@ -171,9 +185,8 @@ public class HandClass  {
     public void LoadFromString (string [] lines) {
         CardPoolClass cardPool = new CardPoolClass ();
         cardPool.LoadFromFile (2);
-        stack = new StackClass [4];
+        Init (4);
         for (int x = 0; x < 4; x++) {
-            stack [x] = new StackClass ();
             if (lines.Length <= x) {
                 continue;
             }

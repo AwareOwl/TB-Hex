@@ -10,7 +10,7 @@ public class RatingClass {
     static int [] winner = new int [5];
     static int [] turn = new int [42];
 
-    static float [,] mapPlayer = new float [5, 5];
+    static float [,] mapPlayer = new float [10, 5];
 
     static float [] edgeDanger = new float [100];
     static float [] multiTargetDanger = new float [100];
@@ -70,7 +70,10 @@ public class RatingClass {
     }
 
     static public void AnalyzeStatistics (MatchClass match) { // anal...
-        int winnerNumber = match.winner.playerNumber;
+        if (match.winner == null) {
+            return;
+        }
+        int winnerNumber = match.winner.properties.playerNumber;
         winner [winnerNumber] ++;
         winnerScore [match.winner.score]++;
         for (int x = 1; x <= match.numberOfPlayers; x++) {

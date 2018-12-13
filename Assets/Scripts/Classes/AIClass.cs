@@ -36,10 +36,12 @@ public class AIClass {
                 tempMatch.PlayCard (tile.x, tile.y, playerNumber, x);
                 float tempValue = CalculateMatchValue (tempMatch, playerNumber);
                 if (tempMatch.finished) {
-                    if (tempMatch.winner.playerNumber == playerNumber) {
-                        tempValue += 100000;
-                    } else {
-                        tempValue -= 100000;
+                    if (tempMatch.winner != null) {
+                        if (tempMatch.winner.properties.playerNumber == playerNumber) {
+                            tempValue += 100000;
+                        } else {
+                            tempValue -= 100000;
+                        }
                     }
                 }
                 if (bestTile == null || bestValue < tempValue) {
@@ -111,8 +113,7 @@ public class AIClass {
             }
             float riskValue = 2;
             if (tile.IsFilledTile ()) {
-                VectorInfo info = new VectorInfo (match.Board, tile);
-                info.CheckTokenAfterTurnTriggers (match, tile);
+                VectorInfo info = match.GetTokenAfterTurnVectorInfo (tile, tile.token);
                 float tokenValue = tile.token.value;
                 int tokenType = tile.token.type;
                 int tokenOwner = tile.token.owner;

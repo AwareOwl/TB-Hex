@@ -5,6 +5,7 @@ using UnityEngine;
 public class MatchMakingClass {
 
     static public List<MatchClass> matches = new List<MatchClass> ();
+    static public List<QueuePosition> quickQueue = new List<QueuePosition> ();
 
     static public MatchClass FindMatch (string accountName) {
         foreach (MatchClass match in matches) {
@@ -15,6 +16,30 @@ public class MatchMakingClass {
             }
         }
         return null;
+    }
+
+    static public void JoinQuickQueue (ClientInterface client) {
+        QueuePosition sameGameMode = null;
+        foreach (QueuePosition pos in quickQueue) {
+            if (client.AccountName == pos.client.AccountName) {
+                return;
+            }
+            if (client.GameMode == pos.client.GameMode) {
+                sameGameMode = pos;
+                break;
+            }
+        }
+        if (sameGameMode != null) {
+            quickQueue.Remove (sameGameMode);
+            PlayerPropertiesClass [] properties = new PlayerPropertiesClass [2];
+            int playerNumber = Random.Range (0, 2);
+            properties [playerNumber++] = new PlayerPropertiesClass (1, client);
+            properties [playerNumber % 2] = new PlayerPropertiesClass (2, sameGameMode.client);
+            ServerLogic.StartMatch (CreateGame (client.GameMode, properties));
+        } else {
+            quickQueue.Add (new QueuePosition (client));
+        }
+
     }
 
 

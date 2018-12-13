@@ -112,11 +112,11 @@ public class VectorInfo {
         }
     }
 
-    public void CheckTokenAfterTurnTriggers (MatchClass match, TileClass tokenTile) {
-        if (!tokenTile.IsFilledTile ()) {
+    public void CheckTokenAfterTurnTriggers (MatchClass match, TileClass tokenTile, TokenClass token) {
+        if (token == null) {
             return;
         }
-        int tokenType = tokenTile.token.type;
+        int tokenType = token.type;
         switch (tokenType) {
             case 3:
             case 4:
@@ -217,7 +217,7 @@ public class VectorInfo {
                     }
                     break;
                 case 18:
-                    if (IsFilledTile (vector.target) && emptyTileCount == 1 && match.LastPlayedToken () != null) {
+                    if (IsEmptyTile (vector.target) && emptyTileCount == 1 && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);

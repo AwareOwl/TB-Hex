@@ -28,7 +28,7 @@ public class VisualPlayer {
         GameObject Clone;
 
         this.player = player;
-        playerNumber = player.playerNumber - 1;
+        playerNumber = player.properties.playerNumber - 1;
         this.ally = ally;
         this.numberOfPlayers = numberOfPlayers;
 

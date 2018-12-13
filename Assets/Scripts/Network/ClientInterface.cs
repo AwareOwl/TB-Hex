@@ -10,6 +10,7 @@ public class ClientInterface : NetworkBehaviour {
     public int GameMode = 2;
 
     public MatchClass currentMatch;
+    public int playerNumber;
 
     public void Start () {
         if (isServer) {
@@ -56,6 +57,11 @@ public class ClientInterface : NetworkBehaviour {
     [Command]
     public void CmdJoinGameAgainstAI () {
         ServerLogic.JoinGameAgainstAI (this);
+    }
+
+    [Command]
+    public void CmdJoinQuickMatchQueue () {
+        ServerLogic.JoinQuickMatchQueue (this);
     }
 
     [TargetRpc]
@@ -185,20 +191,21 @@ public class ClientInterface : NetworkBehaviour {
 
 
     [TargetRpc]
-    public void TargetFinishDownloadCurrentGame (NetworkConnection target) {
+    public void TargetFinishDownloadCurrentGame (NetworkConnection target, int playerNumber) {
+        this.playerNumber = playerNumber;
         InGameUI.ShowInGameUI ();
     }
 
 
     [Command]
-    public void CmdCurrentGameMakeAMove (int x, int y, int playerNumber, int stackNumber) {
+    public void CmdCurrentGameMakeAMove (int x, int y, int stackNumber) {
         ServerLogic.CurrentGameMakeAMove (this, x, y, playerNumber, stackNumber);
     }
 
     [TargetRpc]
-    public void TargetCurrentGameMakeAMove (NetworkConnection target, int x, int y, int playerNumber, int stackNumber) {
+    public void TargetCurrentGameMakeAMove (NetworkConnection target, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
         if (InGameUI.PlayedMatch != null) {
-            InGameUI.PlayedMatch.PlayCard (x, y, playerNumber, stackNumber);
+            InGameUI.PlayedMatch.PlayCard (x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
         }
     }
 

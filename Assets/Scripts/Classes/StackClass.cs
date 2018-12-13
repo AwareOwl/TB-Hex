@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class StackClass {
     
-    public int stackNumber;
     public List<CardClass> card = new List<CardClass>();
 
     public StackClass () {
 
-    }
-    public StackClass (int stackNumber) {
-        this.stackNumber = stackNumber;
     }
 
     public int GetStackSize () {

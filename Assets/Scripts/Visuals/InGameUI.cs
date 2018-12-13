@@ -50,6 +50,7 @@ public class InGameUI : GOUI {
         instance = this;
         CurrentGUI = this;
 
+        MyPlayerNumber = ClientLogic.MyInterface.playerNumber;
         EnvironmentScript.CreateNewBackground ();
         CreatePlayersUI ();
         PlayedMatch.EnableVisuals ();
@@ -112,7 +113,7 @@ public class InGameUI : GOUI {
     }
 
     static public void TileAction (int x, int y) {
-        ClientLogic.MyInterface.CmdCurrentGameMakeAMove (x, y, MyPlayerNumber, SelectedStack);
+        ClientLogic.MyInterface.CmdCurrentGameMakeAMove (x, y, SelectedStack);
         //PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
         RefreshHovers ();
     }
@@ -198,11 +199,25 @@ public class InGameUI : GOUI {
             CardClass card = GetSelectedCard ();
             int abilityType = card.abilityType;
             int abilityArea = card.abilityArea;
+            int tokenType = card.tokenType;
 
             VisualToken token = new VisualToken ();
             token.AddCreateAnimation ();
-            token.SetState (MyPlayerNumber, card.tokenType, card.value);
+            token.SetState (MyPlayerNumber, tokenType, card.value);
             token.SetParent (GetAnchor (x, y));
+            TileClass tokenTile = PlayedMatch.Board.GetTile (x, y);
+            VectorInfo tokenInfo = PlayedMatch.GetTokenAfterTurnVectorInfo (tokenTile, new TokenClass (null, card.tokenType, card.value, MyPlayerNumber));
+            switch (tokenType) {
+                case 3:
+                case 4:
+                    if (tokenInfo.Triggered1 == null || tokenInfo.Triggered1.Count == 0) {
+                        break;
+                    }
+                    TileClass trigger = tokenInfo.Triggered1 [0];
+                    VisualEffectInterface.SetRotateTo (token.BorderAccent [0], GetAnchor (x, y), GetAnchor (trigger.x, trigger.y));
+                    break;
+            }
+
             switch (abilityType) {
                 case 7:
                     GameObject Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, false, false);

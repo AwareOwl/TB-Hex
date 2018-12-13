@@ -69,29 +69,58 @@ public class ServerLogic : MonoBehaviour {
 
     static public MatchClass JoinGameAgainstAI (ClientInterface client) {
         HandClass hand1 = new HandClass ();
-        //hand1.GenerateRandomHand ();
         string accountName = client.AccountName;
         int gameMode = client.GameMode;
-        int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
-        if (!ServerData.GetPlayerModeSelectedSetExists (accountName, gameMode)) {
-            client.TargetShowMessage (client.connectionToClient, Language.NoSetSelectedKey);
-            return null;
-        }
-        hand1.LoadFromFile (client.AccountName, client.GameMode, selectedSet);
-        if (!hand1.IsValid ()) {
-            client.TargetInvalidSet (client.connectionToClient);
-            return null;
+        if (!InputController.autoRunAI) {
+            int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
+            if (!ServerData.GetPlayerModeSelectedSetExists (accountName, gameMode)) {
+                client.TargetShowMessage (client.connectionToClient, Language.NoSetSelectedKey);
+                return null;
+            }
+            hand1.LoadFromFile (client.AccountName, client.GameMode, selectedSet);
+            if (!hand1.IsValid ()) {
+                client.TargetInvalidSet (client.connectionToClient);
+                return null;
+            }
+        } else {
+            hand1.GenerateRandomHand ();
         }
         HandClass hand2 = new HandClass ();
         hand2.GenerateRandomHand ();
         MatchClass match = MatchMakingClass.CreateGame (gameMode, new PlayerPropertiesClass [] {
             new PlayerPropertiesClass (1, InputController.autoRunAI, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
-        client.currentMatch = match;
-        if (!InputController.autoRunAI) {
-            DownloadGame (client, match);
-        }
+        StartMatch (match);
         return match;
+    }
+
+    static public void JoinQuickMatchQueue (ClientInterface client) {
+        HandClass hand1 = new HandClass ();
+        string accountName = client.AccountName;
+        int gameMode = client.GameMode;
+        int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
+        if (!ServerData.GetPlayerModeSelectedSetExists (accountName, gameMode)) {
+            client.TargetShowMessage (client.connectionToClient, Language.NoSetSelectedKey);
+            return;
+        }
+        hand1.LoadFromFile (client.AccountName, client.GameMode, selectedSet);
+        if (!hand1.IsValid ()) {
+            client.TargetInvalidSet (client.connectionToClient);
+            return;
+        }
+        MatchMakingClass.JoinQuickQueue (client);
+    }
+
+    static public void StartMatch (MatchClass match) {
+        for (int x = 1; x <= match.numberOfPlayers; x++) {
+            ClientInterface client = match.Player [x].properties.client;
+            if (client != null) {
+                client.currentMatch = match;
+                if (!InputController.autoRunAI) {
+                    DownloadGame (client, match);
+                }
+            }
+        }
     }
 
     static public void DownloadGame (ClientInterface client, MatchClass match) {
@@ -108,12 +137,14 @@ public class ServerLogic : MonoBehaviour {
             if (playerProperties != null) {
                 client.TargetDownloadCurrentGamePlayerProperties (client.connectionToClient,
                     x, playerProperties.PlayerPropertiesToString ());
-                HandClass hand = playerProperties.hand;
-                client.TargetDownloadCurrentGameHand (client.connectionToClient,
-                    x, hand.HandToString ());
+                if (client.playerNumber == playerProperties.playerNumber) {
+                    HandClass hand = playerProperties.hand;
+                    client.TargetDownloadCurrentGameHand (client.connectionToClient,
+                        x, hand.HandToString ());
+                }
             }
         }
-        client.TargetFinishDownloadCurrentGame (client.connectionToClient);
+        client.TargetFinishDownloadCurrentGame (client.connectionToClient, client.playerNumber);
     }
     /*
     static public void DelayedShowMatchResult (ClientInterface client, string winnerName, int winCondition, int limit) {
@@ -244,8 +275,8 @@ public class ServerLogic : MonoBehaviour {
     }
 
 
-    static public void TargetCurrentGameMakeAMove (ClientInterface client, int x, int y, int playerNumber, int stackNumber) {
-        client.TargetCurrentGameMakeAMove (client.connectionToClient, x, y, playerNumber, stackNumber);
+    static public void TargetCurrentGameMakeAMove (ClientInterface client, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
+        client.TargetCurrentGameMakeAMove (client.connectionToClient, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
         //VisualMatch.instance.ShowMatchResult (client, winnerName, winCondition, limit);
     }
 }

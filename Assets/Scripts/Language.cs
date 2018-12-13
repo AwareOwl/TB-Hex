@@ -74,6 +74,7 @@ public class Language {
     // main menu
     static public string PlayAgainstAI;
     static public string QuickOnlineGame;
+    static public string BeginGameAgainstAI;
 
     static public string SelectCardSet;
     static public string EmptySlot;
@@ -189,6 +190,7 @@ public class Language {
         ListOfGameVersions = UI [59];
         QuickOnlineGame = UI [60];
         GameVersion = UI [61];
+        BeginGameAgainstAI = UI [62];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

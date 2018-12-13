@@ -9,6 +9,7 @@ public class VisualToken {
     public GameObject Anchor;
     public GameObject Base;
     public GameObject Border;
+    public List <GameObject> BorderAccent = new List<GameObject> ();
     public GameObject Text;
 
     int Type;
@@ -106,8 +107,44 @@ public class VisualToken {
         SetType (token.type);
     }
     public void SetType (int type) {
+        if (Type == type) {
+            return;
+        }
         Border.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetBorderColorMain (type));
         Type = type;
+
+
+        foreach (GameObject obj in BorderAccent) {
+            GameObject.DestroyImmediate (obj);
+        }
+        BorderAccent = new List<GameObject> ();
+        GameObject Clone;
+        switch (type) {
+            case 2:
+                for (int x = 0; x < 4; x++) {
+                    Clone = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBorderSpike")) as GameObject;
+                    Clone.AddComponent<VisualEffectScript> ().SetColor (AppDefaults.GetBorderColorAccent (type));
+                    Clone.transform.parent = Anchor.transform;
+                    Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.25f);
+                    Clone.transform.localEulerAngles = new Vector3 (-90, 45 + x * 90, 0);
+                    Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                    BorderAccent.Add (Clone);
+                }
+                break;
+            case 3:
+            case 4:
+                Clone = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBorderPointer")) as GameObject;
+                VisualEffectScript VES = Clone.AddComponent<VisualEffectScript> ();
+                VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                //VES.SetRotateTo (new Vector3 (-90, 0, Random.Range (0, 360)));
+                VES.SetRotateVector (new Vector3 (0, 0, 25));
+                Clone.transform.parent = Anchor.transform;
+                Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.25f);
+                Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+                Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                BorderAccent.Add (Clone);
+                break;
+        }
     }
 
     public void CreateToken () {

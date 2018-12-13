@@ -167,7 +167,7 @@ public class EnvironmentScript : MonoBehaviour {
         gravity = 3f;
         int minX = -1;
         int maxX = 8;
-        int minY = -15;
+        int minY = -13;
         int maxY = -3;
         int minZ = -1;
         int maxZ = 8;

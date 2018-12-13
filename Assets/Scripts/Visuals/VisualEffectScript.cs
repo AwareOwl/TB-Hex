@@ -27,6 +27,8 @@ public class VisualEffectScript : MonoBehaviour {
     float driftHeight = 0f;
     float driftDestination = 0f;
 
+    public List<Vector3> rotateTo;
+    public List<Vector3> rotateVector;
     public bool rotateToCamera;
     public bool rotateToCameraVertical;
 
@@ -128,6 +130,24 @@ public class VisualEffectScript : MonoBehaviour {
         this.lerpPosition = new List<bool> ();
         for (int x = 0; x <= endPhase; x++) {
             this.lerpPosition.Add (lerpPosition);
+        }
+    }
+
+    public void SetRotateTo () {
+        this.rotateTo = null;
+    }
+
+    public void SetRotateTo (Vector3 rotateTo) {
+        this.rotateTo = new List<Vector3> ();
+        for (int x = 0; x <= endPhase; x++) {
+            this.rotateTo.Add (rotateTo);
+        }
+    }
+
+    public void SetRotateVector (Vector3 rotateVector) {
+        this.rotateVector = new List<Vector3> ();
+        for (int x = 0; x <= endPhase; x++) {
+            this.rotateVector.Add (rotateVector);
         }
     }
 
@@ -272,6 +292,21 @@ public class VisualEffectScript : MonoBehaviour {
     }
 
     public void UpdateRotation () {
+        if (rotateTo != null) {
+            Vector3 rot1 = transform.localEulerAngles;
+            Vector3 rot2 = rotateTo [currentPhase];
+            transform.localRotation = Quaternion.Lerp (Quaternion.Euler (rot1), Quaternion.Euler (rot2), Time.deltaTime * 5);
+            /*transform.localEulerAngles = new Vector3 (
+             Mathf.LerpAngle (rot1.x, rot2.x, Time.deltaTime * 5),
+             Mathf.LerpAngle (rot1.y, rot2.y, Time.deltaTime * 5),
+             Mathf.LerpAngle (rot1.z, rot2.z, Time.deltaTime * 5));*/
+            return;
+        }
+        if (rotateVector != null) {
+            Vector3 rot2 = rotateVector [currentPhase];
+            transform.localEulerAngles += new Vector3 (rot2.x * Time.deltaTime, rot2.y * Time.deltaTime, rot2.z * Time.deltaTime);
+            return;
+        }
         if (rotateToCameraVertical) {
             Vector3 dPos = transform.position - Camera.main.transform.position;
             float atan = Mathf.Atan2 (dPos.y, dPos.x);

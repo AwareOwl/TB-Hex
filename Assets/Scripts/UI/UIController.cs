@@ -160,6 +160,15 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ExitApp:
                 Tooltip.NewTooltip (transform, Language.ExitApp);
                 break;
+            case UIString.MainMenuStartGameVsAI:
+                Tooltip.NewTooltip (transform, Language.BeginGameAgainstAI);
+                break;
+            case UIString.ShowSetList:
+                Tooltip.NewTooltip (transform, Language.SelectCardSetTooltip);
+                break;
+            case UIString.ShowGameModeMenu:
+                Tooltip.NewTooltip (transform, Language.ChangeGameVersion);
+                break;
 
             case UIString.SetEditorGenerateRandomSet:
                 Tooltip.NewTooltip (transform, Language.GenerateRandomSet);
@@ -173,10 +182,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.SetEditorAbout:
                 Tooltip.NewTooltip (transform, Language.ClickToLearnMore);
                 break;
-
-            case UIString.SaveSelectedSet:
-                Tooltip.NewTooltip (transform, Language.Apply);
+            case UIString.SetEditorChangeSetProperties:
+                Tooltip.NewTooltip (transform, Language.ChangeSetNameOrIcon);
                 break;
+                
             case UIString.ShowSetEditor:
                 Tooltip.NewTooltip (transform, Language.EditSet);
                 break;
@@ -187,7 +196,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 Tooltip.NewTooltip (transform, Language.CreateNewSet);
                 break;
 
+            case UIString.SaveSelectedSet:
             case UIString.SetEditorApplySetProperties:
+            case UIString.GameModeMenuApply:
                 Tooltip.NewTooltip (transform, Language.Apply);
                 break;
             case UIString.DestroySubMenu:
@@ -328,6 +339,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             // Main menu
             case UIString.MainMenuStartGameVsAI:
                 ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+                break;
+            case UIString.MainMenuStartQuickMatch:
+                ClientLogic.MyInterface.CmdJoinQuickMatchQueue ();
                 break;
             case UIString.ShowSetEditor:
                 SetEditor.ShowSetEditorMenu (id);

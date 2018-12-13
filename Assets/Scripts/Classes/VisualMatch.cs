@@ -122,6 +122,24 @@ public class VisualMatch : MonoBehaviour {
         token.MoveToDisabledTile (x, y);
     }
 
+    public void RotateTo (VisualToken token, TileClass source, TileClass dest) {
+        StartCoroutine (IERotateTo (token, source, dest));
+    }
+
+    public IEnumerator IERotateTo (VisualToken token, TileClass source, TileClass dest) {
+        yield return new WaitForSeconds (GlobalTimer);
+        VisualEffectInterface.SetRotateTo (token.BorderAccent [0], source.visualTile.Anchor, dest.visualTile.Anchor);
+    }
+
+    public void NullRotateTo (VisualToken token) {
+        StartCoroutine (IENullRotateTo (token));
+    }
+
+    public IEnumerator IENullRotateTo (VisualToken token) {
+        yield return new WaitForSeconds (GlobalTimer);
+        token.BorderAccent [0].GetComponent<VisualEffectScript> ().SetRotateTo ();
+    }
+
 
     public void SetPlayerHealthBar (VisualPlayer player, int score, int scoreIncome, int scoreLimit) {
         StartCoroutine (IESetPlayerHealthBar (player, score, scoreIncome, scoreLimit));
@@ -153,6 +171,15 @@ public class VisualMatch : MonoBehaviour {
         VisualEffectInterface.RealEffect (x, y, abilityType, triggered);
     }
 
+    public void CreateRealTokenVectorEffect (TileClass token, TileClass destination, int effectType) {
+        StartCoroutine (IECreateRealTokenVectorEffect (token, destination, effectType));
+    }
+
+    public IEnumerator IECreateRealTokenVectorEffect (TileClass token, TileClass destination, int effectType) {
+        yield return new WaitForSeconds (GlobalTimer);
+        VisualEffectInterface.CreateRealTokenVectorEffect (token, destination, effectType);
+    }
+
 
 
 
@@ -176,6 +203,7 @@ public class VisualMatch : MonoBehaviour {
         yield return new WaitForSeconds (GlobalTimer);
         client.ShuffleCardVisual (card);
     }
+
     public void UpdateCardVisuals (PlayerClass player, int stackNumber, int cardNumber, int position) {
         StartCoroutine (IEUpdateCardVisuals (player, stackNumber, cardNumber, position));
     }

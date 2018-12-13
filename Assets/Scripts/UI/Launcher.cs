@@ -9,6 +9,7 @@ public class Launcher : GOUI {
 
         UICanvas = GameObject.Find ("Canvas");
         EnvironmentScript.CreateNewBackground (1);
+        Time.timeScale = 1;
         //Debug.Log (Language.test);
         //EnvironmentScript.CreateRandomBoard ();
         //EnvironmentScript.CreateNormalBoard ();

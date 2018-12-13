@@ -60,3 +60,4 @@
 [59] List of game versions:
 [60] Quick online game
 [61] Wersje gry
+[62] Begin game against AI

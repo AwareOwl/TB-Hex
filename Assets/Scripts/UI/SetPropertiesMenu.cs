@@ -13,7 +13,7 @@ public class SetPropertiesMenu : GOUI {
 
     static int iconX;
     static int iconY;
-    static int iconNumber;
+    static int iconNumber = -1;
 
     public void Start () {
         CreateSetPropertiesMenu ();
@@ -50,7 +50,9 @@ public class SetPropertiesMenu : GOUI {
     }
 
     static public void SelectIcon (int x, int y, int number) {
-        SelectIcon (iconX, iconY, iconNumber, false);
+        if (iconNumber != -1) {
+            SelectIcon (iconX, iconY, iconNumber, false);
+        }
         SelectIcon (x, y, number, true);
         iconX = x;
         iconY = y;
@@ -60,11 +62,12 @@ public class SetPropertiesMenu : GOUI {
     static public void SelectIcon (int x, int y, int number, bool enabled) {
         if (enabled) {
             IconBackground [x, y].GetComponent<Image> ().color = Color.white;
-            IconImage [x, y].GetComponent<Image> ().color = AppDefaults.GetAbilityColor (number);
+            //IconImage [x, y].GetComponent<Image> ().color = AppDefaults.GetAbilityColor (number);
         } else {
             IconBackground [x, y].GetComponent<Image> ().color = new Color (0.3f, 0.3f, 0.3f);
-            IconImage [x, y].GetComponent<Image> ().color = AppDefaults.GetAbilityColor (number);
+            //IconImage [x, y].GetComponent<Image> ().color = AppDefaults.GetAbilityColor (number);
         }
+        IconImage [x, y].GetComponent<Image> ().color = AppDefaults.GetAbilityColor (number);
     }
 
     static public void CreateSetPropertiesMenu () {

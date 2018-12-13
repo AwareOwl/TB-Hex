@@ -34,6 +34,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 12) {
                         ConvertTo0_1_1_12 ();
                     }
+                    if (DevelopVersion < 13) {
+                        ConvertTo0_1_1_13 ();
+                    }
                 }
             }
         }
@@ -86,6 +89,14 @@ public class ServerVersionManager : VersionManager {
         HotfixVersion = 1;
         DevelopVersion = 4;
     }*/
+    static public void ConvertTo0_1_1_13 () {
+        ServerData.SetGameModeName (1, "Version 0.1.0");
+        ServerData.SetGameModeName (2, "Version 0.2.0");
+        GameVersion = 0;
+        PathVersion = 1;
+        HotfixVersion = 1;
+        DevelopVersion = 13;
+    }
 
     static public void ConvertTo0_1_1_12 () {
         ServerData.SaveNewBoard (1, "Path0.2.0.0", "Board5", GetResource ("ExportFolder/v0.2/Boards/Board5"));

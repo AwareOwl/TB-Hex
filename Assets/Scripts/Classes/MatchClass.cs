@@ -94,14 +94,27 @@ public class MatchClass {
     }
 
     public void AfterTurn () {
+        bool actionMade = false;
         foreach (TileClass tile in Board.tileList) {
             if (!tile.IsFilledTile ()) {
                 continue;
             }
-            int tokenType = tile.token.type;
-            VectorInfo info = new VectorInfo (Board, tile);
-            info.CheckTokenAfterTurnTriggers (this, tile);
+            TokenClass token = tile.token;
+            int tokenType = token.type;
+            VectorInfo info = GetTokenAfterTurnVectorInfo (tile, token);
             foreach (TileClass target in info.Triggered1) {
+                switch (tokenType) {
+                    case 3:
+                    case 4:
+                        if (visualMatch != null) {
+                            if (!actionMade) {
+                                VisualMatch.GlobalTimer += 0.5f;
+                            }
+                            visualMatch.CreateRealTokenVectorEffect (tile, target, tokenType);
+                        }
+                        actionMade = true;
+                        break;
+                }
                 switch (tokenType) {
                     case 3:
                         ModifyTempValue (target, 1);
@@ -114,9 +127,35 @@ public class MatchClass {
         }
 
         UpdateBoard ();
+        UpdateVisuals ();
 
         turnOfPlayer = Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1));
         turn++;
+    }
+
+    public void UpdateVisuals () {
+        foreach (TileClass tile in Board.tileList) {
+            if (!tile.IsFilledTile ()) {
+                continue;
+            }
+            TokenClass token = tile.token;
+            int tokenType = token.type;
+            VisualToken vToken = token.visualToken;
+            if (vToken != null) {
+                VectorInfo info = GetTokenAfterTurnVectorInfo (tile, token);
+                switch (tokenType) {
+                    case 3:
+                    case 4:
+                        if (info.Triggered1.Count == 1) {
+                            visualMatch.RotateTo (token.visualToken, tile, info.Triggered1 [0]);
+                        } else {
+
+                            visualMatch.NullRotateTo (token.visualToken);
+                        }
+                        break;
+                }
+            }
+        }
     }
 
     public void CheckFinishCondition () {
@@ -197,18 +236,24 @@ public class MatchClass {
     }
 
     public void PlayCard (int x, int y, int playerNumber, int stackNumber) {
+        PlayerClass player = Player [playerNumber];
+        CardClass card = player.GetTopCard (stackNumber);
+        PlayCard (x, y, playerNumber, stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.value);
+    }
+
+    public void PlayCard (int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
         TileClass tile = Board.tile [x, y];
         if (!finished && turnOfPlayer == playerNumber && tile.enabled && tile.token == null) {
             PlayerClass player = Player [playerNumber];
-            CardClass card = player.GetTopCard (stackNumber);
+            CardClass card = new CardClass (tokenValue, tokenType, abilityArea, abilityType);
             VisualPlayCard (playerNumber, card);
             PlayCard (x, y, playerNumber, stackNumber, card);
 
-            FinishMove (x, y, playerNumber, stackNumber);
+            FinishMove (x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
         }
     }
 
-    public void FinishMove (int x, int y, int playerNumber, int stackNumber) {
+    public void FinishMove (int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
         if (real) {
             foreach (PlayerClass player2 in Player) {
                 if (player2 == null || player2.properties == null) {
@@ -216,7 +261,7 @@ public class MatchClass {
                 }
                 ClientInterface client = player2.properties.client;
                 if (client != null) {
-                    ServerLogic.TargetCurrentGameMakeAMove (client, x, y, playerNumber, stackNumber);
+                    ServerLogic.TargetCurrentGameMakeAMove (client, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
                     //Debug.Log ("Test " + x + " " + y + " " + playerNumber + " " + stackNumber);
                 }
             }
@@ -240,6 +285,7 @@ public class MatchClass {
         UseAbility (tile, playerNumber, card.abilityArea, card.abilityType);
         SaveLastMove (tile.x, tile.y, card, token, playerNumber);
         UpdateBoard ();
+        UpdateVisuals ();
         player.MoveTopCard (stackNumber);
         EndTurn ();
     }
@@ -269,6 +315,17 @@ public class MatchClass {
         AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea);
         VectorInfo info = new VectorInfo (vectors, token);
         info.CheckAbilityTriggers (this, tile, abilityType, token);
+        return info;
+    }
+
+    public VectorInfo GetTokenAfterTurnVectorInfo (int x, int y, TokenClass token) {
+        return GetTokenAfterTurnVectorInfo (Board.tile [x, y], token);
+    }
+
+    public VectorInfo GetTokenAfterTurnVectorInfo (TileClass tile, TokenClass token) {
+        AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, 4);
+        VectorInfo info = new VectorInfo (vectors, token);
+        info.CheckTokenAfterTurnTriggers (this, tile, token);
         return info;
     }
 
@@ -364,8 +421,10 @@ public class MatchClass {
                 foreach (int pNumber in info.TargetPlayers) {
                     PlayerClass player = Player [pNumber];
                     HandClass hand = player.GetHand ();
-                    for (int y = 0; y < hand.stack.Length; y++) {
-                        player.MoveTopCard (y);
+                    if (hand != null) {
+                        for (int y = 0; y < hand.stack.Length; y++) {
+                            player.MoveTopCard (y);
+                        }
                     }
                 }
                 break;
@@ -550,8 +609,13 @@ public class MatchClass {
 
     public void SetPlayer (int PlayerNumber, PlayerClass player) {
         Player [PlayerNumber] = player;
-        player.playerNumber = PlayerNumber;
-        AIClass AI = player.properties.AI;
+        PlayerPropertiesClass properties = player.properties;
+        properties.playerNumber = PlayerNumber;
+        ClientInterface client = properties.client;
+        if (client != null) {
+            client.playerNumber = PlayerNumber;
+        }
+        AIClass AI = properties.AI;
         if (AI != null) {
             AI.MaxEmptyTileCount = Board.GetEmptyTilesCount ();
         }
