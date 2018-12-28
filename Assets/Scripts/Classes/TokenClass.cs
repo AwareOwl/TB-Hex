@@ -33,6 +33,10 @@ public class TokenClass {
     public TokenClass (TokenClass tokenReference) {
         SetState (tokenReference.type, tokenReference.value, tokenReference.owner);
     }
+    public TokenClass (TileClass tile, int type, int value, int owner) {
+        this.tile = tile;
+        SetState (type, value, owner);
+    }
 
     public void EnableVisual () {
         if (visualToken == null) {
@@ -55,16 +59,14 @@ public class TokenClass {
         }
     }
 
-    public void Update () {
+    public void UpdateTempValue () {
         UpdateValue ();
+    }
+
+    public void Update () {
         if (value <= 0 || destroyed) {
             DestroyToken ();
         }
-    }
-
-    public TokenClass (TileClass tile, int type, int value, int owner) {
-        this.tile = tile;
-        SetState (type, value, owner);
     }
 
     public void SetValue (int value) {
@@ -81,7 +83,21 @@ public class TokenClass {
     }
 
     public void SetType (int type) {
+        if (tile != null) {
+            BoardClass board = tile.board;
+            if (board != null) {
+                board.NumberOfTypes [type]++;
+            }
+        }
         this.type = type;
+    }
+
+    public void ChangeType (int type) {
+        BoardClass board = tile.board;
+        if (board != null) {
+            board.NumberOfTypes [this.type]--;
+        }
+        SetType (type);
     }
 
     public void UpdateValue () {
@@ -89,7 +105,15 @@ public class TokenClass {
     }
 
     public void SetState (int type, int value, int owner) {
-        this.type = type;
+        SetType (type);
+        this.value = value;
+        this.tempValue = value;
+        this.owner = owner;
+        RefreshVisual ();
+    }
+
+    public void ChangeState (int type, int value, int owner) {
+        ChangeType (type);
         this.value = value;
         this.tempValue = value;
         this.owner = owner;
@@ -113,6 +137,12 @@ public class TokenClass {
     }
 
     public void DestroyToken () {
+        BoardClass board = tile.board;
+        MatchClass match = board.match;
+        if (match != null) {
+            match.DestroyToken (this);
+            board.NumberOfTypes [type]--;
+        }
         tile.token = null;
         DestroyVisual ();
     }

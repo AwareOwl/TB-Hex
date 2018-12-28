@@ -10,13 +10,15 @@ public class ClientLogic : MonoBehaviour {
         MyInterface.AccountName = accountName;
         MyInterface.UserName = userName;
 
+        InputController.autoRunAI = true;
+
         if (!InputController.autoRunAI) {
             //BoardEditorMenu.ShowBoardEditorMenu ();
             //CardPoolEditor.ShowCardPoolEditorMenu ();
             //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
             //SetEditor.ShowSetEditorMenu ();
 
-            MainMenu.ShowMainMenu ();
+            //MainMenu.ShowMainMenu ();
         } else {
             //ServerLogic.JoinGameAgainstAI (ClientLogic.MyInterface).RunAI ();
             MainMenu.ShowMainMenu ();
@@ -24,6 +26,7 @@ public class ClientLogic : MonoBehaviour {
     }
 
     static public void LoadCurrentGameMatch (string [] lines) {
+        GOUI.DestroyMenu ();
         InGameUI.PlayedMatch = new MatchClass ();
         InGameUI.PlayedMatch.LoadFromString (lines);
     }
@@ -36,7 +39,7 @@ public class ClientLogic : MonoBehaviour {
 
     static public void LoadCurrentGameBoard (string [] lines) {
         MatchClass match = InGameUI.PlayedMatch;
-        match.Board = new BoardClass ();
+        match.Board = new BoardClass (match);
         match.Board.LoadBoard (lines, 8, 8);
     }
 
@@ -58,6 +61,6 @@ public class ClientLogic : MonoBehaviour {
         PlayerClass player = match.Player [playerNumber];
         PlayerPropertiesClass playerProperties = player.properties;
         playerProperties.hand = new HandClass ();
-        playerProperties.hand.LoadFromString (lines);
+        playerProperties.hand.LoadFromModeString (lines);
     }
 }

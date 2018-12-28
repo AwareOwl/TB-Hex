@@ -1,5 +1,8 @@
 [0] No special properties.
 [1] Generates double score income.
 [2] Instead of generating score income, decreases it.
-[3] After owner turns increases value of neraby weakest token by %d.
-[4] After owner turns decreases value of nearby strongest token by %d.
+[3] Between turns increases value of neraby weakest token by 1.
+[4] Between turns decreases value of nearby strongest token by 1.
+[5] Between turns decreases its value by 1. When it becomes destroyed, it reduces value of nearby tokens by 3.
+[6] Generates income only during owner turns;
+[7] All played tokens will have their value increased by 1.

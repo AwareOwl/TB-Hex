@@ -295,6 +295,34 @@ public class VisualEffectInterface : MonoBehaviour {
         }
     }
 
+    static public void CreateRealTokenEffect (TileClass sourceTile, int effectNumber) {
+        GameObject source = GetRealAnchor (sourceTile);
+        Color col = Color.white;
+        VisualEffectScript VES;
+        switch (effectNumber) {
+            case 5:
+                col = AppDefaults.Red;
+                break;
+        }
+        switch (effectNumber) {
+            case 5:
+                VES = CreateSimpleEffect (source, "Textures/Effects/Ignite", col, true, true);
+                VES.gameObject.transform.localEulerAngles = new Vector3 (90, 0, 0);
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0.4f));
+                VES.SetLastScale (new Vector3 (0.8f, 0.8f, 0.8f));
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.AddPhase ();
+                VES.SetPhaseTimer (1);
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0.2f));
+                VES.SetLastScale (new Vector3 (2.1f, 2.1f, 2.1f));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (2.4f, 2.4f, 2.4f));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0.025f));
+                VES.SetLastPhaseTimer (5f);
+                break;
+        }
+    }
+
     static public void CreateRealTokenVectorEffect (TileClass sourceTile, TileClass destinationTile, int effectNumber) {
         GameObject source = GetRealAnchor (sourceTile);
         GameObject destination = GetRealAnchor (destinationTile);
@@ -305,6 +333,7 @@ public class VisualEffectInterface : MonoBehaviour {
                 col = AppDefaults.Green;
                 break;
             case 4:
+            case 5:
                 col = AppDefaults.Red;
                 break;
         }
@@ -321,6 +350,20 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.rotateToCamera = true;
                 VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
                 VES.SetPhaseTimer (1.25f);
+                break;
+            case 5:
+                VES = CreateEffectPointingAt (source, destination.transform.position, "Textures/Effects/ExplosionParticle", col, true, true);
+                VES.SetLastScale (new Vector3 (0.6f, 0.6f, 0.6f));
+                VES.SetLastPosition (new Vector3 (0, 0f, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1.2f));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.8f, 0.8f, 0.8f));
+                VES.SetLastPosition (destination.transform.position - source.transform.position);
+                VES.SetPhaseTimer (0.5f);
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (1, 1, 1));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1);
                 break;
 
         }

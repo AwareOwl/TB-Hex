@@ -61,3 +61,4 @@
 [60] Szybka gra online
 [61] Wersje gry
 [62] Rozpocznij grę przeciwko SI
+[63] Przeciwnicy poddali grę.

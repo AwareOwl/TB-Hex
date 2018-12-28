@@ -80,8 +80,19 @@ public class InGameUI : GOUI {
                 //PlayedMatch.MoveTopCard (MyPlayerNumber, x - 1);
             }
         }
-        if (Input.GetKeyDown ("f5")) {
+        if (Input.GetKeyDown ("f4")) {
             ShowInGameUI ();
+        }
+        if (Input.GetKeyDown ("f5")) {
+            ClientLogic.MyInterface.CmdDownloadCurrentGame ();
+            //ShowInGameUI ();
+        }
+        if (Input.GetKeyDown ("i")) {
+            //Debug.Log (PlayedMatch.Mov)
+        }
+        if (Input.GetKeyDown ("p")) {
+            ClientLogic.MyInterface.CmdCurrentGameFetchMissingMoves (PlayedMatch.lastMoveId);
+            //Debug.Log (PlayedMatch.Mov)
         }
         /*if (Input.GetKeyDown ("r")) {
             ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
@@ -113,6 +124,9 @@ public class InGameUI : GOUI {
     }
 
     static public void TileAction (int x, int y) {
+        if (InputController.debuggingEnabled) {
+            Debug.Log ("Tile action performed");
+        }
         ClientLogic.MyInterface.CmdCurrentGameMakeAMove (x, y, SelectedStack);
         //PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
         RefreshHovers ();
@@ -206,7 +220,7 @@ public class InGameUI : GOUI {
             token.SetState (MyPlayerNumber, tokenType, card.value);
             token.SetParent (GetAnchor (x, y));
             TileClass tokenTile = PlayedMatch.Board.GetTile (x, y);
-            VectorInfo tokenInfo = PlayedMatch.GetTokenAfterTurnVectorInfo (tokenTile, new TokenClass (null, card.tokenType, card.value, MyPlayerNumber));
+            VectorInfo tokenInfo = PlayedMatch.GetTokenVectorInfo (tokenTile, new TokenClass (null, card.tokenType, card.value, MyPlayerNumber));
             switch (tokenType) {
                 case 3:
                 case 4:

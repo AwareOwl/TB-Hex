@@ -137,7 +137,7 @@ public class SetEditor : GOUI {
 
     static public void LoadSet (string [] lines, string name, int iconNumber) {
         hand = new HandClass ();
-        hand.LoadFromString (lines);
+        hand.LoadFromString (cardPool, lines);
         LoadSet (hand);
         LoadPage (Page);
         SetEditor.setName = name;

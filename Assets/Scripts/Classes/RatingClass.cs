@@ -21,14 +21,18 @@ public class RatingClass {
 
     static float [] numberOfCards = new float [40]; // CardsInHand
 
-    static float [] cardNumberWinRatio = new float [40];
+    static float [] cardNumberWinRatio = new float [60];
 
     static public float [,,] abilityOnStack; // AbilityType, AbilityArea (0, 2, 6 fields), stackNumber;
     static public float [,,] abilityOnRow;
     static public float [,,] tokenOnRow;
 
     static public float [,,,] abilityAbilitySynergy;// AbilityType, AbilityArea (0, 2, 6 fields), AbilityType, AbilityArea (0, 2, 6 fields);
+    static public float [,,,] abilityTokenSynergy;
     static public float [,,,] abilityAfterAbility;
+    static public float [,,,] abilityAfterToken;
+    static public float [,,,] tokenAfterAbility;
+    static public float [,,,] tokenAfterToken;
 
     static RatingClass () {
         int availableAbilities = AppDefaults.AvailableAbilities;
@@ -38,6 +42,9 @@ public class RatingClass {
         tokenOnRow = new float [availableTokens, 9, 10];
         abilityAbilitySynergy = new float [availableAbilities, 3, availableAbilities, 3];
         abilityAfterAbility = new float [availableAbilities, 3, availableAbilities, 3];
+        abilityAfterToken = new float [availableAbilities, 3, availableTokens, 9];
+        tokenAfterAbility = new float [availableTokens, 9, availableAbilities, 3];
+        tokenAfterToken = new float [availableTokens, 9, availableTokens, 9];
 
         for (int x = 0; x < abilityOnStack.GetLength (0); x++) {
             for (int y = 0; y < abilityOnStack.GetLength (1); y++) {
@@ -67,6 +74,9 @@ public class RatingClass {
         }
         LoadAbilityAbilitySynergy ();
         LoadAbilityAfterAbility ();
+        LoadAbilityAfterToken ();
+        LoadTokenAfterAbility ();
+        LoadTokenAfterToken ();
     }
 
     static public void AnalyzeStatistics (MatchClass match) { // anal...
@@ -108,8 +118,14 @@ public class RatingClass {
                     if (z > 0) {
                         CardClass prevCard = stack.card [z - 1];
                         abilityAfterAbility [abilityType, abilityArea, prevCard.abilityType, prevCard.AreaSize ()] *= 0.999f;
+                        abilityAfterToken [abilityType, abilityArea, prevCard.tokenType, prevCard.value] *= 0.999f;
+                        tokenAfterAbility [tokenType, tokenValue, prevCard.abilityType, prevCard.AreaSize ()] *= 0.999f;
+                        tokenAfterToken [tokenType, tokenValue, prevCard.tokenType, prevCard.value] *= 0.999f;
                         if (winnerNumber == x) {
                             abilityAfterAbility [abilityType, abilityArea, prevCard.abilityType, prevCard.AreaSize ()] += 0.001f;
+                            abilityAfterToken [abilityType, abilityArea, prevCard.tokenType, prevCard.value] += 0.001f;
+                            tokenAfterAbility [tokenType, tokenValue, prevCard.abilityType, prevCard.AreaSize ()] += 0.001f;
+                            tokenAfterToken [tokenType, tokenValue, prevCard.tokenType, prevCard.value] += 0.001f;
                         }
                     }
                     usedCards.Add (card);
@@ -146,6 +162,7 @@ public class RatingClass {
     }
 
     static public void SaveEverything () {
+        Debug.Log ("Test");
         SaveAbilityOnStack ();
         SaveAbilityOnRow ();
         SaveTokenOnRow ();
@@ -161,6 +178,9 @@ public class RatingClass {
         SaveNumberOfCards ();
         SaveAbilityAbilitySynergy ();
         SaveAbilityAfterAbility ();
+        SaveAbilityAfterToken ();
+        SaveTokenAfterAbility ();
+        SaveTokenAfterToken ();
     }
 
     static public void SaveAbilityOnStack () {
@@ -333,22 +353,7 @@ public class RatingClass {
     }
 
     static public void SaveAbilityAbilitySynergy () {
-        List<string> lines = new List<string> ();
-        for (int x = 0; x < abilityAbilitySynergy.GetLength (0); x++) {
-            string s = "[" + x.ToString () + "] ";
-            lines.Add (s);
-            for (int x2 = 0; x2 < abilityAbilitySynergy.GetLength (1); x2++) {
-                s = "[" + x2.ToString () + "] ";
-                for (int y = 0; y < abilityAbilitySynergy.GetLength (2); y++) {
-                    s += "[" + y.ToString () + "] ";
-                    for (int y2 = 0; y2 < abilityAbilitySynergy.GetLength (3); y2++) {
-                        s += abilityAbilitySynergy [x, x2, y, y2].ToString () + " ";
-                    }
-                }
-                lines.Add (s);
-            }
-        }
-        ServerData.SaveRatingAbilityAbilitySynergy (lines.ToArray ());
+        ServerData.SaveRatingAbilityAbilitySynergy (Save (abilityAbilitySynergy));
     }
 
     static public void LoadAbilityAbilitySynergy () {
@@ -377,47 +382,85 @@ public class RatingClass {
     }
 
     static public void SaveAbilityAfterAbility () {
-        List<string> lines = new List<string> ();
-        for (int x = 0; x < abilityAfterAbility.GetLength (0); x++) {
-            string s = "[" + x.ToString () + "] ";
-            lines.Add (s);
-            for (int x2 = 0; x2 < abilityAfterAbility.GetLength (1); x2++) {
-                s = "[" + x2.ToString () + "] ";
-                for (int y = 0; y < abilityAfterAbility.GetLength (2); y++) {
-                    s += "[" + y.ToString () + "] ";
-                    for (int y2 = 0; y2 < abilityAfterAbility.GetLength (3); y2++) {
-                        s += abilityAfterAbility [x, x2, y, y2].ToString () + " ";
-                    }
-                }
-                lines.Add (s);
-            }
-        }
-        ServerData.SaveRatingAbilityAfterAbility (lines.ToArray ());
+        ServerData.SaveRatingAbilityAfterAbility (Save (abilityAfterAbility));
     }
 
     static public void LoadAbilityAfterAbility () {
         string [] lines = ServerData.GetRatingAbilityAfterAbility ();
-        for (int x = 0; x < abilityAfterAbility.GetLength (0); x++) {
+        Load (lines, abilityAfterAbility);
+    }
+
+    static public void SaveAbilityAfterToken () {
+        ServerData.SaveRatingAbilityAfterToken (Save (abilityAfterToken));
+    }
+
+
+    static public void LoadAbilityAfterToken () {
+        string [] lines = ServerData.GetRatingAbilityAfterToken ();
+        Load (lines, abilityAfterToken);
+    }
+
+    static public void SaveTokenAfterAbility () {
+        ServerData.SaveRatingTokenAfterAbility (Save (tokenAfterAbility));
+    }
+
+
+    static public void LoadTokenAfterAbility () {
+        string [] lines = ServerData.GetRatingTokenAfterAbility ();
+        Load (lines, tokenAfterAbility);
+    }
+
+    static public void SaveTokenAfterToken () {
+        ServerData.SaveRatingTokenAfterToken (Save (tokenAfterToken));
+    }
+
+
+    static public void LoadTokenAfterToken () {
+        string [] lines = ServerData.GetRatingTokenAfterToken ();
+        Load (lines, tokenAfterToken);
+    }
+
+    static public void Load (string [] lines, float [,,,] array) {
+        for (int x = 0; x < array.GetLength (0); x++) {
             string [] word = null;
-            int l1 = abilityAfterAbility.GetLength (1);
+            int l1 = array.GetLength (1);
             for (int x2 = 0; x2 < l1; x2++) {
                 int lineNumber = 1 + x * (l1 + 1) + x2;
                 if (lines != null && lineNumber < lines.Length) {
                     word = lines [lineNumber].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 }
-                for (int y = 0; y < abilityAfterAbility.GetLength (2); y++) {
-                    int l2 = abilityAfterAbility.GetLength (3);
+                for (int y = 0; y < array.GetLength (2); y++) {
+                    int l2 = array.GetLength (3);
                     for (int y2 = 0; y2 < l2; y2++) {
                         int number = 2 + y * (l2 + 1) + y2;
                         if (word != null && number < word.Length) {
-                            abilityAfterAbility [x, x2, y, y2] = float.Parse (word [number]);
+                            array [x, x2, y, y2] = float.Parse (word [number]);
                         } else {
-                            abilityAfterAbility [x, x2, y, y2] = 0.5f;
+                            array [x, x2, y, y2] = 0.5f;
                         }
                     }
                 }
             }
         }
     }
+    static public string [] Save (float [,,,] array) {
+        List<string> lines = new List<string> ();
+        for (int x = 0; x < array.GetLength (0); x++) {
+            string s = "[" + x.ToString () + "] ";
+            lines.Add (s);
+            for (int x2 = 0; x2 < array.GetLength (1); x2++) {
+                s = "[" + x2.ToString () + "] ";
+                for (int y = 0; y < array.GetLength (2); y++) {
+                    s += "[" + y.ToString () + "] ";
+                    for (int y2 = 0; y2 < array.GetLength (3); y2++) {
+                        s += array [x, x2, y, y2].ToString () + " ";
+                    }
+                }
+                lines.Add (s);
+            }
+        }
+        return lines.ToArray ();
+    }
+
 
 }

@@ -8,6 +8,8 @@ public class PlayerPropertiesClass {
     public string accountName;
     public int playerNumber;
 
+    public bool conceded = false;
+
     public int team;
 
     public AIClass AI;

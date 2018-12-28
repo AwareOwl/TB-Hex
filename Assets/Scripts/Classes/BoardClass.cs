@@ -12,22 +12,38 @@ public class BoardClass {
     public TileClass [,] tile;
     public List<TileClass> tileList = new List<TileClass> ();
 
+    public int [] NumberOfTypes;
+
+    public MatchClass match;
+
     public BoardClass () {
+        Init ();
 
     }
 
-    public BoardClass (BoardClass board) {
+    public BoardClass (MatchClass match) {
+        Init ();
+        this.match = match;
+    }
+
+    public BoardClass (MatchClass match, BoardClass board) {
+        Init ();
         int width = board.tile.GetLength (0);
         int height = board.tile.GetLength (1);
         this.tile = new TileClass [width, height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                this.tile [x, y] = new TileClass (board.tile [x, y]);
+                this.tile [x, y] = new TileClass (this, board.tile [x, y]);
                 if (tile [x, y].enabled) {
                     EnableTile (x, y, true);
                 }
             }
         }
+        this.match = match;
+    }
+
+    public void Init () {
+        NumberOfTypes = new int [AppDefaults.AvailableTokens];
     }
 
     public void EnableTile (int x, int y) {
@@ -109,7 +125,8 @@ public class BoardClass {
     }
 
     TileClass CreateTile (int x, int y) {
-        tile [x, y] = new TileClass (x, y);
+        tile [x, y] = new TileClass (this, x, y);
+        tile [x, y].board = this;
         if (tile [x, y].enabled || BoardEditorMenu.instance != null) {
             VisualiseTile (tile [x, y]);
         }

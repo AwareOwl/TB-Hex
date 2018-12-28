@@ -10,7 +10,7 @@ public class BoardEditorMenu : GOUI {
 
     static public GameObject BackgroundObject;
 
-    static int currentId = 5;
+    static int currentId = 6;
 
     static public int TileType;
     static public int Owner;
@@ -30,7 +30,7 @@ public class BoardEditorMenu : GOUI {
         EditedBoard = new BoardClass ();
         EditedBoard.EnableVisualisation ();
         EditedBoard.CreateNewBoard ();
-        //LoadBoard (5);
+        LoadBoard (6);
     }
 
     static public void LoadBoard (int id) {

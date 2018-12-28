@@ -86,9 +86,9 @@ public class HandClass  {
         output = Mathf.Max (output, 0.4f);
         return output;
     }
-    public void GenerateRandomHand () {
+    public void GenerateRandomHand (int gameMode) {
         CardPoolClass CardPool = new CardPoolClass ();
-        CardPool.LoadFromFile (2);
+        CardPool.LoadFromFile (gameMode);
         GenerateRandomHand (CardPool);
     }
 
@@ -122,7 +122,16 @@ public class HandClass  {
                         CardClass prevCard = stack [x].card [y - 1];
                         modifier [z] *= Normalize (RatingClass.abilityAfterAbility [
                             card.abilityType, card.AreaSize(),
-                            prevCard.abilityType, prevCard.AreaSize()], 10);
+                            prevCard.abilityType, prevCard.AreaSize()], 8);
+                        modifier [z] *= Normalize (RatingClass.abilityAfterToken [
+                            card.abilityType, card.AreaSize (),
+                            prevCard.tokenType, prevCard.value], 8);
+                        modifier [z] *= Normalize (RatingClass.tokenAfterAbility [
+                            card.tokenType, card.value,
+                            prevCard.abilityType, prevCard.AreaSize ()], 8);
+                        modifier [z] *= Normalize (RatingClass.tokenAfterToken [
+                            card.tokenType, card.value,
+                            prevCard.tokenType, prevCard.value], 8);
                     }
                     SumOfValues += modifier [z];
                 }
@@ -178,13 +187,31 @@ public class HandClass  {
         return s.ToArray();
     }
 
-    public void LoadFromFile (string accountName, int gameMode, int setId) {
-        LoadFromString (ServerData.GetPlayerModeSet (accountName, gameMode, setId));
+    public string [] ModeHandToString () {
+        List<string> s = new List<string> ();
+        for (int x = 0; x < numberOfStacks; x++) {
+            string s2 = "";
+            for (int y = 0; y < stack [x].card.Count; y++) {
+                CardClass card = GetCard (x, y);
+                if (card != null) {
+                    s2 += card.abilityType + " " + card.abilityArea + " " + card.tokenType + " " + card.value.ToString() + " ";
+                }
+            }
+            s.Add (s2);
+        }
+        return s.ToArray ();
     }
 
-    public void LoadFromString (string [] lines) {
+    public void LoadFromFile (string accountName, int gameMode, int setId) {
+        LoadFromString (gameMode, ServerData.GetPlayerModeSet (accountName, gameMode, setId));
+    }
+
+    public void LoadFromString (int gameMode, string [] lines) {
         CardPoolClass cardPool = new CardPoolClass ();
-        cardPool.LoadFromFile (2);
+        cardPool.LoadFromFile (gameMode);
+        LoadFromString (cardPool, lines);
+    }
+    public void LoadFromString (CardPoolClass cardPool, string [] lines) {
         Init (4);
         for (int x = 0; x < 4; x++) {
             if (lines.Length <= x) {
@@ -192,8 +219,29 @@ public class HandClass  {
             }
             string [] word = lines [x].Split (new char [] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
             for (int y = 0; y < word.Length / 2; y++) {
-                stack [x].card.Add (cardPool.Card [int.Parse (word [y * 2])]);
-                stack [x].card [y].abilityArea = int.Parse (word [y * 2 + 1]);
+                int cardNumber = int.Parse (word [y * 2]);
+                if (cardPool.Card.Count <= cardNumber) {
+                    continue;
+                }
+                stack [x].card.Add (cardPool.Card [cardNumber]);
+                int abilityArea = int.Parse (word [y * 2 + 1]);
+                if (stack [x].card [y].abilityArea < 3 && abilityArea < 3) {
+                    stack [x].card [y].abilityArea = abilityArea;
+                }
+            }
+        }
+    }
+
+    public void LoadFromModeString (string [] lines) {
+        Init (4);
+        for (int x = 0; x < 4; x++) {
+            if (lines.Length <= x) {
+                continue;
+            }
+            string [] word = lines [x].Split (new char [] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+            for (int y = 0; y < word.Length / 4; y++) {
+                CardClass card = new CardClass (int.Parse (word [y * 4 + 3]), int.Parse (word [y * 4 + 2]), int.Parse (word [y * 4 + 1]), int.Parse (word [y * 4]));
+                stack [x].card.Add (card);
             }
         }
     }

@@ -8,6 +8,8 @@ public class InputController : MonoBehaviour {
     float timer = 0;
     static public bool autoRunAI = false;
 
+    static public bool debuggingEnabled;
+
     private void Start () {
         Time.timeScale = 1;
     }
@@ -32,6 +34,10 @@ public class InputController : MonoBehaviour {
                 timer -= 20;
                 RatingClass.SaveEverything ();
             }
+        }
+        if (Input.GetKey ("d") && Input.GetKeyDown ("b")) {
+            Debug.Log ("Debugging enabled");
+            debuggingEnabled = true;
         }
 	}
 }

@@ -1,5 +1,8 @@
 [0] Normal Token
 [1] Golden Token
 [2] Parasite Token
-[3] Inspiring Token
-[4] ... Tokens
+[3] Token of Growth
+[4] Tokens of Decay
+[5] Dynamite Token
+[6] Lazy Token
+[7] Token of Inflation

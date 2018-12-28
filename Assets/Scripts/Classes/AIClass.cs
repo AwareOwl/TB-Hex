@@ -74,13 +74,19 @@ public class AIClass {
             }
         }
         //value += playerValue;
-        value += CalculateBoardValue (match, playerNumber);
+        value += CalculateBoardValue (match, playerNumber, myTurnsToWin);
         return value;
     }
 
-    public float CalculateBoardValue (MatchClass match, int playerNumber) {
+    public float CalculateBoardValue (MatchClass match, int playerNumber, float turnsLeft) {
         float value = 0;
         TileClass [] tiles = match.Board.tileList.ToArray ();
+        VectorInfo [,] VE = new VectorInfo [10, 10];
+        foreach (TileClass tile in tiles) {
+            if (tile.IsFilledTile ()) {
+                VE [tile.x, tile.y] = match.GetTokenVectorInfo (tile, tile.token);
+            }
+        }
         foreach (TileClass tile in tiles) {
             float dangerCount = 0;
             float edgeCount = 0;
@@ -110,37 +116,47 @@ public class AIClass {
                     }
                 }
                 multiDangerCount += Mathf.Max (0, enemies - allies - 0.5f);
+
             }
             float riskValue = 2;
             if (tile.IsFilledTile ()) {
-                VectorInfo info = match.GetTokenAfterTurnVectorInfo (tile, tile.token);
+                VectorInfo oVE = VE [tile.x, tile.y];
                 float tokenValue = tile.token.value;
                 int tokenType = tile.token.type;
                 int tokenOwner = tile.token.owner;
+                foreach (AbilityVector vector in oVE.vectors) {
+                    TileClass targetTile = vector.target;
+                    if (!targetTile.IsFilledTile ()) {
+                        continue;
+                    }
+                    VectorInfo tVE = VE [targetTile.x, targetTile.y];
+                    TokenClass targetToken = targetTile.token;
+                    int targetType = targetToken.type;
+                    int targetValue = targetToken.value;
+                    switch (targetType) {
+                        case 3:
+                            if (tVE.WeakestTargets.Count == 1 && tVE.WeakestTargets [0] == tile) {
+                                tokenValue = valueOverTime (tokenValue, 1, 1, turnsLeft);
+                            }
+                            break;
+                        case 4:
+                            if (tVE.StrongestTargets.Count == 1 && tVE.StrongestTargets [0] == tile) {
+                                tokenValue = valueOverTime (tokenValue, -1, 1, turnsLeft);
+                            }
+                            break;
+                        case 5:
+                            tokenValue = valueOverTime (tokenValue, -3, targetValue, turnsLeft);
+                            break;
+                    }
+
+                }
+                tokenValue = Mathf.Max (tokenValue, 0);
                 switch (tokenType) {
                     case 1:
                         tokenValue *= 1.9f;
                         break;
                     case 2:
                         tokenValue *= -0.9f;
-                        break;
-                    case 3:
-                        if (info.WeakestTargets.Count == 1) {
-                            if (info.WeakestTargets [0].token.owner == tokenOwner) {
-                                tokenValue += 1f;
-                            } else {
-                                tokenValue -= 1f;
-                            }
-                        }
-                        break;
-                    case 4:
-                        if (info.StrongestTargets.Count == 1) {
-                            if (info.StrongestTargets [0].token.owner == tokenOwner) {
-                                tokenValue -= 1f;
-                            } else {
-                                tokenValue += 1f;
-                            }
-                        }
                         break;
                 }
                 riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);
@@ -158,6 +174,11 @@ public class AIClass {
             }
         }
         return value;
+    }
+
+    public float valueOverTime (float value, float valueDifference, float turnDelay, float turnsLeft) {
+        float perc = Mathf.Max ((turnsLeft - turnDelay), 0) / turnsLeft;
+        return value * (1 - perc) + Mathf.Max (value + valueDifference, 0) * perc;
     }
 
     public float TurnToWinPredict (MatchClass match, int playerNumber) {

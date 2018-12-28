@@ -31,13 +31,14 @@ public class CardPoolEditor : GOUI {
 
     private void Start () {
         instance = this;
+        NumberOfButtons [2] = AppDefaults.AvailableTokens;
         NumberOfButtons [4] = AppDefaults.AvailableAbilities;
         CreateCardPoolEditorMenu ();
         CurrentGUI = this;
 
 
         EditedCardPool = new CardPoolClass ();
-        EditedCardPool.LoadFromFile (2);
+        EditedCardPool.LoadFromFile (ClientLogic.MyInterface.GameMode);
 
         CreateSampleCards ();
         //EditedCardPool.EnableVisualisation ();

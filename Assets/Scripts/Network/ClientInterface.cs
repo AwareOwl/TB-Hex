@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.1.1.12");
+            CmdCompareServerVersion ("0.2.0.1");
         }
     }
 
@@ -148,6 +148,11 @@ public class ClientInterface : NetworkBehaviour {
         ServerLogic.DownloadGameModeLists (this);
     }
 
+    [Command]
+    public void CmdDownloadCurrentGame () {
+        ServerLogic.DownloadGame (this, MatchMakingClass.FindMatch (AccountName));
+    }
+
     [TargetRpc]
     public void TargetDownloadGameModeLists (NetworkConnection target, int gameMode,
         string [] officialNames, string [] publicNames, string [] yourNames, 
@@ -199,19 +204,39 @@ public class ClientInterface : NetworkBehaviour {
 
     [Command]
     public void CmdCurrentGameMakeAMove (int x, int y, int stackNumber) {
+        if (InputController.debuggingEnabled) {
+            Debug.Log ("Play card command sent to server");
+        }
         ServerLogic.CurrentGameMakeAMove (this, x, y, playerNumber, stackNumber);
     }
 
     [TargetRpc]
-    public void TargetCurrentGameMakeAMove (NetworkConnection target, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
+    public void TargetCurrentGameMakeAMove (NetworkConnection target, int moveId, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
         if (InGameUI.PlayedMatch != null) {
-            InGameUI.PlayedMatch.PlayCard (x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
+            InGameUI.PlayedMatch.PlayCard (moveId, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
         }
     }
+
+    [Command]
+    public void CmdCurrentGameFetchMissingMoves (int lastMoveId) {
+        ServerLogic.CurrentGameFetchMissingMoves (this, lastMoveId);
+    }
+
+    //public void CmdUpdate
 
     [TargetRpc]
     public void TargetGetStartingSetName (NetworkConnection target) {
         CmdSetStartingSetName (Language.StartingSet);
+    }
+
+    [Command]
+    public void CmdCurrentGameConcede () {
+        ServerLogic.CurrentGameConcede (this);
+    }
+
+    [TargetRpc]
+    public void TargetCurrentGameConcede (NetworkConnection target, int playerNumber) {
+        InGameUI.PlayedMatch.Concede (playerNumber);
     }
 
     [Command]

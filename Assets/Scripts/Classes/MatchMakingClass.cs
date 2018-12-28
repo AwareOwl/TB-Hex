@@ -10,7 +10,7 @@ public class MatchMakingClass {
     static public MatchClass FindMatch (string accountName) {
         foreach (MatchClass match in matches) {
             foreach (PlayerClass player in match.Player) {
-                if (player.properties != null && player.properties.accountName == accountName) {
+                if (player.properties != null && player.properties.accountName == accountName && !player.properties.conceded) {
                     return match;
                 }
             }

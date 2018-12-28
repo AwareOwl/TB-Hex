@@ -7,8 +7,8 @@ public class AppDefaults {
     static public Color Green = new Color (0, 0.95f, 0);
     static public Color Red = Color.red;
 
-    static public int AvailableTokens = 5; 
-    static public int AvailableAbilities = 21; // Always + 1, to include null
+    static public int AvailableTokens = 8; 
+    static public int AvailableAbilities = 24; // Always + 1, to include null
 
 
     static public Shader sprite;
@@ -27,21 +27,18 @@ public class AppDefaults {
     static public Color GetBorderColorMain (int type) {
         switch (type) {
             case 0:
+            case 6:
                 return new Color (0.1f, 0.1f, 0.1f);
             case 1:
                 return new Color (0.8f, 0.6f, 0.1f);
             case 2:
                 return new Color (0.1f, 0.1f, 0.0f);
             case 3:
-                return new Color (0.0f, 0.05f, 0.2f);
             case 4:
-                return new Color (0.0f, 0.05f, 0.2f);
-            case 6:
-                return new Color (0.0f, 0.6f, 0.2f);
             case 5:
-                return new Color (0.6f, 0.0f, 0.2f);
+                return new Color (0.0f, 0.05f, 0.2f);
             case 7:
-                return new Color (0.5f, 0.7f, 0.2f);
+                return new Color (0.1f, 0.4f, 0.1f);
             default:
                 return Color.black;
         }
@@ -54,7 +51,12 @@ public class AppDefaults {
             case 3:
                 return new Color (0.0f, 0.9f, 0f);
             case 4:
-                return new Color (0.9f, 0, 0);;
+            case 5:
+                return new Color (0.9f, 0, 0);
+            case 6:
+                return new Color (0.7f, 0.7f, 0.7f);
+            case 7:
+                return new Color (0.8f, 0.8f, 0f);
             default:
                 return Color.black;
         }
@@ -80,6 +82,7 @@ public class AppDefaults {
             case 8:
             case 12:
             case 14:
+            case 21:
                 return Red;
             // Green
             case 2:
@@ -97,12 +100,14 @@ public class AppDefaults {
             case 6:
             case 13:
             case 15:
+            case 23:
                 return new Color (1, 1, 0);
             // Purple
             case 7:
             case 10:
             case 16:
             case 17:
+            case 22:
                 return new Color (0.8f, 0, 1);
             // Blue
             case 20:

@@ -12,3 +12,13 @@
 [11] Swap positions
 [12] Thunder
 [13] Equality
+[14] Crush
+[15] exploitation
+[16] Inspiration
+[17] Identity thief
+[18] Replication
+[19] Castling
+[20] Deconcentration
+[21] Sacrifice: death
+[22] Propaganda
+[23] Expose target

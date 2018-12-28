@@ -1,5 +1,8 @@
 ﻿[0] Brak specjalnych właściwości.
 [1] Generuje podwójną liczbę punktów.
 [2] Zamiast generować punkty odejmuje je.
-[3] Po turach właściciela zwiększa wartość najsłabszego pobliskiego żetonu o 1.
-[4] Po turach właściciela zmniejsza wartość najsilniejszego pobliskiego żetonu o 1.
+[3] Pomiędzy turami zwiększa wartość najsłabszego pobliskiego żetonu o 1.
+[4] Pomiędzy turami zmniejsza wartość najsilniejszego pobliskiego żetonu o 1.
+[5] Pomiędzy turami zmniejsza swoją wartość o 1. Gdy zostaje zniszczony, redukuje wartość pobliskich żetonów o 3.
+[6] Generuje przyrost punktacji tylko w trakcie tur właściciela.
+[7] Wszystkie zagrywane żetony będą miały wartość większą o 1.

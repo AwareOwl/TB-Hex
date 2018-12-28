@@ -121,6 +121,9 @@ public class VisualToken {
         GameObject Clone;
         switch (type) {
             case 2:
+            case 5:
+            case 6:
+            case 7:
                 for (int x = 0; x < 4; x++) {
                     Clone = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBorderSpike")) as GameObject;
                     Clone.AddComponent<VisualEffectScript> ().SetColor (AppDefaults.GetBorderColorAccent (type));

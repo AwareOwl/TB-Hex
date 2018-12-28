@@ -27,14 +27,17 @@ public class InGameMenu : GOUI {
 
     static public void CreateInGameMenu () {
         GameObject Clone;
-        BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 390, 330, false);
+        BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 20, 390, 330, false);
+
+        Clone = CreateSprite ("UI/Transparent", 720, 540, 19, 10000, 10000, false);
+        Clone.transform.SetParent (BackgroundObject.transform);
 
         int count = 3;
         Button = new GameObject [count];
 
         for (int x = 0; x < count; x++) {
-            Button [x] = CreateSprite ("UI/Butt_M_EmptySquare", 720, 465 + 75 * x, 11, 270, 60, false);
-            Clone = CreateText (Language.MainMenuButton, 720, 465 + 75 * x, 12, 0.03f);
+            Button [x] = CreateSprite ("UI/Butt_M_EmptySquare", 720, 465 + 75 * x, 21, 270, 60, false);
+            Clone = CreateText (Language.MainMenuButton, 720, 465 + 75 * x, 22, 0.03f);
             AddTextToGameObject (Button [x], Clone);
             Clone.transform.SetParent (Button [x].transform);
             switch (x) {

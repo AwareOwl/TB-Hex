@@ -12,3 +12,13 @@
 [11] Swaps positions of played token with last played token.
 [12] Reduces value of strongest target token by %d1.
 [13] Sets values of target tokens to value of played token.
+[14] Destroys weaker target token.
+[15] Steals values of your target tokens.
+[16] Type of the weakest target token becomes the same as the type of played token.
+[17] Swaps type of the weaker target token with played token.
+[18] Creates a copy of last played token on target empty field. You own the copy.
+[19] Swaps positions of played token with your target token.
+[20] Owners of target tokens put the top card from their card stacks on the bottom of those stacks.
+[21] Destroys your taget tokens to reduce value of last played token by sum of their values.
+[22] Sets type of last played token by value of target token.
+[23] Enemy target tokens steal 1 value from last played token.

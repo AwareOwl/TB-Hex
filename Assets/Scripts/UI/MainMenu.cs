@@ -13,6 +13,7 @@ public class MainMenu : GOUI {
     }
 
     static public void ShowMainMenu () {
+        ClientLogic.MyInterface.CmdCurrentGameConcede ();
         DestroyMenu ();
         CurrentCanvas.AddComponent<MainMenu> ();
     }
@@ -37,8 +38,8 @@ public class MainMenu : GOUI {
         Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.SelectCardSetTooltip, 720, 600, 11, 330, 90);
         Button.name = UIString.ShowSetList;
 
-        CreateSprite ("UI/Panel_Window_01_Sliced", 1200, 960, 10, 450, 210, false);
-        Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.GameVersion, 1200, 960, 11, 330, 90);
+        CreateSprite ("UI/Panel_Window_01_Sliced", 1200, 960, 10, 420, 180, false);
+        Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.GameVersion, 1200, 960, 11, 300, 60);
         Button.name = UIString.ShowGameModeMenu;
 
     }

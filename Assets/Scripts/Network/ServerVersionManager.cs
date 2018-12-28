@@ -18,12 +18,14 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 37) {
                         ConvertTo0_0_0_37 ();
                     }
+                    HotfixVersion = 1;
                     DevelopVersion = 0;
                 }
-                HotfixVersion = 1;
             }
-            PathVersion = 1;
             if (PathVersion <= 1) {
+                PathVersion = 1;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
                 if (HotfixVersion <= 1) {
                     if (DevelopVersion < 10) {
                         ConvertTo0_1_1_10 ();
@@ -39,6 +41,16 @@ public class ServerVersionManager : VersionManager {
                     }
                 }
             }
+            if (PathVersion <= 2) {
+                PathVersion = 2;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
+                if (HotfixVersion <= 0) {
+                    if (DevelopVersion < 1) {
+                        ConvertTo0_2_0_1 ();
+                    }
+                }
+            }
         }
 
     }
@@ -47,6 +59,9 @@ public class ServerVersionManager : VersionManager {
         ServerData.SetServerKeyData (ServerData.VersionKey, GetVersion ());
         RatingClass.LoadAbilityAbilitySynergy ();
         RatingClass.LoadAbilityAfterAbility ();
+        RatingClass.LoadAbilityAfterToken ();
+        RatingClass.LoadTokenAfterAbility ();
+        RatingClass.LoadTokenAfterToken ();
         RatingClass.LoadAbilityOnRow ();
         RatingClass.LoadTokenOnRow ();
     }
@@ -89,6 +104,14 @@ public class ServerVersionManager : VersionManager {
         HotfixVersion = 1;
         DevelopVersion = 4;
     }*/
+
+    static public void ConvertTo0_2_0_1 () {
+        GameVersion = 0;
+        PathVersion = 2;
+        HotfixVersion = 0;
+        DevelopVersion = 1;
+    }
+
     static public void ConvertTo0_1_1_13 () {
         ServerData.SetGameModeName (1, "Version 0.1.0");
         ServerData.SetGameModeName (2, "Version 0.2.0");
@@ -139,7 +162,7 @@ public class ServerVersionManager : VersionManager {
             ServerData.SetUserKeyData (s2, ServerData.PasswordKey,
                 ServerData.EncryptString (ServerData.UserPassword (s2)));
             HandClass hand = new HandClass ();
-            hand.GenerateRandomHand ();
+            hand.GenerateRandomHand (1);
             ServerData.SavePlayerModeSet (s2, 1, 1, hand.HandToString ());
         }
         DevelopVersion = 37;

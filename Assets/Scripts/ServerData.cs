@@ -214,7 +214,7 @@ public class ServerData : MonoBehaviour {
     }
 
     static public string RatingTokenAfterTokenPath () {
-        return RatingPath () + "TokenTokenSynergyPath.txt";
+        return RatingPath () + "TokenAfterTokenPath.txt";
     }
 
     static public string SaveRatingTokenAfterToken (string [] lines) {
@@ -251,6 +251,45 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+
+    static public string RatingAbilityAfterTokenPath () {
+        return RatingPath () + "AbilityAfterToken.txt";
+    }
+
+    static public string [] GetRatingAbilityAfterToken () {
+        string path = RatingAbilityAfterTokenPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
+    static public string SaveRatingAbilityAfterToken (string [] lines) {
+        string path = RatingAbilityAfterTokenPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+
+    static public string RatingTokenAfterAbilityPath () {
+        return RatingPath () + "TokenAfterAbility.txt";
+    }
+
+    static public string [] GetRatingTokenAfterAbility () {
+        string path = RatingTokenAfterAbilityPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
+    static public string SaveRatingTokenAfterAbility (string [] lines) {
+        string path = RatingTokenAfterAbilityPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
 
     static public string ContentPath () {
         string path = ServerPath () + "Content/";
@@ -856,7 +895,7 @@ public class ServerData : MonoBehaviour {
         }
         File.WriteAllLines (UserDataPath (accountName), Lines.ToArray ());
         HandClass hand = new HandClass ();
-        hand.GenerateRandomHand ();
+        hand.GenerateRandomHand (1);
         ServerData.SavePlayerModeSet (accountName, 1, 1, hand.HandToString ());
     }
 

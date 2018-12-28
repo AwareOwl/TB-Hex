@@ -12,17 +12,24 @@ public class TileClass {
     public bool enabled;
 
     public TokenClass token;
+    public BoardClass board;
 
     public TileClass () {
 
     }
 
-    public TileClass (TileClass tile) {
+    public TileClass (BoardClass board, TileClass tile) {
         this.SetXY (tile.x, tile.y);
         this.enabled = tile.enabled;
         if (tile.token != null) {
             this.AttachToken (new TokenClass (tile.token));
         }
+        this.board = board;
+    }
+
+    public TileClass (BoardClass board, int x, int y) {
+        this.board = board;
+        SetXY (x, y);
     }
 
     public bool IsEmptyTile () {
@@ -31,10 +38,6 @@ public class TileClass {
 
     public bool IsFilledTile () {
         return enabled && token != null;
-    }
-
-    public TileClass (int x, int y) {
-        SetXY (x, y);
     }
 
     void SetXY (int x, int y) {
@@ -75,7 +78,7 @@ public class TileClass {
         if (token == null) {
             token = CreateToken (type, value, owner);
         } else {
-            token.SetState (type, value, owner);
+            token.ChangeState (type, value, owner);
         }
         return token;
     }
@@ -106,6 +109,12 @@ public class TileClass {
             }
         } else {
             token.DestroyToken ();
+        }
+    }
+
+    public void UpdateTempValue () {
+        if (token != null) {
+            token.UpdateTempValue ();
         }
     }
 

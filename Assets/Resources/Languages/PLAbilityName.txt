@@ -1,7 +1,7 @@
 ﻿[0] Brak umiejętności
 [1] Uszkodzenie
 [2] Wsparcie
-[3] Collapse
+[3] Zapaść
 [4] Terytorialne roszczenia
 [5] Odrzucenie
 [6] Osłona
@@ -19,3 +19,6 @@
 [18] Replikacja
 [19] Roszada
 [20] Dekoncentracja
+[21] Ofiara: śmierć
+[22] Propaganda
+[23] Wystawienie celu

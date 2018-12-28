@@ -83,10 +83,10 @@ public class ServerLogic : MonoBehaviour {
                 return null;
             }
         } else {
-            hand1.GenerateRandomHand ();
+            hand1.GenerateRandomHand (gameMode);
         }
         HandClass hand2 = new HandClass ();
-        hand2.GenerateRandomHand ();
+        hand2.GenerateRandomHand (gameMode);
         MatchClass match = MatchMakingClass.CreateGame (gameMode, new PlayerPropertiesClass [] {
             new PlayerPropertiesClass (1, InputController.autoRunAI, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
@@ -140,7 +140,7 @@ public class ServerLogic : MonoBehaviour {
                 if (client.playerNumber == playerProperties.playerNumber) {
                     HandClass hand = playerProperties.hand;
                     client.TargetDownloadCurrentGameHand (client.connectionToClient,
-                        x, hand.HandToString ());
+                        x, hand.ModeHandToString ());
                 }
             }
         }
@@ -242,7 +242,7 @@ public class ServerLogic : MonoBehaviour {
     static public void SavePlayerModeSet (ClientInterface client, string [] lines, int setId) {
         ServerData.SavePlayerModeSet (client.AccountName, client.GameMode, setId, lines);
         HandClass hand = new HandClass ();
-        hand.LoadFromString (lines);
+        hand.LoadFromString (client.GameMode, lines);
         if (hand.IsValid ()) {
             client.TargetShowMessage (client.connectionToClient, Language.SetSavedKey);
         } else {
@@ -270,13 +270,35 @@ public class ServerLogic : MonoBehaviour {
 
 
     static public void CurrentGameMakeAMove (ClientInterface client, int x, int y, int playerNumber, int stackNumber) {
+        if (InputController.debuggingEnabled) {
+            Debug.Log ("Play card command verified on server");
+        }
         client.currentMatch.PlayCard (x, y, playerNumber, stackNumber);
         //VisualMatch.instance.ShowMatchResult (client, winnerName, winCondition, limit);
     }
 
 
-    static public void TargetCurrentGameMakeAMove (ClientInterface client, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
-        client.TargetCurrentGameMakeAMove (client.connectionToClient, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
+    static public void TargetCurrentGameMakeAMove (ClientInterface client, int moveId, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
+        client.TargetCurrentGameMakeAMove (client.connectionToClient, moveId, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
         //VisualMatch.instance.ShowMatchResult (client, winnerName, winCondition, limit);
+    }
+
+    static public void CurrentGameFetchMissingMoves (ClientInterface client, int lastMoveId) {
+        CurrentGameFetchMissingMoves (client, lastMoveId, client.currentMatch.LastMove);
+    }
+
+    static public void CurrentGameFetchMissingMoves (ClientInterface client, int lastMoveId, MoveHistoryClass mHistory) {
+        if (mHistory != null && mHistory.moveId > lastMoveId) {
+            CurrentGameFetchMissingMoves (client, lastMoveId, mHistory.prev);
+            CardClass card = mHistory.usedCard;
+            TargetCurrentGameMakeAMove (client, mHistory.moveId, mHistory.x, mHistory.y, mHistory.playerNumber, mHistory.stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.value);
+        }
+    }
+
+    static public void CurrentGameConcede (ClientInterface client) {
+        if (client.currentMatch != null) {
+            client.currentMatch.Concede (client.playerNumber);
+            client.currentMatch = null;
+        }
     }
 }

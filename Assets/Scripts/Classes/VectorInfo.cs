@@ -16,6 +16,8 @@ public class VectorInfo {
     public int strongerCount = 0;
     public int weakerCount = 0;
 
+    public int sumOfAlliesValues = 0;
+
     public int emptyTileCount = 0;
 
     public int allyCount = 0;
@@ -77,6 +79,7 @@ public class VectorInfo {
 
                     if (token.owner == owner) {
                         allyCount++;
+                        sumOfAlliesValues += token.value;
                     } else {
                         enemyCount++;
                     }
@@ -112,7 +115,7 @@ public class VectorInfo {
         }
     }
 
-    public void CheckTokenAfterTurnTriggers (MatchClass match, TileClass tokenTile, TokenClass token) {
+    public void CheckTokenTriggers (MatchClass match, TileClass tokenTile, TokenClass token) {
         if (token == null) {
             return;
         }
@@ -120,6 +123,7 @@ public class VectorInfo {
         switch (tokenType) {
             case 3:
             case 4:
+            case 5:
                 break;
             default:
                 return;
@@ -135,8 +139,18 @@ public class VectorInfo {
                     Triggered1.Add (StrongestTargets [0]);
                 }
                 break;
-            default:
-                return;
+            case 5:
+                break;
+        }
+        foreach (AbilityVector vector in vectors) {
+            switch (tokenType) {
+                case 5:
+                    if (IsFilledTile (vector.target)) {
+                        Triggered1.Add (vector.target);
+                    }
+                    break;
+
+            }
         }
 
     }
@@ -216,6 +230,13 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
+                case 23:
+                    if (IsFilledTile (vector.target) && vector.target.token.owner != token.owner && match.LastPlayedToken () != null) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
                 case 18:
                     if (IsEmptyTile (vector.target) && emptyTileCount == 1 && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
@@ -236,6 +257,9 @@ public class VectorInfo {
             case 8:
             case 11:
             case 18:
+            case 21:
+            case 22:
+            case 23:
                 if (match.LastPlayedToken () != null) {
                     Triggered2.Add (match.LastPlayedTile ());
                 }

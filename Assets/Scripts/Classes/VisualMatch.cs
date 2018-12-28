@@ -32,7 +32,6 @@ public class VisualMatch : MonoBehaviour {
 
     public void PlayCard (int playerNumber, CardClass card) {
         StartCoroutine (IEPlayCard (playerNumber, card));
-        GlobalTimer += 0.5f;
     }
 
     public IEnumerator IEPlayCard (int playerNumber, CardClass card) {
@@ -169,6 +168,15 @@ public class VisualMatch : MonoBehaviour {
     public IEnumerator IERealEffect (int x, int y, int abilityType, bool triggered) {
         yield return new WaitForSeconds (GlobalTimer);
         VisualEffectInterface.RealEffect (x, y, abilityType, triggered);
+    }
+
+    public void CreateRealTokenEffect (TileClass token, int effectType) {
+        StartCoroutine (IECreateRealTokenEffect (token, effectType));
+    }
+
+    public IEnumerator IECreateRealTokenEffect (TileClass token, int effectType) {
+        yield return new WaitForSeconds (GlobalTimer);
+        VisualEffectInterface.CreateRealTokenEffect (token, effectType);
     }
 
     public void CreateRealTokenVectorEffect (TileClass token, TileClass destination, int effectType) {

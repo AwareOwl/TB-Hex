@@ -295,6 +295,9 @@ public class Language {
             case 3:
                 s += UI [19];
                 break;
+            case 4:
+                s += UI [63];
+                break;
         }
         if (winner != null && winner != "") {
             s += " " + UI [16].Replace ("%s", winner);
