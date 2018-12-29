@@ -14,7 +14,7 @@ public class VisualEffectInterface : MonoBehaviour {
     static public void SetRotateTo (GameObject anchor, GameObject source, GameObject destination) {
         Vector3 delta = destination.transform.position - source.transform.position;
         float rot = - Mathf.Atan2 (delta.z, delta.x) * 180f / Mathf.PI;
-        anchor.GetComponent<VisualEffectScript> ().SetRotateTo (new Vector3 (-90, 0, rot));
+        anchor.GetComponent<VisualEffectScript> ().SetRotateTo (new Vector3 (-90, rot, 0));
     }
 
     static public void DelayedRealEffect (int x, int y, int abilityType, bool triggered) {

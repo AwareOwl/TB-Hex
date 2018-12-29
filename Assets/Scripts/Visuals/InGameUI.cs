@@ -72,8 +72,15 @@ public class InGameUI : GOUI {
         RefreshHovers ();
     }
 
+    float fetchMissingPacketsTimer = -2;
+
 
     public void Update () {
+        fetchMissingPacketsTimer += Time.deltaTime;
+        if (fetchMissingPacketsTimer >= 0) {
+            fetchMissingPacketsTimer -= 2;
+            ClientLogic.MyInterface.CmdCurrentGameFetchMissingMoves (PlayedMatch.lastMoveId);
+        }
         for (int x = 1; x <= 4; x++) {
             if (Input.GetKeyDown (x.ToString ())) {
                 SelectStack (x - 1);

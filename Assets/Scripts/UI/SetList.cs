@@ -9,15 +9,15 @@ public class SetList : GOUI {
 
     static int SelectedId;
 
-    static SetRowClass [] setRow;
+    static RowClass [] setRow;
 
     static string [] setName;
     static int [] setId;
     
 	// Use this for initialization
 	void Start () {
-        CreateSetList ();
         CurrentGUI = this;
+        CreateSetList ();
         ClientLogic.MyInterface.CmdDownloadSetList ();
 	}
 
@@ -76,9 +76,10 @@ public class SetList : GOUI {
         Collider = CreateSprite ("UI/Transparent", 720, 540, 9, 10000, 10000, false);
         Collider.transform.SetParent (Background.transform);
 
-        setRow = new SetRowClass [5];
+        setRow = new RowClass [5];
         for (int x = 0; x < 5; x++) {
-            setRow [x] = new SetRowClass (x);
+            setRow [x] = CurrentGUI.gameObject.AddComponent<RowClass> ();
+            setRow [x].Init (x, RowClass.SetList);
         }
 
 

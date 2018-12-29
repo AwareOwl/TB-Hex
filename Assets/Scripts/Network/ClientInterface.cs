@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.2.0.1");
+            CmdCompareServerVersion ("0.2.0.11");
         }
     }
 
@@ -242,6 +242,11 @@ public class ClientInterface : NetworkBehaviour {
     [Command]
     public void CmdSetStartingSetName (string startingSetName) {
         AccountVersionManager.SetStartingSetNameToAllSets (AccountName, startingSetName);
+    }
+
+    [Command]
+    public void CmdCreateNewGameMode () {
+        ServerLogic.CreateNewGameMode (this);
     }
 
 

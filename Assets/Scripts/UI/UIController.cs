@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler {
 
+
     public int id;
     public int number;
     public int x;
@@ -17,6 +18,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public GameObject Text;
     public GameObject HoverObject;
 
+    public PageUI pageUI;
     public CardClass card;
     public TileClass tile;
     public int abilityType = -1;
@@ -209,6 +211,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
 
     public void OnClickAction () {
+        if (pageUI != null) {
+            pageUI.SelectPage (number);
+        }
         switch (name) {
             case "SelectPL":
                 Language.SetLanguage (Language.Polish);
@@ -354,6 +359,19 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ShowGameModeMenu:
                 GameModeMenu.ShowGameModeMenu ();
                 break;
+            case UIString.GameModeMenuOfficialGameModes:
+                GameModeMenu.SelectGroup (0);
+                break;
+            case UIString.GameModeMenuPublicGameModes:
+                GameModeMenu.SelectGroup (1);
+                break;
+            case UIString.GameModeMenuYourGameModes:
+                GameModeMenu.SelectGroup (2);
+                break;
+            case UIString.CreateNewGameMode:
+                ClientLogic.MyInterface.CmdCreateNewGameMode ();
+                break;
+
 
             case UIString.GameModeMenuApply:
                 GameModeMenu.ApplyGameMode ();

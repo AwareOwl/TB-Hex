@@ -102,12 +102,17 @@ public class GOUI : MonoBehaviour {
 		GameObject Clone = CreateSprite ();
 		SetSprite (Clone, assetName, onMouseOver);
 		return Clone;
-	}
-
+    }
     static public GameObject CreateSpriteWithText (
         string assetName, string text, int px, int py, int layer, int sx, int sy) {
+        return CreateSpriteWithText (assetName, text, px, py, layer, sx, sy, 0.03f);
+    }
+
+
+    static public GameObject CreateSpriteWithText (
+        string assetName, string text, int px, int py, int layer, int sx, int sy, float st) {
         GameObject sprite = CreateSprite (assetName, px, py, layer, sx, sy, true);
-        GameObject textObject = CreateText (text, px, py, layer + 1, 0.03f);
+        GameObject textObject = CreateText (text, px, py, layer + 1, st);
         AddTextToGameObject (sprite, textObject);
         textObject.transform.SetParent (sprite.transform);
         textObject.name = "Text";

@@ -49,6 +49,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 1) {
                         ConvertTo0_2_0_1 ();
                     }
+                    if (DevelopVersion < 11) {
+                        ConvertTo0_2_0_11 ();
+                    }
                 }
             }
         }
@@ -104,6 +107,28 @@ public class ServerVersionManager : VersionManager {
         HotfixVersion = 1;
         DevelopVersion = 4;
     }*/
+
+    static public void ConvertTo0_2_0_11 () {
+        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
+        ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
+        ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
+        ServerData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
+        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
+        ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
+        ServerData.SetGameModeIsOfficial (1, true);
+        ServerData.SetGameModeIsOfficial (2, true);
+        ServerData.SetCardPool (3, GetResource ("ExportFolder/v0.3/CardPools/CardPool"));
+        ServerData.SetGameModeName (3, "Version 0.3.0");
+        for (int y = 1; y <= 5; y++) {
+            ServerData.SetGameModeBoard (3, y);
+        }
+        ServerData.SetGameModeIsOfficial (3, true);
+        GameVersion = 0;
+        PathVersion = 2;
+        HotfixVersion = 0;
+        DevelopVersion = 11;
+    }
 
     static public void ConvertTo0_2_0_1 () {
         GameVersion = 0;

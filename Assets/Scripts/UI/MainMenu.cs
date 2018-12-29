@@ -38,8 +38,8 @@ public class MainMenu : GOUI {
         Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.SelectCardSetTooltip, 720, 600, 11, 330, 90);
         Button.name = UIString.ShowSetList;
 
-        CreateSprite ("UI/Panel_Window_01_Sliced", 1200, 960, 10, 420, 180, false);
-        Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.GameVersion, 1200, 960, 11, 300, 60);
+        CreateSprite ("UI/Panel_Window_01_Sliced", 1200, 960, 10, 360, 180, false);
+        Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.GameVersion, 1200, 960, 11, 240, 60, 0.025f);
         Button.name = UIString.ShowGameModeMenu;
 
     }

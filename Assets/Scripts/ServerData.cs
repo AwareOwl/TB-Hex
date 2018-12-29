@@ -15,6 +15,7 @@ public class ServerData : MonoBehaviour {
     static public string UserNameKey = "UserName";
     static public string BoardNameKey = "BoardName";
     static public string GameModeNameKey = "GameModeName";
+    static public string GameModeOfficialKey = "GameModeOfficialKey";
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
     static public string SetNameKey = "SetName";
     static public string SetIconNumberKey = "SetIconNumber";
@@ -361,6 +362,7 @@ public class ServerData : MonoBehaviour {
     static public void CreateNewGameMode (string userName) {
         int id = IncrementGameModeNextId ();
         SetGameModeName (id, "New game mode");
+        AddGameModeOwner (id, userName);
     }
 
     static public string GameModeOwnerPath (int id) {
@@ -388,6 +390,19 @@ public class ServerData : MonoBehaviour {
         string path = GameModeContentPath (gameModeId);
         SetKeyData (KeyDataPath (path), GameModeNameKey, name);
         return name;
+    }
+
+    static public bool GetGameModeIsOfficial (int gameModeId) {
+        string path = GameModeContentPath (gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GameModeOfficialKey);
+        return Convert.ToBoolean (s);
+    }
+
+    static public string SetGameModeIsOfficial (int gameModeId, bool isOfficial) {
+        string path = GameModeContentPath (gameModeId);
+        string isOfficialString = isOfficial.ToString ();
+        SetKeyData (KeyDataPath (path), GameModeOfficialKey, isOfficialString);
+        return isOfficialString;
     }
 
     static public string GameModeBoardsPath (int gameModeId) {

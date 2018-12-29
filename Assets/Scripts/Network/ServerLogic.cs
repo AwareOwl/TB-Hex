@@ -210,21 +210,37 @@ public class ServerLogic : MonoBehaviour {
         List<string> publicNames = new List<string> ();
         List<string> yourNames = new List<string> ();
 
-        
-
         foreach (string s in list) {
             int id = int.Parse (s);
-            officialIds.Add (id);
+            string [] owners = ServerData.GetGameModeOwners (id);
+            if (ServerData.GetGameModeIsOfficial (id)) {
+                officialIds.Add (id);
+            }
+            foreach (string owner in owners) {
+                if (client.AccountName == owner) {
+                    yourIds.Add (id);
+                }
+            }
         }
         officialIds.Sort ((a, b) => (b.CompareTo (a)));
+        yourIds.Sort ((a, b) => (b.CompareTo (a)));
 
         foreach (int id in officialIds) {
             officialNames.Add (ServerData.GetGameModeName (id));
         }
 
+        foreach (int id in yourIds) {
+            yourNames.Add (ServerData.GetGameModeName (id));
+        }
+
 
         client.TargetDownloadGameModeLists (client.connectionToClient, client.GameMode,
-            officialNames.ToArray (), null, null, officialIds.ToArray (), null, null);
+            officialNames.ToArray (), null, yourNames.ToArray(), officialIds.ToArray (), null, yourIds.ToArray());
+    }
+
+    static public void CreateNewGameMode (ClientInterface client) {
+        ServerData.CreateNewGameMode (client.AccountName);
+        DownloadGameModeLists (client);
     }
 
     static public void CreateNewSet (ClientInterface client, string name) {
@@ -301,4 +317,5 @@ public class ServerLogic : MonoBehaviour {
             client.currentMatch = null;
         }
     }
+
 }

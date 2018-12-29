@@ -37,7 +37,7 @@ public class UIString {
     public const string ShowGameModeMenu = "ShowGameModeMenu";
     public const string GameModeMenuOfficialGameModes = "GameModeMenuOfficialGameModes";
     public const string GameModeMenuPublicGameModes = "GameModeMenuPublicGameModes";
-    public const string GameModeMenuYourGameModes = "GameModeMenuPublicGameModes";
+    public const string GameModeMenuYourGameModes = "GameModeMenuYourGameModes";
 
     public const string GameModeMenuApply = "GameModeMenuApply";
 
@@ -46,6 +46,12 @@ public class UIString {
     public const string ShowSetEditor = "ShowSetEditor";
     public const string MainMenuStartGameVsAI = "MainMenuStartGameVsAI";
     public const string MainMenuStartQuickMatch = "MainMenuStartQuickMatch";
+
+
+    public const string ShowGameModeEditor = "ShowGameModeEditor";
+    public const string DeleteGameMode = "DeleteGameMode";
+    public const string CreateNewGameMode = "CreateNewGameMode";
+    public const string GameModeListPageButton = "GameModeListPageButton";
 
     public const string ShowInGameMenu = "InGameMenu";
     public const string DestroySubMenu = "DestroySubMenu";

@@ -100,7 +100,11 @@ public class VectorInfo {
     }
 
     public bool IsEnemy (TileClass tile, int playerNumber) {
-        return IsFilledTile (tile) && tile.token.owner != playerNumber;
+        return IsFilledTile (tile) && tile.token.owner != playerNumber && tile.token.owner != 0;
+    }
+
+    public bool IsAlly (TileClass tile, int playerNumber) {
+        return IsFilledTile (tile) && tile.token.owner == playerNumber && tile.token.owner != 0;
     }
 
     public bool IsEmptyTile (TileClass tile) {
@@ -224,14 +228,21 @@ public class VectorInfo {
                     }
                     break;
                 case 15:
-                    if (IsFilledTile (vector.target) && vector.target.token.owner == token.owner) {
+                    if (IsFilledTile (vector.target) && IsAlly (vector.target, token.owner)) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 21:
+                    if (IsFilledTile (vector.target) && IsAlly (vector.target, token.owner) && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
                 case 23:
-                    if (IsFilledTile (vector.target) && vector.target.token.owner != token.owner && match.LastPlayedToken () != null) {
+                    if (IsFilledTile (vector.target) && IsEnemy (vector.target, token.owner) && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
@@ -245,7 +256,7 @@ public class VectorInfo {
                     }
                     break;
                 case 19:
-                    if (IsFilledTile (vector.target) && vector.target.token.owner == token.owner && allyCount == 1) {
+                    if (IsFilledTile (vector.target) && IsAlly (vector.target, token.owner) && allyCount == 1) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);

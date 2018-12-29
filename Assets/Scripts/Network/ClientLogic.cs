@@ -10,7 +10,7 @@ public class ClientLogic : MonoBehaviour {
         MyInterface.AccountName = accountName;
         MyInterface.UserName = userName;
 
-        InputController.autoRunAI = true;
+        InputController.autoRunAI = false;
 
         if (!InputController.autoRunAI) {
             //BoardEditorMenu.ShowBoardEditorMenu ();
@@ -18,7 +18,7 @@ public class ClientLogic : MonoBehaviour {
             //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
             //SetEditor.ShowSetEditorMenu ();
 
-            //MainMenu.ShowMainMenu ();
+            MainMenu.ShowMainMenu ();
         } else {
             //ServerLogic.JoinGameAgainstAI (ClientLogic.MyInterface).RunAI ();
             MainMenu.ShowMainMenu ();

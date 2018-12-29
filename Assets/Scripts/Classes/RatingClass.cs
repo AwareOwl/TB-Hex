@@ -85,7 +85,7 @@ public class RatingClass {
         }
         int winnerNumber = match.winner.properties.playerNumber;
         winner [winnerNumber] ++;
-        winnerScore [match.winner.score]++;
+        winnerScore [Mathf.Max (0, match.winner.score)]++;
         for (int x = 1; x <= match.numberOfPlayers; x++) {
             List<CardClass> usedCards = new List<CardClass> ();
             PlayerClass player = match.Player [x];
@@ -154,7 +154,7 @@ public class RatingClass {
                 multiTargetDanger [AI.multiTargetDanger] += 0.001f;
                 surroundDanger [AI.surroundDanger] += 0.001f;
             } else {
-                loserScore [player.score]++;
+                loserScore [Mathf.Max (0, player.score)]++;
             }
 
         }

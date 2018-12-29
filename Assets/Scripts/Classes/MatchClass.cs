@@ -487,6 +487,9 @@ public class MatchClass {
                 case 19:
                     SwapToken (tile, target);
                     break;
+                case 21:
+                    SetDestroy (target);
+                    break;
                 case 23:
                     ModifyTempValue (target, 1);
                     ModifyTempValue (info.Triggered2[0], -1);

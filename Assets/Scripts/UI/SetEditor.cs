@@ -18,7 +18,8 @@ public class SetEditor : GOUI {
     static GameObject [,] CollectionCollider;
     static GameObject [,] SetCollider;
 
-    static GameObject [] PageButton;
+    static public GameObject pageUIObject;
+    static public PageUI pageUI;
 
     static public int SelectedCollectionX = -1;
     static public int SelectedCollectionY;
@@ -71,7 +72,7 @@ public class SetEditor : GOUI {
 
     static public void LoadPage (int page) {
         SelectedCollectionX = -1;
-        Page = page;
+        Page = pageUI.SelectPage (page);
         int MaxX = 4;
         for (int x = 0; x < MaxX; x++) {
             for (int y = 0; y < 5; y++) {
@@ -84,14 +85,6 @@ public class SetEditor : GOUI {
                     LoadCardInCollection (x, y, number);
                 }
             }
-        }
-        foreach (GameObject button in PageButton) {
-            if (button != null) {
-                button.GetComponent<UIController> ().FreeAndUnlcok ();
-            }
-        }
-        if (PageButton [page] != null) {
-            PageButton [page].GetComponent<UIController> ().PressAndLock ();
         }
     }
 
@@ -326,20 +319,11 @@ public class SetEditor : GOUI {
     }
 
     static public void LoadPageUI () {
-        GameObject Clone;
-        GameObject Background;
         int pageLimit = (cardPool.Card.Count - 1) / PageCount + 1;
-        PageButton = new GameObject [pageLimit];
-        if (pageLimit > 1) {
-            for (int x = 0; x < pageLimit; x++) {
-                Background = CreateSprite ("UI/Butt_M_EmptyRect_Sliced", 90 + 60 * x, 990, 11, 60, 60, true);
-                Background.GetComponent<UIController> ().number = x;
-                Background.name = "SetEditorPageButton";
-                Clone = CreateText ((x + 1).ToString (), 90 + 60 * x, 990, 12, 0.03f);
-                AddTextToGameObject (Background, Clone);
-                PageButton [x] = Background;
-            }
-        }
+        pageLimit = 4;
+        pageUIObject = CurrentGUI.gameObject;
+        pageUI = pageUIObject.AddComponent<PageUI> ();
+        pageUI.Init (8, pageLimit, new Vector2Int (90, 990), UIString.SetEditorPageButton);
     }
         
 }
