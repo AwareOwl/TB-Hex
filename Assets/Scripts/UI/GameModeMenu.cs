@@ -9,15 +9,20 @@ public class GameModeMenu : GOUI {
 
     static GameObject DropdownObject;
 
+    static public GameObject [] groupButton;
+
     static string [][] names;
     static int [][] ids;
+    static bool [] yourIsLegal;
     static int currentGroup;
 
     static int currentPage;
 
-    static int [] selectedRow;
+    static int selectedId;
 
     static public RowClass [] row;
+
+    static PageUI pageUI;
 
     // Use this for initialization
     void Start () {
@@ -27,13 +32,15 @@ public class GameModeMenu : GOUI {
     }
 
     static public void ApplyGameMode () {
-        ClientLogic.MyInterface.CmdChangeGameMode (ids [currentGroup] [selectedRow [currentGroup]]);
+        ClientLogic.MyInterface.CmdChangeGameMode (selectedId);
         MainMenu.ShowMainMenu ();
     }
 
     static public void UpdateLists (int selectedGameMode,
         string [] officialNames, string [] publicNames, string [] yourNames,
-        int [] officialIds, int [] publicIds, int [] yourIds) {
+        int [] officialIds, int [] publicIds, int [] yourIds, bool [] yourIsLegal) {
+
+        selectedId = selectedGameMode;
 
         names = new string [3] [];
         ids = new int [3] [];
@@ -44,23 +51,32 @@ public class GameModeMenu : GOUI {
         ids [0] = officialIds;
         ids [1] = publicIds;
         ids [2] = yourIds;
+        GameModeMenu.yourIsLegal = yourIsLegal;
+        SelectGroup (currentGroup);
         ShowPage ();
-        /*
-        List<Dropdown.OptionData> options = new List<Dropdown.OptionData> ();
-        for (int x = 0; x < count; x++) {
-            Dropdown.OptionData option = new Dropdown.OptionData (officialNames [x]);
-            options.Add (option);
-            if (ids [0][x] == selectedGameMode) {
-                selectedIndex = x;
-            }
-        }
-        DropdownComponent.options = options;
-        DropdownComponent.value = selectedIndex;*/
     }
 
     static public void SelectGroup (int number) {
         currentGroup = number;
+        for (int x = 0; x < groupButton.Length; x++) {
+            groupButton [x].GetComponent<UIController> ().FreeAndUnlcok ();
+        }
+        groupButton [number].GetComponent<UIController> ().PressAndLock ();
+        CreatePageButtons ();
         ShowPage ();
+    }
+
+    static public void CreatePageButtons () {
+        int count = ids [currentGroup].Length;
+        if (currentGroup == 2) {
+            count++;
+        }
+        int pageLimit = (count - 1) / 5 + 1;
+        GameObject pageUIObject = new GameObject ();
+        if (pageUI == null) {
+            pageUI = pageUIObject.AddComponent<PageUI> ();
+        }
+        pageUI.Init (9, pageLimit, new Vector2Int (480, 780), UIString.GameModeListPageButton);
     }
 
     static public void SelectPage (int number) {
@@ -68,12 +84,30 @@ public class GameModeMenu : GOUI {
         ShowPage ();
     }
 
+    static public void ClickOnGameMode (int row) {
+        selectedId = row;
+        ShowPage ();
+    }
+
+    static public void ShowGameModeEditor (int row) {
+        ClickOnGameMode (row);
+
+    }
+
     static public void ShowPage () {
         for (int x = 0; x < 5; x++) {
             int number = currentPage * 5 + x;
             int count = ids [currentGroup].Length;
+            row [x].FreeRow ();
             if (number < count) {
-                row [x].SetState (names [currentGroup] [number], ids [currentGroup] [number], 0, true);
+                bool legal = true;
+                if (currentGroup == 2) {
+                    legal = yourIsLegal [number];
+                }
+                row [x].SetState (names [currentGroup] [number], ids [currentGroup] [number], 0, legal);
+                if (ids [currentGroup] [number] == selectedId) {
+                    row [x].SelectRow ();
+                }
             } else if (number == count) {
                 row [x].SetState (1);
             } else {
@@ -86,6 +120,7 @@ public class GameModeMenu : GOUI {
                 row [x].SetState (3);
             }
         }
+        pageUI.SelectPage (currentPage);
     }
 
     static public void ShowGameModeMenu () {
@@ -109,7 +144,8 @@ public class GameModeMenu : GOUI {
         Clone.name = UIString.ShowMainMenu;
         
         int maxX = 3;
-        for (int x = 0; x < 3; x++) {
+        groupButton = new GameObject [maxX];
+        for (int x = 0; x < maxX; x++) {
             string text = "";
             switch (x) {
                 case 0:
@@ -127,7 +163,6 @@ public class GameModeMenu : GOUI {
             switch (x) {
                 case 0:
                     Button.name = UIString.GameModeMenuOfficialGameModes;
-                    Button.GetComponent<UIController> ().PressAndLock ();
                     break;
                 case 1:
                     Button.name = UIString.GameModeMenuPublicGameModes;
@@ -136,15 +171,13 @@ public class GameModeMenu : GOUI {
                     Button.name = UIString.GameModeMenuYourGameModes;
                     break;
             }
+            groupButton [x] = Button;
         }
+        //SelectGroup (0);
         row = new RowClass [5];
         for (int x = 0; x < 5; x++) {
             row [x] = CurrentGUI.gameObject.AddComponent <RowClass>();
             row [x].Init (x, RowClass.GameModeList);
         }
-
-        GameObject pageUIObject = new GameObject ();
-        PageUI pageUI = pageUIObject.AddComponent<PageUI> ();
-        pageUI.Init (9, 13, new Vector2Int (480, 780), UIString.GameModeListPageButton);
     }
 }

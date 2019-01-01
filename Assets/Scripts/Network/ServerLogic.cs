@@ -63,6 +63,10 @@ public class ServerLogic : MonoBehaviour {
     }
 
     static public void ChangeGameMode (ClientInterface client, int gameMode) {
+        if (!ServerData.GetIsGameModeLegal (gameMode)) {
+            client.TargetShowMessage (client.connectionToClient, Language.GameVersionDoesNotMeetRequirementsKey);
+            return;
+        }
         client.GameMode = gameMode;
         ServerData.SetUserSelectedGameMode (client.AccountName, gameMode);
     }
@@ -71,6 +75,10 @@ public class ServerLogic : MonoBehaviour {
         HandClass hand1 = new HandClass ();
         string accountName = client.AccountName;
         int gameMode = client.GameMode;
+        if (!ServerData.GetIsGameModeLegal (gameMode)) {
+            client.TargetShowMessage (client.connectionToClient, Language.GameVersionDoesNotMeetRequirementsKey);
+            return null;
+        }
         if (!InputController.autoRunAI) {
             int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
             if (!ServerData.GetPlayerModeSelectedSetExists (accountName, gameMode)) {
@@ -109,6 +117,12 @@ public class ServerLogic : MonoBehaviour {
             return;
         }
         MatchMakingClass.JoinQuickQueue (client);
+        client.TargetShowQuickMatchQueue (client.connectionToClient);
+    }
+
+    static public void LeaveQuickMatchQueue (ClientInterface client) {
+        MatchMakingClass.LeaveQuickQueue (client);
+        client.TargetShowMainMenu (client.connectionToClient);
     }
 
     static public void StartMatch (MatchClass match) {
@@ -168,8 +182,13 @@ public class ServerLogic : MonoBehaviour {
     }
 
 
-    static public void DownloadCardPoolToEditor (ClientInterface client) {
-        client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (client.GameMode));
+    static public void DownloadCardPoolToSetEditor (ClientInterface client) {
+        client.TargetDownloadCardPoolToSetEditor (client.connectionToClient, ServerData.GetCardPool (client.GameMode));
+    }
+
+
+    static public void DownloadCardPoolToCardPoolEditor (ClientInterface client, int gameModeId) {
+        client.TargetDownloadCardPoolToEditor (client.connectionToClient, gameModeId, ServerData.GetCardPool (gameModeId));
     }
 
 
@@ -209,38 +228,137 @@ public class ServerLogic : MonoBehaviour {
         List<string> officialNames = new List<string> ();
         List<string> publicNames = new List<string> ();
         List<string> yourNames = new List<string> ();
+        List<bool> yourIsLegal = new List<bool> ();
 
         foreach (string s in list) {
             int id = int.Parse (s);
             string [] owners = ServerData.GetGameModeOwners (id);
             if (ServerData.GetGameModeIsOfficial (id)) {
                 officialIds.Add (id);
+            } else {
+                if (ServerData.GetIsGameModeLegal (id) && !ServerData.GetGameModeDeleted (id)) {
+                    publicIds.Add (id);
+                }
             }
             foreach (string owner in owners) {
-                if (client.AccountName == owner) {
+                if (client.AccountName == owner && !ServerData.GetGameModeDeleted (id)) {
                     yourIds.Add (id);
+                    if (ServerData.GetIsGameModeLegal (id)) {
+                        yourIsLegal.Add (true);
+                    } else {
+                        yourIsLegal.Add (false);
+                    }
                 }
             }
         }
         officialIds.Sort ((a, b) => (b.CompareTo (a)));
-        yourIds.Sort ((a, b) => (b.CompareTo (a)));
+        publicIds.Sort ((a, b) => (b.CompareTo (a)));
+        yourIds.Sort ((a, b) => (a.CompareTo (b)));
 
         foreach (int id in officialIds) {
             officialNames.Add (ServerData.GetGameModeName (id));
         }
-
+        foreach (int id in yourIds) {
+            publicNames.Add (ServerData.GetGameModeName (id));
+        }
         foreach (int id in yourIds) {
             yourNames.Add (ServerData.GetGameModeName (id));
         }
 
 
         client.TargetDownloadGameModeLists (client.connectionToClient, client.GameMode,
-            officialNames.ToArray (), null, yourNames.ToArray(), officialIds.ToArray (), null, yourIds.ToArray());
+            officialNames.ToArray (), publicNames.ToArray (), yourNames.ToArray(), officialIds.ToArray (), publicIds.ToArray (), yourIds.ToArray(), yourIsLegal.ToArray());
     }
 
-    static public void CreateNewGameMode (ClientInterface client) {
+    static public void CreateNewGameMode (ClientInterface client, string name) {
+        int id = ServerData.GetGameModeNextId ();
         ServerData.CreateNewGameMode (client.AccountName);
+        ServerData.SetGameModeName (id, name);
         DownloadGameModeLists (client);
+    }
+
+    static public void CreateNewBoard (ClientInterface client, int gameModeId, string name) {
+        BoardClass board = new BoardClass ();
+        board.CreateNewBoard ();
+        ServerData.SaveNewBoard (gameModeId, client.AccountName, name, board.BoardToString ());
+        DownloadGameModeToEditor (client, gameModeId);
+    }
+
+    static public void DeleteGameMode (ClientInterface client, int gameModeId) {
+        ServerData.SetGameModeDeleted (gameModeId, true);
+        DownloadGameModeLists (client);
+    }
+
+    static public void DeleteBoard (ClientInterface client, int gameModeId, int boardId) {
+        DeleteBoard (client, boardId);
+        DownloadGameModeToEditor (client, gameModeId);
+    }
+
+    static public void DeleteBoard (ClientInterface client, int boardId) {
+        if (!ServerData.IsBoardOwner (boardId, client.AccountName)) {
+            return;
+        }
+        ServerData.SetBoardDeleted (boardId, true);
+        int [] ids = ServerData.GetAllBoardGameModes (boardId);
+        foreach (int id in ids) {
+            ServerData.RemoveGameModeBoard (id, boardId);
+            ServerData.CheckIfGameModeIsLegal (id);
+        }
+    }
+
+    static public void DownloadGameModeToEditor (ClientInterface client, int gameModeId) {
+        string [] owners = ServerData.GetGameModeOwners (gameModeId);
+        string accountName = client.AccountName;
+        bool isClientOwner = false;
+        foreach (string s in owners) {
+            if (accountName == s) {
+                isClientOwner = true;
+                break;
+            }
+        }
+        if (!isClientOwner) {
+            return;
+        }
+        int [] ids = ServerData.GetAllGameModeBoards (gameModeId);
+        int count = ids.Length;
+        string [] names = new string [count];
+        bool [] isLegal = new bool [count];
+        for (int x = 0; x < count; x++) {
+            names [x] = ServerData.GetBoardName (ids [x]);
+            isLegal [x] = ServerData.GetIsBoardLegal (ids [x]);
+        }
+        string gameModeName = ServerData.GetGameModeName (gameModeId);
+        client.TargetDownloadGameModeToEditor (client.connectionToClient, gameModeId, gameModeName, names, ids, isLegal);
+    }
+
+    static public void DownloadBoardToEditor (ClientInterface client, int boardId) {
+        string boardName = ServerData.GetBoardName (boardId);
+        string [] board = ServerData.GetBoard (boardId);
+        client.TargetDownloadBoardToEditor (client.connectionToClient, boardId, boardName, board);
+    }
+
+    static public void SaveBoard (ClientInterface client, int boardId, string [] board) {
+        if (!ServerData.IsBoardOwner (boardId, client.AccountName)) {
+            return;
+        }
+        ServerData.SetBoard (boardId, board);
+        if (ServerData.GetIsBoardLegal (boardId)) {
+            client.TargetShowMessage (client.connectionToClient, Language.BoardHasBeenSavedKey);
+        } else {
+            client.TargetShowMessage (client.connectionToClient, Language.BoardHasBeenSavedButIllegalKey);
+        }
+    }
+
+    static public void SaveCardPool (ClientInterface client, int gameModeId, string [] cardPool) {
+        if (!ServerData.IsGameModeOwner (gameModeId, client.AccountName)) {
+            return;
+        }
+        ServerData.SetCardPool (gameModeId, cardPool);
+        if (ServerData.GetIsCardPoolLegal (gameModeId)) {
+            client.TargetShowMessage (client.connectionToClient, Language.CardPoolSavedKey);
+        } else {
+            client.TargetShowMessage (client.connectionToClient, Language.CardPoolSavedButIllegalKey);
+        }
     }
 
     static public void CreateNewSet (ClientInterface client, string name) {
@@ -272,6 +390,22 @@ public class ServerLogic : MonoBehaviour {
         int gameMode = client.GameMode;
         ServerData.SetPlayerModeSetName (accountName, gameMode, setId, setName);
         ServerData.SetPlayerModeSetIconNumber (accountName, gameMode, setId, iconNumber);
+    }
+
+    static public void SaveGameModeProperties (ClientInterface client, int gameModeId, string gameModeName, int iconNumber) {
+        string accountName = client.AccountName;
+        if (!ServerData.IsGameModeOwner (gameModeId, accountName)){
+            return;
+        }
+        ServerData.SetGameModeName (gameModeId, gameModeName);
+    }
+
+    static public void SaveBoardProperties (ClientInterface client, int boardId, string boardName, int iconNumber) {
+        string accountName = client.AccountName;
+        if (!ServerData.IsBoardOwner (boardId, accountName)){
+            return;
+        }
+        ServerData.SetBoardName (boardId, boardName);
     }
 
 

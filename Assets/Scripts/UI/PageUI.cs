@@ -22,7 +22,16 @@ public class PageUI : GOUI {
 		
 	}
 
+    public void DestroyButtons () {
+        if (ButtonBackground != null) {
+            foreach (GameObject bg in ButtonBackground) {
+                DestroyImmediate (bg);
+            }
+        }
+    }
+
     public void Init (int numberOfButtons, int pageLimit, Vector2Int startingPosition, string name) {
+        DestroyButtons ();
         numberOfButtons = Mathf.Min (numberOfButtons, pageLimit);
         this.numberOfButtons = numberOfButtons;
         this.pageLimit = pageLimit;
@@ -31,7 +40,8 @@ public class PageUI : GOUI {
         ButtonText = new TextMesh [numberOfButtons];
         if (pageLimit > 1) {
             for (int x = 0; x < numberOfButtons; x++) {
-                Clone = CreateSpriteWithText ("UI/Butt_M_EmptyRect_Sliced", (x + 1).ToString (), startingPosition.x + 60 * x, startingPosition.y, 11, 60, 60);
+                int pageNumber = ButtonNumberToPageNumber (x) + 1;
+                Clone = CreateSpriteWithText ("UI/Butt_M_EmptyRect_Sliced", pageNumber.ToString (), startingPosition.x + 60 * x, startingPosition.y, 11, 60, 60);
                 UIController UIC = Clone.GetComponent<UIController> ();
                 UIC.number = x;
                 UIC.pageUI = this;
@@ -69,7 +79,9 @@ public class PageUI : GOUI {
             int number = ButtonNumberToPageNumber (x);
             ButtonText [x].text = (number + 1).ToString ();
             if (number == page && button != null) {
-                button.GetComponent<UIController> ().PressAndLock ();
+                UIController UIC = button.GetComponent<UIController> ();
+                UIC.number = number;
+                UIC.PressAndLock ();
             }
         }
         for (int x = 0; x < numberOfButtons; x++) {

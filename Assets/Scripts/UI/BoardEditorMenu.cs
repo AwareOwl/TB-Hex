@@ -10,19 +10,26 @@ public class BoardEditorMenu : GOUI {
 
     static public GameObject BackgroundObject;
 
-    static int currentId = 6;
+    static int currentId = -1;
+
+    static string boardName;
 
     static public int TileType;
     static public int Owner;
     static public int Value;
     static public int TokenType;
 
-    static int [] NumberOfButtons = new int [] { 4, 3, 5, 9, 8 };
+    static int [] NumberOfButtons = new int [] { 4, 3, 3, 9, 8 };
     static int [] Selected = new int [] {0, 1, 1, 1, 0 };
     static GameObject [] [] Buttons;
 
+    override public void DestroyThis () {
+        EditedBoard.DestroyAllVisuals ();
+    }
+
     private void Start () {
         instance = this;
+        EnvironmentScript.CreateNewBackground (1);
         CreateBoardEditorMenu ();
         CameraScript.SetBoardEditorCamera ();
         CurrentGUI = this;
@@ -30,20 +37,22 @@ public class BoardEditorMenu : GOUI {
         EditedBoard = new BoardClass ();
         EditedBoard.EnableVisualisation ();
         EditedBoard.CreateNewBoard ();
-        LoadBoard (6);
+        ClientLogic.MyInterface.CmdDownloadBoard (currentId);
     }
 
-    static public void LoadBoard (int id) {
+    static public void LoadDataToEditor (int id, string boardName, string [] board) {
         currentId = id;
-        EditedBoard.LoadFromFile (id);
+        BoardEditorMenu.boardName = boardName;
+        EditedBoard.LoadFromString (board);
     }
 
     static public void SaveBoard () {
-        EditedBoard.SaveBoard (currentId);
+        ClientLogic.MyInterface.CmdSaveBoard (currentId, EditedBoard.BoardToString ());
     }
 
-    static public void ShowBoardEditorMenu () {
+    static public void ShowBoardEditorMenu (int id) {
         DestroyMenu ();
+        currentId = id;
         CurrentCanvas.AddComponent<BoardEditorMenu> ();
         //EnvironmentScript.CreateRandomBoard ();
     }
@@ -69,7 +78,16 @@ public class BoardEditorMenu : GOUI {
         }
     }
 
+
+    static public void ApplyProperties (string name, int iconNumber) {
+        ClientLogic.MyInterface.CmdSaveBoardProperties (currentId, name, iconNumber);
+    }
+    override public void ShowPropertiesMenu () {
+        PropertiesMenu.ShowSetPropertiesMenu (PropertiesMenu.boardPropertiesKey, boardName, 0);
+    }
+
     static public void CreateBoardEditorMenu () {
+        type = 0;
 
         Buttons = new GameObject [NumberOfButtons.Length] [];
         for (int x = 0; x < NumberOfButtons.Length; x++) {
@@ -168,17 +186,20 @@ public class BoardEditorMenu : GOUI {
                     switch (x) {
                         case 0:
                             BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, true);
-                            BackgroundObject.name = "SaveBoard";
+                            BackgroundObject.name = UIString.SaveBoard;
                             break;
                         case 1:
-                            BackgroundObject = CreateSprite ("UI/Butt_S_SetList", npx, npy, 11, 60, 60, true);
-                            BackgroundObject.name = "LoadBoard";
+                            BackgroundObject = CreateSprite ("UI/Butt_S_Name", npx, npy, 11, 60, 60, true);
+                            BackgroundObject.name = UIString.ChangeBoardName;
+                            //BackgroundObject.name = "LoadBoard";
                             break;
                         case 2:
-                            BackgroundObject = CreateSprite ("UI/Butt_S_Delete", npx, npy, 11, 60, 60, true);
+                            BackgroundObject = CreateSprite ("UI/Butt_S_Help", npx, npy, 11, 60, 60, true);
+                            BackgroundObject.name = UIString.BoardEditorAbout;
                             break;
                         case 3:
                             BackgroundObject = CreateSprite ("UI/Butt_M_Discard", npx, npy, 11, 60, 60, true);
+                            BackgroundObject.name = UIString.GoBackToGameModeEditor;
                             break;
                     }
                 }

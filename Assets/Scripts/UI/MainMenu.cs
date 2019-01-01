@@ -21,7 +21,7 @@ public class MainMenu : GOUI {
     static public void CreateMainMenu () {
         GameObject Clone;
         GameObject Button;
-        int maxX = 1;
+        int maxX = 2;
         CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 105 + maxX * 345, 330, false);
         for (int x = 0; x < maxX; x++) {
             Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.PlayAgainstAI, 720 + (int) (345 * (x - maxX / 2f + 0.5f)), 480, 11, 330, 90);

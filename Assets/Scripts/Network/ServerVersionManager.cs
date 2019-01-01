@@ -52,6 +52,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 11) {
                         ConvertTo0_2_0_11 ();
                     }
+                    if (DevelopVersion < 12) {
+                        ConvertTo0_2_0_12 ();
+                    }
                 }
             }
         }
@@ -107,6 +110,27 @@ public class ServerVersionManager : VersionManager {
         HotfixVersion = 1;
         DevelopVersion = 4;
     }*/
+
+    static public void ConvertTo0_2_0_13 () {
+        string [] users = ServerData.GetAllUsers ();
+        foreach (string user in users) {
+            ServerData.SetUserSelectedGameMode (user, 3);
+        }
+        GameVersion = 0;
+        PathVersion = 2;
+        HotfixVersion = 0;
+        DevelopVersion = 12;
+    }
+
+    static public void ConvertTo0_2_0_12 () {
+        for (int y = 1; y <= 5; y++) {
+            ServerData.SetBoardName (y, "Board " + y.ToString());
+        }
+        GameVersion = 0;
+        PathVersion = 2;
+        HotfixVersion = 0;
+        DevelopVersion = 12;
+    }
 
     static public void ConvertTo0_2_0_11 () {
         ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));

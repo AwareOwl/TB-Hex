@@ -15,6 +15,9 @@ public class ServerData : MonoBehaviour {
     static public string UserNameKey = "UserName";
     static public string BoardNameKey = "BoardName";
     static public string GameModeNameKey = "GameModeName";
+    static public string IsDeletedKey = "IsDeleted";
+    static public string IsLegalKey = "IsLegal";
+    static public string IsCardPoolLegalKey = "IsCardPoolLegalKey";
     static public string GameModeOfficialKey = "GameModeOfficialKey";
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
     static public string SetNameKey = "SetName";
@@ -215,7 +218,7 @@ public class ServerData : MonoBehaviour {
     }
 
     static public string RatingTokenAfterTokenPath () {
-        return RatingPath () + "TokenAfterTokenPath.txt";
+        return RatingPath () + "TokenAfterToken.txt";
     }
 
     static public string SaveRatingTokenAfterToken (string [] lines) {
@@ -325,7 +328,7 @@ public class ServerData : MonoBehaviour {
         SetNextId (path, id);
     }
 
-    static int GetGameModeNextId () {
+    static public int GetGameModeNextId () {
         string path = GetNextIdPath (GameModeContentPath ());
         return GetNextId (path);
     }
@@ -335,7 +338,93 @@ public class ServerData : MonoBehaviour {
         return IncrementNextId (path);
     }
 
-    static int GetNextId (string path) {
+    static public bool CheckIfGameModeIsLegal (int id) {
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromFile (id);
+        if (!GetIsCardPoolLegal (id)) {
+            SetIsGameModeLegal (id, false);
+            return false;
+        }
+        int [] boards = GetAllLegalGameModeBoard (id);
+        if (boards == null || boards.Length == 0) {
+            SetIsGameModeLegal (id, false);
+            return false;
+        }
+        SetIsGameModeLegal (id, true);
+        return true;
+    }
+
+    static public bool GetIsGameModeLegal (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), IsLegalKey);
+        if (s != null && s != "") {
+            return Convert.ToBoolean (s);
+        }
+        return CheckIfGameModeIsLegal (id);
+    }
+
+    static public bool SetIsGameModeLegal (int id, bool legal) {
+        string path = GameModeContentPath (id);
+        SetKeyData (KeyDataPath (path), IsLegalKey, legal.ToString ());
+        return legal;
+    }
+
+    static public bool GetIsBoardLegal (int id) {
+        string path = BoardContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), IsLegalKey);
+        if (s != null && s != "") {
+            return Convert.ToBoolean (s);
+        }
+        return CheckIfBoardIsLegal (id);
+    }
+
+    static public bool CheckIfBoardIsLegal (int id) {
+        BoardClass board = new BoardClass ();
+        board.LoadFromFile (id);
+        foreach (TileClass tile in board.tileList) {
+            if (tile.IsEmptyTile ()) {
+                SetIsBoardLegal (id, true);
+                return true;
+            }
+        }
+        SetIsBoardLegal (id, false);
+        return false;
+    }
+
+    static public bool SetIsBoardLegal (int id, bool legal) {
+        string path = BoardContentPath (id);
+        SetKeyData (KeyDataPath (path), IsLegalKey, legal.ToString ());
+        return legal;
+    }
+
+    static public bool GetIsCardPoolLegal (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), IsCardPoolLegalKey);
+        if (s != null && s != "") {
+            return Convert.ToBoolean (s);
+        }
+        return CheckIfCardPoolIsLegal (id);
+    }
+
+    static public bool CheckIfCardPoolIsLegal (int id) {
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromFile (id);
+        if (cardPool.Card.Count >= 8) {
+            SetIsCardPoolLegal (id, true);
+            return true;
+        }
+        SetIsCardPoolLegal (id, false);
+        return false;
+    }
+
+    static public bool SetIsCardPoolLegal (int id, bool legal) {
+        string path = GameModeContentPath (id);
+        SetKeyData (KeyDataPath (path), IsCardPoolLegalKey, legal.ToString ());
+        return legal;
+    }
+
+
+    static public int GetNextId (string path) {
         if (!File.Exists (path)) {
             SetNextId (path, 1);
         }
@@ -380,6 +469,18 @@ public class ServerData : MonoBehaviour {
         return lines;
     }
 
+    static public string GetBoardName (int boardId) {
+        string path = BoardContentPath (boardId);
+        string s = GetKeyData (KeyDataPath (path), BoardNameKey);
+        return s;
+    }
+
+    static public string SetBoardName (int boardId, string name) {
+        string path = BoardContentPath (boardId);
+        SetKeyData (KeyDataPath (path), BoardNameKey, name);
+        return name;
+    }
+
     static public string GetGameModeName (int gameModeId) {
         string path = GameModeContentPath (gameModeId);
         string s = GetKeyData (KeyDataPath (path), GameModeNameKey);
@@ -390,6 +491,30 @@ public class ServerData : MonoBehaviour {
         string path = GameModeContentPath (gameModeId);
         SetKeyData (KeyDataPath (path), GameModeNameKey, name);
         return name;
+    }
+
+    static public bool GetGameModeDeleted (int gameModeId) {
+        string path = GameModeContentPath (gameModeId);
+        string s = GetKeyData (KeyDataPath (path), IsDeletedKey);
+        return s == true.ToString();
+    }
+
+    static public bool SetGameModeDeleted (int gameModeId, bool deleted) {
+        string path = GameModeContentPath (gameModeId);
+        SetKeyData (KeyDataPath (path), IsDeletedKey, deleted.ToString());
+        return deleted;
+    }
+
+    static public bool GetBoardDeleted (int boardId) {
+        string path = BoardContentPath (boardId);
+        string s = GetKeyData (KeyDataPath (path), IsDeletedKey);
+        return s == true.ToString ();
+    }
+
+    static public bool SetBoardDeleted (int boardId, bool deleted) {
+        string path = BoardContentPath (boardId);
+        SetKeyData (KeyDataPath (path), IsDeletedKey, deleted.ToString ());
+        return deleted;
     }
 
     static public bool GetGameModeIsOfficial (int gameModeId) {
@@ -410,8 +535,39 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public int [] GetAllLegalGameModeBoard (int gameModeId) {
+        int [] ids = GetAllGameModeBoards (gameModeId);
+        List<int> legalIds = new List<int> ();
+        foreach (int id in ids){
+            if (GetIsBoardLegal (id)) {
+                legalIds.Add (id);
+            }
+        }
+        return legalIds.ToArray ();
+    }
+
     static public int [] GetAllGameModeBoards (int gameModeId) {
         string path = GameModeBoardsPath (gameModeId);
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            int count = lines.Length;
+            int [] ids = new int [count];
+            for (int x = 0; x < count; x++) {
+                ids [x] = int.Parse (lines [x]);
+            }
+            return ids;
+        } else {
+            return new int [0];
+        }
+    }
+
+    static public string BoardGameModesPath (int boardId) {
+        string path = BoardContentPath (boardId) + "GameModes.txt";
+        return path;
+    }
+
+    static public int [] GetAllBoardGameModes (int boardId) {
+        string path = BoardGameModesPath (boardId);
         if (File.Exists (path)) {
             string [] lines = File.ReadAllLines (path);
             int count = lines.Length;
@@ -430,14 +586,66 @@ public class ServerData : MonoBehaviour {
         int [] ids = GetAllGameModeBoards (gameModeId);
         int count = ids.Length;
         List<string> idString = new List<string> ();
+        bool alreadyExists = false;
         for (int x = 0; x < count; x++) {
             if (ids [x] == boardId) {
-                return false;
+                alreadyExists = true;
             }
             idString.Add (ids [x].ToString ());
         }
-        idString.Add (boardId.ToString ());
-        File.WriteAllLines (path, idString.ToArray ());
+        if (!alreadyExists) {
+            idString.Add (boardId.ToString ());
+            File.WriteAllLines (path, idString.ToArray ());
+        }
+
+        path = BoardGameModesPath (boardId);
+        ids = GetAllBoardGameModes (boardId);
+        count = ids.Length;
+        idString = new List<string> ();
+        for (int x = 0; x < count; x++) {
+            if (ids [x] == gameModeId) {
+                alreadyExists = true;
+            }
+            idString.Add (ids [x].ToString ());
+        }
+        if (!alreadyExists) {
+            idString.Add (gameModeId.ToString ());
+            File.WriteAllLines (path, idString.ToArray ());
+        }
+        return true;
+    }
+
+    static public bool RemoveGameModeBoard (int gameModeId, int boardId) {
+        string path = GameModeBoardsPath (gameModeId);
+        int [] ids = GetAllGameModeBoards (gameModeId);
+        int count = ids.Length;
+        List<string> idString = new List<string> ();
+        bool exist = false;
+        for (int x = 0; x < count; x++) {
+            if (ids [x] != boardId) {
+                idString.Add (ids [x].ToString ());
+            } else {
+                exist = true;
+            }
+        }
+        if (exist) {
+            File.WriteAllLines (path, idString.ToArray ());
+        }
+        /*
+        path = BoardGameModesPath (boardId);
+        ids = GetAllBoardGameModes (boardId);
+        count = ids.Length;
+        idString = new List<string> ();
+        for (int x = 0; x < count; x++) {
+            if (ids [x] != gameModeId) {
+                idString.Add (ids [x].ToString ());
+            } else {
+                exist = true;
+            }
+        }
+        if (exist) {
+            File.WriteAllLines (path, idString.ToArray ());
+        }*/
         return true;
     }
 
@@ -478,6 +686,8 @@ public class ServerData : MonoBehaviour {
     static public string [] SetCardPool (int gameModeId, string [] lines) {
         string path = CardPoolContentPath (gameModeId);
         File.WriteAllLines (path, lines);
+        CheckIfCardPoolIsLegal (gameModeId);
+        CheckIfGameModeIsLegal (gameModeId);
         return lines;
     }
 
@@ -493,7 +703,7 @@ public class ServerData : MonoBehaviour {
         int id = IncrementBoardNextId ();
         SetBoard (id, board);
         AddBoardOwners (id, userName);
-        SetBoardInfoKey (id, BoardNameKey, boardName);
+        SetBoardName (id, boardName);
         SetGameModeBoard (gameModeId, id);
     }
 
@@ -538,6 +748,11 @@ public class ServerData : MonoBehaviour {
     static public string SetBoard (int id, string [] s) {
         string path = BoardContentPath (id) + "Board.txt";
         File.WriteAllLines (path, s);
+        CheckIfBoardIsLegal (id);
+        int [] gameModeIds = GetAllBoardGameModes (id);
+        foreach (int gameModeId in gameModeIds) {
+            CheckIfGameModeIsLegal (gameModeId);
+        }
         return path;
     }
 
@@ -588,6 +803,26 @@ public class ServerData : MonoBehaviour {
             lines = new string [0];
         }
         return lines;
+    }
+
+    static public bool IsBoardOwner (int id, string accountName) {
+        string [] owners = GetBoardOwners (id);
+        foreach (string s in owners) {
+            if (s == accountName) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static public bool IsGameModeOwner (int id, string accountName) {
+        string [] owners = GetGameModeOwners (id);
+        foreach (string s in owners) {
+            if (s == accountName) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static public string [] SaveBoardOwners (int id, string [] owners) {

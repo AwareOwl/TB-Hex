@@ -8,6 +8,8 @@ public class Tooltip : GOUI {
     static public List<bool> Bolds;
     static public List<Texture> Textures;
     static public List<string> Texts;
+    static public GameObject [] textObjects;
+    static public float [] textHeights;
 
 
     static GameObject background;
@@ -37,11 +39,13 @@ public class Tooltip : GOUI {
 
     void UpdateTransparency () {
         foreach (GameObject obj in garbage) {
-            SpriteRenderer sRenderer = obj.GetComponent<SpriteRenderer> ();
-            if (sRenderer != null) {
-                Color col = sRenderer.color;
-                sRenderer.color = new Color (col.r, col.g, col.b, timer / timerScale);
-            }
+            if (obj != null) {
+                SpriteRenderer sRenderer = obj.GetComponent<SpriteRenderer> ();
+                if (sRenderer != null) {
+                    Color col = sRenderer.color;
+                    sRenderer.color = new Color (col.r, col.g, col.b, timer / timerScale);
+                }
+            } 
         }
     }
 
@@ -148,7 +152,11 @@ public class Tooltip : GOUI {
         height = 30;
         width = 30;
 
-        for (int x = Texts.Count - 1; x >= 0; x--) {
+        int count = Texts.Count;
+        textObjects = new GameObject [count];
+        textHeights = new float [count];
+
+        for (int x = count - 1; x >= 0; x--) {
             string text = Texts [x];
             GameObject textObject = CreateUIText (text, (int) anchor.x, (int) anchor.y);
             Text textC = textObject.GetComponent<Text> ();
@@ -161,7 +169,8 @@ public class Tooltip : GOUI {
             float thisWidth = Mathf.Min (textC.preferredWidth, 400);
             height += thisHeight;
             width = Mathf.Max (width, thisWidth + 30);
-            SetAnchoredPosition (textObject, (int) anchor.x, (int) (anchor.y - height + thisHeight / 2));
+            textObjects [x] = textObject;
+            textHeights [x] = height - thisHeight / 2;
             garbage.Add (textObject);
         }
 
@@ -170,8 +179,14 @@ public class Tooltip : GOUI {
             FinalizeSideTooltip (transform);
             return;
         }
+        
+        float posX2 = Mathf.Clamp (anchor.x, width / 2, 1440 - width / 2);
 
-        SetInPixPosition (background, (int) (anchor.x), (int) (anchor.y - 15 - height / 2), 30, false);
+        for (int x = Texts.Count - 1; x >= 0; x--) {
+            SetAnchoredPosition (textObjects [x], (int) posX2, (int) (anchor.y - textHeights [x]));
+        }
+
+        SetInPixPosition (background, (int) (posX2), (int) (anchor.y - 15 - height / 2), 30, false);
         SetInPixPosition (pointer, (int) (anchor.x), (int) (anchor.y - 15 - anchor.y % 2), 31, false);
         SetInPixScale (background, (int) width, (int) height, false);
         SetInPixScale (pointer, 30, 30, false);

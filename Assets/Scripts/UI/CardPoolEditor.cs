@@ -16,15 +16,18 @@ public class CardPoolEditor : GOUI {
     static public int TokenType;
 
 
-    static int maxX = 5;
+    static int maxX = 8;
     static int maxY = 4;
 
     static int page;
 
-    static int [] NumberOfButtons = new int [] { 4, 8, 6, 2, 13 };
+    static int [] NumberOfButtons = new int [] { 3, 8, 6, 2, 13 };
     static int [] Selected = new int [] { 0, 1, 0, 0, 1 };
     static GameObject [] [] Buttons;
 
+    static int currentId;
+
+    static PageUI pageUI;
 
     static GameObject EmptyCardSlot;
     static VisualCard [] CardSlot;
@@ -36,22 +39,30 @@ public class CardPoolEditor : GOUI {
         CreateCardPoolEditorMenu ();
         CurrentGUI = this;
 
-
-        EditedCardPool = new CardPoolClass ();
-        EditedCardPool.LoadFromFile (ClientLogic.MyInterface.GameMode);
-
-        CreateSampleCards ();
+        ClientLogic.MyInterface.CmdDownloadCardPoolToEditor (currentId);
         //EditedCardPool.EnableVisualisation ();
         //EditedCardPool.LoadFromFile (1);
+    }
+
+    static public void LoadDataToEditor (int gameModeId, string [] cardPool) {
+        EditedCardPool = new CardPoolClass ();
+        EditedCardPool.LoadFromString (cardPool);
+
+        CreateSampleCards ();
     }
 
     private void Update () {
         for (int x = 1; x <= 9; x++) {
             if (Input.GetKeyDown (x.ToString ())) {
-                page = Mathf.Min (x - 1, EditedCardPool.Card.Count / CardCountOnPage ());
-                RefreshPage ();
+                SelectPage (x - 1);
             }
         }
+    }
+
+    static public void SelectPage (int pageNumber) {
+        page = Mathf.Min (pageNumber, EditedCardPool.Card.Count / CardCountOnPage ());
+        RefreshPage ();
+        pageUI.SelectPage (page);
     }
 
     static public int CardCountOnPage () {
@@ -73,21 +84,25 @@ public class CardPoolEditor : GOUI {
 
 
     static public void CreateSampleCards () {
-        CardSlot = new VisualCard [maxX * maxY];
+        CardSlot = new VisualCard [CardCountOnPage ()];
         EmptyCardSlot = CreateEmptySlot ();
         //SetEmptySlot (0);
         RefreshPage ();
     }
 
     static public void RefreshPage () {
-        for (int x = 0; x < CardCountOnPage (); x++) {
+        SetEmptySlot (1000);
+        int count = CardCountOnPage ();
+        for (int x = 0; x < count; x++) {
             UpdateCard (x);
         }
+        int pageLimit = EditedCardPool.Card.Count / count + 1;
+        pageUI.Init (17, pageLimit, new Vector2Int (390, 770), UIString.CardPoolEditorPageButton);
     }
 
 
-    static public void SaveCardPool (int GameMode) {
-        ServerData.SetCardPool (GameMode, EditedCardPool.ToString ().ToArray ());
+    static public void SaveCardPool () {
+        ClientLogic.MyInterface.CmdSaveCardPool (currentId, EditedCardPool.CardPoolToString ());
     }
 
     static void CreateCard (int number) {
@@ -95,7 +110,8 @@ public class CardPoolEditor : GOUI {
         int y = number / maxX;
         VisualCard card = new VisualCard ();
         card.Anchor.transform.SetParent (GOUI.CurrentCanvas.transform);
-        card.Anchor.transform.localPosition = new Vector3 (-1.7f + x * 1.3f, 3.1f - 1.4f * y, 5);
+        card.Anchor.transform.localScale = Vector3.one * 0.14f;
+        SetInPixPosition (card.Anchor, 450 + 120 * x, 145 + 156 * y, 12);
         card.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
         card.Background.name = UIString.CardPoolEditorCard;
         card.Background.GetComponent<UIController> ().number = number;
@@ -108,7 +124,11 @@ public class CardPoolEditor : GOUI {
             if (CardSlot [number] == null) {
                 CreateCard (number);
             }
-            CardSlot [number].SetState (EditedCardPool.Card [number + page * CardCountOnPage ()]);
+            Debug.Log (number);
+            Debug.Log (CardSlot.Length);
+            Debug.Log (EditedCardPool.Card.Count);
+            Debug.Log (cardNumber);
+            CardSlot [number].SetState (EditedCardPool.Card [cardNumber]);
         } else {
             if (CardSlot [number] != null) {
                 CardSlot [number].DestroyVisual ();
@@ -123,9 +143,11 @@ public class CardPoolEditor : GOUI {
     static GameObject CreateEmptySlot () {
         GameObject Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
         Clone.transform.SetParent (GOUI.CurrentCanvas.transform);
+        Clone.transform.localScale = Vector3.one * 0.15f;
         Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
         Clone.GetComponent<Renderer> ().material.shader = Shader.Find ("Sprites/Default");
-        Clone.GetComponent<Renderer> ().material.mainTexture = Resources.Load (VisualCard.GetIconPath (2)) as Texture2D;
+        Clone.GetComponent<Renderer> ().material.color = new Color (0.3f, 0.3f, 0.3f);
+        Clone.GetComponent<Renderer> ().material.mainTexture = Resources.Load ("Textures/Other/LittlePlus") as Texture2D;
         Clone.name = UIString.CardPoolEditorCard;
         Clone.AddComponent<UIController> ();
         return Clone;
@@ -134,7 +156,7 @@ public class CardPoolEditor : GOUI {
     static void SetEmptySlot (int number) {
         int x = number % maxX;
         int y = number / maxX;
-        EmptyCardSlot.transform.localPosition = new Vector3 (-1.7f + x * 1.3f, 2.9f - 1.4f * y, 5);
+        SetInPixPosition (EmptyCardSlot, 450 + 120 * x, 160 + 156 * y, 12);
         EmptyCardSlot.GetComponent<UIController> ().number = number;
     }
 
@@ -143,12 +165,22 @@ public class CardPoolEditor : GOUI {
         CurrentCanvas.AddComponent<CardPoolEditor> ();
     }
 
+    static public void ShowCardPoolEditorMenu (int id) {
+        currentId = id;
+        ShowCardPoolEditorMenu ();
+    }
+
     static public void CreateCardPoolEditorMenu () {
+
+        DestroyImmediate (ExitButton);
 
         Buttons = new GameObject [NumberOfButtons.Length] [];
         for (int x = 0; x < NumberOfButtons.Length; x++) {
             Buttons [x] = new GameObject [NumberOfButtons [x]];
         }
+
+        GameObject Clone =CreateSprite ("UI/Panel_Window_01_Sliced", 870, 425, 10, 1110, 840, false);
+        GameObject.DestroyImmediate (Clone.GetComponent<Collider> ());
 
         int sx = 345;
         int sy = 150;
@@ -161,6 +193,7 @@ public class CardPoolEditor : GOUI {
 
         int dy = 50;
 
+        type = 0;
 
         AddButtons (px, py, maxX, maxY);
 
@@ -194,7 +227,21 @@ public class CardPoolEditor : GOUI {
             SelectButton (x, Selected [x]);
         }
 
+        CreateCardSlots ();
 
+
+        pageUI = new PageUI ();
+
+    }
+
+    static public void CreateCardSlots () {
+        GameObject Clone;
+        for (int y = 0; y < maxY; y++) {
+            for (int x = 0; x < maxX; x++) {
+                Clone = CreateSprite ("UI/Panel_Slot_01_CollectionCard", 450 + 120 * x, 150 + 156 * y, 11, 120, 150, false);
+                GameObject.DestroyImmediate (Clone.GetComponent<Collider> ());
+            }
+        }
     }
 
     static public void SelectButton (int type, int number) {
@@ -219,6 +266,7 @@ public class CardPoolEditor : GOUI {
         int dy = 70;
 
         BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", px, py, 10, sx, sy, false);
+
         switch (type) {
 
             case 0:
@@ -249,26 +297,24 @@ public class CardPoolEditor : GOUI {
                 if (type == 0) {
                     switch (x) {
                         case 0:
-                            BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, false);
+                            BackgroundObject = CreateSprite ("UI/Butt_M_Apply", npx, npy, 11, 60, 60, true);
                             BackgroundObject.name = UIString.CardPoolEditorSaveCardPool;
                             break;
                         case 1:
-                            BackgroundObject = CreateSprite ("UI/Butt_S_SetList", npx, npy, 11, 60, 60, false);
-                            BackgroundObject.name = UIString.CardPoolEditorLoadCardPool;
+                            BackgroundObject = CreateSprite ("UI/Butt_S_Help", npx, npy, 11, 60, 60, true);
+                            BackgroundObject.name = UIString.CardPoolEditorAbout;
                             break;
                         case 2:
-                            BackgroundObject = CreateSprite ("UI/Butt_S_Delete", npx, npy, 11, 60, 60, false);
-                            break;
-                        case 3:
-                            BackgroundObject = CreateSprite ("UI/Butt_M_Discard", npx, npy, 11, 60, 60, false);
+                            BackgroundObject = CreateSprite ("UI/Butt_M_Discard", npx, npy, 11, 60, 60, true);
+                            BackgroundObject.name = UIString.GoBackToGameModeEditor;
                             break;
                     }
                 }
                 if (type > 0) {
                     if (type == 3) {
-                        BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx + (x * 2 + 1) * 30, npy + (y * 2 + 1) * 30, 11, 120, 120, false);
+                        BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx + (x * 2 + 1) * 30, npy + (y * 2 + 1) * 30, 11, 120, 120, true);
                     } else {
-                        BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx, npy, 11, 60, 60, false);
+                        BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx, npy, 11, 60, 60, true);
                     }
                     switch (type) {
                         case 1:

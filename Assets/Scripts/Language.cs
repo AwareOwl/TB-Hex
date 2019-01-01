@@ -88,9 +88,37 @@ public class Language {
     static public string YourGameVersions;
     static public string ListOfGameVersions;
     static public string GameVersion;
+    static public string EditThisGameVersion;
+    static public string DeleteThisGameVersion;
+    static public string AddNewGameVersion;
+    static public string NewGameVersion;
+    static public string GoBackToGameVersionSelection;
+    static public string EnterNewGameVersionName;
+
+    static public string GameModeEditorDescription;
+
+    static public string AvailableBoards;
+    static public string Tools;
+    static public string EditThisBoard;
+    static public string AddNewBoard;
+    static public string DeleteThisBoard;
+    static public string NewBoard;
+    static public string ChangeGameVersionName;
+    static public string EditAvailableCardPool;
+    static public string SaveThisBoard;
+    static public string ChangeBoardName;
+    static public string GoBackToGameVersionEditor;
+    static public string BoardEditorDescription;
+    static public string EnterNewBoardName;
+
+    static public string OpenCardPoolEditor;
+    static public string CardPoolEditorDescription;
 
     static public string Apply;
     static public string Close;
+
+    static public string WaitingInQueue;
+    static public string Cancel;
 
     static public string AIOpponent;
 
@@ -104,6 +132,11 @@ public class Language {
     static public int InvalidGameVersion;
     static public int SetSavedKey;
     static public int NoSetSelectedKey;
+    static public int BoardHasBeenSavedKey;
+    static public int BoardHasBeenSavedButIllegalKey;
+    static public int CardPoolSavedKey;
+    static public int CardPoolSavedButIllegalKey;
+    static public int GameVersionDoesNotMeetRequirementsKey;
 
     static public void SetLanguage (int languageKey) {
         PlayerPrefs.SetInt (SelectedLanguageKey, languageKey);
@@ -191,6 +224,35 @@ public class Language {
         QuickOnlineGame = UI [60];
         GameVersion = UI [61];
         BeginGameAgainstAI = UI [62];
+        EditThisGameVersion = UI [64];
+        DeleteThisGameVersion = UI [65];
+        AddNewGameVersion = UI [66];
+        NewGameVersion = UI [67];
+        AvailableBoards = UI [68];
+        Tools = UI [69];
+        EditThisBoard = UI [70];
+        AddNewBoard = UI [71];
+        DeleteThisBoard = UI [72];
+        NewBoard = UI [73];
+        GameModeEditorDescription = UI [74];
+        ChangeGameVersionName = UI [75];
+        EditAvailableCardPool = UI [76];
+        BoardHasBeenSavedKey = 77;
+        BoardHasBeenSavedButIllegalKey = 78;
+        SaveThisBoard = UI [79];
+        ChangeBoardName = UI [80];
+        GoBackToGameVersionEditor = UI [81];
+        BoardEditorDescription = UI [82];
+        GoBackToGameVersionSelection = UI [83];
+        OpenCardPoolEditor = UI [84];
+        CardPoolSavedKey = 85;
+        CardPoolSavedButIllegalKey = 86;
+        EnterNewGameVersionName = UI [87];
+        EnterNewBoardName = UI [88];
+        GameVersionDoesNotMeetRequirementsKey = 89;
+        CardPoolEditorDescription = UI [90];
+        WaitingInQueue = UI [91];
+        Cancel = UI [92];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

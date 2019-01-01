@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.2.0.11");
+            CmdCompareServerVersion ("0.2.0.12");
         }
     }
 
@@ -65,6 +65,21 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
+    public void TargetShowQuickMatchQueue (NetworkConnection target) {
+        QueueMenu.ShowQueueMenu ();
+    }
+
+    [Command]
+    public void CmdLeaveQuickQueue () {
+        ServerLogic.LeaveQuickMatchQueue (this);
+    }
+
+    [TargetRpc]
+    public void TargetShowMainMenu (NetworkConnection target) {
+        MainMenu.ShowMainMenu ();
+    }
+
+    [TargetRpc]
     public void TargetInvalidSet (NetworkConnection target) {
         GOUI.ShowMessage (Language.GetInvalidSetMessage ());
     }
@@ -90,13 +105,23 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdDownloadCardPoolToEditor () {
-        ServerLogic.DownloadCardPoolToEditor (this);
+    public void CmdDownloadCardPoolToSetEditor () {
+        ServerLogic.DownloadCardPoolToSetEditor (this);
     }
 
     [TargetRpc]
-    public void TargetDownloadCardPoolToEditor (NetworkConnection target, string [] lines) {
+    public void TargetDownloadCardPoolToSetEditor (NetworkConnection target, string [] lines) {
         SetEditor.LoadCardPool (lines);
+    }
+
+    [Command]
+    public void CmdDownloadCardPoolToEditor (int gameModeId) {
+        ServerLogic.DownloadCardPoolToCardPoolEditor (this, gameModeId);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadCardPoolToEditor (NetworkConnection target, int gameModeId, string [] lines) {
+        CardPoolEditor.LoadDataToEditor (gameModeId, lines);
     }
 
 
@@ -139,6 +164,16 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdSaveGameModeProperties (int setId, string setName, int iconNumber) {
+        ServerLogic.SaveGameModeProperties (this, setId, setName, iconNumber);
+    }
+
+    [Command]
+    public void CmdSaveBoardProperties (int setId, string setName, int iconNumber) {
+        ServerLogic.SaveBoardProperties (this, setId, setName, iconNumber);
+    }
+
+    [Command]
     public void CmdDownloadSetToEditor (int setId) {
         ServerLogic.DownloadSetToEditor (this, setId);
     }
@@ -156,8 +191,8 @@ public class ClientInterface : NetworkBehaviour {
     [TargetRpc]
     public void TargetDownloadGameModeLists (NetworkConnection target, int gameMode,
         string [] officialNames, string [] publicNames, string [] yourNames, 
-        int [] officialIds, int [] publicIds, int [] yourIds) {
-        GameModeMenu.UpdateLists (gameMode, officialNames, publicNames, yourNames, officialIds, publicIds, yourIds);
+        int [] officialIds, int [] publicIds, int [] yourIds, bool [] yourIsLegal) {
+        GameModeMenu.UpdateLists (gameMode, officialNames, publicNames, yourNames, officialIds, publicIds, yourIds, yourIsLegal);
     }
 
     [TargetRpc]
@@ -245,8 +280,53 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdCreateNewGameMode () {
-        ServerLogic.CreateNewGameMode (this);
+    public void CmdCreateNewGameMode (string name) {
+        ServerLogic.CreateNewGameMode (this, name);
+    }
+
+    [Command]
+    public void CmdDeleteGameMode (int id) {
+        ServerLogic.DeleteGameMode (this, id);
+    }
+
+    [Command]
+    public void CmdDownloadGameModeToEditor (int gameModeId) {
+        ServerLogic.DownloadGameModeToEditor (this, gameModeId);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadGameModeToEditor (NetworkConnection target, int gameModeId, string gameModeName, string [] boardNames, int [] boardIds, bool [] boardIsLegal) {
+        GameModeEditor.LoadDataToEditor (gameModeId, gameModeName, boardNames, boardIds, boardIsLegal);
+    }
+
+    [Command]
+    public void CmdCreateNewBoard (int gameModeId, string name) {
+        ServerLogic.CreateNewBoard (this, gameModeId, name);
+    }
+
+    [Command]
+    public void CmdDeleteBoard (int gameModeId, int boardId) {
+        ServerLogic.DeleteBoard (this, gameModeId, boardId);
+    }
+
+    [Command]
+    public void CmdDownloadBoard (int boardId) {
+        ServerLogic.DownloadBoardToEditor (this, boardId);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadBoardToEditor (NetworkConnection target, int boardId, string boardName, string [] board) {
+        BoardEditorMenu.LoadDataToEditor (boardId, boardName, board);
+    }
+
+    [Command]
+    public void CmdSaveBoard (int boardId, string [] board) {
+        ServerLogic.SaveBoard (this, boardId, board);
+    }
+
+    [Command]
+    public void CmdSaveCardPool (int gameModeId, string [] cardpool) {
+        ServerLogic.SaveCardPool (this, gameModeId, cardpool);
     }
 
 

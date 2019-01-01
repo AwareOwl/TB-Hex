@@ -43,7 +43,7 @@
 [42] Żaden zestaw kart nie jest wybrany. Musisz wybrać zestaw nim rozpoczniesz mecz.
 [43] Zmień nazwę zestawu lub ikonę.
 [44] Zapisz ustawienia
-[45] Wprowadź nową nazwę zestawu:
+[45] Wprowadź nową nazwę zestawu
 [46] Wybierz nową ikonę:
 [47] Menu główne
 [48] Wyjdź z gry
@@ -62,3 +62,32 @@
 [61] Wersje gry
 [62] Rozpocznij grę przeciwko SI
 [63] Przeciwnicy poddali grę.
+[64] Edytuj tą wersję gry
+[65] Usuń tą wersję gry
+[66] Dodaj nową wersję gry
+[67] Nowa wersja gry
+[68] Dostępne plansze
+[69] Narzędzia
+[70] Edytuj tą planszę
+[71] Dodaj nową planszę
+[72] Usuń tą planszę
+[73] Nowa plansza
+[74] W tym edytorze możesz zarządzać pulą kart i plansz dostępnych w tej wersji gry. Aby inni gracze mogli z niej korzystać, musi ona zawierać co najmniej 8 kart i planszę z co najmniej 1 polem.
+[75] Zmień nazwę tej wersji gry
+[76] Edytuj dostępną pulę kart
+[77] Plansza została zapisana
+[78] Plansza została zapisana, ale nie będzie można na niej grać, ponieważ nie posiada żadnego pustego pola.
+[79] Zapisz tą planszę
+[80] Zmień nazwę tej planszy
+[81] Wróć do edytora wersji gry
+[82] W tym edytorze możesz stworzyć swoją własną planszę. Wybierz wszystkie parametry i kliknij na pole aby je zmodyfikować. Plansza musi mieć co najmniej 1 puste pole aby mogła być użyta.
+[83] Wróć do wyboru wersji gry
+[84] Otwórz edytor puli kart
+[85] Pula kart została zapisana
+[86] Pula kart została zapisana, ale nie będzie można z niej korzystać, ponieważ posiada mniej niż 8 kart.
+[87] Wprowadź nową nazwę wersji gry
+[88] Wprowadź nową nazwę planszy
+[89] Wersja gry w której chcesz zagrać nie spełnia wymogów gry. Wybierz inną wersję gry aby móc grać.
+[90] W tym edytorze możesz stworzyć swoją własną pulę kart. Wybierz wszystkie parametry i kliknij na wybraną pozycję aby ją dodać/zmodyfikować. Pula kart musi mieć co najmniej 8 kart aby była dopuszczona do gry.
+[91] Oczekiwanie na znalezienie pozostałych graczy. Pamiętaj że w twojej sieci LAN muszą być inni gracze, aby kogoś znalazło.
+[92] Anuuluj

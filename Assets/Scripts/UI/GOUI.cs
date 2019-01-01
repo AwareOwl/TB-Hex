@@ -23,8 +23,14 @@ public class GOUI : MonoBehaviour {
             CurrentGUI.DestroyThis ();
             CreateNewCanvas ();
         }
-        foreach (Transform child in UICanvas.transform) {
-            GameObject.Destroy (child.gameObject);
+        Transform trans = UICanvas.transform;
+        int count = trans.childCount;
+        Transform [] t = new Transform [count];
+        for (int x = 0; x < count; x++) {
+            t [x] = trans.GetChild (x);
+        }
+        for (int x = 0; x < count; x++) {
+            GameObject.DestroyImmediate (t [x].gameObject);
         }
     }
 
@@ -37,10 +43,14 @@ public class GOUI : MonoBehaviour {
     virtual public void DestroyThis () {
     }
 
+    virtual public void ShowPropertiesMenu () {
+    }
+
     static public void CreateNewCanvas () {
         if (CurrentCanvas != null) {
             DestroyImmediate (CurrentCanvas);
         }
+        CameraScript.SetStandardCamera ();
         CurrentCanvas = new GameObject ();
         CurrentCanvas.transform.parent = CameraScript.CameraObject.transform;
         CurrentCanvas.transform.localPosition = new Vector3 (0, 0, 0.8655f * globalScale);
@@ -307,7 +317,9 @@ public class GOUI : MonoBehaviour {
         clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
         clone.transform.Find ("Placeholder").GetComponent<Text> ().fontSize = sy / 2;
         clone.transform.Find ("Placeholder").GetComponent<Text> ().text = placeholderText;
-        clone.transform.Find ("Text").GetComponent<Text> ().fontSize = sy / 2;
+        clone.transform.Find ("Placeholder").GetComponent<RectTransform> ().offsetMax = new Vector2 (10, -sy / 4);
+        clone.transform.Find ("Text").GetComponent<Text> ().fontSize = sy /2;
+        clone.transform.Find ("Text").GetComponent<RectTransform> ().offsetMax = new Vector2 (10, - sy / 4);
 
         return clone;
     }
@@ -369,7 +381,7 @@ public class GOUI : MonoBehaviour {
 
         Collider = CreateUIImage ("UI/Transparent", 720, 540, 10000, 10000, false);
         Collider.transform.SetParent (Background.transform);
-
+        
         Button = CreateUIButton ("UI/Butt_M_EmptySquare", 720, 540 + textHeight / 2 + 15, 90, 60, true);
         Button.transform.SetParent (Background.transform);
 
@@ -384,6 +396,14 @@ public class GOUI : MonoBehaviour {
                 });
                 break;
             case "MainMenu":
+                Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    MainMenu.ShowMainMenu ();
+                    DestroyImmediate (Background);
+                });
+                break;
+            case UIString.Cancel:
+                SetInPixScale (Button, 120, 60);
+                Text.GetComponent<Text> ().text = Language.Cancel;
                 Button.GetComponent<Button> ().onClick.AddListener (delegate {
                     MainMenu.ShowMainMenu ();
                     DestroyImmediate (Background);

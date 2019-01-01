@@ -30,6 +30,14 @@ public class CardPoolClass {
         return lines;
     }
 
+    public string [] CardPoolToString () {
+        List<string> lines = new List<string> ();
+        foreach (CardClass card in Card) {
+            lines.Add (card.ToString ());
+        }
+        return lines.ToArray();
+    }
+
     public void LoadFromString (string [] lines) {
         foreach (string line in lines) {
             AddCard ().ConvertFromString (line);

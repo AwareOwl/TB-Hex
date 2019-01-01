@@ -6,8 +6,9 @@ public class RowClass : GOUI {
 
     public const int SetList = 0;
     public const int GameModeList = 1;
+    public const int BoardList = 2;
 
-    int mode;
+    int listMode;
 
     GameObject RowBackground;
     GameObject Icon;
@@ -20,8 +21,8 @@ public class RowClass : GOUI {
 
     public void Init (int x, int mode) {
         GameObject Clone;
+        listMode = mode;
         RowBackground = CreateSprite ("UI/Panel_Slot_01_Sliced", 720, 330 + x * 90, 11, 540, 90, true);
-        RowBackground.name = UIString.SelectSet;
 
         int py = 330 + x * 90;
 
@@ -32,12 +33,18 @@ public class RowClass : GOUI {
         Icon.GetComponent<Collider> ().enabled = false;
 
         Edit = CreateSprite ("UI/Butt_S_Name", 945 - 60, py, 12, 60, 60, true);
-        switch (mode) {
+        switch (listMode) {
             case (SetList):
+                RowBackground.name = UIString.SelectSet;
                 Edit.name = UIString.ShowSetEditor;
                 break;
             case (GameModeList):
+                RowBackground.name = UIString.SelectGameMode;
                 Edit.name = UIString.ShowGameModeEditor;
+                break;
+            case (BoardList):
+                RowBackground.name = UIString.GameModeEditorSelectBoard;
+                Edit.name = UIString.GameModeEditorEditBoard;
                 break;
         }
 
@@ -80,12 +87,15 @@ public class RowClass : GOUI {
                 Option.GetComponent<Renderer> ().enabled = true;
                 Option.GetComponent<Collider> ().enabled = true;
                 SetSprite (Option, "UI/Butt_S_Delete", true);
-                switch (mode) {
+                switch (listMode) {
                     case (SetList):
                         Option.name = UIString.DeleteSet;
                         break;
                     case (GameModeList):
                         Option.name = UIString.DeleteGameMode;
+                        break;
+                    case (BoardList):
+                        Option.name = UIString.GameModeEditorDeleteBoard;
                         break;
                 }
                 break;
@@ -98,12 +108,15 @@ public class RowClass : GOUI {
                 Option.GetComponent<Collider> ().enabled = true;
                 SetSprite (Option, "UI/Butt_S_Add", true);
                 Text.GetComponent<TextMesh> ().text = Language.EmptySlot;
-                switch (mode) {
+                switch (listMode) {
                     case (SetList):
                         Option.name = UIString.CreateNewSet;
                         break;
                     case (GameModeList):
                         Option.name = UIString.CreateNewGameMode;
+                        break;
+                    case (BoardList):
+                        Option.name = UIString.GameModeEditorCreateNewBoard;
                         break;
                 }
                 break;
@@ -121,10 +134,12 @@ public class RowClass : GOUI {
                 break;
 
         }
-        RowBackground.GetComponent<UIController> ().id = -1;
-        Edit.GetComponent<UIController> ().id = -1;
-        Option.GetComponent<UIController> ().id = -1;
-        setId = -1;
+        if (mode != 3) {
+            RowBackground.GetComponent<UIController> ().id = -1;
+            Edit.GetComponent<UIController> ().id = -1;
+            Option.GetComponent<UIController> ().id = -1;
+            setId = -1;
+        }
         RowBackground.GetComponent<SpriteRenderer> ().color = Color.white;
     }
 

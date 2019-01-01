@@ -37,11 +37,11 @@ public class EnvironmentScript : MonoBehaviour {
 
     }
     static public void CreateNewBackground () {
-        DestroyImmediate (Background);
         CreateNewBackground (Random.Range (1, 3));
     }
 
     static public void CreateNewBackground (int theme) {
+        DestroyImmediate (Background);
         Theme = theme;
         switch (theme) {
             case 1:

@@ -169,13 +169,17 @@ public class BoardClass {
     }
 
     public void LoadRandomFromGameMode (int gameModeId) {
-        int [] ids = ServerData.GetAllGameModeBoards (gameModeId);
+        int [] ids = ServerData.GetAllLegalGameModeBoard (gameModeId);
         LoadFromFile (ids [UnityEngine.Random.Range (0, ids.Length)]);
     }
 
     public void LoadFromFile (int id) {
         LoadBoard (ServerData.GetBoard (id), 8, 8);
         boardTemplateId = id;
+    }
+
+    public void LoadFromString (string [] board) {
+        LoadBoard (board, 8, 8);
     }
 
     public void LoadBoard (string [] board, int x, int y) {

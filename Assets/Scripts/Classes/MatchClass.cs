@@ -676,11 +676,7 @@ public class MatchClass {
     }
 
     public void DestroyVisuals () {
-        foreach (TileClass tile in Board.tile) {
-            if (tile.visualTile != null) {
-                tile.DestroyVisual ();
-            }
-        }
+        Board.DestroyAllVisuals ();
         foreach (PlayerClass player in Player) {
             player.DestroyVisuals ();
         }

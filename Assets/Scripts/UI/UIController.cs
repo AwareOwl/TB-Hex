@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler {
 
@@ -181,9 +180,6 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ShowMainMenu:
                 Tooltip.NewTooltip (transform, Language.GoBackToMenu);
                 break;
-            case UIString.SetEditorAbout:
-                Tooltip.NewTooltip (transform, Language.ClickToLearnMore);
-                break;
             case UIString.SetEditorChangeSetProperties:
                 Tooltip.NewTooltip (transform, Language.ChangeSetNameOrIcon);
                 break;
@@ -196,6 +192,52 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.CreateNewSet:
                 Tooltip.NewTooltip (transform, Language.CreateNewSet);
+                break;
+
+            case UIString.ShowGameModeEditor:
+                Tooltip.NewTooltip (transform, Language.EditThisGameVersion);
+                break;
+            case UIString.CreateNewGameMode:
+                Tooltip.NewTooltip (transform, Language.AddNewGameVersion);
+                break;
+            case UIString.DeleteGameMode:
+                Tooltip.NewTooltip (transform, Language.DeleteThisGameVersion);
+                break;
+            case UIString.GoBackToGameModeSelection:
+                Tooltip.NewTooltip (transform, Language.GoBackToGameVersionSelection);
+                break;
+
+            case UIString.GameModeEditorCreateNewBoard:
+                Tooltip.NewTooltip (transform, Language.AddNewBoard);
+                break;
+            case UIString.GameModeEditorDeleteBoard:
+                Tooltip.NewTooltip (transform, Language.DeleteThisBoard);
+                break;
+            case UIString.GameModeEditorEditBoard:
+                Tooltip.NewTooltip (transform, Language.EditThisBoard);
+                break;
+            case UIString.GameModeEditorEditCardPool:
+                Tooltip.NewTooltip (transform, Language.EditAvailableCardPool);
+                break;
+            case UIString.GameModeEditorChangeName:
+                Tooltip.NewTooltip (transform, Language.ChangeGameVersionName);
+                break;
+
+            case UIString.SaveBoard:
+                Tooltip.NewTooltip (transform, Language.SaveThisBoard);
+                break;
+            case UIString.ChangeBoardName:
+                Tooltip.NewTooltip (transform, Language.ChangeBoardName);
+                break;
+            case UIString.GoBackToGameModeEditor:
+                Tooltip.NewTooltip (transform, Language.GoBackToGameVersionEditor);
+                break;
+
+            case UIString.SetEditorAbout:
+            case UIString.GameModeEditorAbout:
+            case UIString.BoardEditorAbout:
+            case UIString.CardPoolEditorAbout:
+                Tooltip.NewTooltip (transform, Language.ClickToLearnMore);
                 break;
 
             case UIString.SaveSelectedSet:
@@ -247,14 +289,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case "CloseMessage":
                 DestroyReferences ();
                 break;
-
-            // BoardEditor
-            case "SaveBoard":
-                BoardEditorMenu.SaveBoard ();
-                break;
+                /*
             case "LoadBoard":
                 BoardEditorMenu.LoadBoard (2);
-                break;
+                break;*/
             case "BoardEditorTileType":
                 BoardEditorMenu.SelectButton (1, number);
                 break;
@@ -284,9 +322,15 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.CardPoolEditorCard:
                 CardPoolEditor.CardAction (number);
                 break;
+            case UIString.CardPoolEditorAbout:
+                GOUI.ShowMessage (Language.CardPoolEditorDescription);
+                break;
+            case UIString.CardPoolEditorPageButton:
+                CardPoolEditor.SelectPage (number);
+                break;
 
             case UIString.CardPoolEditorSaveCardPool:
-                CardPoolEditor.SaveCardPool (ClientLogic.MyInterface.GameMode);
+                CardPoolEditor.SaveCardPool ();
                 break;
 
             // Set editor
@@ -332,13 +376,15 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 SetList.SaveSelection ();
                 break;
             case UIString.SetEditorChangeSetProperties:
-                SetPropertiesMenu.ShowSetPropertiesMenu ();
+            case UIString.GameModeEditorChangeName:
+            case UIString.ChangeBoardName:
+                GOUI.CurrentGUI.ShowPropertiesMenu ();
                 break;
             case UIString.SetEditorApplySetProperties:
-                SetPropertiesMenu.ApplySetProperties ();
+                PropertiesMenu.ApplySetProperties ();
                 break;
             case UIString.SetEditorSelectIcon:
-                SetPropertiesMenu.SelectIcon (x, y, number);
+                PropertiesMenu.SelectIcon (x, y, number);
                 break;
 
             // Main menu
@@ -357,6 +403,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
 
             case UIString.ShowGameModeMenu:
+            case UIString.GoBackToGameModeSelection:
                 GameModeMenu.ShowGameModeMenu ();
                 break;
             case UIString.GameModeMenuOfficialGameModes:
@@ -369,9 +416,54 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 GameModeMenu.SelectGroup (2);
                 break;
             case UIString.CreateNewGameMode:
-                ClientLogic.MyInterface.CmdCreateNewGameMode ();
+                ClientLogic.MyInterface.CmdCreateNewGameMode (Language.NewGameVersion);
+                break;
+            case UIString.DeleteGameMode:
+                ClientLogic.MyInterface.CmdDeleteGameMode (id);
+                break;
+            case UIString.GameModeListPageButton:
+                GameModeMenu.SelectPage (number);
+                break;
+            case UIString.SelectGameMode:
+                GameModeMenu.ClickOnGameMode (id);
+                break;
+            case UIString.ShowGameModeEditor:
+                GameModeEditor.ShowGameModeEditor (id);
+                break;
+            case UIString.GameModeEditorAbout:
+                GOUI.ShowMessage (Language.GameModeEditorDescription);
                 break;
 
+            case UIString.GameModeEditorCreateNewBoard:
+                GameModeEditor.CreateNewBoard ();
+                break;
+            case UIString.GameModeEditorDeleteBoard:
+                GameModeEditor.DeleteBoard (id);
+                break;
+            case UIString.GameModeEditorEditCardPool:
+                GameModeEditor.ShowCardPoolEditor ();
+                break;
+            case UIString.GameModeEditorEditBoard:
+                BoardEditorMenu.ShowBoardEditorMenu (id);
+                break;
+            case UIString.GameModeEditorPageButton:
+                GameModeEditor.ClickOnPageButton (number);
+                break;
+            case UIString.GameModeEditorSelectBoard:
+                GameModeEditor.ClickOnRow (id);
+                break;
+
+
+            // BoardEditor
+            case UIString.SaveBoard:
+                BoardEditorMenu.SaveBoard ();
+                break;
+            case UIString.GoBackToGameModeEditor:
+                GameModeEditor.ShowGameModeEditor ();
+                break;
+            case UIString.BoardEditorAbout:
+                GOUI.ShowMessage (Language.BoardEditorDescription);
+                break;
 
             case UIString.GameModeMenuApply:
                 GameModeMenu.ApplyGameMode ();

@@ -62,3 +62,32 @@
 [61] Game versions
 [62] Begin game against AI
 [63] Opponents conceded.
+[64] Edit this game version
+[65] Delete this game version
+[66] Add new game version
+[67] New game version
+[68] Available boards
+[69] Tools
+[70] Edit this board
+[71] Add new board
+[72] Delete this board
+[73] New board
+[74] In this editor you can manage card and board pool available in this game version. Other players will be able to use it if it contains at least 8 cards and board with at least 1 empty tile.
+[75] Change name of this game version
+[76] Edit available card pool
+[77] Board has been saved
+[78] Board has been saved, but it won't be available for games, because it has no empty tile.
+[79] Save this board
+[80] Change name of this board
+[81] Go back to game version editor
+[82] In this editor you can create your own board. Select all the parameters and click on a tile to modify it. Board needs at least 1 empty tile to be useable.
+[83] Go back to the game version selection
+[84] Open card pool editor
+[85] Card pool has been saved
+[86] Card pool has been saved, but it can't be used, because it contains less than 8 cards.
+[87] Enter new game version name
+[88] Enter new board name
+[89] The game version you have chosen does not meet the game requirements. You need to change game version if you want to play.
+[90] In this editor you can create your own card pool. Chose all the parameters and then click on a slot to create/modify it. Card pool needs to have at least 8 cards to be used.
+[91] Looking for other players. In your LAN network
+[92] Cancel

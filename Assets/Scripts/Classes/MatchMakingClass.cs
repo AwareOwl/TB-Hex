@@ -26,7 +26,6 @@ public class MatchMakingClass {
             }
             if (client.GameMode == pos.client.GameMode) {
                 sameGameMode = pos;
-                break;
             }
         }
         if (sameGameMode != null) {
@@ -39,7 +38,15 @@ public class MatchMakingClass {
         } else {
             quickQueue.Add (new QueuePosition (client));
         }
+    }
 
+    static public void LeaveQuickQueue (ClientInterface client) {
+        foreach (QueuePosition pos in quickQueue) {
+            if (client.AccountName == pos.client.AccountName) {
+                quickQueue.Remove (pos);
+                return;
+            }
+        }
     }
 
 

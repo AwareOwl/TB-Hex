@@ -50,12 +50,12 @@ public class VisualToken {
     }
 
     public void DestroyToken (GameObject anchor) {
-        //if (anchor != null) {
+        if (anchor != null) {
             VisualEffectScript VEScript = anchor.AddComponent<VisualEffectScript> ();
             VEScript.SetScale (new Vector3 [] { new Vector3 (1, 1, 1), new Vector3 (0, 0, 0) });
             VEScript.SetPhaseTimer (0.5f);
             VEScript.destroyOnEnd = true;
-        //}
+        }
         //GameObject.Destroy (anchor);
     }
 
@@ -163,7 +163,7 @@ public class VisualToken {
                 VES = Clone.AddComponent<VisualEffectScript> ();
                 VES.SetColor (AppDefaults.GetBorderColorAccent (type));
                 Clone.transform.parent = Anchor.transform;
-                Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+                Clone.transform.localScale = new Vector3 (0.8f, 0.25f, 0.8f);
                 Clone.transform.localPosition = new Vector3 (0, 0, 0);
                 Clone.transform.localEulerAngles = new Vector3 (0, 135, 0);
                 BorderAccent.Add (Clone);

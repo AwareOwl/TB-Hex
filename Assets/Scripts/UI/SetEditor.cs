@@ -32,7 +32,9 @@ public class SetEditor : GOUI {
     static public string setName;
     static public int iconNumber;
 
-    static public void ApplySetProperties () {
+    static public void ApplySetProperties (string setName, int iconNumber) {
+        SetEditor.setName = setName;
+        SetEditor.iconNumber = iconNumber;
         ClientLogic.MyInterface.CmdSaveSetProperties (setId, setName, iconNumber);
     }
 
@@ -44,7 +46,7 @@ public class SetEditor : GOUI {
         SetCollider = new GameObject [4, 5];
         CreateCardPoolEditorMenu ();
         CurrentGUI = this;
-        ClientLogic.MyInterface.CmdDownloadCardPoolToEditor ();
+        ClientLogic.MyInterface.CmdDownloadCardPoolToSetEditor ();
         ClientLogic.MyInterface.CmdDownloadSetToEditor (setId);
         DestroyImmediate (ExitButton);
     }
@@ -79,6 +81,7 @@ public class SetEditor : GOUI {
                 if (Collection [x, y] != null) {
                     Collection [x, y].DestroyVisual ();
                     Collection [x, y] = null;
+                    CollectionCollider [x, y].GetComponent<Collider> ().enabled = false;
                 }
                 int number = y * MaxX + x + page * PageCount;
                 if (number < cardPool.Card.Count && available [number]) {
@@ -118,6 +121,7 @@ public class SetEditor : GOUI {
         Collection [x, y] = vCard;
         SetInPixPosition (vCard.Anchor, 120 + 120 * x, 220 + 156 * y, 12);
         CollectionCollider [x, y].GetComponent<UIController> ().card = card;
+        CollectionCollider [x, y].GetComponent<Collider> ().enabled = true;
         vCard.Anchor.name = "CardInCollection";
     }
 
@@ -137,6 +141,10 @@ public class SetEditor : GOUI {
         SetEditor.iconNumber = iconNumber;
     }
 
+    override public void ShowPropertiesMenu () {
+        PropertiesMenu.ShowSetPropertiesMenu (PropertiesMenu.setPropertiesKey, setName, iconNumber);
+    }
+
     static public void RemoveCardFromCollection (int number) {
         int MaxX = 4;
         for (int x = 0; x < MaxX; x++) {
@@ -148,6 +156,7 @@ public class SetEditor : GOUI {
                         Collection [x, y] = null;
                     }
                     CollectionCollider [x, y].GetComponent<UIController> ().card = null;
+                    CollectionCollider [x, y].GetComponent<Collider> ().enabled = false;
                 }
             }
         }
@@ -320,7 +329,6 @@ public class SetEditor : GOUI {
 
     static public void LoadPageUI () {
         int pageLimit = (cardPool.Card.Count - 1) / PageCount + 1;
-        pageLimit = 4;
         pageUIObject = CurrentGUI.gameObject;
         pageUI = pageUIObject.AddComponent<PageUI> ();
         pageUI.Init (8, pageLimit, new Vector2Int (90, 990), UIString.SetEditorPageButton);
