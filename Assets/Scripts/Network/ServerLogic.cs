@@ -258,13 +258,12 @@ public class ServerLogic : MonoBehaviour {
         foreach (int id in officialIds) {
             officialNames.Add (ServerData.GetGameModeName (id));
         }
-        foreach (int id in yourIds) {
+        foreach (int id in publicIds) {
             publicNames.Add (ServerData.GetGameModeName (id));
         }
         foreach (int id in yourIds) {
             yourNames.Add (ServerData.GetGameModeName (id));
         }
-
 
         client.TargetDownloadGameModeLists (client.connectionToClient, client.GameMode,
             officialNames.ToArray (), publicNames.ToArray (), yourNames.ToArray(), officialIds.ToArray (), publicIds.ToArray (), yourIds.ToArray(), yourIsLegal.ToArray());

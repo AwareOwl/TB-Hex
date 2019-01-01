@@ -72,11 +72,11 @@ public class Launcher : GOUI {
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
 
-
+        /*
         Clone = CreateSprite ("UI/Butt_M_EmptySquare", true);
         SetInPixScale (Clone, 400, 90);
         SetInPixPosition (Clone, 300, 600, 11);
         Parent = Clone;
-        Clone.name = "StartServer";
+        Clone.name = "StartServer";*/
     }
 }
