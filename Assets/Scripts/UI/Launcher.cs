@@ -9,7 +9,6 @@ public class Launcher : GOUI {
 
         UICanvas = GameObject.Find ("Canvas");
         EnvironmentScript.CreateNewBackground (1);
-        Time.timeScale = 1;
         //Debug.Log (Language.test);
         //EnvironmentScript.CreateRandomBoard ();
         //EnvironmentScript.CreateNormalBoard ();
@@ -72,5 +71,12 @@ public class Launcher : GOUI {
         Clone = CreateText (Language.JoinLocalNetwork, 300, 500, 12, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
+
+
+        Clone = CreateSprite ("UI/Butt_M_EmptySquare", true);
+        SetInPixScale (Clone, 400, 90);
+        SetInPixPosition (Clone, 300, 600, 11);
+        Parent = Clone;
+        Clone.name = "StartServer";
     }
 }

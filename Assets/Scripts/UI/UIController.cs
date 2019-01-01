@@ -270,6 +270,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case "StartClient":
                 MyNetworkManager.StartNewClient ();
                 break;
+            case "StartServer":
+                MyNetworkManager.StartNewServer ();
+                break;
             case "Tile":
                 TileAction ();
                 //transform.parent.GetComponent<VisualEffectScript> ().PushItDown (-1);
