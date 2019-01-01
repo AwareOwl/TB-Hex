@@ -64,6 +64,9 @@ public class MatchClass {
     }
 
     public void Concede (int playerNumber) {
+        if (finished) {
+            return;
+        }
         Player [playerNumber].properties.conceded = true;
         PlayerPropertiesClass winner = null;
         foreach (PlayerClass player in Player) {

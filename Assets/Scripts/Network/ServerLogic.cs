@@ -117,7 +117,6 @@ public class ServerLogic : MonoBehaviour {
             return;
         }
         MatchMakingClass.JoinQuickQueue (client);
-        client.TargetShowQuickMatchQueue (client.connectionToClient);
     }
 
     static public void LeaveQuickMatchQueue (ClientInterface client) {

@@ -37,6 +37,7 @@ public class MatchMakingClass {
             ServerLogic.StartMatch (CreateGame (client.GameMode, properties));
         } else {
             quickQueue.Add (new QueuePosition (client));
+            client.TargetShowQuickMatchQueue (client.connectionToClient);
         }
     }
 
