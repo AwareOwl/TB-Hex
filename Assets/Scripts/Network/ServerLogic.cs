@@ -194,11 +194,7 @@ public class ServerLogic : MonoBehaviour {
     static public void DownloadSetList (ClientInterface client) {
         string accountName = client.AccountName;
         int gameMode = client.GameMode;
-        string [] idsToParse = ServerData.GetAllPlayerModeSets (accountName, gameMode);
-        List<int> ids = new List<int> ();
-        foreach (string s in idsToParse) {
-            ids.Add (int.Parse (s));
-        }
+        List<int> ids = new List<int> (ServerData.GetAllPlayerModeSets (accountName, gameMode));
         ids.Sort ();
         int count = ids.Count;
         int [] intIds = new int [count];

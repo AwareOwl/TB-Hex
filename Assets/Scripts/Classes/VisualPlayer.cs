@@ -19,6 +19,7 @@ public class VisualPlayer {
     GameObject HealthBar;
     GameObject ScoreText;
     GameObject UserNameText;
+    GameObject Highlight;
 
     public VisualPlayer () {
 
@@ -49,6 +50,13 @@ public class VisualPlayer {
         GOUI.SetInPixScale (Clone, avatarSize, avatarSize);
         GOUI.SetInPixPosition (Clone, avatarPosition, 45, 14);
 
+        Clone = GOUI.CreateSprite ("Textures/Other/Selection".ToString ());
+        Clone.GetComponent<SpriteRenderer> ().color = new Color (0, 1, 0);
+        GOUI.SetInPixScale (Clone, avatarSize + 30, avatarSize + 30);
+        GOUI.SetInPixPosition (Clone, avatarPosition, 45, 12);
+        Highlight = Clone;
+        SetPlayerActive (false);
+
         Clone = GOUI.CreateSprite ("UI/White");
         GOUI.SetInPixScale (Clone, barLength, 30);
         GOUI.SetInPixPosition (Clone, barPosition, 25, 11);
@@ -66,6 +74,14 @@ public class VisualPlayer {
         Clone.GetComponent<TextMesh> ().color = Color.black;
         Clone.GetComponent<TextMesh> ().text = player.properties.displayName;
         UserNameText = Clone;
+    }
+
+    public void DelayedSetActivePlayer (bool active) {
+        VisualMatch.instance.SetPlayerActive (this, active);
+    }
+
+    public void SetPlayerActive (bool active) {
+        Highlight.GetComponent<SpriteRenderer> ().enabled = active;
     }
 
     public void UpdateVisuals (MatchClass match) {

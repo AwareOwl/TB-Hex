@@ -142,6 +142,7 @@ public class VisualToken {
                 VES.SetRotateVector (new Vector3 (0, 25, 0));
                 Clone.transform.parent = Anchor.transform;
                 Clone.transform.localScale = new Vector3 (0.8f, 0.25f, 0.8f);
+                Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
                 Clone.transform.localPosition = new Vector3 (0, 0, 0);
                 BorderAccent.Add (Clone);
                 break;

@@ -149,6 +149,16 @@ public class VisualMatch : MonoBehaviour {
         player.SetPlayerHealthBar (score, scoreIncome, scoreLimit);
     }
 
+    public void SetPlayerActive (VisualPlayer player, bool active) {
+        StartCoroutine (IESetPlayerActive (player, active));
+    }
+
+    public IEnumerator IESetPlayerActive (VisualPlayer player, bool active) {
+        yield return new WaitForSeconds (GlobalTimer);
+        player.SetPlayerActive (active);
+    }
+
+
 
 
 

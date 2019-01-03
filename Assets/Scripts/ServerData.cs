@@ -896,12 +896,14 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static public string [] GetAllPlayerModeSets (string owner, int gameModeId) {
+    static public int [] GetAllPlayerModeSets (string owner, int gameModeId) {
         string [] s = Directory.GetDirectories (PlayerModeSetPath (owner, gameModeId));
+        int [] i = new int [s.Length];
         for (int x = 0; x < s.Length; x++) {
             s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+            i [x] = int.Parse (s [x]);
         }
-        return s;
+        return i;
     }
 
     static public string GetPlayerModeSetName (string owner, int gameModeId, int setId) {
@@ -929,12 +931,12 @@ public class ServerData : MonoBehaviour {
     }
 
 
-    static public string [] CreatePlayerModeSet (string owner, int gameModeId, string [] lines, string name) {
+    static public int CreatePlayerModeSet (string owner, int gameModeId, string [] lines, string name) {
         int id = GetPlayerModeSetNextId (owner, gameModeId);
         SavePlayerModeSet (owner, gameModeId, id, lines);
         SetPlayerModeSetName (owner, gameModeId, id, name);
         SetPlayerModeSetIconNumber (owner, gameModeId, id, 1);
-        return lines;
+        return id;
     }
 
     static public void DeletePlayerModeSet (string owner, int gameModeId, int setId) {

@@ -53,6 +53,7 @@ public class InGameUI : GOUI {
         MyPlayerNumber = ClientLogic.MyInterface.playerNumber;
         EnvironmentScript.CreateNewBackground ();
         CreatePlayersUI ();
+        GetPlayer (PlayedMatch.turnOfPlayer).visualPlayer.SetPlayerActive (true);
         PlayedMatch.EnableVisuals ();
         SelectStack (0);
 
@@ -221,13 +222,19 @@ public class InGameUI : GOUI {
             int abilityType = card.abilityType;
             int abilityArea = card.abilityArea;
             int tokenType = card.tokenType;
+            int tokenValue = card.value;
+            int tokenModifier = PlayedMatch.Board.NumberOfTypes [7];
+            tokenValue += tokenModifier;
 
             VisualToken token = new VisualToken ();
+            if (tokenModifier > 0) {
+                token.Text.GetComponent<Renderer> ().material.color = new Color (0, 0.5f, 0);
+            }
             token.AddCreateAnimation ();
-            token.SetState (MyPlayerNumber, tokenType, card.value);
+            token.SetState (MyPlayerNumber, tokenType, tokenValue);
             token.SetParent (GetAnchor (x, y));
             TileClass tokenTile = PlayedMatch.Board.GetTile (x, y);
-            VectorInfo tokenInfo = PlayedMatch.GetTokenVectorInfo (tokenTile, new TokenClass (null, card.tokenType, card.value, MyPlayerNumber));
+            VectorInfo tokenInfo = PlayedMatch.GetTokenVectorInfo (tokenTile, new TokenClass (null, tokenType, tokenValue, MyPlayerNumber));
             switch (tokenType) {
                 case 3:
                 case 4:
@@ -248,7 +255,7 @@ public class InGameUI : GOUI {
                     }
                     break;
             }
-            VectorInfo info = PlayedMatch.GetVectorInfo (x, y, MyPlayerNumber, abilityArea, abilityType, new TokenClass (null, card.tokenType, card.value, MyPlayerNumber));
+            VectorInfo info = PlayedMatch.GetVectorInfo (x, y, MyPlayerNumber, abilityArea, abilityType, new TokenClass (null, tokenType, tokenValue, MyPlayerNumber));
             foreach (AbilityVector vector in info.TriggeredVector) {
                 VisualEffectInterface.CreateEffectPointingAt (
                     GetAnchor (vector.x, vector.y), GetAnchor (vector.pushX, vector.pushY).transform.position, abilityType, true, false);

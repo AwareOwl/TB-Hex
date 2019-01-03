@@ -133,14 +133,18 @@ public class TokenClass {
             visualToken.DelayedMoveToDisabledTile (x, y);
             visualToken = null;
         }
-        DestroyToken ();
+        DestroyToken (x, y);
     }
 
     public void DestroyToken () {
+        DestroyToken (x, y);
+    }
+
+    public void DestroyToken (int x, int y) {
         BoardClass board = tile.board;
         MatchClass match = board.match;
         if (match != null) {
-            match.DestroyToken (this);
+            match.DestroyToken (this, x, y);
             board.NumberOfTypes [type]--;
         }
         tile.token = null;

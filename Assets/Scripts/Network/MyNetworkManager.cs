@@ -16,11 +16,11 @@ public class MyNetworkManager : NetworkManager {
     }
 
     static public void StartNewHost () {
-        singleton.networkAddress = "192.168.1.13";
+        //singleton.networkAddress = "192.168.1.13";
         singleton.StartHost ();
     }
     static public void StartNewClient () {
-        singleton.networkAddress = "192.168.1.13";
+        //singleton.networkAddress = "192.168.1.13";
         singleton.StartClient ();
     }
     static public void StartNewServer () {

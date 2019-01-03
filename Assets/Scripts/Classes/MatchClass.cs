@@ -168,8 +168,20 @@ public class MatchClass {
         UpdateBoard ();
         UpdateVisuals ();
 
-        turnOfPlayer = Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1));
+        SetTurnOfPlayer (Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1)));
         turn++;
+    }
+
+    public void SetTurnOfPlayer (int turnOfPlayer) {
+       this.turnOfPlayer = turnOfPlayer;
+        if (visualMatch != null) {
+            foreach (PlayerClass player in Player) {
+                VisualPlayer vPlayer = player.visualPlayer;
+                if (vPlayer != null) {
+                    vPlayer.DelayedSetActivePlayer (player.properties.playerNumber == turnOfPlayer);
+                }
+            }
+        }
     }
 
     public void UpdateVisuals () {
@@ -230,7 +242,11 @@ public class MatchClass {
         }
         if (real) {
             if (visualMatch != null) {
-                visualMatch.ShowMatchResult (winner.properties.displayName, winCondition, limit);
+                string winnerName = "";
+                if (winner != null) {
+                    winnerName = winner.properties.displayName;
+                }
+                visualMatch.ShowMatchResult (winnerName, winCondition, limit);
             }
             /*for (int x = 1; x <= numberOfPlayers; x++) {
                 ClientInterface client = Player [x].properties.client;
@@ -394,12 +410,13 @@ public class MatchClass {
         return info;
     }
 
-    public void DestroyToken (TokenClass token) {
-        VectorInfo VI = GetTokenVectorInfo (token.tile, token);
+    public void DestroyToken (TokenClass token, int x, int y) {
+        TileClass tile = Board.GetTile (x, y);
+        VectorInfo VI = GetTokenVectorInfo (tile, token);
         switch (token.type) {
             case 5:
                 if (visualMatch != null) {
-                    visualMatch.CreateRealTokenEffect (token.tile, token.type);
+                    visualMatch.CreateRealTokenEffect (tile, token.type);
                 }
                 break;
         }
@@ -407,7 +424,7 @@ public class MatchClass {
             switch (token.type) {
                 case 5:
                     if (visualMatch != null) {
-                        visualMatch.CreateRealTokenVectorEffect (token.tile, target, token.type);
+                        visualMatch.CreateRealTokenVectorEffect (tile, target, token.type);
                     }
                     ModifyTempValue (target, -3);
                     break;
@@ -496,6 +513,12 @@ public class MatchClass {
                 case 23:
                     ModifyTempValue (target, 1);
                     ModifyTempValue (info.Triggered2[0], -1);
+                    break;
+                case 24:
+                    ModifyTempValue (target, -info.allyCount);
+                    break;
+                case 25:
+                    CreateToken (target, 0, 1, playerNumber);
                     break;
             }
         }

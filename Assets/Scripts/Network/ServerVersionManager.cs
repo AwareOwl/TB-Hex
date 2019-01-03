@@ -55,7 +55,15 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 12) {
                         ConvertTo0_2_0_12 ();
                     }
+                    if (DevelopVersion < 13) {
+                        ConvertTo0_2_0_13 ();
+                    }
                 }
+            }
+            if (PathVersion <= 3) {
+                PathVersion = 3;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
             }
         }
 
@@ -115,11 +123,16 @@ public class ServerVersionManager : VersionManager {
         string [] users = ServerData.GetAllUsers ();
         foreach (string user in users) {
             ServerData.SetUserSelectedGameMode (user, 3);
+            int [] ids = ServerData.GetAllPlayerModeSets (user, 2);
+            foreach (int id in ids) {
+                int newId = ServerData.CreatePlayerModeSet (user, 3, ServerData.GetPlayerModeSet (user, 2, id), ServerData.GetPlayerModeSetName (user, 2, id));
+                ServerData.SetPlayerModeSetIconNumber (user, 3, newId, ServerData.GetPlayerModeSetIconNumber (user, 2, id));
+            }
         }
         GameVersion = 0;
         PathVersion = 2;
         HotfixVersion = 0;
-        DevelopVersion = 12;
+        DevelopVersion = 13;
     }
 
     static public void ConvertTo0_2_0_12 () {

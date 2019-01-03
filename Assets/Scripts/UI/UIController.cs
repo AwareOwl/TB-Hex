@@ -242,6 +242,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
             case UIString.SaveSelectedSet:
             case UIString.SetEditorApplySetProperties:
+            case UIString.CardPoolEditorSaveCardPool:
             case UIString.GameModeMenuApply:
                 Tooltip.NewTooltip (transform, Language.Apply);
                 break;

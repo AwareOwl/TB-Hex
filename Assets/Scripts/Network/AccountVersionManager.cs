@@ -45,9 +45,8 @@ public class AccountVersionManager : VersionManager {
         string [] s3 = ServerData.GetAllPlayerModes (accountName);
         foreach (string s4 in s3) {
             int i4 = int.Parse (s4);
-            string [] s5 = ServerData.GetAllPlayerModeSets (accountName, i4);
-            foreach (string s6 in s5) {
-                int i6 = int.Parse (s6);
+            int [] s5 = ServerData.GetAllPlayerModeSets (accountName, i4);
+            foreach (int i6 in s5) {
                 ServerData.SetPlayerModeSetIconNumber (accountName, i4, i6, 1);
                 ServerData.SetPlayerModeSetName (accountName, i4, i6, Language.StartingSet);
             }

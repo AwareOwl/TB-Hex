@@ -42,6 +42,7 @@ public class VisualCard {
         switch (type) {
             case 0:
             case 11:
+            case 22:
                 Area.DisableAbilityArea ();
                 break;
         }

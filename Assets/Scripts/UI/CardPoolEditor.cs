@@ -124,11 +124,9 @@ public class CardPoolEditor : GOUI {
             if (CardSlot [number] == null) {
                 CreateCard (number);
             }
-            Debug.Log (number);
-            Debug.Log (CardSlot.Length);
-            Debug.Log (EditedCardPool.Card.Count);
-            Debug.Log (cardNumber);
-            CardSlot [number].SetState (EditedCardPool.Card [cardNumber]);
+            CardClass card = EditedCardPool.Card [cardNumber];
+            CardSlot [number].SetState (card);
+            CardSlot [number].Background.GetComponent<UIController> ().card = card;
         } else {
             if (CardSlot [number] != null) {
                 CardSlot [number].DestroyVisual ();
@@ -179,7 +177,7 @@ public class CardPoolEditor : GOUI {
             Buttons [x] = new GameObject [NumberOfButtons [x]];
         }
 
-        GameObject Clone =CreateSprite ("UI/Panel_Window_01_Sliced", 870, 425, 10, 1110, 840, false);
+        GameObject Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 870, 425, 10, 1110, 840, false);
         GameObject.DestroyImmediate (Clone.GetComponent<Collider> ());
 
         int sx = 345;
@@ -323,6 +321,7 @@ public class CardPoolEditor : GOUI {
                             AddTextToGameObject (BackgroundObject, Clone);
                             break;
                         case 2:
+                            BackgroundObject.GetComponent<UIController> ().tokenType = number;
                             BackgroundObject.name = UIString.CardPoolEditorTokenType;
                             VT = new VisualToken ();
                             Clone = VT.Anchor;

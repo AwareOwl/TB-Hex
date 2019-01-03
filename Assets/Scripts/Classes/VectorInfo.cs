@@ -79,7 +79,7 @@ public class VectorInfo {
 
                     if (token.owner == owner) {
                         allyCount++;
-                        sumOfAlliesValues += token.value;
+                        sumOfAlliesValues += value;
                     } else {
                         enemyCount++;
                     }
@@ -168,6 +168,7 @@ public class VectorInfo {
                 case 10:
                 case 13:
                 case 20:
+                case 24:
                     if (IsFilledTile (vector.target)) {
                         Triggered1.Add (vector.target);
                     } else {
@@ -262,7 +263,22 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
+                case 25:
+                    if (IsEmptyTile (vector.target) && emptyTileCount <= 4) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
             }
+        }
+        switch (abilityType) {
+            case 22:
+                if (match.LastPlayedToken () != null) {
+                    Triggered1.Add (playTile);
+                }
+                break;
+
         }
         switch (abilityType) {
             case 8:

@@ -244,6 +244,7 @@ public class BoardEditorMenu : GOUI {
                             AddTextToGameObject (BackgroundObject, Clone);
                             break;
                         case 4:
+                            BackgroundObject.GetComponent<UIController> ().tokenType = number;
                             BackgroundObject.name = "BoardEditorTokenType";
                             VT = new VisualToken ();
                             Clone = VT.Anchor;

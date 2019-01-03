@@ -58,7 +58,7 @@
 [57] Publiczne wersje gry
 [58] Własne wersje gry
 [59] Lista wersji gry:
-[60] Szybka gra online
+[60] Szybka gra
 [61] Wersje gry
 [62] Rozpocznij grę przeciwko SI
 [63] Przeciwnicy poddali grę.

@@ -22,3 +22,5 @@
 [21] Ofiara: śmierć
 [22] Propaganda
 [23] Wystawienie celu
+[24] Spopielenie
+[25] Rój

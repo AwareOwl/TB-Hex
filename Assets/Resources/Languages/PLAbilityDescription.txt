@@ -22,3 +22,5 @@
 [21] Niszczy twoje żetony będące celem by zredukować wartość ostatnio zagranego żetonu o sumę ich wartości.
 [22] Zamienia typ ostatnio zagranego żetonu na typ żetonu będącego celem.
 [23] Wrogie żetony będące celem kradną 1 pkt. wartości ostatnio zagranego żetonu.
+[24] Redukuje wartość żetonów będących celem o wartość równą liczbie przyjaznych żetonów będących celem.
+[25] Tworzy do 4 Zwykłych Żetonów na pustych polach będących celem.

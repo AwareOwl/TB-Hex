@@ -7,7 +7,7 @@ public class AppDefaults {
     static public Color Green = new Color (0, 0.95f, 0);
     static public Color Red = Color.red;
 
-    static public int AvailableTokens = 8; 
+    static public int AvailableTokens = 8; // Always + 1, to include null
     static public int AvailableAbilities = 24; // Always + 1, to include null
 
 

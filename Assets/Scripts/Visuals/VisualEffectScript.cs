@@ -195,6 +195,10 @@ public class VisualEffectScript : MonoBehaviour {
     }
 
     public void SetPhaseTimer (int index, float duration) {
+        if (phaseTimer == null) {
+            SetPhaseTimer (duration);
+            return;
+        }
         phaseTimer [index] = phaseTimer [index - 1] + duration;
     }
 

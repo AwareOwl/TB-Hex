@@ -205,7 +205,7 @@ public class BoardClass {
         if (IsTileInBounds (x, y)) {
             return tile [x, y];
         } else {
-            return null;
+            return new TileClass (this, x, y);
         }
     }
 

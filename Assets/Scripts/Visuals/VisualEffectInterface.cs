@@ -53,6 +53,9 @@ public class VisualEffectInterface : MonoBehaviour {
                 case 13:
                     CreateRealVectorEffect (GetRealAnchor (info.PlayedTokenTile.x, info.PlayedTokenTile.y), GetRealAnchor (target.x, target.y), abilityType, true, true);
                     break;
+                case 23:
+                    CreateRealVectorEffect (GetRealAnchor (info.Triggered2 [0].x, info.Triggered2 [0].y), GetRealAnchor (target.x, target.y), abilityType, true, true);
+                    break;
             }
         }
         foreach (TileClass target in info.Triggered2) {
@@ -261,6 +264,33 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.SetLastScale (new Vector3 (1.3f, 1.3f, 1.3f));
                 VES.rotateToCamera = true;
                 break;
+            case 21:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Dagger", col, triggered, autoDestroy);
+                VES.SetLastScale (new Vector3 (1, 1, 1));
+                VES.SetLastPosition (new Vector3 (0, 0.5f, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 0.7f, 0));
+                VES.SetLastPhaseTimer (0.5f);
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, -0.2f, 0));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1f);
+                VES.rotateToCameraVertical = true;
+                break;
+            case 22:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Dot", col, triggered, autoDestroy);
+                VES.SetLastScale (new Vector3 (0.4f, 0.4f, 0.4f));
+                VES.SetLastPosition (new Vector3 (0, 0.2f, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 1f, 0));
+                VES.SetLastScale (new Vector3 (1f, 1f, 1f));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (1, 1, 1, 1f));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (1, 1, 1, 0f));
+                VES.rotateToCamera = true;
+                break;
         }
     }
 
@@ -291,6 +321,29 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.SetLastPhaseTimer (0.5f);
                 VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
                 VES.rotateToCameraVertical = true;
+                break;
+            case 21:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Spike", col, triggered, autoDestroy);
+                VES.SetLastScale (new Vector3 (0, 0, 0));
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.5f, 1.1f, 1.1f));
+                VES.SetLastPosition (new Vector3 (0, 0.5f, 0));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1f);
+                VES.rotateToCameraVertical = true;
+                break;
+            case 22:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/HalfMoon", col, triggered, autoDestroy);
+                VES.SetLastPosition (new Vector3 (0, 0.6f, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 1f, 0));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (1, 1, 1, 1f));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (1, 1, 1, 0f));
+                VES.rotateToCamera = true;
                 break;
         }
     }
@@ -411,6 +464,18 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.SetLastScale (new Vector3 (1.5f, 1.5f, 1.5f));
                 VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
                 break;
+            case 23:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Dot", col, triggered, autoDestroy);
+                VES.SetJumpAnimation (true);
+                VES.SetLastScale (new Vector3 (0.8f, 0.8f, 0.8f));
+                VES.SetLastPosition (new Vector3 (0, 0.1f, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (lookAtGameObject.transform.position - anchor.transform.position);
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.rotateToCamera = true;
+                VES.SetPhaseTimer (1.5f);
+                break;
         }
     }
 
@@ -436,6 +501,9 @@ public class VisualEffectInterface : MonoBehaviour {
             case 8:
             case 11:
             case 18:
+            case 21:
+            case 22:
+            case 23:
                 effectTextureNumber = 8;
                 break;
             default:
