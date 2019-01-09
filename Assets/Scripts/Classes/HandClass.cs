@@ -83,7 +83,7 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output = Mathf.Max (output, 0.4f);
+        output = Mathf.Max (output, 0.5f);
         return output;
     }
     public void GenerateRandomHand (int gameMode) {
@@ -116,8 +116,8 @@ public class HandClass  {
                 for (int z = 0; z < CardValue.Length; z++) {
                     CardClass card = CardPool.Card [z];
                     modifier [z] = CardValue [z];
-                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 15)
-                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.value, y], 15);
+                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 20)
+                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.value, y], 20);
                     if (y > 0) {
                         CardClass prevCard = stack [x].card [y - 1];
                         modifier [z] *= Normalize (RatingClass.abilityAfterAbility [

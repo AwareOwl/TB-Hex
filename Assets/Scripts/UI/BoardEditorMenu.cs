@@ -89,6 +89,8 @@ public class BoardEditorMenu : GOUI {
     static public void CreateBoardEditorMenu () {
         type = 0;
 
+        NumberOfButtons [4] = AppDefaults.AvailableTokens;
+
         Buttons = new GameObject [NumberOfButtons.Length] [];
         for (int x = 0; x < NumberOfButtons.Length; x++) {
             Buttons [x] = new GameObject [NumberOfButtons [x]];

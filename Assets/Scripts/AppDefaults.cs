@@ -7,8 +7,8 @@ public class AppDefaults {
     static public Color Green = new Color (0, 0.95f, 0);
     static public Color Red = Color.red;
 
-    static public int AvailableTokens = 8; // Always + 1, to include null
-    static public int AvailableAbilities = 24; // Always + 1, to include null
+    static public int AvailableTokens = 10; // Always + 1, to include null
+    static public int AvailableAbilities = 28; // Always + 1, to include null
 
 
     static public Shader sprite;
@@ -39,6 +39,10 @@ public class AppDefaults {
                 return new Color (0.0f, 0.05f, 0.2f);
             case 7:
                 return new Color (0.1f, 0.4f, 0.1f);
+            case 8:
+                return new Color (1, 0, 0);
+            case 9:
+                return new Color (0, 0, 1);
             default:
                 return Color.black;
         }
@@ -83,11 +87,13 @@ public class AppDefaults {
             case 12:
             case 14:
             case 21:
+            case 24:
                 return Red;
             // Green
             case 2:
             case 9:
             case 18:
+            case 25:
                 return Green;
             // Orange
             case 3:
@@ -101,6 +107,8 @@ public class AppDefaults {
             case 13:
             case 15:
             case 23:
+            case 26:
+            case 27:
                 return new Color (1, 1, 0);
             // Purple
             case 7:

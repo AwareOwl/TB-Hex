@@ -6,3 +6,5 @@
 [5] Dynamitowy Żeton
 [6] Leniwy Żeton
 [7] Żeton Inflacji
+[8] Żeton Tłumienia
+[9] Żeton Negacji

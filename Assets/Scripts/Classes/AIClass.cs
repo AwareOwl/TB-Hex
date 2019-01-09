@@ -147,6 +147,11 @@ public class AIClass {
                         case 5:
                             tokenValue = valueOverTime (tokenValue, -3, targetValue, turnsLeft);
                             break;
+                        case 8:
+                            if (tile.token.value < vector.target.token.value) {
+                                tokenValue = 0;
+                            }
+                            break;
                     }
 
                 }
@@ -157,6 +162,12 @@ public class AIClass {
                         break;
                     case 2:
                         tokenValue *= -0.9f;
+                        break;
+                    case 5:
+                        tokenValue = (tokenValue * (tokenValue + 1) - Mathf.Max (tokenValue - turnsLeft, 0) * (tokenValue - turnsLeft + 1)) / 2 / turnsLeft;
+                        break;
+                    case 9:
+                        tokenValue += 1;
                         break;
                 }
                 riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);

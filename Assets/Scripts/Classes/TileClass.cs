@@ -94,6 +94,11 @@ public class TileClass {
     public TokenClass CreateToken (int type, int value, int owner) {
         if (enabled && token == null) {
             token = new TokenClass (this, type, value, owner);
+            switch (token.type) {
+                case 9:
+                    board.BeforeAbilityTriggers.Add (token.tile);
+                    break;
+            }
             if (visualTile != null) {
                 token.EnableVisual ();
             }

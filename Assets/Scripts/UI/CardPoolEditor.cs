@@ -45,6 +45,7 @@ public class CardPoolEditor : GOUI {
     }
 
     static public void LoadDataToEditor (int gameModeId, string [] cardPool) {
+        page = 0;
         EditedCardPool = new CardPoolClass ();
         EditedCardPool.LoadFromString (cardPool);
 

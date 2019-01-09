@@ -93,6 +93,7 @@ public class GameModeEditor : GOUI {
     }
 
     static public void LoadDataToEditor (int gameModeId, string gameModeName, string [] boardNames, int [] boardIds, bool [] boardIsLegal) {
+        currentPage = 0;
         GameModeEditor.gameModeId = gameModeId;
         GameModeEditor.gameModeName = gameModeName;
         GameModeEditor.boardNames = boardNames;

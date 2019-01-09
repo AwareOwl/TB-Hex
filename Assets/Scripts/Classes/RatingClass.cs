@@ -10,7 +10,7 @@ public class RatingClass {
     static int [] winner = new int [5];
     static int [] turn = new int [42];
 
-    static float [,] mapPlayer = new float [10, 5];
+    static float [,] mapPlayer = new float [100, 5];
 
     static float [] edgeDanger = new float [100];
     static float [] multiTargetDanger = new float [100];

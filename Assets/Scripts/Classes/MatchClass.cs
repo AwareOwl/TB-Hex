@@ -94,7 +94,8 @@ public class MatchClass {
         foreach (TileClass tile in Board.tileList) {
             TokenClass token = tile.token;
             if (token != null) {
-                int value = token.value;
+                int tokenValue = token.value;
+                int value = tokenValue;
                 switch (token.type) {
                     case 1:
                         value *= 2;
@@ -107,6 +108,21 @@ public class MatchClass {
                             value = 0;
                         }
                         break;
+                }
+                VectorInfo info = GetTokenVectorInfo (tile, token);
+                foreach (AbilityVector vector in info.vectors) {
+                    TokenClass targetToken = vector.target.token;
+                    if (targetToken != null) {
+                        int targetType = targetToken.type;
+                        int targetValue = targetToken.value;
+                        switch (targetType) {
+                            case 8:
+                                if (tokenValue < targetValue) {
+                                    value = 0;
+                                }
+                                break;
+                        }
+                    }
                 }
                 playerIncome [token.owner] += value;
             }
@@ -173,7 +189,7 @@ public class MatchClass {
     }
 
     public void SetTurnOfPlayer (int turnOfPlayer) {
-       this.turnOfPlayer = turnOfPlayer;
+        this.turnOfPlayer = turnOfPlayer;
         if (visualMatch != null) {
             foreach (PlayerClass player in Player) {
                 VisualPlayer vPlayer = player.visualPlayer;
@@ -313,7 +329,7 @@ public class MatchClass {
             Debug.Log ("Finished: " + finished);
             Debug.Log ("Turn of player: " + turnOfPlayer + ", your number:" + playerNumber);
             Debug.Log ("Tile enabled: " + tile.enabled);
-            Debug.Log ("Tile is empty: " + (tile.token == null).ToString());
+            Debug.Log ("Tile is empty: " + (tile.token == null).ToString ());
             if (tile.token != null) {
                 Debug.Log ("Token value: " + tile.token.value);
                 Debug.Log ("Token temp value: " + tile.token.tempValue);
@@ -419,6 +435,9 @@ public class MatchClass {
                     visualMatch.CreateRealTokenEffect (tile, token.type);
                 }
                 break;
+            case 9:
+                Board.BeforeAbilityTriggers.Remove (tile);
+                break;
         }
         foreach (TileClass target in VI.Triggered1) {
             switch (token.type) {
@@ -440,22 +459,71 @@ public class MatchClass {
     }
 
     public void UseAbility (TileClass tile, int playerNumber, int abilityArea, int abilityType) {
-        if (abilityType == 7) {
-            if (visualMatch != null) {
-                bool triggered = LastMove != null && LastMove.usedCard.abilityType != abilityType;
-                VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, triggered);
-                if (triggered) {
-                    abilityType = LastMove.usedCard.abilityType;
-                }
-            }
-        }
+        abilityType = VerifyAbilityType (tile, abilityType);
         VectorInfo info = GetVectorInfo (tile, abilityArea, abilityType, tile.token);
         if (visualMatch != null) {
             VisualEffectInterface.DelayedCreateRealEffects (info, abilityType);
             VisualMatch.GlobalTimer += 0.5f;
         }
+        if (tile.token == null) {
+            Debug.Log (51);
+        }
         int tokenType = tile.token.type;
+        UseAbilityTrigger1 (info, tile, playerNumber, abilityType, tokenType);
+        UseAbilityTrigger2 (info, tile, playerNumber, abilityType, tokenType);
+        UseAbilityVector (info, tile, playerNumber, abilityType, tokenType);
+        UseAbilityConstant (info, tile, playerNumber, abilityType, tokenType);
+    }
+
+    public int VerifyAbilityType (TileClass tile, int abilityType) {
+        int newAbilityType = abilityType;
+        List<TileClass> removeFromList = new List<TileClass> ();
+        foreach (TileClass triggeredTile in Board.BeforeAbilityTriggers) {
+            if (triggeredTile != null) {
+                TokenClass triggeredToken = triggeredTile.token;
+                if (triggeredToken != null) {
+                    int triggeredType = triggeredToken.type;
+                    switch (triggeredType) {
+                        case 9:
+                            if (abilityType != 0 && tile != triggeredTile) {
+                                newAbilityType = 0;
+                                ChangeType (triggeredTile, 0);
+                                removeFromList.Add (triggeredTile);
+                            }
+                            break;
+
+                    }
+                } else {
+                    //Debug.Log ("Wut");
+                }
+
+            } else {
+                Debug.Log ("wut2");
+            }
+        }
+        foreach (TileClass triggeredTile in removeFromList) {
+            Board.BeforeAbilityTriggers.Remove (triggeredTile);
+        }
+        //Debug.Log ("2");
+
+        abilityType = newAbilityType;
+        if (abilityType == 7) {
+            bool triggered = LastMove != null && LastMove.usedCard.abilityType != abilityType;
+            if (visualMatch != null) {
+                VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, triggered);
+            }
+            if (triggered) {
+                abilityType = LastMove.usedCard.abilityType;
+            }
+        }
+        return abilityType;
+    }
+
+    public void UseAbilityTrigger1 (VectorInfo info, TileClass tile, int playerNumber, int abilityType, int tokenType) {
         foreach (TileClass target in info.Triggered1) {
+            if (target == null) {
+                Debug.Log ("30");
+            }
             switch (abilityType) {
                 case 1:
                     ModifyTempValue (target, -1);
@@ -467,24 +535,36 @@ public class MatchClass {
                     DisableEmptyTile (target);
                     break;
                 case 4:
+                    if (Player.Length <= playerNumber || playerNumber < 0) {
+                        Debug.Log ("15");
+                    }
+                    if (Player [playerNumber] == null) {
+                        Debug.Log ("42");
+                    }
                     Player [playerNumber].AddScore (GetTokenValue (target));
                     break;
                 case 6:
                     ModifyTempValue (tile, -1);
                     break;
                 case 8:
+                    if (LastPlayedToken () == null || LastPlayedToken ().tile == null) {
+                        Debug.Log ("16");
+                    }
                     ModifyTempValue (LastPlayedToken ().tile, -1);
                     break;
                 case 9:
                     ModifyTempValue (target, 2);
                     break;
                 case 10:
-                    target.token.ChangeType (0);
+                    ChangeType (target, 0);
                     break;
                 case 12:
                     ModifyTempValue (target, -4);
                     break;
                 case 13:
+                    if (target.token == null) {
+                        Debug.Log ("17");
+                    }
                     ModifyTempValue (target, tile.token.value - target.token.value);
                     break;
                 case 14:
@@ -495,13 +575,19 @@ public class MatchClass {
                     ModifyTempValue (target, -target.token.value);
                     break;
                 case 16:
-                    target.token.ChangeType (tokenType);
+                    ChangeType (target, tokenType);
                     break;
                 case 17:
-                    tile.token.ChangeType (target.token.type);
-                    target.token.ChangeType (tokenType);
+                    if (target.token == null) {
+                        Debug.Log ("48");
+                    }
+                    ChangeType (tile, target.token.type);
+                    ChangeType (target, tokenType);
                     break;
                 case 18:
+                    if (LastPlayedToken () == null) {
+                        Debug.Log ("18");
+                    }
                     CreateToken (target, LastPlayedToken ().type, LastPlayedToken ().value, playerNumber);
                     break;
                 case 19:
@@ -512,7 +598,10 @@ public class MatchClass {
                     break;
                 case 23:
                     ModifyTempValue (target, 1);
-                    ModifyTempValue (info.Triggered2[0], -1);
+                    if (info.Triggered2.Count == 0) {
+                        Debug.Log ("19");
+                    }
+                    ModifyTempValue (info.Triggered2 [0], -1);
                     break;
                 case 24:
                     ModifyTempValue (target, -info.allyCount);
@@ -520,9 +609,21 @@ public class MatchClass {
                 case 25:
                     CreateToken (target, 0, 1, playerNumber);
                     break;
+                case 26:
+                    ModifyTempValue (target, -1);
+                    break;
+                case 27:
+                    ModifyTempValue (target, 1);
+                    break;
             }
         }
+    }
+
+    public void UseAbilityTrigger2 (VectorInfo info, TileClass tile, int playerNumber, int abilityType, int tokenType) {
         foreach (TileClass target in info.Triggered2) {
+            if (target == null) {
+                Debug.Log ("31");
+            }
             switch (abilityType) {
                 case 2:
                     CreateToken (target, 0, 1, playerNumber);
@@ -534,23 +635,57 @@ public class MatchClass {
                     ModifyTempValue (target, -info.sumOfAlliesValues);
                     break;
                 case 22:
-                    target.token.ChangeType (tokenType);
+                    ChangeType (target, tokenType);
+                    break;
+                case 26:
+                    ModifyTempValue (target, 1);
                     break;
             }
         }
+    }
+
+    public void UseAbilityVector (VectorInfo info, TileClass tile, int playerNumber, int abilityType, int tokenType) {
         foreach (AbilityVector vector in info.TriggeredVector) {
+            if (vector == null) {
+                Debug.Log ("21");
+            }
             switch (abilityType) {
                 case 5:
+                    if (vector.target == null) {
+                        Debug.Log ("20");
+                    }
                     MoveToken (vector.target, vector.pushX, vector.pushY);
                     break;
             }
         }
+    }
+
+    public void UseAbilityConstant (VectorInfo info, TileClass tile, int playerNumber, int abilityType, int tokenType) {
         switch (abilityType) {
             case 20:
+                if (info == null) {
+                    Debug.Log ("54");
+                }
+                if (info.TargetPlayers == null) {
+                    Debug.Log ("22");
+                }
                 foreach (int pNumber in info.TargetPlayers) {
+                    if (Player == null) {
+                        Debug.Log ("55");
+                    }
+                    if (pNumber < 0 || pNumber >= Player.Length) {
+                        Debug.Log (pNumber);
+                    }
                     PlayerClass player = Player [pNumber];
+                    if (player == null) {
+                        Debug.Log ("45");
+
+                    }
                     HandClass hand = player.GetHand ();
                     if (hand != null) {
+                        if (hand.stack == null) {
+                            Debug.Log ("32");
+                        }
                         for (int y = 0; y < hand.stack.Length; y++) {
                             player.MoveTopCard (y);
                         }
@@ -558,6 +693,10 @@ public class MatchClass {
                 }
                 break;
         }
+    }
+
+    public void ChangeType (TileClass tile, int newType) {
+        tile.token.ChangeType (newType);
     }
 
     public TileClass LastPlayedTile () {

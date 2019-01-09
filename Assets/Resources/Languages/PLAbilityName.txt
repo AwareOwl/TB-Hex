@@ -24,3 +24,5 @@
 [23] Wystawienie celu
 [24] Spopielenie
 [25] Rój
+[26] Monopol
+[27] Różnorodność

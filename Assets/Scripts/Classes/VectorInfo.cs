@@ -264,7 +264,23 @@ public class VectorInfo {
                     }
                     break;
                 case 25:
-                    if (IsEmptyTile (vector.target) && emptyTileCount <= 4) {
+                    if (IsEmptyTile (vector.target) && emptyTileCount <= 3) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 26:
+                    if (IsFilledTile (vector.target) && weakestValue == vector.target.token.value) {
+                        Triggered1.Add (vector.target);
+                    } else if (IsFilledTile (vector.target) && strongestValue == vector.target.token.value) {
+                        Triggered2.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 27:
+                    if (IsFilledTile (vector.target) && vector.target.token.type != token.type) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
