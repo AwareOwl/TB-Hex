@@ -16,6 +16,7 @@ public class RowClass : GOUI {
     GameObject Edit;
     GameObject Option;
 
+    int iconNumber;
     string setName;
     public int setId;
 
@@ -62,6 +63,7 @@ public class RowClass : GOUI {
     }
 
     public void SetState (string setName, int setId, int iconNumber, bool legal) {
+        this.iconNumber = iconNumber;
         SpriteRenderer editRenderer = Edit.GetComponent<SpriteRenderer> ();
         Text.GetComponent<TextMesh> ().text = setName;
         SetSprite (Icon, VisualCard.GetIconPath (iconNumber));
@@ -131,6 +133,15 @@ public class RowClass : GOUI {
                 if (mode == 2) {
                     Text.GetComponent<TextMesh> ().text = "";
                 }
+                break;
+            case 4:
+            case 5:
+                Icon.GetComponent<Renderer> ().enabled = true;
+                Icon.GetComponent<SpriteRenderer> ().color = Color.white;
+                SetSprite (Icon, AppDefaults.Avatar [iconNumber]);
+                Icon.GetComponent<Collider> ().enabled = false;
+                Edit.GetComponent<Renderer> ().enabled = false;
+                Edit.GetComponent<Collider> ().enabled = false;
                 break;
 
         }

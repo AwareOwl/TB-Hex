@@ -398,6 +398,12 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.MainMenuStartQuickMatch:
                 ClientLogic.MyInterface.CmdJoinQuickMatchQueue ();
                 break;
+            case UIString.ShowCustomGameLobby:
+                CustomGameLobby.ShowCustomGameLobby ();
+                break;
+            case UIString.ShowCustomGameMenu:
+                CustomGameMenu.ShowCustomGameMenu ();
+                break;
             case UIString.ShowSetEditor:
                 SetEditor.ShowSetEditorMenu (id);
                 break;

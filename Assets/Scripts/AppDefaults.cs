@@ -10,6 +10,7 @@ public class AppDefaults {
     static public int AvailableTokens = 10; // Always + 1, to include null
     static public int AvailableAbilities = 28; // Always + 1, to include null
 
+    static public Sprite [] Avatar = new Sprite [5];
 
     static public Shader sprite;
     static public Object Tile;
@@ -20,8 +21,20 @@ public class AppDefaults {
 
     static AppDefaults () {
         LoadPlayerColors ();
+        LoadAvatars ();
         Tile = Resources.Load ("Prefabs/Tile");
         sprite = Shader.Find ("Sprites/Default");
+    }
+
+    static public void LoadAvatars () {
+        for (int x = 0; x < Avatar.Length; x++) {
+            string path = "Textures/Avatars/Avatar";
+            if (x < 10) {
+                path += "0";
+            }
+            path += x.ToString ();
+            Avatar [x] = GOUI.GetSprite (path);
+        }
     }
 
     static public Color GetBorderColorMain (int type) {

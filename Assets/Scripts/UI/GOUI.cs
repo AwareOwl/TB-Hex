@@ -222,14 +222,17 @@ public class GOUI : MonoBehaviour {
 	}
 
 	static public void SetSprite (GameObject obj, string assetName) {
-		Sprite sprite = GetSprite (assetName);
+        SetSprite (obj, GetSprite (assetName));
+	}
+
+    static public void SetSprite (GameObject obj, Sprite sprite) {
         if (obj.GetComponent<SpriteRenderer> () != null) {
             obj.GetComponent<SpriteRenderer> ().sprite = sprite;
         }
-		if (obj.GetComponent <UIController> () != null) {
-			obj.GetComponent<UIController> ().NormalSprite = sprite;
-		}
-	}
+        if (obj.GetComponent<UIController> () != null) {
+            obj.GetComponent<UIController> ().NormalSprite = sprite;
+        }
+    }
 
     static public void SetSpriteColor (GameObject obj, Color col) {
         obj.GetComponent<SpriteRenderer> ().color = col;
