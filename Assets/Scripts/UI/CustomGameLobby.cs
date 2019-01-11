@@ -6,6 +6,9 @@ public class CustomGameLobby : GOUI {
 
     static RowClass [] row;
 
+    static int currentPage = 0;
+    static PageUI pageUI;
+
     static int [] ids;
     static string [] names;
     static int [] matchTypes;
@@ -14,11 +17,44 @@ public class CustomGameLobby : GOUI {
     void Start () {
         CurrentGUI = this;
         CreateCustomGameLobby ();
+        ClientLogic.MyInterface.CmdDownloadListOfCustomGames ();
     }
 
     static public void ShowCustomGameLobby () {
         DestroyMenu ();
         CurrentCanvas.AddComponent<CustomGameLobby> ();
+    }
+
+    static public void LoadData (int [] ids, string [] names, int [] matchTypes) {
+        currentPage = 0;
+        CustomGameLobby.ids = ids;
+        CustomGameLobby.names = names;
+        CustomGameLobby.matchTypes = matchTypes;
+    }
+
+    static public void ShowPage () {
+        ShowPage (currentPage);
+    }
+
+    static public void ShowPage (int pageNumber) {
+        currentPage = pageNumber;
+        for (int x = 0; x < 5; x++) {
+            int number = currentPage * 5 + x;
+            int count = ids.Length;
+            row [x].FreeRow ();
+            if (number < count) {
+                bool legal = boardIsLegal [number];
+                row [x].SetState (boardNames [number], boardIds [number], 0, legal);
+                if (boardIds [number] == selectedRow) {
+                    row [x].SelectRow ();
+                }
+            } else if (number == count) {
+                row [x].SetState (1);
+            } else {
+                row [x].SetState (2);
+            }
+        }
+        pageUI.SelectPage (currentPage);
     }
     
     
@@ -47,7 +83,7 @@ public class CustomGameLobby : GOUI {
         row [3].SetState (3);
         row [4].SetState (3);
 
-        PageUI pageUI = new PageUI ();
+        pageUI = new PageUI ();
         pageUI.Init (9, 12, new Vector2Int (480, 780), "meh");
         pageUI.SelectPage (0);
 
