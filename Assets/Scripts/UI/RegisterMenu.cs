@@ -86,6 +86,7 @@ public class RegisterMenu : GOUI {
 
     static public void CreateRegisterMenu () {
         GameObject Clone;
+        DestroyImmediate (ChatButton);
 
 
         int px;

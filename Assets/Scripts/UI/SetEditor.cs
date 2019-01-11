@@ -49,6 +49,7 @@ public class SetEditor : GOUI {
         ClientLogic.MyInterface.CmdDownloadCardPoolToSetEditor ();
         ClientLogic.MyInterface.CmdDownloadSetToEditor (setId);
         DestroyImmediate (ExitButton);
+        DestroyImmediate (ChatButton);
     }
 
     static public void ShowSetEditorMenu (int setId) {

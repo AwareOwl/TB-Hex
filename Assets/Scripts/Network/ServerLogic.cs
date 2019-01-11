@@ -190,6 +190,10 @@ public class ServerLogic : MonoBehaviour {
         client.TargetDownloadCardPoolToEditor (client.connectionToClient, gameModeId, ServerData.GetCardPool (gameModeId));
     }
 
+    static public void DownloadListOfCustomGames (ClientInterface client) {
+
+    }
+
 
     static public void DownloadSetList (ClientInterface client) {
         string accountName = client.AccountName;

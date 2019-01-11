@@ -13,6 +13,7 @@ public class GOUI : MonoBehaviour {
     static public GameObject CurrentTooltip;
 
     static public GameObject ExitButton;
+    static public GameObject ChatButton;
 
     static float globalScale = 2;
 
@@ -61,6 +62,9 @@ public class GOUI : MonoBehaviour {
         Clone = CreateSprite ("UI/Butt_S_Value", 1395, 45, 11, 60, 60, true);
         Clone.name = UIString.ExitApp;
         ExitButton = Clone;
+        Clone = CreateSprite ("UI/Butt_S_Name", 1335, 45, 11, 60, 60, true);
+        Clone.name = UIString.ExitApp;
+        ChatButton = Clone;
     }
 
     static public GameObject CreateText (string s, int px, int py, int layer, float scale) {

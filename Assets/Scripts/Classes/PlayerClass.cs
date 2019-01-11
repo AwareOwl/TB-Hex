@@ -65,6 +65,9 @@ public class PlayerClass {
     }
 
     public HandClass GetHand () {
+        if (properties == null) {
+            return null;
+        }
         return properties.hand;
     }
 

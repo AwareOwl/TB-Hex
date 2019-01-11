@@ -114,6 +114,11 @@ public class Language {
     static public string OpenCardPoolEditor;
     static public string CardPoolEditorDescription;
 
+    static public string CustomGame;
+
+    static public string FreeForAll;
+    static public string ShowChat;
+
     static public string Apply;
     static public string Close;
 
@@ -253,6 +258,9 @@ public class Language {
         CardPoolEditorDescription = UI [90];
         WaitingInQueue = UI [91];
         Cancel = UI [92];
+        CustomGame = UI [93];
+        FreeForAll = UI [94];
+        ShowChat = UI [95];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

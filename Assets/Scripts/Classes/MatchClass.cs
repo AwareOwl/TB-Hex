@@ -663,31 +663,14 @@ public class MatchClass {
     public void UseAbilityConstant (VectorInfo info, TileClass tile, int playerNumber, int abilityType, int tokenType) {
         switch (abilityType) {
             case 20:
-                if (info == null) {
-                    Debug.Log ("54");
-                }
-                if (info.TargetPlayers == null) {
-                    Debug.Log ("22");
-                }
-                foreach (int pNumber in info.TargetPlayers) {
-                    if (Player == null) {
-                        Debug.Log ("55");
-                    }
-                    if (pNumber < 0 || pNumber >= Player.Length) {
-                        Debug.Log (pNumber);
-                    }
-                    PlayerClass player = Player [pNumber];
-                    if (player == null) {
-                        Debug.Log ("45");
-
-                    }
-                    HandClass hand = player.GetHand ();
-                    if (hand != null) {
-                        if (hand.stack == null) {
-                            Debug.Log ("32");
-                        }
-                        for (int y = 0; y < hand.stack.Length; y++) {
-                            player.MoveTopCard (y);
+                if (info.TargetPlayers != null) {
+                    foreach (int pNumber in info.TargetPlayers) {
+                        PlayerClass player = Player [pNumber];
+                        HandClass hand = player.GetHand ();
+                        if (hand != null) {
+                            for (int y = 0; y < hand.stack.Length; y++) {
+                                player.MoveTopCard (y);
+                            }
                         }
                     }
                 }

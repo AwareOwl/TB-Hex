@@ -16,6 +16,7 @@ public class Launcher : GOUI {
         //VisualCard.Make4Cards ();
         //InGameUI.CreatePlayersUI ();
         CreateLauncherGUI ();
+        DestroyImmediate (ChatButton);
     }
 
     public void Test () {
@@ -24,6 +25,7 @@ public class Launcher : GOUI {
     public void CreateLauncherGUI () {
         GameObject Clone;
         GameObject Parent;
+
 
 
         Clone = CreateSprite ("UI/Butt_M_EmptySquare", true);

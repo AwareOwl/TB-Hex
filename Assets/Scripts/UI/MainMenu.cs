@@ -36,7 +36,7 @@ public class MainMenu : GOUI {
                 case 2:
                     Button.name = UIString.ShowCustomGameMenu;
                     //Button.name = UIString.ShowCustomGameLobby;
-                    Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.QuickOnlineGame;
+                    Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.CustomGame;
                     break;
             }
         }

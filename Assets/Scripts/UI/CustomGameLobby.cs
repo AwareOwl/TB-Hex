@@ -6,6 +6,10 @@ public class CustomGameLobby : GOUI {
 
     static RowClass [] row;
 
+    static int [] ids;
+    static string [] names;
+    static int [] matchTypes;
+
     // Use this for initialization
     void Start () {
         CurrentGUI = this;

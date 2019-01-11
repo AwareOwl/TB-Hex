@@ -33,7 +33,7 @@ public class VisualPlayer {
         this.ally = ally;
         this.numberOfPlayers = numberOfPlayers;
 
-        margin = 60;
+        margin = 120;
         avatarSize = 70;
         shiftLength = (1440 - margin * 2) / numberOfPlayers;
         barLength = shiftLength - avatarSize - 30;

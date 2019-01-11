@@ -91,3 +91,6 @@
 [90] W tym edytorze możesz stworzyć swoją własną pulę kart. Wybierz wszystkie parametry i kliknij na wybraną pozycję aby ją dodać/zmodyfikować. Pula kart musi mieć co najmniej 8 kart aby była dopuszczona do gry.
 [91] Oczekiwanie na znalezienie pozostałych graczy. Pamiętaj że w twojej sieci LAN muszą być inni gracze, aby kogoś znalazło.
 [92] Anuluj
+[93] Własna gra
+[94] każdy na każdego
+[95] Pokaż chat

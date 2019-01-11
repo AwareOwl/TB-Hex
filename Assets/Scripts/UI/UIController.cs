@@ -407,6 +407,8 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ShowSetEditor:
                 SetEditor.ShowSetEditorMenu (id);
                 break;
+            case UIString.ShowChat:
+                break;
 
             case UIString.InGameHandCard:
                 InGameUI.SelectStack (x);

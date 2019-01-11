@@ -91,3 +91,6 @@
 [90] In this editor you can create your own card pool. Chose all the parameters and then click on a slot to create/modify it. Card pool needs to have at least 8 cards to be used.
 [91] Looking for other players. In your LAN network
 [92] Cancel
+[93] Custom game
+[94] free for all
+[95] Show chat

@@ -65,6 +65,7 @@ public class LoginMenu : GOUI {
 
     static public void CreateLoginMenu () {
         GameObject Clone;
+        DestroyImmediate (ChatButton);
 
 
         int px;

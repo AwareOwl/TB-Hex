@@ -54,6 +54,7 @@ public class UIString {
 
     public const string ShowCustomGameLobby = "ShowCustomGameLobby";
     public const string ShowCustomGameMenu = "ShowCustomGameMenu";
+    public const string ShowChat = "ShowChat";
 
     public const string ShowGameModeEditor = "ShowGameModeEditor";
     public const string DeleteGameMode = "DeleteGameMode";

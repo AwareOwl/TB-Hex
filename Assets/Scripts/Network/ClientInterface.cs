@@ -329,6 +329,16 @@ public class ClientInterface : NetworkBehaviour {
         ServerLogic.SaveCardPool (this, gameModeId, cardpool);
     }
 
+    [Command]
+    public void CmdDownloadListOfCustomGames () {
+        ServerLogic.DownloadListOfCustomGames (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadListOfCustomGames (int [] ids, string [] names, int [] matchTypes) {
+
+    }
+
 
     /*
     [TargetRpc]
