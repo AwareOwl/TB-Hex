@@ -18,6 +18,7 @@ public class ServerData : MonoBehaviour {
     static public string IsDeletedKey = "IsDeleted";
     static public string IsLegalKey = "IsLegal";
     static public string IsCardPoolLegalKey = "IsCardPoolLegalKey";
+    static public string OfficialKey = "Official";
     static public string GameModeOfficialKey = "GameModeOfficialKey";
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
     static public string SetNameKey = "SetName";
@@ -448,10 +449,11 @@ public class ServerData : MonoBehaviour {
         File.WriteAllText (path, id.ToString ());
     }
 
-    static public void CreateNewGameMode (string userName) {
+    static public int CreateNewGameMode (string userName) {
         int id = IncrementGameModeNextId ();
         SetGameModeName (id, "New game mode");
         AddGameModeOwner (id, userName);
+        return id;
     }
 
     static public string GameModeOwnerPath (int id) {
@@ -517,6 +519,19 @@ public class ServerData : MonoBehaviour {
         return deleted;
     }
 
+    static public bool GetBoardIsOfficial (int boardId) {
+        string path = BoardContentPath (boardId);
+        string s = GetKeyData (KeyDataPath (path), OfficialKey);
+        return Convert.ToBoolean (s);
+    }
+
+    static public string SetBoardIsOfficial (int boardId, bool isOfficial) {
+        string path = BoardContentPath (boardId);
+        string isOfficialString = isOfficial.ToString ();
+        SetKeyData (KeyDataPath (path), OfficialKey, isOfficialString);
+        return isOfficialString;
+    }
+
     static public bool GetGameModeIsOfficial (int gameModeId) {
         string path = GameModeContentPath (gameModeId);
         string s = GetKeyData (KeyDataPath (path), GameModeOfficialKey);
@@ -566,6 +581,87 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public int [] GetAllBoards () {
+        string [] s = Directory.GetDirectories (BoardContentPath ());
+        List<int> ids = new List<int> ();
+        for (int x = 0; x < s.Length; x++) {
+            s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+            int id = int.Parse (s [x]);
+            ids.Add (id);
+        }
+        return ids.ToArray();
+    }
+
+    static public int [] GetAllOfficialBoards () {
+        int [] ids = GetAllBoards ();
+        List<int> officialIds = new List<int> ();
+        foreach (int id in ids) {
+            if (GetBoardIsOfficial (id)) {
+                officialIds.Add (id);
+            }
+        }
+        return officialIds.ToArray ();
+    }
+
+    static public string BoardMatchTypesPath (int boardId) {
+        return BoardContentPath (boardId) + "MatchTypes.txt";
+    }
+
+    static public int [] GetBoardMatchTypes (int boardId) {
+        string path = BoardMatchTypesPath (boardId);
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            List<int> matchTypes = new List<int> ();
+            foreach (string line in lines) {
+                matchTypes.Add (int.Parse (line));
+            }
+            return matchTypes.ToArray ();
+        }
+        return new int [0];
+    }
+
+    static public void SetBoardMatchTypes (int boardId, string [] lines) {
+        string path = BoardMatchTypesPath (boardId);
+        File.WriteAllLines (path, lines);
+    }
+
+    static public bool GetBoardMatchType (int boardId, int matchType) {
+        int [] matchTypes = GetBoardMatchTypes (boardId);
+        foreach (int type in matchTypes) {
+            if (type == matchType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static public void AddBoardMatchType (int boardId, int matchType) {
+        int [] matchTypes = GetBoardMatchTypes (boardId);
+        bool exists = false;
+        List<string> lines = new List<string> ();
+        foreach (int type in matchTypes) {
+            if (type == matchType) {
+                exists = true;
+            }
+            lines.Add (type.ToString ());
+        }
+        if (!exists) {
+            lines.Add (matchType.ToString ());
+        }
+        SetBoardMatchTypes (boardId, lines.ToArray ());
+    }
+
+    static public void RemoveBoardMatchType (int boardId, int matchType) {
+        int [] matchTypes = GetBoardMatchTypes (boardId);
+        List<string> lines = new List<string> ();
+        foreach (int type in matchTypes) {
+            if (type != matchType) {
+                lines.Add (type.ToString ());
+            }
+        }
+        SetBoardMatchTypes (boardId, lines.ToArray ());
+    }
+
     static public int [] GetAllBoardGameModes (int boardId) {
         string path = BoardGameModesPath (boardId);
         if (File.Exists (path)) {
@@ -610,8 +706,10 @@ public class ServerData : MonoBehaviour {
         }
         if (!alreadyExists) {
             idString.Add (gameModeId.ToString ());
+            Debug.Log (path);
             File.WriteAllLines (path, idString.ToArray ());
         }
+        CheckIfGameModeIsLegal (gameModeId);
         return true;
     }
 
@@ -699,12 +797,14 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static public void SaveNewBoard (int gameModeId, string userName, string boardName, string [] board) {
+    static public int SaveNewBoard (int gameModeId, string userName, string boardName, string [] board) {
         int id = IncrementBoardNextId ();
         SetBoard (id, board);
         AddBoardOwners (id, userName);
         SetBoardName (id, boardName);
         SetGameModeBoard (gameModeId, id);
+        SetBoardMatchTypes (id, new string [] { "0", "1" });
+        return id;
     }
 
     static void SetBoardNextId (int id) {

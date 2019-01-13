@@ -66,7 +66,14 @@ public class ServerVersionManager : VersionManager {
                 DevelopVersion = 0;
             }
             if (PathVersion <= 4) {
-
+                PathVersion = 4;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
+                if (HotfixVersion <= 0) {
+                    if (DevelopVersion < 7) {
+                        ConvertTo0_4_0_7 ();
+                    }
+                }
             }
         }
 
@@ -82,45 +89,59 @@ public class ServerVersionManager : VersionManager {
         RatingClass.LoadAbilityOnRow ();
         RatingClass.LoadTokenOnRow ();
     }
-    /*
-    static public void ConvertTo0_1_1_5 () {
-        string [] s = ServerData.GetAllUsers ();
 
-        foreach (string s2 in s) {
-            string [] s3 = ServerData.GetAllPlayerModes (s2);
-            foreach (string s4 in s3) {
-                int i4 = int.Parse (s4);
-                string [] s5 = ServerData.GetAllPlayerModeSets (s2, i4);
-                foreach (string s6 in s5) {
-                    int i6 = int.Parse (s6);
-                    ServerData.SetPlayerModeSetIconNumber (s2, i4, i6, 1);
-                }
+    static public void ConvertTo0_4_0_7 () {
+        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
+        ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
+        ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
+        ServerData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
+        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
+        ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
+
+        int [] boardIds = ServerData.GetAllBoards ();
+        foreach (int boardId in boardIds) {
+            ServerData.SetBoardMatchTypes (boardId, new string [] { "0", "1" });
+        }
+
+        int newId;
+
+        for (int y = 1; y <= 5; y++) {
+            ServerData.SetBoardIsOfficial (y, true);
+        }
+
+        newId = ServerData.CreateNewGameMode ("");
+        ServerData.SetCardPool (newId, GetResource ("ExportFolder/v0.4/CardPools/CardPool"));
+        ServerData.SetGameModeName (newId, "Version 0.4.0");
+        ServerData.SetGameModeIsOfficial (newId, true);
+
+        int [] officialBoards = ServerData.GetAllOfficialBoards ();
+        foreach (int offId in officialBoards) {
+            ServerData.SetGameModeBoard (newId, offId);
+        }
+
+        int newBoardId;
+        for (int x = 0; x < 3; x++) {
+            newBoardId = ServerData.SaveNewBoard (newId, "Path0.4.0.0", "Board" + (6 + x).ToString (),
+                GetResource ("ExportFolder/v0.4/Boards/Board" + (6 + x).ToString ()));
+            ServerData.SetBoardIsOfficial (newBoardId, true);
+            switch (x) {
+                case 1:
+                    ServerData.RemoveBoardMatchType (newBoardId, 1);
+                    ServerData.AddBoardMatchType (newBoardId, 3);
+                    break;
+                case 2:
+                    ServerData.RemoveBoardMatchType (newBoardId, 1);
+                    ServerData.AddBoardMatchType (newBoardId, 2);
+                    break;
             }
         }
-        PathVersion = 1;
-        HotfixVersion = 1;
-        DevelopVersion = 4;
+
+        GameVersion = 0;
+        PathVersion = 4;
+        HotfixVersion = 0;
+        DevelopVersion = 7;
     }
-
-    static public void ConvertTo0_1_1_4 () {
-        string [] s = ServerData.GetAllUsers ();
-
-        foreach (string s2 in s) {
-            string [] s3 = ServerData.GetAllPlayerModes (s2);
-            foreach (string s4 in s3) {
-                int i4 = int.Parse (s4);
-                string [] s5 = ServerData.GetAllPlayerModeSets (s2, i4);
-                foreach (string s6 in s5) {
-                    int i6 = int.Parse (s6);
-
-                    ServerData.SetPlayerModeSetName (s2, i4, i6, Language.StartingSet);
-                }
-            }
-        }
-        PathVersion = 1;
-        HotfixVersion = 1;
-        DevelopVersion = 4;
-    }*/
 
     static public void ConvertTo0_2_0_13 () {
         string [] users = ServerData.GetAllUsers ();

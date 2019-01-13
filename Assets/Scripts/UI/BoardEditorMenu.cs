@@ -19,7 +19,7 @@ public class BoardEditorMenu : GOUI {
     static public int Value;
     static public int TokenType;
 
-    static int [] NumberOfButtons = new int [] { 4, 3, 3, 9, 8 };
+    static int [] NumberOfButtons = new int [] { 4, 3, 5, 9, 8 };
     static int [] Selected = new int [] {0, 1, 1, 1, 0 };
     static GameObject [] [] Buttons;
 
