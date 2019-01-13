@@ -90,6 +90,34 @@ public class ServerVersionManager : VersionManager {
         RatingClass.LoadTokenOnRow ();
     }
 
+    static public void ConvertTo0_4_0_8 () {
+        int id4 = 3;
+        int [] officialGameModeIds = ServerData.GetAllOfficialGameModes ();
+        foreach (int id in officialGameModeIds) {
+            if (ServerData.GetGameModeName (id) == "Version 0.4.0") {
+                id4 = id;
+            }
+        }
+
+        string [] users = ServerData.GetAllUsers ();
+        foreach (string user in users) {
+            int prevMode = 3;
+            int [] ids = ServerData.GetAllPlayerModeSets (user, prevMode);
+            foreach (int id in ids) {
+                int newId = ServerData.CreatePlayerModeSet (user, id4, ServerData.GetPlayerModeSet (user, prevMode, id), ServerData.GetPlayerModeSetName (user, prevMode, id));
+                ServerData.SetPlayerModeSetIconNumber (user, id4, newId, ServerData.GetPlayerModeSetIconNumber (user, prevMode, id));
+            }
+            if (ServerData.GetUserSelectedGameMode (user) == prevMode) {
+                ServerData.SetUserSelectedGameMode (user, id4);
+            }
+        }
+
+        GameVersion = 0;
+        PathVersion = 4;
+        HotfixVersion = 0;
+        DevelopVersion = 8;
+    }
+
     static public void ConvertTo0_4_0_7 () {
         ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
         ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));

@@ -959,12 +959,25 @@ public class ServerData : MonoBehaviour {
     }
 
 
-    static public string [] GetAllGameModes () {
+    static public int [] GetAllGameModes () {
         string [] s = Directory.GetDirectories (GameModeContentPath ());
+        List<int> ids = new List<int> ();
         for (int x = 0; x < s.Length; x++) {
             s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+            ids.Add (int.Parse (s [x]));
         }
-        return s;
+        return ids.ToArray ();
+    }
+
+    static public int [] GetAllOfficialGameModes () {
+        int [] allIds = GetAllGameModes ();
+        List<int> offIds = new List<int> ();
+        foreach (int id in allIds) {
+            if (GetGameModeIsOfficial (id)) {
+                offIds.Add (id);
+            }
+        }
+        return offIds.ToArray ();
     }
 
     static public string PlayerModePath (string owner, int gameModeId) {

@@ -266,7 +266,7 @@ public class ServerLogic : MonoBehaviour {
 
     static public void DownloadGameModeLists (ClientInterface client) {
         string accountName = client.AccountName;
-        string [] list = ServerData.GetAllGameModes ();
+        int [] list = ServerData.GetAllGameModes ();
         List<int> officialIds = new List<int> ();
         List<int> publicIds = new List<int> ();
         List<int> yourIds = new List<int> ();
@@ -275,8 +275,7 @@ public class ServerLogic : MonoBehaviour {
         List<string> yourNames = new List<string> ();
         List<bool> yourIsLegal = new List<bool> ();
 
-        foreach (string s in list) {
-            int id = int.Parse (s);
+        foreach (int id in list) {
             string [] owners = ServerData.GetGameModeOwners (id);
             if (ServerData.GetGameModeIsOfficial (id)) {
                 officialIds.Add (id);
