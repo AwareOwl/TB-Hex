@@ -14,36 +14,73 @@ public class CustomGameClass {
     public int id;
     public string name;
     public int gameMode;
+    public int matchType;
+
+    public ClientInterface host;
 
     public ClientInterface [] clients;
+    public bool [] AI;
+
+    public int NumberOfPlayers () {
+        int count = 0;
+
+        for (int x = 0; x < clients.Length; x++) {
+            if (clients [x] != null || AI [x]) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    static public int GetNumberOfSlots (int matchType) {
+        switch (matchType) {
+            case 0:
+                return 1;
+            case 1:
+                return 2;
+            case 2:
+                return 3;
+            case 3:
+                return 4;
+            default:
+                return 0;
+        }
+
+    }
+
+    static public string GetMatchTypeName (int matchType) {
+        switch (matchType) {
+            case 0:
+                return "1FFA";
+            case 1:
+                return "2FFA";
+            case 2:
+                return "3FFA";
+            case 3:
+                return "4FFA";
+            default:
+                return "Unknown";
+        }
+    }
 
     public CustomGameClass (int gameMode, int matchType, string gameName) {
         id = nextId++;
         this.name = gameName;
         this.gameMode = gameMode;
-        switch (matchType) {
-            case FFA1:
-                clients = new ClientInterface [1];
-                break;
-            case FFA2:
-                clients = new ClientInterface [2];
-                break;
-            case FFA3:
-                clients = new ClientInterface [3];
-                break;
-            case FFA4:
-                clients = new ClientInterface [4];
-                break;
-        }
+        this.matchType = matchType;
+        clients = new ClientInterface [GetNumberOfSlots (matchType)];
+        AI = new bool [clients.Length];
     }
 
-    public void JoinGame (ClientInterface client) {
+    public bool JoinGame (ClientInterface client) {
         for (int x = 0; x < clients.Length; x++) {
-            if (clients [x] == null) {
+            if (clients [x] == null && !AI [x]) {
                 JoinSlot (client, x);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     public void JoinSlot (ClientInterface client, int slot) {
@@ -53,6 +90,33 @@ public class CustomGameClass {
             }
         }
         clients [slot] = client;
+        if (host == null) {
+            host = client;
+        }
+        RefreshRoomForClients ();
+    }
+
+    public void AddAI (ClientInterface client, int slot) {
+        if (!host == client) {
+            return;
+        }
+        if (clients [slot] == null) {
+            AI [slot] = true;
+        }
+        RefreshRoomForClients ();
+    }
+
+    public void KickPlayer (ClientInterface client, int slot) {
+        if (!host == client) {
+            return;
+        }
+        clients [slot] = null;
+        AI [slot] = false;
+        RefreshRoomForClients ();
+    }
+
+    public void RefreshRoomForClients () {
+        ServerLogic.DownloadCustomGameRoom (this);
     }
 
     public void StartGame () {

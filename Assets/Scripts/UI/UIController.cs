@@ -401,8 +401,23 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ShowCustomGameLobby:
                 CustomGameLobby.ShowCustomGameLobby ();
                 break;
-            case UIString.ShowCustomGameMenu:
-                CustomGameMenu.ShowCustomGameMenu ();
+            case UIString.ShowCustomGameRoom:
+                CustomGameRoom.ShowCustomGameRoom ();
+                break;
+            case UIString.ShowCustomGameEditor:
+                CustomGameEditor.ShowCustomGameEditor ();
+                break;
+            case UIString.CustomGameEditorTypeButton:
+                CustomGameEditor.SelectType (number);
+                break;
+            case UIString.CustomGameRoomAddAI:
+                CustomGameRoom.AddAIOpponent (id);
+                break;
+            case UIString.CustomGameKickPlayer:
+                CustomGameRoom.KickPlayer (id);
+                break;
+            case UIString.CustomGameEditorApply:
+                CustomGameEditor.CreateGame ();
                 break;
             case UIString.ShowSetEditor:
                 SetEditor.ShowSetEditorMenu (id);

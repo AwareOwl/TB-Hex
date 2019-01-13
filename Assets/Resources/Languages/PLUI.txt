@@ -94,3 +94,9 @@
 [93] Własna gra
 [94] każdy na każdego
 [95] Pokaż chat
+[96] Dostępne gry
+[97] Stwórz nową grę
+[98] Dołącz do wybranej gry
+[99] Podaj nazwę gry
+[100] Gotów do startu!
+[101] Wyrzuć gracza

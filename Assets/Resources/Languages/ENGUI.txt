@@ -94,3 +94,9 @@
 [93] Custom game
 [94] free for all
 [95] Show chat
+[96] Available games
+[97] Create new game
+[98] Join to selected game
+[99] Enter game name
+[100] Ready to start!
+[101] Kick player

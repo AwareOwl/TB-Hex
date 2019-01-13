@@ -53,8 +53,15 @@ public class UIString {
     public const string MainMenuStartQuickMatch = "MainMenuStartQuickMatch";
 
     public const string ShowCustomGameLobby = "ShowCustomGameLobby";
-    public const string ShowCustomGameMenu = "ShowCustomGameMenu";
+    public const string ShowCustomGameRoom = "ShowCustomGameRoom";
+    public const string ShowCustomGameEditor = "ShowCustomGameEditor";
     public const string ShowChat = "ShowChat";
+    public const string CustomGameLobbyApply = "CustomGameLobbyApply";
+    public const string CustomGameEditorTypeButton = "CustomGameEditorTypeButton";
+    public const string CustomGameEditorApply = "CustomGameEditorApply";
+    public const string CustomGameRoomSelectRow = "CustomGameRoomSelectRow";
+    public const string CustomGameRoomAddAI = "CustomGameRoomAddAI";
+    public const string CustomGameKickPlayer = "CustomGameKickPlayer";
 
     public const string ShowGameModeEditor = "ShowGameModeEditor";
     public const string DeleteGameMode = "DeleteGameMode";

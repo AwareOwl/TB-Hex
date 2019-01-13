@@ -63,4 +63,11 @@ public class ClientLogic : MonoBehaviour {
         playerProperties.hand = new HandClass ();
         playerProperties.hand.LoadFromModeString (lines);
     }
+
+    static public void LoadCustomGameRoom (bool isHost, string gameName, int matchType, int [] avatars, string [] names, bool [] AIs) {
+        if (GOUI.CurrentGUI.GetType () != typeof (CustomGameRoom)) {
+            CustomGameRoom.ShowCustomGameRoom ();
+        }
+        CustomGameRoom.LoadData (isHost, gameName, matchType, avatars, names, AIs);
+    }
 }

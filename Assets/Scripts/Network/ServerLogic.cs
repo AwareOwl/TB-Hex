@@ -191,7 +191,53 @@ public class ServerLogic : MonoBehaviour {
     }
 
     static public void DownloadListOfCustomGames (ClientInterface client) {
+        List<int> ids = new List<int> ();
+        List<string> names = new List<string> ();
+        List<int> matchTypes = new List<int> ();
+        List<int> filledSlots = new List<int> ();
+        CustomGameClass [] list = CustomGameManager.GetCustomGames (client.GameMode);
+        foreach (CustomGameClass customGame in list) {
+            ids.Add (customGame.id);
+            names.Add (customGame.name);
+            matchTypes.Add (customGame.matchType);
+            filledSlots.Add (customGame.NumberOfPlayers ());
+        }
 
+        client.TargetDownloadListOfCustomGames (client.connectionToClient, 
+            ids.ToArray(), names.ToArray (), matchTypes.ToArray(), filledSlots.ToArray());
+    }
+
+    static public void DownloadCustomGameRoom (CustomGameClass customGame) {
+        List<int> avatars = new List<int> ();
+        List<string> userNames = new List<string> ();
+        List<bool> AI = new List<bool> ();
+
+        int count = CustomGameClass.GetNumberOfSlots (customGame.matchType);
+        for (int x = 0; x < count; x++) {
+            bool tAI = customGame.AI [x];
+            if (tAI) {
+                avatars.Add (3);
+            } else {
+                avatars.Add (2);
+            }
+            ClientInterface tClient = customGame.clients [x];
+            if (tClient != null) {
+                userNames.Add (tClient.UserName);
+            } else if (tAI) {
+                userNames.Add ("AI Opponent");
+            } else {
+                userNames.Add ("");
+            }
+            AI.Add (tAI);
+        }
+        foreach (ClientInterface client in customGame.clients) {
+            if (client != null) {
+                bool isHost = client == customGame.host;
+                client.TargetDownloadCustomGameRoom (client.connectionToClient,
+                    isHost, customGame.name, customGame.matchType, 
+                    avatars.ToArray (), userNames.ToArray (), AI.ToArray ());
+            }
+        }
     }
 
 

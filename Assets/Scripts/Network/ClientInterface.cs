@@ -335,8 +335,30 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadListOfCustomGames (int [] ids, string [] names, int [] matchTypes) {
+    public void TargetDownloadListOfCustomGames (NetworkConnection target, 
+        int [] ids, string [] names, int [] matchTypes, int [] filledSlots) {
+        CustomGameLobby.LoadData (ids, names, matchTypes, filledSlots);
+    }
 
+    [Command]
+    public void CmdCreateCustomGame (string gameName, int matchType) {
+        CustomGameManager.CreateCustomGame (this, matchType, gameName);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadCustomGameRoom (NetworkConnection target, 
+       bool host, string roomName, int matchType, int [] avatars, string [] names, bool [] AIs) {
+        ClientLogic.LoadCustomGameRoom (host, roomName, matchType, avatars, names, AIs);
+    }
+
+    [Command]
+    public void CmdCustomGameAddAI (int slotNumber) {
+        CustomGameManager.AddAI (this, slotNumber);
+    }
+
+    [Command]
+    public void CmdCustomGameKickPlayer (int slotNumber) {
+        CustomGameManager.KickPlayer (this, slotNumber);
     }
 
 

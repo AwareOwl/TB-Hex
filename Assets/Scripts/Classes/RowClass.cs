@@ -7,6 +7,8 @@ public class RowClass : GOUI {
     public const int SetList = 0;
     public const int GameModeList = 1;
     public const int BoardList = 2;
+    public const int RoomUsers = 3;
+    public const int RoomList = 4;
 
     int listMode;
 
@@ -46,6 +48,10 @@ public class RowClass : GOUI {
             case (BoardList):
                 RowBackground.name = UIString.GameModeEditorSelectBoard;
                 Edit.name = UIString.GameModeEditorEditBoard;
+                break;
+            case (RoomUsers):
+                RowBackground.name = UIString.CustomGameRoomSelectRow;
+                //Edit.name = UIString.GameModeEditorEditBoard;
                 break;
         }
 
@@ -120,6 +126,9 @@ public class RowClass : GOUI {
                     case (BoardList):
                         Option.name = UIString.GameModeEditorCreateNewBoard;
                         break;
+                    case (RoomUsers):
+                        Option.name = UIString.CustomGameRoomAddAI;
+                        break;
                 }
                 break;
             case 2:
@@ -135,6 +144,20 @@ public class RowClass : GOUI {
                 }
                 break;
             case 4:
+                Icon.GetComponent<Renderer> ().enabled = true;
+                Icon.GetComponent<SpriteRenderer> ().color = Color.white;
+                SetSprite (Icon, AppDefaults.Avatar [iconNumber]);
+                Icon.GetComponent<Collider> ().enabled = false;
+                Edit.GetComponent<Renderer> ().enabled = false;
+                Edit.GetComponent<Collider> ().enabled = false;
+                Option.GetComponent<Renderer> ().enabled = true;
+                Option.GetComponent<Collider> ().enabled = true;
+                switch (listMode) {
+                    case (RoomUsers):
+                        Option.name = UIString.CustomGameKickPlayer;
+                        break;
+                }
+                break;
             case 5:
                 Icon.GetComponent<Renderer> ().enabled = true;
                 Icon.GetComponent<SpriteRenderer> ().color = Color.white;
@@ -142,13 +165,15 @@ public class RowClass : GOUI {
                 Icon.GetComponent<Collider> ().enabled = false;
                 Edit.GetComponent<Renderer> ().enabled = false;
                 Edit.GetComponent<Collider> ().enabled = false;
+                Option.GetComponent<Renderer> ().enabled = false;
+                Option.GetComponent<Collider> ().enabled = false;
                 break;
 
         }
         if (mode != 3) {
             RowBackground.GetComponent<UIController> ().id = -1;
-            Edit.GetComponent<UIController> ().id = -1;
-            Option.GetComponent<UIController> ().id = -1;
+            //Edit.GetComponent<UIController> ().id = -1;
+            //Option.GetComponent<UIController> ().id = -1;
             setId = -1;
         }
         RowBackground.GetComponent<SpriteRenderer> ().color = Color.white;

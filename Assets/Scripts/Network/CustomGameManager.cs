@@ -20,4 +20,30 @@ public class CustomGameManager {
         newCustomGame.JoinGame (client);
         customGames.Add (newCustomGame);
     }
+
+    static public void AddAI (ClientInterface client, int slotNumber) {
+        foreach (CustomGameClass customGame in customGames) {
+            if (customGame.host == client) {
+                customGame.AddAI (client, slotNumber);
+            }
+        }
+    }
+
+    static public void KickPlayer (ClientInterface client, int slotNumber) {
+        foreach (CustomGameClass customGame in customGames) {
+            if (customGame.host == client) {
+                customGame.KickPlayer (client, slotNumber);
+            }
+        }
+    }
+
+    static public void StartCustomGame (ClientInterface client) {
+        CustomGameClass game = null;
+        foreach (CustomGameClass customGame in customGames) {
+            if (customGame.host == client) {
+                game.StartGame ();
+            }
+        }
+        customGames.Remove (game);
+    }
 }

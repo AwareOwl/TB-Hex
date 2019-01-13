@@ -65,6 +65,9 @@ public class ServerVersionManager : VersionManager {
                 HotfixVersion = 0;
                 DevelopVersion = 0;
             }
+            if (PathVersion <= 4) {
+
+            }
         }
 
     }
