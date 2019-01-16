@@ -222,6 +222,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.GameModeEditorChangeName:
                 Tooltip.NewTooltip (transform, Language.ChangeGameVersionName);
                 break;
+            case UIString.RefreshCustomGameLobby:
+                Tooltip.NewTooltip (transform, Language.Refresh);
+                break;
 
             case UIString.SaveBoard:
                 Tooltip.NewTooltip (transform, Language.SaveThisBoard);
@@ -426,6 +429,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 ClientLogic.MyInterface.CmdJoinQuickMatchQueue ();
                 break;
             case UIString.ShowCustomGameLobby:
+            case UIString.RefreshCustomGameLobby:
                 CustomGameLobby.ShowCustomGameLobby ();
                 break;
 

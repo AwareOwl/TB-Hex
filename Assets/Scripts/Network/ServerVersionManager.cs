@@ -76,8 +76,8 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 8) {
                         ConvertTo0_4_0_8 ();
                     }
-                    if (DevelopVersion < 10) {
-                        ConvertTo0_4_0_10 ();
+                    if (DevelopVersion < 11) {
+                        ConvertTo0_4_0_11 ();
                     }
                 }
             }
@@ -96,11 +96,11 @@ public class ServerVersionManager : VersionManager {
         RatingClass.LoadTokenOnRow ();
     }
 
-    static public void ConvertTo0_4_0_10 () {
+    static public void ConvertTo0_4_0_11 () {
         GameVersion = 0;
         PathVersion = 4;
         HotfixVersion = 0;
-        DevelopVersion = 10;
+        DevelopVersion = 11;
     }
 
     static public void ConvertTo0_4_0_8 () {

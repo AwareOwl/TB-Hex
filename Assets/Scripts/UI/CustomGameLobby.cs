@@ -30,6 +30,10 @@ public class CustomGameLobby : GOUI {
 
     static public void SelectRow (int id) {
         selectedId = id;
+        foreach (RowClass row in row) {
+            row.FreeRow ();
+        }
+        row [id].SelectRow ();
     }
 
     static public void JoinCustomGameRoom () {
@@ -104,6 +108,9 @@ public class CustomGameLobby : GOUI {
 
         Clone = CreateSprite ("UI/Butt_M_Apply", 495, 900, 11, 90, 90, true);
         Clone.name = UIString.CustomGameLobbyApply;
+        
+        Clone = CreateSprite ("UI/Butt_S_Revert", 855, 900, 11, 90, 90, true);
+        Clone.name = UIString.RefreshCustomGameLobby;
 
         Clone = CreateSprite ("UI/Butt_M_Discard", 945, 900, 11, 90, 90, true);
         Clone.name = UIString.ShowMainMenu;

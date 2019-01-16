@@ -91,6 +91,7 @@ public class UIString {
     public const string BoardEditorSettings = "BoardEditorSettings";
     public const string AvailableMatchTypesEditorApply = "AvailableMatchTypesEditorApply";
     public const string AvailableMatchTypesEditorButton = "AvailableMatchTypesEditorButton";
+    public const string RefreshCustomGameLobby = "RefreshCustomGameLobby";
 
     public const string ChatSendButton = "ChatSendButton";
 

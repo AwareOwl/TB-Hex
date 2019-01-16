@@ -130,6 +130,7 @@ public class Language {
     static public string EnterText;
     static public string Send;
     static public string BeforeApplyingSelectAnyOption;
+    static public string Refresh;
 
     static public string ChangeSettings;
     static public string Apply;
@@ -291,6 +292,7 @@ public class Language {
         BeforeApplyingSelectAnyOption = UI [108];
         FailedToConnectToTheGameKey = 109;
         HideChat = UI [110];
+        Refresh = UI [112];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

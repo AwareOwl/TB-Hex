@@ -22,3 +22,7 @@
 [21] Sacrifice: death
 [22] Propaganda
 [23] Expose target
+[24] Incineration
+[25] Swarm
+[26] Monopoly
+[27] Diversity

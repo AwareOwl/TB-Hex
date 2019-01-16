@@ -6,3 +6,5 @@
 [5] Dynamite Token
 [6] Lazy Token
 [7] Token of Inflation
+[8] Token of Suppression
+[9] Token of Negation

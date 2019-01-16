@@ -110,3 +110,4 @@
 [109] Failed to connect to the game. Probably game has started or was canceled.
 [110] Hide chat
 [111] Deleting old unwanted files. Please wait.
+[112] Refresh

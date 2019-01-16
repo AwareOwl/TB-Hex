@@ -110,3 +110,4 @@
 [109] Nie udało się dołączyć do gry. Prawdopodobnie gra już się rozpoczęła lub została anulowana.
 [110] Ukryj chat
 [111] Trwa usuwanie zbędnych plików. Proszę czekać.
+[112] Odśwież

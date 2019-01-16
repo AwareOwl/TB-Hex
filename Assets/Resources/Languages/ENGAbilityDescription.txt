@@ -5,7 +5,7 @@
 [4] Increases your current score by sum of values of target tokens.
 [5] Pushes target tokens away from played token unless their path is blocked by another token.
 [6] Reduces value of played token by %d1 for every target empty field.
-[7] This ability has the same effect as the last played ability.
+[7] This ability has the same effect as the ability of last played card
 [8] Reduces value of last played token by %d1 for every target enemy token.
 [9] Increases value of weakest target token by %d1.
 [10] Changes types of target tokens to Normal Tokens.
@@ -22,3 +22,7 @@
 [21] Destroys your taget tokens to reduce value of last played token by sum of their values.
 [22] Sets type of last played token by value of target token.
 [23] Enemy target tokens steal 1 value from last played token.
+[24] Reduces values of target tokens by number equal to count of target allied tokens.
+[25] Creates up to 3 Normal Tokens with value 1 on target empty fields.
+[26] Reduces values of weakest target tokens by 1, and increases values of strongest target tokens by 1.
+[27] Increases values of target tokens with different type than played token by 1.

@@ -6,5 +6,5 @@
 [5] Pomiędzy turami zmniejsza swoją wartość o 1. Gdy zostaje zniszczony, redukuje wartość pobliskich żetonów o 3.
 [6] Generuje przyrost punktacji tylko w trakcie tur właściciela.
 [7] Wszystkie zagrywane żetony będą miały wartość większą o 1.
-[8] Pobliskie słabsze żetony nie mogą generować wartości.
+[8] Pobliskie słabsze żetony nie mogą generować przyrostu punktacji
 [9] Blokuje następną zagraną umiejętność, a gdy do tego dojdzie, zmienia się w Zwykły Żeton.
