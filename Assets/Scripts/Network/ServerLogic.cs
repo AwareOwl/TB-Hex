@@ -52,7 +52,7 @@ public class ServerLogic : MonoBehaviour {
     static public void CompleteLogIn (ClientInterface client, string accountName) {
         client.AccountName = accountName;
         string userName = ServerData.GetUserKeyData (accountName, ServerData.UserNameKey);
-        if (userName == "null" || userName == "") {
+        if (userName == null || userName == "") {
             userName = accountName;
         }
         client.UserName = userName;
@@ -95,7 +95,7 @@ public class ServerLogic : MonoBehaviour {
         }
         HandClass hand2 = new HandClass ();
         hand2.GenerateRandomHand (gameMode);
-        MatchClass match = MatchMakingClass.CreateGame (gameMode, new PlayerPropertiesClass [] {
+        MatchClass match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
             new PlayerPropertiesClass (1, InputController.autoRunAI, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
         StartMatch (match);
@@ -119,6 +119,12 @@ public class ServerLogic : MonoBehaviour {
         MatchMakingClass.JoinQuickQueue (client);
     }
 
+    static public void JoinCustomGameRoom (ClientInterface client, int id) {
+        if (!CustomGameManager.JoinGame (client, id)) {
+            client.TargetShowMessage (client.connectionToClient, Language.FailedToConnectToTheGameKey);
+        }
+    }
+
     static public void LeaveQuickMatchQueue (ClientInterface client) {
         MatchMakingClass.LeaveQuickQueue (client);
         client.TargetShowMainMenu (client.connectionToClient);
@@ -126,12 +132,32 @@ public class ServerLogic : MonoBehaviour {
 
     static public void StartMatch (MatchClass match) {
         for (int x = 1; x <= match.numberOfPlayers; x++) {
-            ClientInterface client = match.Player [x].properties.client;
+            PlayerClass player = match.Player [x];
+            if (player != null) {
+                match.turnOfPlayer = x;
+                break;
+            }
+        }
+        for (int x = 1; x <= match.numberOfPlayers; x++) {
+            PlayerClass player = match.Player [x];
+            if (player == null) {
+                continue;
+            }
+            ClientInterface client = player.properties.client;
             if (client != null) {
                 client.currentMatch = match;
                 if (!InputController.autoRunAI) {
                     DownloadGame (client, match);
                 }
+            }
+        }
+        for (int x = 1; x <= match.numberOfPlayers; x++) {
+            PlayerClass player = match.Player [x];
+            if (player != null) {
+                if (player.properties.AI != null) {
+                    match.RunAI ();
+                }
+                break;
             }
         }
     }
@@ -144,6 +170,9 @@ public class ServerLogic : MonoBehaviour {
             match.Board.BoardToString ());
         for (int x = 0; x <= match.numberOfPlayers; x++) {
             PlayerClass player = match.Player [x];
+            if (player == null) {
+                continue;
+            }
             client.TargetDownloadCurrentGamePlayer (client.connectionToClient, 
                 x, player.PlayerToString ());
             PlayerPropertiesClass playerProperties = player.properties;
@@ -377,7 +406,8 @@ public class ServerLogic : MonoBehaviour {
     static public void DownloadBoardToEditor (ClientInterface client, int boardId) {
         string boardName = ServerData.GetBoardName (boardId);
         string [] board = ServerData.GetBoard (boardId);
-        client.TargetDownloadBoardToEditor (client.connectionToClient, boardId, boardName, board);
+        int [] matchTypes = ServerData.GetBoardMatchTypes (boardId);
+        client.TargetDownloadBoardToEditor (client.connectionToClient, boardId, boardName, board, matchTypes);
     }
 
     static public void SaveBoard (ClientInterface client, int boardId, string [] board) {
@@ -390,6 +420,24 @@ public class ServerLogic : MonoBehaviour {
         } else {
             client.TargetShowMessage (client.connectionToClient, Language.BoardHasBeenSavedButIllegalKey);
         }
+    }
+
+    static public void SaveBoardMatchTypes (ClientInterface client, int boardId, int [] matchTypes) {
+        if (!ServerData.IsBoardOwner (boardId, client.AccountName)) {
+            return;
+        }
+        ServerData.SetBoardMatchTypes (boardId, matchTypes);
+    }
+
+    static public void CreateCustomGame (ClientInterface client, string gameName, int matchType) {
+        int [] availableMatchTypes = ServerData.GetAllGameModeMatchTypes (client.GameMode);
+        foreach (int type in availableMatchTypes) {
+            if (type == matchType) {
+                CustomGameManager.CreateCustomGame (client, matchType, gameName);
+                return;
+            }
+        }
+        client.TargetShowMessage (client.connectionToClient, Language.SelectedMatchVersionIsNotAvailableKey);
     }
 
     static public void SaveCardPool (ClientInterface client, int gameModeId, string [] cardPool) {

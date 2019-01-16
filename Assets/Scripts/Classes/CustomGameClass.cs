@@ -96,6 +96,14 @@ public class CustomGameClass {
         RefreshRoomForClients ();
     }
 
+    public void ChangeSlot (int previousSlot, int newSlot) {
+        if (clients [newSlot] == null && !AI [newSlot]) {
+            clients [newSlot] = clients [previousSlot];
+            clients [previousSlot] = null;
+        }
+        RefreshRoomForClients ();
+    }
+
     public void AddAI (ClientInterface client, int slot) {
         if (!host == client) {
             return;
@@ -109,6 +117,25 @@ public class CustomGameClass {
     public void KickPlayer (ClientInterface client, int slot) {
         if (!host == client) {
             return;
+        }
+        RemovePlayer (slot);
+    }
+
+    public void RemovePlayer (int slot) {
+        if (host == clients [slot]) {
+            host = null;
+            bool replaced = false;
+            for (int x = 0; x < clients.Length; x++) {
+                if (clients [x] != null && x != slot) {
+                    host = clients [x];
+                    replaced = true;
+                    break;
+                }
+            }
+            if (!replaced) {
+                CustomGameManager.RemoveCustomGame (this);
+                return;
+            }
         }
         clients [slot] = null;
         AI [slot] = false;
@@ -125,9 +152,16 @@ public class CustomGameClass {
         for (int x = 0; x < count; x++) {
             if (clients [x] != null) {
                 properties [x] = new PlayerPropertiesClass (x + 1, clients [x]);
+            } else if (AI [x]) {
+                HandClass hand2 = new HandClass ();
+                hand2.GenerateRandomHand (gameMode);
+                properties [x] = new PlayerPropertiesClass (x + 1, true, "AI opponent", "AI opponent", hand2, null);
+            } else {
+                properties [x] = null;
             }
+
         }
-        ServerLogic.StartMatch (MatchMakingClass.CreateGame (gameMode, properties));
+        ServerLogic.StartMatch (MatchMakingClass.CreateGame (gameMode, matchType, properties));
     }
 
 }

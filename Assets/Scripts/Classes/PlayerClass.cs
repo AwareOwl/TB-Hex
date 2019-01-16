@@ -44,6 +44,9 @@ public class PlayerClass {
     }
 
     public PlayerClass (PlayerPropertiesClass properties) {
+        if (properties == null) {
+            return;
+        }
         this.properties = properties;
         this.topCardNumber = new int [properties.hand.stack.Length];
         for (int x = 0; x < topCardNumber.Length; x++) {

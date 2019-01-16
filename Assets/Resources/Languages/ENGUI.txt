@@ -100,3 +100,12 @@
 [99] Enter game name
 [100] Ready to start!
 [101] Kick player
+[102] Select available match types
+[103] Change settings
+[104] Selected match version is not available in selected game version. Try again selecting another match version.
+[105] You have been kicked out from the room.
+[106] Enter text
+[107] Send
+[108] Before applying select any option
+[109] Failed to connect to the game. Probably game has started or was canceled.
+[110] Hide chat

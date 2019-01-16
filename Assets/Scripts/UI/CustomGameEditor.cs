@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class CustomGameEditor : GOUI {
 
+    static int numberOfButtons = 4;
     static public InputField inputField;
 
+    static public bool [] available;
     static public GameObject [] typeButtons;
     static public int selectedType = 1;
 
@@ -14,7 +16,7 @@ public class CustomGameEditor : GOUI {
     void Start () {
         CurrentGUI = this;
         CreateCustomGameEditor ();
-        //ClientLogic.MyInterface.CmdDownloadListOfCustomGames ();
+        ClientLogic.MyInterface.CmdDownloadCustomGameEditorData ();
     }
 
     static public void ShowCustomGameEditor () {
@@ -26,12 +28,33 @@ public class CustomGameEditor : GOUI {
         SelectType (selectedType);
     }
 
+    static public void LoadData (int [] matchTypes) {
+        GameObject Clone;
+        typeButtons = new GameObject [numberOfButtons];
+        available = new bool [numberOfButtons];
+
+        for (int y = 0; y < matchTypes.Length; y++) {
+            int x = matchTypes [y];
+            available [matchTypes [y]] = true;
+            Clone = CreateSpriteWithText ("UI/Butt_M_EmptySquare",
+                CustomGameClass.GetMatchTypeName (x), 540 + 120 * x, 520, 11, 120, 60);
+            Clone.name = UIString.CustomGameEditorTypeButton;
+            Clone.GetComponent<UIController> ().number = x;
+            typeButtons [x] = Clone;
+        }
+        SelectType ();
+    }
+
     static public void SelectType (int type) {
         selectedType = type;
         foreach (GameObject obj in typeButtons) {
-            obj.GetComponent<UIController> ().FreeAndUnlcok ();
+            if (obj != null) {
+                obj.GetComponent<UIController> ().FreeAndUnlcok ();
+            }
         }
-        typeButtons [type].GetComponent<UIController> ().PressAndLock ();
+        if (typeButtons [type] != null) {
+            typeButtons [type].GetComponent<UIController> ().PressAndLock ();
+        }
     }
 
     static public void CreateGame () {
@@ -48,17 +71,6 @@ public class CustomGameEditor : GOUI {
 
         inputField = CreateInputField (Language.EnterGameName, 720, 435, 510, 60).GetComponent <InputField>();
 
-        int numberOfButtons = 4;
-        typeButtons = new GameObject [numberOfButtons];
-
-        for (int x = 0; x < numberOfButtons; x++) {
-            Clone = CreateSpriteWithText ("UI/Butt_M_EmptySquare", 
-                CustomGameClass.GetMatchTypeName (x), 540 + 120 * x, 520, 11, 120, 60);
-            Clone.name = UIString.CustomGameEditorTypeButton;
-            Clone.GetComponent<UIController> ().number = x;
-            typeButtons [x] = Clone;
-        }
-        SelectType ();
 
 
         Clone = CreateSprite ("UI/Butt_M_Apply", 495, 630, 11, 90, 90, true);

@@ -56,7 +56,10 @@ public class MatchClass {
         this.numberOfPlayers = match.numberOfPlayers;
         this.Player = new PlayerClass [this.numberOfPlayers + 1];
         for (int x = 0; x <= this.numberOfPlayers; x++) {
-            this.Player [x] = new PlayerClass (match.Player [x]);
+            PlayerClass player = match.Player [x];
+            if (player != null) {
+                this.Player [x] = new PlayerClass (match.Player [x]);
+            }
         }
         this.LastMove = match.LastMove;
         this.Properties = match.Properties;
@@ -129,9 +132,11 @@ public class MatchClass {
         }
         for (int x = 0; x < Player.Length; x++) {
             PlayerClass player = Player [x];
-            player.SetScoreIncome (playerIncome [x]);
-            player.AddScore (playerIncome [x]);
-            player.UpdateVisuals (this);
+            if (player != null) {
+                player.SetScoreIncome (playerIncome [x]);
+                player.AddScore (playerIncome [x]);
+                player.UpdateVisuals (this);
+            }
         }
 
         CheckFinishCondition ();
@@ -183,18 +188,27 @@ public class MatchClass {
 
         UpdateBoard ();
         UpdateVisuals ();
-
-        SetTurnOfPlayer (Mathf.Max (1, (turnOfPlayer + 1) % (numberOfPlayers + 1)));
+        IncrementTurnOfPlayer ();
         turn++;
+    }
+
+    public void IncrementTurnOfPlayer () {
+        int newTurnOfPlayer = turnOfPlayer;
+        do {
+            newTurnOfPlayer = Mathf.Max (1, (newTurnOfPlayer + 1) % (numberOfPlayers + 1));
+        } while (Player [newTurnOfPlayer] == null);
+        SetTurnOfPlayer (newTurnOfPlayer);
     }
 
     public void SetTurnOfPlayer (int turnOfPlayer) {
         this.turnOfPlayer = turnOfPlayer;
         if (visualMatch != null) {
             foreach (PlayerClass player in Player) {
-                VisualPlayer vPlayer = player.visualPlayer;
-                if (vPlayer != null) {
-                    vPlayer.DelayedSetActivePlayer (player.properties.playerNumber == turnOfPlayer);
+                if (player != null) {
+                    VisualPlayer vPlayer = player.visualPlayer;
+                    if (vPlayer != null) {
+                        vPlayer.DelayedSetActivePlayer (player.properties.playerNumber == turnOfPlayer);
+                    }
                 }
             }
         }
@@ -227,7 +241,7 @@ public class MatchClass {
 
     public void CheckFinishCondition () {
         for (int x = 1; x <= numberOfPlayers; x++) {
-            if (Player [x].score >= Properties.scoreLimit) {
+            if (Player [x] != null && Player [x].score >= Properties.scoreLimit) {
                 FinishGame (1, Properties.scoreLimit);
                 return;
             }
@@ -248,7 +262,7 @@ public class MatchClass {
         for (int x = 1; x <= numberOfPlayers; x++) {
             if (winner == null) {
                 winner = Player [x];
-            } else {
+            } else if (Player [x] != null) {
                 if (winner.score < Player [x].score) {
                     winner = Player [x];
                 } else if (winner.score == Player [x].score) {
@@ -276,13 +290,13 @@ public class MatchClass {
         }
     }
 
-    public void NewMatch (int gameMode, int numberOfPlayers) {
+    public void NewMatch (int gameMode, int matchType, int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
         Properties = new MatchPropertiesClass ();
         SetPlayers ();
 
         Board = new BoardClass (this);
-        Board.LoadRandomFromGameMode (gameMode);
+        Board.LoadRandomFromGameMode (gameMode, matchType);
     }
 
     public void MoveTopCard (int playerNumber, int stackNumber) {
@@ -389,7 +403,21 @@ public class MatchClass {
 
     public void VisualPlayCard (int playerNumber, CardClass card) {
         if (visualMatch != null) {
-            visualMatch.PlayCard (playerNumber, card);
+            bool player = playerNumber == ClientLogic.MyInterface.playerNumber;
+            int playerPosition = 0;
+            if (!player) {
+                for (int x = 1; x < Player.Length; x++) {
+                    if (Player [x] != null) {
+                        if (x == playerNumber) {
+                            break;
+                        }
+                        if (x != ClientLogic.MyInterface.playerNumber) {
+                            playerPosition++;
+                        }
+                    }
+                }
+            }
+            visualMatch.PlayCard (playerNumber, player, playerPosition, card);
         }
     }
 
@@ -610,7 +638,7 @@ public class MatchClass {
                     CreateToken (target, 0, 1, playerNumber);
                     break;
                 case 26:
-                    ModifyTempValue (target, -1);
+                    ModifyTempValue (target, 1);
                     break;
                 case 27:
                     ModifyTempValue (target, 1);
@@ -638,7 +666,7 @@ public class MatchClass {
                     ChangeType (target, tokenType);
                     break;
                 case 26:
-                    ModifyTempValue (target, 1);
+                    ModifyTempValue (target, -1);
                     break;
             }
         }
@@ -799,6 +827,9 @@ public class MatchClass {
     }
 
     public void SetPlayer (int PlayerNumber, PlayerClass player) {
+        if (player == null) {
+            return;
+        }
         Player [PlayerNumber] = player;
         PlayerPropertiesClass properties = player.properties;
         properties.playerNumber = PlayerNumber;
@@ -819,14 +850,18 @@ public class MatchClass {
         }
         Board.EnableVisualisation ();
         for (int x = 1; x < Player.Length; x++) {
-            Player [x].EnableVisuals ();
+            if (Player [x] != null) {
+                Player [x].EnableVisuals ();
+            }
         }
     }
 
     public void DestroyVisuals () {
         Board.DestroyAllVisuals ();
         foreach (PlayerClass player in Player) {
-            player.DestroyVisuals ();
+            if (player != null) {
+                player.DestroyVisuals ();
+            }
         }
         if (visualMatch != null) {
             visualMatch.DestroyVisuals ();

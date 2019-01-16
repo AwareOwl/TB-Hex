@@ -7,6 +7,8 @@ public class UsedCardPreview : MonoBehaviour {
     static List<GameObject> [] ExistingPreviews = new List<GameObject> [5];
 
     int PlayerNumber;
+    bool player;
+    int playerPosition;
     CardClass card;
     GameObject Anchor;
     GameObject Card;
@@ -30,13 +32,15 @@ public class UsedCardPreview : MonoBehaviour {
     }
 
 
-    public void Init (int playerNumber, CardClass card) {
+    public void Init (int playerNumber, bool player, int playerPosition, CardClass card) {
         timerScale = AppSettings.AnimationDuration;
         destroyTime = timerScale + 20f * AppSettings.CardPreviewDuration;
         if (AppSettings.CardPreviewDuration >= 1) {
             destroyTime += 10000f;
         }
         PlayerNumber = playerNumber;
+        this.playerPosition = playerPosition;
+        this.player = player;
         this.card = card;
         if (ExistingPreviews [playerNumber] == null) {
             ExistingPreviews [playerNumber] = new List<GameObject> ();
@@ -47,9 +51,13 @@ public class UsedCardPreview : MonoBehaviour {
 
         Clone.transform.parent = GOUI.CurrentCanvas.transform;
         Clone.transform.localScale = new Vector3 (1, 1, 1);
+        int shift = -1;
+        if (!player) {
+            shift = 1;
+        }
         Clone.transform.localPosition = new Vector3 (
-            (3.85f + Random.Range (-0.1f, 0.1f)) * (playerNumber * 2 - 3),
-            2 - 0.15f * ExistingPreviews [playerNumber].Count,
+            3.85f * shift + Random.Range (-0.1f, 0.1f),
+            2 - 0.15f * ExistingPreviews [playerNumber].Count - 2 * playerPosition,
             5 + 0.1f * ExistingPreviews [playerNumber].Count);
         Clone.transform.localEulerAngles = new Vector3 (-90f, 0, Random.Range (-2f, 2f));
         Anchor = Clone;
@@ -91,7 +99,7 @@ public class UsedCardPreview : MonoBehaviour {
 
         Anchor.transform.localPosition = new Vector3 (
             Anchor.transform.localPosition.x,
-            0.8f * Anchor.transform.localPosition.y + 0.2f * (2f - 0.15f * pos),
+            0.8f * Anchor.transform.localPosition.y + 0.2f * (2f - 0.15f * pos - 2 * playerPosition),
             5 + 0.1f * pos);
 
 
@@ -109,11 +117,13 @@ public class UsedCardPreview : MonoBehaviour {
         if (timer * 2 > timerScale && timer - destroyTime < 0) {
             if (Card == null) {
                 GameObject Clone;
-                Clone = new VisualCard (card).Anchor;
+                VisualCard VC = new VisualCard (card);
+                Clone = VC.Anchor;
                 Clone.transform.parent = Anchor.transform;
                 Clone.transform.localScale = new Vector3 (1, 1, 1);
                 Clone.transform.localPosition = new Vector3 (0, 0, 0);
                 Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
+                VC.Background.GetComponent<Renderer> ().material.color = AppDefaults.PlayerColor [PlayerNumber] * 0.25f;
                 Card = Clone;
             }
         } else if (ExistingPreviews [PlayerNumber] [0] == gameObject || destroy) {

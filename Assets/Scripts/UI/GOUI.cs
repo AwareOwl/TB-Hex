@@ -63,7 +63,7 @@ public class GOUI : MonoBehaviour {
         Clone.name = UIString.ExitApp;
         ExitButton = Clone;
         Clone = CreateSprite ("UI/Butt_S_Name", 1335, 45, 11, 60, 60, true);
-        Clone.name = UIString.ExitApp;
+        Clone.name = UIString.ShowChat;
         ChatButton = Clone;
     }
 
@@ -330,6 +330,18 @@ public class GOUI : MonoBehaviour {
 
         return clone;
     }
+
+    static public GameObject CreateUIScrollView (int px, int py, int sx, int sy) {
+        GameObject clone;
+        clone = Instantiate (Resources.Load ("Prefabs/PreUIScrollView")) as GameObject;
+        clone.transform.SetParent (UICanvas.transform);
+        SetAnchoredPosition (clone, px, py);
+        clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (sx, sy);
+        clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
+
+        return clone;
+    }
+
     static public GameObject CreateUIText (string text, int px, int py, int sx, int fontSize) {
         GameObject Clone = CreateUIText (text, px, py);
         RectTransform rTrans = Clone.GetComponent<RectTransform> ();
@@ -412,6 +424,7 @@ public class GOUI : MonoBehaviour {
                 SetInPixScale (Button, 120, 60);
                 Text.GetComponent<Text> ().text = Language.Cancel;
                 Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    ClientLogic.MyInterface.CmdLeaveQuickQueue ();
                     MainMenu.ShowMainMenu ();
                     DestroyImmediate (Background);
                 });

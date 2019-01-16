@@ -97,6 +97,15 @@
 [96] Dostępne gry
 [97] Stwórz nową grę
 [98] Dołącz do wybranej gry
-[99] Podaj nazwę gry
+[99] Wprowadź nazwę gry
 [100] Gotów do startu!
 [101] Wyrzuć gracza
+[102] Wybierz dostępne wersje potyczek
+[103] Zmień ustawienia
+[104] Wybrana wersja potyczki nie jest dostępna w wybranej wersji gry. Spróbuj ponownie wybierając inną wersję potyczki.
+[105] Zostałeś wyrzucony z pokoju
+[106] Wprowadź tekst
+[107] Wyślij
+[108] Przed zatwierdzeniem wybierz jakąś opcję
+[109] Nie udało się dołączyć do gry. Prawdopodobnie gra już się rozpoczęła lub została anulowana.
+[110] Ukryj chat

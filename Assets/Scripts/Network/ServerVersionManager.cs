@@ -21,11 +21,11 @@ public class ServerVersionManager : VersionManager {
                     HotfixVersion = 1;
                     DevelopVersion = 0;
                 }
-            }
-            if (PathVersion <= 1) {
                 PathVersion = 1;
                 HotfixVersion = 0;
                 DevelopVersion = 0;
+            }
+            if (PathVersion <= 1) {
                 if (HotfixVersion <= 1) {
                     if (DevelopVersion < 10) {
                         ConvertTo0_1_1_10 ();
@@ -40,11 +40,11 @@ public class ServerVersionManager : VersionManager {
                         ConvertTo0_1_1_13 ();
                     }
                 }
-            }
-            if (PathVersion <= 2) {
                 PathVersion = 2;
                 HotfixVersion = 0;
                 DevelopVersion = 0;
+            }
+            if (PathVersion <= 2) {
                 if (HotfixVersion <= 0) {
                     if (DevelopVersion < 1) {
                         ConvertTo0_2_0_1 ();
@@ -59,19 +59,22 @@ public class ServerVersionManager : VersionManager {
                         ConvertTo0_2_0_13 ();
                     }
                 }
-            }
-            if (PathVersion <= 3) {
                 PathVersion = 3;
                 HotfixVersion = 0;
                 DevelopVersion = 0;
             }
-            if (PathVersion <= 4) {
+            if (PathVersion <= 3) {
                 PathVersion = 4;
                 HotfixVersion = 0;
                 DevelopVersion = 0;
+            }
+            if (PathVersion <= 4) {
                 if (HotfixVersion <= 0) {
                     if (DevelopVersion < 7) {
                         ConvertTo0_4_0_7 ();
+                    }
+                    if (DevelopVersion < 8) {
+                        ConvertTo0_4_0_8 ();
                     }
                 }
             }
@@ -129,7 +132,7 @@ public class ServerVersionManager : VersionManager {
 
         int [] boardIds = ServerData.GetAllBoards ();
         foreach (int boardId in boardIds) {
-            ServerData.SetBoardMatchTypes (boardId, new string [] { "0", "1" });
+            ServerData.SetBoardMatchTypes (boardId, new int [] { 0, 1 });
         }
 
         int newId;

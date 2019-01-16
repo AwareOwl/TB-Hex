@@ -229,8 +229,24 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ChangeBoardName:
                 Tooltip.NewTooltip (transform, Language.ChangeBoardName);
                 break;
+            case UIString.BoardEditorSettings:
+                Tooltip.NewTooltip (transform, Language.ChangeSettings);
+                break;
             case UIString.GoBackToGameModeEditor:
                 Tooltip.NewTooltip (transform, Language.GoBackToGameVersionEditor);
+                break;
+            case UIString.CustomGameKickPlayer:
+                Tooltip.NewTooltip (transform, Language.KickPlayer);
+                break;
+            case UIString.CustomGameLobbyApply:
+                Tooltip.NewTooltip (transform, Language.JoinToSelectedGame);
+                break;
+            case UIString.ShowChat:
+                if (ChatUI.instance == null) {
+                    Tooltip.NewTooltip (transform, Language.ShowChat);
+                } else {
+                    Tooltip.NewTooltip (transform, Language.HideChat);
+                }
                 break;
 
             case UIString.SetEditorAbout:
@@ -244,6 +260,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.SetEditorApplySetProperties:
             case UIString.CardPoolEditorSaveCardPool:
             case UIString.GameModeMenuApply:
+            case UIString.AvailableMatchTypesEditorApply:
                 Tooltip.NewTooltip (transform, Language.Apply);
                 break;
             case UIString.DestroySubMenu:
@@ -376,6 +393,13 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 SetList.SelectSet (id);
                 break;
 
+            case UIString.AvailableMatchTypesEditorButton:
+                AvailableMatchTypesEditor.ButtonAction (number);
+                break;
+            case UIString.AvailableMatchTypesEditorApply:
+                AvailableMatchTypesEditor.ApplyChanges ();
+                break;
+
             case UIString.SaveSelectedSet:
                 SetList.SaveSelection ();
                 break;
@@ -383,6 +407,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.GameModeEditorChangeName:
             case UIString.ChangeBoardName:
                 GOUI.CurrentGUI.ShowPropertiesMenu ();
+                break;
+            case UIString.BoardEditorSettings:
+                AvailableMatchTypesEditor.ShowAvailableMatchTypesEditor ();
                 break;
             case UIString.SetEditorApplySetProperties:
                 PropertiesMenu.ApplySetProperties ();
@@ -400,6 +427,16 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.ShowCustomGameLobby:
                 CustomGameLobby.ShowCustomGameLobby ();
+                break;
+
+            case UIString.CustomGameLobbyPageButton:
+                CustomGameLobby.ShowPage (number);
+                break;
+            case UIString.CustomGameLobbyRow:
+                CustomGameLobby.SelectRow (id);
+                break;
+            case UIString.CustomGameLobbyApply:
+                CustomGameLobby.JoinCustomGameRoom ();
                 break;
             case UIString.ShowCustomGameRoom:
                 CustomGameRoom.ShowCustomGameRoom ();
@@ -419,10 +456,20 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.CustomGameEditorApply:
                 CustomGameEditor.CreateGame ();
                 break;
+            case UIString.CustomGameRoomSelectRow:
+                ClientLogic.MyInterface.CmdCustomGameMoveToDifferentSlot (id);
+                break;
+            case UIString.CustomGameRoomStartMatch:
+                CustomGameRoom.StartMatch ();
+                break;
             case UIString.ShowSetEditor:
                 SetEditor.ShowSetEditorMenu (id);
                 break;
             case UIString.ShowChat:
+                ChatUI.ToggleChatUI ();
+                break;
+            case UIString.ChatSendButton:
+                ChatUI.SendMessage ();
                 break;
 
             case UIString.InGameHandCard:

@@ -30,13 +30,13 @@ public class VisualMatch : MonoBehaviour {
         DestroyImmediate (this);
     }
 
-    public void PlayCard (int playerNumber, CardClass card) {
-        StartCoroutine (IEPlayCard (playerNumber, card));
+    public void PlayCard (int playerNumber, bool player, int playerPosition, CardClass card) {
+        StartCoroutine (IEPlayCard (playerNumber, player, playerPosition, card));
     }
 
-    public IEnumerator IEPlayCard (int playerNumber, CardClass card) {
+    public IEnumerator IEPlayCard (int playerNumber, bool player, int playerPosition, CardClass card) {
         yield return new WaitForSeconds (GlobalTimer);
-        new GameObject ().AddComponent<UsedCardPreview> ().Init (playerNumber, card);
+        new GameObject ().AddComponent<UsedCardPreview> ().Init (playerNumber, player, playerPosition, card);
     }
 
 

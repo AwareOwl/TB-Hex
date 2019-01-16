@@ -170,8 +170,8 @@ public class BoardClass {
         return s.ToArray();
     }
 
-    public void LoadRandomFromGameMode (int gameModeId) {
-        int [] ids = ServerData.GetAllLegalGameModeBoard (gameModeId);
+    public void LoadRandomFromGameMode (int gameModeId, int matchType) {
+        int [] ids = ServerData.GetAllLegalGameModeBoard (gameModeId, matchType);
         LoadFromFile (ids [UnityEngine.Random.Range (0, ids.Length)]);
     }
 

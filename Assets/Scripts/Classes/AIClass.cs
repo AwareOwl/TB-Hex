@@ -193,9 +193,12 @@ public class AIClass {
     }
 
     public float TurnToWinPredict (MatchClass match, int playerNumber) {
+        PlayerClass player = match.Player [playerNumber];
+        if (player == null) {
+            return 10000;
+        }
         MatchPropertiesClass properties = match.Properties;
         float value = properties.turnLimit - match.turn + 1;
-        PlayerClass player = match.Player [playerNumber];
         BoardClass board = match.Board;
         int emptyTiles = board.GetEmptyTilesCount ();
         value = Mathf.Min (value, 1f * (properties.scoreLimit - player.score) / Mathf.Max (player.scoreIncome, 0.1f));

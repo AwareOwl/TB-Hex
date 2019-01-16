@@ -26,6 +26,7 @@ public class CustomGameManager {
             if (customGame.host == client) {
                 customGame.AddAI (client, slotNumber);
             }
+            return;
         }
     }
 
@@ -37,13 +38,54 @@ public class CustomGameManager {
         }
     }
 
+    static public bool JoinGame (ClientInterface client, int id) {
+        foreach (CustomGameClass customGame in customGames) {
+            if (customGame.id == id) {
+                customGame.JoinGame (client);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static public void LeaveCustomGame (ClientInterface client) {
+        foreach (CustomGameClass customGame in customGames) {
+            int count = customGame.clients.Length;
+            for (int x = 0; x < count; x++) {
+                if (customGame.clients [x] == client) {
+                    customGame.RemovePlayer (x);
+                    return;
+                }
+            }
+        }
+    }
+
     static public void StartCustomGame (ClientInterface client) {
         CustomGameClass game = null;
         foreach (CustomGameClass customGame in customGames) {
             if (customGame.host == client) {
-                game.StartGame ();
+                game = customGame;
+                customGame.StartGame ();
             }
         }
+        if (game != null) {
+            RemoveCustomGame (game);
+        }
+    }
+
+    static public void RemoveCustomGame (CustomGameClass game) {
         customGames.Remove (game);
+    }
+
+    static public void ChangeSlot (ClientInterface client, int newSlot) {
+        foreach (CustomGameClass customGame in customGames) {
+            int count = customGame.clients.Length;
+            for (int x = 0; x < count; x++) {
+                if (customGame.clients [x] == client) {
+                    customGame.ChangeSlot (x, newSlot);
+                    return;
+                }
+            }
+        }
     }
 }

@@ -57,11 +57,14 @@ public class UIString {
     public const string ShowCustomGameEditor = "ShowCustomGameEditor";
     public const string ShowChat = "ShowChat";
     public const string CustomGameLobbyApply = "CustomGameLobbyApply";
+    public const string CustomGameLobbyRow = "CustomGameLobbyRow";
+    public const string CustomGameLobbyPageButton = "CustomGameLobbyPageButton";
     public const string CustomGameEditorTypeButton = "CustomGameEditorTypeButton";
     public const string CustomGameEditorApply = "CustomGameEditorApply";
     public const string CustomGameRoomSelectRow = "CustomGameRoomSelectRow";
     public const string CustomGameRoomAddAI = "CustomGameRoomAddAI";
     public const string CustomGameKickPlayer = "CustomGameKickPlayer";
+    public const string CustomGameRoomStartMatch = "CustomGameRoomStartMatch";
 
     public const string ShowGameModeEditor = "ShowGameModeEditor";
     public const string DeleteGameMode = "DeleteGameMode";
@@ -85,6 +88,11 @@ public class UIString {
     public const string GoBackToGameModeEditor = "GoBackToGameModeEditor";
     public const string SaveBoard = "SaveBoard";
     public const string ChangeBoardName = "ChangeBoardName";
+    public const string BoardEditorSettings = "BoardEditorSettings";
+    public const string AvailableMatchTypesEditorApply = "AvailableMatchTypesEditorApply";
+    public const string AvailableMatchTypesEditorButton = "AvailableMatchTypesEditorButton";
+
+    public const string ChatSendButton = "ChatSendButton";
 
     public const string ShowInGameMenu = "InGameMenu";
     public const string DestroySubMenu = "DestroySubMenu";

@@ -25,7 +25,7 @@ public class VisualPlayer {
 
     }
 
-    public void CreatePlayerUI (PlayerClass player, bool ally, int numberOfPlayers) {
+    public void CreatePlayerUI (PlayerClass player, bool ally, int numberOfPlayers, int playerPosition) {
         GameObject Clone;
 
         this.player = player;
@@ -37,8 +37,8 @@ public class VisualPlayer {
         avatarSize = 70;
         shiftLength = (1440 - margin * 2) / numberOfPlayers;
         barLength = shiftLength - avatarSize - 30;
-        avatarPosition = margin + avatarSize / 2 + shiftLength * playerNumber;
-        barPosition = margin + barLength / 2 + shiftLength * playerNumber;
+        avatarPosition = margin + avatarSize / 2 + shiftLength * playerPosition;
+        barPosition = margin + barLength / 2 + shiftLength * playerPosition;
 
         if (ally) {
             barPosition += avatarSize;
@@ -46,7 +46,12 @@ public class VisualPlayer {
             avatarPosition += barLength;
         }
 
-        Clone = GOUI.CreateSprite ("Textures/Avatars/Avatar0" + ((playerNumber % 4) + 2).ToString ());
+        int avatarNumber = 2;
+        if (player.properties.displayName == "AI opponent") {
+            avatarNumber = 3;
+        }
+
+        Clone = GOUI.CreateSprite ("Textures/Avatars/Avatar0" + avatarNumber.ToString ());
         GOUI.SetInPixScale (Clone, avatarSize, avatarSize);
         GOUI.SetInPixPosition (Clone, avatarPosition, 45, 14);
 

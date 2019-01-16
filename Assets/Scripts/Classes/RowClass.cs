@@ -36,24 +36,6 @@ public class RowClass : GOUI {
         Icon.GetComponent<Collider> ().enabled = false;
 
         Edit = CreateSprite ("UI/Butt_S_Name", 945 - 60, py, 12, 60, 60, true);
-        switch (listMode) {
-            case (SetList):
-                RowBackground.name = UIString.SelectSet;
-                Edit.name = UIString.ShowSetEditor;
-                break;
-            case (GameModeList):
-                RowBackground.name = UIString.SelectGameMode;
-                Edit.name = UIString.ShowGameModeEditor;
-                break;
-            case (BoardList):
-                RowBackground.name = UIString.GameModeEditorSelectBoard;
-                Edit.name = UIString.GameModeEditorEditBoard;
-                break;
-            case (RoomUsers):
-                RowBackground.name = UIString.CustomGameRoomSelectRow;
-                //Edit.name = UIString.GameModeEditorEditBoard;
-                break;
-        }
 
         Option = CreateSprite ("UI/Butt_S_Delete", 945, py, 12, 60, 60, true);
 
@@ -86,6 +68,45 @@ public class RowClass : GOUI {
     }
 
     public void SetState (int mode) {
+        switch (mode) {
+            case 0:
+            case 3:
+                switch (listMode) {
+                    case (SetList):
+                        RowBackground.name = UIString.SelectSet;
+                        Edit.name = UIString.ShowSetEditor;
+                        break;
+                    case (GameModeList):
+                        RowBackground.name = UIString.SelectGameMode;
+                        Edit.name = UIString.ShowGameModeEditor;
+                        break;
+                    case (BoardList):
+                        RowBackground.name = UIString.GameModeEditorSelectBoard;
+                        Edit.name = UIString.GameModeEditorEditBoard;
+                        break;
+                    case (RoomUsers):
+                        RowBackground.name = UIString.CustomGameRoomSelectRow;
+                        //Edit.name = UIString.GameModeEditorEditBoard;
+                        break;
+                    case (RoomList):
+                        RowBackground.name = UIString.CustomGameLobbyRow;
+                        //Edit.name = UIString.GameModeEditorEditBoard;
+                        break;
+                }
+                break;
+            default:
+                switch (listMode) {
+                    case (RoomUsers):
+                        RowBackground.name = UIString.CustomGameRoomSelectRow;
+                        break;
+                    default:
+                        RowBackground.name = "";
+                        break;
+                }
+                break;
+
+        }
+
         switch (mode) {
             case 0:
                 Icon.GetComponent<Renderer> ().enabled = true;
@@ -171,7 +192,7 @@ public class RowClass : GOUI {
 
         }
         if (mode != 3) {
-            RowBackground.GetComponent<UIController> ().id = -1;
+            //RowBackground.GetComponent<UIController> ().id = -1;
             //Edit.GetComponent<UIController> ().id = -1;
             //Option.GetComponent<UIController> ().id = -1;
             setId = -1;

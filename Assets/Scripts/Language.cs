@@ -110,6 +110,7 @@ public class Language {
     static public string GoBackToGameVersionEditor;
     static public string BoardEditorDescription;
     static public string EnterNewBoardName;
+    static public string SelectAvailableMatchTypes;
 
     static public string OpenCardPoolEditor;
     static public string CardPoolEditorDescription;
@@ -124,7 +125,13 @@ public class Language {
 
     static public string FreeForAll;
     static public string ShowChat;
+    static public string HideChat;
+    static public string YouHaveBeenKicked;
+    static public string EnterText;
+    static public string Send;
+    static public string BeforeApplyingSelectAnyOption;
 
+    static public string ChangeSettings;
     static public string Apply;
     static public string Close;
 
@@ -148,6 +155,8 @@ public class Language {
     static public int CardPoolSavedKey;
     static public int CardPoolSavedButIllegalKey;
     static public int GameVersionDoesNotMeetRequirementsKey;
+    static public int SelectedMatchVersionIsNotAvailableKey;
+    static public int FailedToConnectToTheGameKey;
 
     static public void SetLanguage (int languageKey) {
         PlayerPrefs.SetInt (SelectedLanguageKey, languageKey);
@@ -273,6 +282,15 @@ public class Language {
         EnterGameName = UI [99];
         ReadyToStart = UI [100];
         KickPlayer = UI [101];
+        SelectAvailableMatchTypes = UI [102];
+        ChangeSettings = UI [103];
+        SelectedMatchVersionIsNotAvailableKey = 104;
+        YouHaveBeenKicked = UI [105];
+        EnterText = UI [106];
+        Send = UI [107];
+        BeforeApplyingSelectAnyOption = UI [108];
+        FailedToConnectToTheGameKey = 109;
+        HideChat = UI [110];
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

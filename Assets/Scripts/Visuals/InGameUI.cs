@@ -51,6 +51,7 @@ public class InGameUI : GOUI {
         CurrentGUI = this;
 
         MyPlayerNumber = ClientLogic.MyInterface.playerNumber;
+        NumberOfPlayers = PlayedMatch.numberOfPlayers;
         EnvironmentScript.CreateNewBackground ();
         CreatePlayersUI ();
         GetPlayer (PlayedMatch.turnOfPlayer).visualPlayer.SetPlayerActive (true);
@@ -161,12 +162,23 @@ public class InGameUI : GOUI {
     }
     
     static public void CreatePlayersUI () {
+        int numberOfPlayers = 0;
+        int playerPosition = 0;
         for (int x = 1; x <= NumberOfPlayers; x++) {
             PlayerClass player = GetPlayer (x);
-            bool ally = player.properties.team == GetPlayer (MyPlayerNumber).properties.team;
-            player.EnableVisuals ();
-            player.visualPlayer.CreatePlayerUI (player, ally, NumberOfPlayers);
-            player.visualPlayer.SetPlayerHealthBar (PlayedMatch, player);
+            if (player != null) {
+                numberOfPlayers++;
+            }
+        }
+        for (int x = 1; x <= NumberOfPlayers; x++) {
+            PlayerClass player = GetPlayer (x);
+            if (player != null) {
+                bool ally = player.properties.team == GetPlayer (MyPlayerNumber).properties.team;
+                player.EnableVisuals ();
+                player.visualPlayer.CreatePlayerUI (player, ally, numberOfPlayers, playerPosition);
+                player.visualPlayer.SetPlayerHealthBar (PlayedMatch, player);
+                playerPosition++;
+            }
         }
         int sx = PlayedMatch.Board.tile.GetLength (0);
         int sy = PlayedMatch.Board.tile.GetLength (1);

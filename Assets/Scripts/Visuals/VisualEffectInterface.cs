@@ -14,7 +14,7 @@ public class VisualEffectInterface : MonoBehaviour {
     static public void SetRotateTo (GameObject anchor, GameObject source, GameObject destination) {
         Vector3 delta = destination.transform.position - source.transform.position;
         float rot = - Mathf.Atan2 (delta.z, delta.x) * 180f / Mathf.PI;
-        anchor.GetComponent<VisualEffectScript> ().SetRotateTo (new Vector3 (0, 180 + rot, 0));
+        anchor.GetComponent<VisualEffectScript> ().SetRotateTo (new Vector3 (0, rot, 0));
     }
 
     static public void DelayedRealEffect (int x, int y, int abilityType, bool triggered) {
@@ -291,6 +291,50 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.SetLastColor (new Color (1, 1, 1, 0f));
                 VES.rotateToCamera = true;
                 break;
+            case 24:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Flames", col, triggered, autoDestroy);
+                VES.SetLastScale (new Vector3 (0.6f, 0.1f, 1));
+                VES.SetLastPosition (new Vector3 (0, 0.05f, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0.5f));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.8f, 0.8f, 1f));
+                VES.SetLastPosition (new Vector3 (0f, 0.45f, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1));
+                VES.SetLastPhaseTimer (0.5f);
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.4f, 0.4f, 1f));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1.5f);
+                VES.rotateToCamera = true;
+                break;
+            case 25:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Dot", col, triggered, autoDestroy);
+                VES.SetLastScale (new Vector3 (0.4f, 0.4f, 0.4f));
+                VES.SetLastPosition (new Vector3 (0, 0f, 0));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.6f, 0.6f, 1f));
+                VES.SetLastPosition (new Vector3 (0, 0.5f, 0));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.6f, 0f, 1f));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.rotateToCamera = true;
+                break;
+            case 26:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Promote2", col, triggered, autoDestroy);
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 1, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.rotateToCamera = true;
+                break;
+            case 27:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Promote2", col, triggered, autoDestroy);
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 1, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.rotateToCamera = true;
+                break;
         }
     }
 
@@ -343,6 +387,14 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.SetLastColor (new Color (1, 1, 1, 1f));
                 VES.AddPhase ();
                 VES.SetLastColor (new Color (1, 1, 1, 0f));
+                VES.rotateToCamera = true;
+                break;
+            case 26:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Beak", col, triggered, autoDestroy);
+                VES.SetLastPosition (new Vector3 (0, 1, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.SetLastColor (new Color (1, 0, 0, 0));
                 VES.rotateToCamera = true;
                 break;
         }
@@ -492,10 +544,13 @@ public class VisualEffectInterface : MonoBehaviour {
     }
 
     static public GameObject CreateEffect1 (GameObject anchor, int effectNumber, bool triggered, bool autoDestroy) {
-        return CreateEffect (anchor, VisualCard.GetIconPath (effectNumber), AppDefaults.GetAbilityColor (effectNumber), triggered, autoDestroy);
+        Color col = AppDefaults.GetAbilityColor (effectNumber);
+        return CreateEffect (anchor, VisualCard.GetIconPath (effectNumber), col, triggered, autoDestroy);
     }
     static public void CreateEffect2 (GameObject anchor, int effectNumber, bool triggered, bool autoDestroy) {
-        int effectTextureNumber;
+        Color col = AppDefaults.GetAbilityColor (effectNumber);
+        int effectTextureNumber = effectNumber;
+        string texturePath = VisualCard.GetIconPath (effectTextureNumber) + "b";
         switch (effectNumber) {
             case 5:
             case 8:
@@ -504,13 +559,16 @@ public class VisualEffectInterface : MonoBehaviour {
             case 21:
             case 22:
             case 23:
-                effectTextureNumber = 8;
+                texturePath = VisualCard.GetIconPath (8) + "b";
+                break;
+            case 26:
+                col = AppDefaults.Red;
+                texturePath = VisualCard.GetIconPath (26);
                 break;
             default:
-                effectTextureNumber = effectNumber;
                 break;
         }
-        CreateEffect (anchor, VisualCard.GetIconPath (effectTextureNumber) + "b", AppDefaults.GetAbilityColor (effectNumber), triggered, autoDestroy);
+        CreateEffect (anchor, texturePath, col, triggered, autoDestroy);
     }
 
     static public GameObject CreateEffect (GameObject anchor, string texturePath, Color effectColor, bool triggered, bool autoDestroy) {

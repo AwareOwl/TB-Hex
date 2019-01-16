@@ -19,7 +19,9 @@ public class BoardEditorMenu : GOUI {
     static public int Value;
     static public int TokenType;
 
-    static int [] NumberOfButtons = new int [] { 4, 3, 5, 9, 8 };
+    static public int [] matchTypes;
+
+    static int [] NumberOfButtons = new int [] { 5, 3, 5, 9, 8 };
     static int [] Selected = new int [] {0, 1, 1, 1, 0 };
     static GameObject [] [] Buttons;
 
@@ -40,14 +42,20 @@ public class BoardEditorMenu : GOUI {
         ClientLogic.MyInterface.CmdDownloadBoard (currentId);
     }
 
-    static public void LoadDataToEditor (int id, string boardName, string [] board) {
+    static public void LoadDataToEditor (int id, string boardName, string [] board, int [] matchTypes) {
         currentId = id;
         BoardEditorMenu.boardName = boardName;
         EditedBoard.LoadFromString (board);
+        BoardEditorMenu.matchTypes = matchTypes;
     }
 
     static public void SaveBoard () {
         ClientLogic.MyInterface.CmdSaveBoard (currentId, EditedBoard.BoardToString ());
+    }
+
+    static public void SaveMatchTypes (int [] newMatchTypes) {
+        matchTypes = newMatchTypes;
+        ClientLogic.MyInterface.CmdSaveBoardMatchTypes (currentId, matchTypes);
     }
 
     static public void ShowBoardEditorMenu (int id) {
@@ -196,10 +204,14 @@ public class BoardEditorMenu : GOUI {
                             //BackgroundObject.name = "LoadBoard";
                             break;
                         case 2:
+                            BackgroundObject = CreateSprite ("UI/Butt_S_Settings", npx, npy, 11, 60, 60, true);
+                            BackgroundObject.name = UIString.BoardEditorSettings;
+                            break;
+                        case 3:
                             BackgroundObject = CreateSprite ("UI/Butt_S_Help", npx, npy, 11, 60, 60, true);
                             BackgroundObject.name = UIString.BoardEditorAbout;
                             break;
-                        case 3:
+                        case 4:
                             BackgroundObject = CreateSprite ("UI/Butt_M_Discard", npx, npy, 11, 60, 60, true);
                             BackgroundObject.name = UIString.GoBackToGameModeEditor;
                             break;

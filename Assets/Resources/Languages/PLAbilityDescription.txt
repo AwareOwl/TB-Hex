@@ -5,7 +5,7 @@
 [4] Zwiększa twoją aktualną ilość punktów o sumę wartości żetonów będących celem.
 [5] Odpycha żetony będące celem od zagrywanego żetonu, o ile inny żeton nie blokuje drogi.
 [6] Redukuje wartość zagrywanego żetonu o %d1 za każde puste pole będące celem.
-[7] Ta umiejętność ma dokładnie taki sam efekt co ostatnio zagrana umiejętność.
+[7] Ta umiejętność ma dokładnie taki sam efekt co umiejętność ostatnio zagranej karty.
 [8] Redukuje wartość ostatnio zagranego żetonu o %d1 za każdy wrogi żeton będący celem.
 [9] Zwiększa wartość najsłabszego żetonu będącego celem o %d1.
 [10] Zmienia typy żetonów będących celem na Zwykłe Żetony.

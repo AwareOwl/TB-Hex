@@ -34,7 +34,7 @@ public class MatchMakingClass {
             int playerNumber = Random.Range (0, 2);
             properties [playerNumber++] = new PlayerPropertiesClass (1, client);
             properties [playerNumber % 2] = new PlayerPropertiesClass (2, sameGameMode.client);
-            ServerLogic.StartMatch (CreateGame (client.GameMode, properties));
+            ServerLogic.StartMatch (CreateGame (client.GameMode, 1, properties));
         } else {
             quickQueue.Add (new QueuePosition (client));
             client.TargetShowQuickMatchQueue (client.connectionToClient);
@@ -51,11 +51,13 @@ public class MatchMakingClass {
     }
 
 
-    static public MatchClass CreateGame (int gameMode, PlayerPropertiesClass [] properties) {
+    static public MatchClass CreateGame (int gameMode, int matchType, PlayerPropertiesClass [] properties) {
         MatchClass match = new MatchClass ();
-        match.NewMatch (gameMode, properties.Length);
+        match.NewMatch (gameMode, matchType, properties.Length);
         for (int x = 0; x < properties.Length; x++) {
-            match.SetPlayer (x + 1, new PlayerClass (properties [x]));
+            if (properties [x] != null) {
+                match.SetPlayer (x + 1, new PlayerClass (properties [x]));
+            }
         }
         matches.Add (match);
         //InGameUI.ShowInGameUI (match);

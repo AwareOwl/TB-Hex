@@ -6,6 +6,7 @@ public class CustomGameLobby : GOUI {
 
     static RowClass [] row;
 
+    static int selectedId = -1;
     static int currentPage = 0;
     static PageUI pageUI;
 
@@ -18,12 +19,28 @@ public class CustomGameLobby : GOUI {
     void Start () {
         CurrentGUI = this;
         CreateCustomGameLobby ();
+        ClientLogic.MyInterface.CmdLeaveCustomGame ();
         ClientLogic.MyInterface.CmdDownloadListOfCustomGames ();
     }
 
     static public void ShowCustomGameLobby () {
         DestroyMenu ();
         CurrentCanvas.AddComponent<CustomGameLobby> ();
+    }
+
+    static public void SelectRow (int id) {
+        selectedId = id;
+    }
+
+    static public void JoinCustomGameRoom () {
+        if (selectedId != -1) {
+            JoinCustomGameRoom (selectedId);
+        }
+        ShowMessage (Language.BeforeApplyingSelectAnyOption);
+    }
+
+    static public void JoinCustomGameRoom (int id) {
+        ClientLogic.MyInterface.CmdJoinCustomGameRoom (id);
     }
 
     static public void LoadData (int [] ids, string [] names, int [] matchTypes, int [] filledSlots) {
@@ -39,7 +56,7 @@ public class CustomGameLobby : GOUI {
     static public void RefreshPageButtons () {
         int count = ids.Length;
         int pageLimit = (count) / 5 + 1;
-        pageUI.Init (9, pageLimit, new Vector2Int (480, 780), UIString.GameModeEditorPageButton);
+        pageUI.Init (9, pageLimit, new Vector2Int (480, 780), UIString.CustomGameLobbyPageButton);
     }
 
     static public void ShowPage () {
@@ -57,7 +74,8 @@ public class CustomGameLobby : GOUI {
                 name += " (" + CustomGameClass.GetMatchTypeName (matchTypes [number]);
                 name += " " + filledSlots [number].ToString () + "/";
                 name += CustomGameClass.GetNumberOfSlots (matchTypes [number]) + ")";
-                row [x].SetState (names [number], ids [number], 0, true);
+                row [x].SetState (name, ids [number], 0, true);
+                row [x].SetState (3);
             } else {
                 row [x].SetState (2);
             }
@@ -78,12 +96,10 @@ public class CustomGameLobby : GOUI {
         row = new RowClass [5];
         for (int x = 0; x < 5; x++) {
             row [x] = CurrentGUI.gameObject.AddComponent<RowClass> ();
-            row [x].Init (x, RowClass.BoardList);
+            row [x].Init (x, RowClass.RoomList);
         }
 
         pageUI = new PageUI ();
-        pageUI.Init (9, 12, new Vector2Int (480, 780), "meh");
-        pageUI.SelectPage (0);
 
 
         Clone = CreateSprite ("UI/Butt_M_Apply", 495, 900, 11, 90, 90, true);

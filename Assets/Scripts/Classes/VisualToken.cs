@@ -169,6 +169,29 @@ public class VisualToken {
                 Clone.transform.localEulerAngles = new Vector3 (0, 135, 0);
                 BorderAccent.Add (Clone);
                 break;
+            case 8:
+                for (int x = 0; x < 3; x++) {
+                    Clone = GameObject.Instantiate (Resources.Load ("Prefabs/AnotherSpike")) as GameObject;
+                    VES = Clone.AddComponent<VisualEffectScript> ();
+                    VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                    Clone.transform.parent = Anchor.transform;
+                    Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+                    Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                    Clone.transform.localEulerAngles = new Vector3 (0, 30 + x * 120, 0);
+                    BorderAccent.Add (Clone);
+                }
+                break;
+            case 9:
+                Clone = GameObject.Instantiate (Resources.Load ("Prefabs/HalfBorder")) as GameObject;
+                VES = Clone.AddComponent<VisualEffectScript> ();
+                VES.SetRotateVector (new Vector3 (0, 30, 0));
+                VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                Clone.transform.parent = Anchor.transform;
+                Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+                Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
+                BorderAccent.Add (Clone);
+                break;
         }
     }
 

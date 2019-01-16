@@ -45,6 +45,7 @@ public class AppDefaults {
             case 1:
                 return new Color (0.8f, 0.6f, 0.1f);
             case 2:
+            case 8:
                 return new Color (0.1f, 0.1f, 0.0f);
             case 3:
             case 4:
@@ -52,10 +53,6 @@ public class AppDefaults {
                 return new Color (0.0f, 0.05f, 0.2f);
             case 7:
                 return new Color (0.1f, 0.4f, 0.1f);
-            case 8:
-                return new Color (1, 0, 0);
-            case 9:
-                return new Color (0, 0, 1);
             default:
                 return Color.black;
         }
@@ -74,6 +71,10 @@ public class AppDefaults {
                 return new Color (0.7f, 0.7f, 0.7f);
             case 7:
                 return new Color (0.8f, 0.8f, 0f);
+            case 8:
+                return new Color (0.6f, 0.4f, 0.3f);
+            case 9:
+                return new Color (0.1f, 0.1f, 0.9f);
             default:
                 return Color.black;
         }

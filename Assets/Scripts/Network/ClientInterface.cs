@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.4.0.7");
+            CmdCompareServerVersion ("0.4.0.8");
         }
     }
 
@@ -315,8 +315,23 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadBoardToEditor (NetworkConnection target, int boardId, string boardName, string [] board) {
-        BoardEditorMenu.LoadDataToEditor (boardId, boardName, board);
+    public void TargetDownloadBoardToEditor (NetworkConnection target, int boardId, string boardName, string [] board, int [] matchTypes) {
+        BoardEditorMenu.LoadDataToEditor (boardId, boardName, board, matchTypes);
+    }
+
+    [Command]
+    public void CmdDownloadCustomGameEditorData () {
+        TargetLoadCustomGameEditorData (this.connectionToClient, ServerData.GetAllGameModeMatchTypes (GameMode));
+    }
+
+    [TargetRpc]
+    public void TargetLoadCustomGameEditorData (NetworkConnection target, int [] gameModeMatchTypes) {
+        CustomGameEditor.LoadData (gameModeMatchTypes);
+    }
+
+    [Command]
+    public void CmdSaveBoardMatchTypes (int boardId, int [] matchTypes) {
+        ServerLogic.SaveBoardMatchTypes (this, boardId, matchTypes);
     }
 
     [Command]
@@ -342,8 +357,29 @@ public class ClientInterface : NetworkBehaviour {
 
     [Command]
     public void CmdCreateCustomGame (string gameName, int matchType) {
-        CustomGameManager.CreateCustomGame (this, matchType, gameName);
+        ServerLogic.CreateCustomGame (this, gameName, matchType);
     }
+
+    [Command]
+    public void CmdLeaveCustomGame () {
+        CustomGameManager.LeaveCustomGame (this);
+    }
+
+    [Command]
+    public void CmdJoinCustomGameRoom (int id) {
+        ServerLogic.JoinCustomGameRoom (this, id);
+    }
+
+    [Command]
+    public void CmdCustomGameMoveToDifferentSlot (int newSlotNumber) {
+        CustomGameManager.ChangeSlot (this, newSlotNumber);
+    }
+
+    [Command]
+    public void CmdCustomGameRoomStartMatch () {
+        CustomGameManager.StartCustomGame (this);
+    }
+
 
     [TargetRpc]
     public void TargetDownloadCustomGameRoom (NetworkConnection target, 
@@ -361,6 +397,15 @@ public class ClientInterface : NetworkBehaviour {
         CustomGameManager.KickPlayer (this, slotNumber);
     }
 
+    [Command]
+    public void CmdChatSendMessage (string message) {
+        RpcChatSendMessage (UserName, message);
+    }
+
+    [ClientRpc]
+    public void RpcChatSendMessage (string userName, string message) {
+        ChatUI.RecieveMessage (userName, message);
+    }
 
     /*
     [TargetRpc]

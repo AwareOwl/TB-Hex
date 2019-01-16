@@ -22,6 +22,10 @@ public class CustomGameRoom : GOUI {
         CreateCustomGameRoom ();
     }
 
+    static public void StartMatch () {
+        ClientLogic.MyInterface.CmdCustomGameRoomStartMatch ();
+    }
+
     static public void ShowCustomGameRoom () {
         DestroyMenu ();
         CurrentCanvas.AddComponent<CustomGameRoom> ();
@@ -100,7 +104,7 @@ public class CustomGameRoom : GOUI {
         row [3].SetState (4);*/
 
         Clone = CreateSprite ("UI/Butt_M_Apply", 495, 810, 11, 90, 90, true);
-        Clone.name = UIString.CustomGameEditorApply;
+        Clone.name = UIString.CustomGameRoomStartMatch;
 
         Clone = CreateSprite ("UI/Butt_M_Discard", 945, 810, 11, 90, 90, true);
         Clone.name = UIString.ShowCustomGameLobby;
