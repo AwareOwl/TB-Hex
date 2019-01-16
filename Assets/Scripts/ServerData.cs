@@ -63,6 +63,11 @@ public class ServerData : MonoBehaviour {
         DirectoryCopy (ServerPath (), BackUpPath () + "/" + backUpCount.ToString (), true);
     }
 
+    static public void DeleteBackUps () {
+        string path = BackUpPath ();
+        Directory.Delete (path, true);
+    }
+
     private static void DirectoryCopy (string sourceDirName, string destDirName, bool copySubDirs) {
         // Get the subdirectories for the specified directory.
         DirectoryInfo dir = new DirectoryInfo (sourceDirName);
