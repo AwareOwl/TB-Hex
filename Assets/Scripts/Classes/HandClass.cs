@@ -83,7 +83,7 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output = Mathf.Max (output, 0.5f);
+        output = Mathf.Max (output, 0.3f);
         return output;
     }
     public void GenerateRandomHand (int gameMode) {

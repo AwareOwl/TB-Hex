@@ -30,10 +30,7 @@ public class CustomGameLobby : GOUI {
 
     static public void SelectRow (int id) {
         selectedId = id;
-        foreach (RowClass row in row) {
-            row.FreeRow ();
-        }
-        row [id].SelectRow ();
+        ShowPage ();
     }
 
     static public void JoinCustomGameRoom () {
@@ -82,6 +79,9 @@ public class CustomGameLobby : GOUI {
                 row [x].SetState (3);
             } else {
                 row [x].SetState (2);
+            }
+            if (ids [number] == selectedId) {
+                row [x].SelectRow ();
             }
         }
         pageUI.SelectPage (currentPage);

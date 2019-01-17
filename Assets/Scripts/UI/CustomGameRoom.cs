@@ -83,7 +83,7 @@ public class CustomGameRoom : GOUI {
         Clone = CreateText ("Custom game #124", 720, 245, 11, 0.03f);
         gameNameObject = Clone;
 
-        Clone = CreateText ("Ready to start!", 720, 690, 11, 0.03f);
+        Clone = CreateText (Language.ReadyToStart, 720, 690, 11, 0.03f);
         progress = Clone;
 
         /*
