@@ -541,6 +541,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ShowProfileMenu:
                 ProfileMenu.ShowProfileMenu ();
                 break;
+            case UIString.ShowProfileSettings:
+                ProfileSettings.ShowProfileSettings ();
+                break;
 
 
             // BoardEditor

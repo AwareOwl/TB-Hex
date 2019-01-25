@@ -124,3 +124,5 @@
 [123] Przegrane gry
 [124] Zremisowane gry
 [125] Nieukończone gry
+[126] Wprowadź nową nazwę użytkownika
+[127] Wybierz nowy avatar

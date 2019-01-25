@@ -138,6 +138,9 @@ public class Language {
     static public string DrawnGames;
     static public string UnfinishedGames;
 
+    static public string EnterNewUserName;
+    static public string ChoseNewAvatar;
+
     static public string FreeForAll;
     static public string ShowChat;
     static public string HideChat;
@@ -321,6 +324,8 @@ public class Language {
         LostGames = UI [123];
         DrawnGames = UI [124];
         UnfinishedGames = UI [125];
+        EnterNewUserName = UI [126];
+        ChoseNewAvatar = UI [127];
 
 
         path = "Languages/" + FileName [language] + UITooltipKey;

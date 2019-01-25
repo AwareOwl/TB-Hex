@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProfileMenu : GOUI {
 
@@ -41,7 +42,7 @@ public class ProfileMenu : GOUI {
         ProfileMenu.totalUnfinished = totalUnfinished;
 
         DestroyMenu ();
-        CurrentCanvas.AddComponent<GameModeSettingsEditor> ();
+        CurrentCanvas.AddComponent<ProfileMenu> ();
     }
 
 
@@ -50,20 +51,44 @@ public class ProfileMenu : GOUI {
 
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 1200, 660, false);
 
-        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 520, 240, 11, 300, 300, false);
-        SetSprite (Clone, AppDefaults.Avatar [2]);
+        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 360, 525, 11, 300, 300, false);
+        SetSprite (Clone, AppDefaults.Avatar [1]);
 
-        Clone = CreateSprite ("UI/Butt_S_Name", 720, 240, 11, 60, 60, false);
+        Clone = CreateUIText (ClientLogic.MyInterface.UserName, 330, 315, 240, 36);
+        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
 
-        Clone = CreateUIText (ClientLogic.MyInterface.UserName, 720, 300, 520, 36);
+        Clone = CreateSprite ("UI/Butt_S_Name", 480, 315, 11, 60, 60, false);
+        Clone.name = UIString.ShowProfileSettings;
 
-        Clone = CreateUIText (Language.ThisGameVersion, 720, 440, 520, 36);
-        Clone = CreateUIText (Language.AllGameVersions, 920, 440, 520, 36);
+        int firstRowY = 390;
+        int firstColumnX = 690;
+        int secondColumnX = 885;
+        int thirdColumnX = 1110;
 
-        Clone = CreateUIText (Language.WonGames, 620, 540, 520, 36);
-        Clone = CreateUIText (Language.LostGames, 620, 640, 520, 36);
-        Clone = CreateUIText (Language.DrawnGames, 620, 740, 520, 36);
-        Clone = CreateUIText (Language.UnfinishedGames, 620, 840, 520, 36);
+        Clone = CreateUIText (Language.ThisGameVersion, secondColumnX, firstRowY, 520, 24);
+        Clone = CreateUIText (Language.AllGameVersions, thirdColumnX, firstRowY, 520, 24);
+
+        Clone = CreateUIText (Language.WonGames, firstColumnX, firstRowY + 60 * 1, 240, 24);
+        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
+        Clone = CreateUIText (Language.LostGames, firstColumnX, firstRowY + 60 * 2, 240, 24);
+        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
+        Clone = CreateUIText (Language.DrawnGames, firstColumnX, firstRowY + 60 * 3, 240, 24);
+        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
+        Clone = CreateUIText (Language.UnfinishedGames, firstColumnX, firstRowY + 60 * 4, 240, 24);
+        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
+
+        Clone = CreateUIText (thisModeWon.ToString (), secondColumnX, firstRowY + 60 * 1, 520, 24);
+        Clone = CreateUIText (thisModeLost.ToString (), secondColumnX, firstRowY + 60 * 2, 520, 24);
+        Clone = CreateUIText (thisModeDrawn.ToString (), secondColumnX, firstRowY + 60 * 3, 520, 24);
+        Clone = CreateUIText (thisModeUnfinished.ToString (), secondColumnX, firstRowY + 60 * 4, 520, 24);
+
+        Clone = CreateUIText (totalWon.ToString (), thirdColumnX, firstRowY + 60 * 1, 520, 24);
+        Clone = CreateUIText (totalLost.ToString (), thirdColumnX, firstRowY + 60 * 2, 520, 24);
+        Clone = CreateUIText (totalDrawn.ToString (), thirdColumnX, firstRowY + 60 * 3, 520, 24);
+        Clone = CreateUIText (totalUnfinished.ToString (), thirdColumnX, firstRowY + 60 * 4, 520, 24);
+
+        Clone = CreateSprite ("UI/Butt_M_Discard", 1200, 755, 11, 90, 90, true);
+        Clone.name = UIString.ShowMainMenu;
 
 
     }

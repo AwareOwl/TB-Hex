@@ -9,8 +9,9 @@ public class AppDefaults {
 
     static public int AvailableTokens = 10; // Always + 1, to include null
     static public int AvailableAbilities = 30; // Always + 1, to include null
+    static public int AvailableAvatars = 8; // Always + 1, to include null
 
-    static public Sprite [] Avatar = new Sprite [5];
+    static public Sprite [] Avatar;
     static public Texture [] Cloud = new Texture [5];
 
     static public Shader sprite;
@@ -31,6 +32,7 @@ public class AppDefaults {
     }
 
     static public void LoadAvatars () {
+        Avatar = new Sprite [AvailableAvatars];
         for (int x = 0; x < Avatar.Length; x++) {
             string path = "Textures/Avatars/Avatar";
             if (x < 10) {
@@ -42,7 +44,7 @@ public class AppDefaults {
     }
 
     static public void LoadClouds () {
-        for (int x = 1; x < Avatar.Length; x++) {
+        for (int x = 1; x < Cloud.Length; x++) {
             string path = "Textures/Environment/Cloud";
             if (x < 10) {
                 path += "0";
