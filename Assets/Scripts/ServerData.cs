@@ -17,6 +17,21 @@ public class ServerData : MonoBehaviour {
     static public string GameModeNameKey = "GameModeName";
     static public string IsDeletedKey = "IsDeleted";
     static public string IsLegalKey = "IsLegal";
+    static public string AvatarKey = "Avatar";
+
+    static public string GamesWonKey = "GamesWon";
+    static public string GamesLostKey = "GamesLost";
+    static public string GamesDrawnKey = "GamesDrawn";
+    static public string GamesUnfinishedKey = "GamesUnfinished";
+
+    static public string HasScoreWinConditionKey = "HasScoreWinCondition";
+    static public string HasTurnWinConditionKey = "HasTurnWinCondition";
+    static public string ScoreWinConditionValueKey = "ScoreWinConditionValue";
+    static public string TurnWinConditionValueKey = "TurnWinConditionValue";
+    static public string IsAllowedToRotateCardsDuringMatchKey = "IsAllowedToRotateCardsDuringMatch";
+    static public string NumberOfStacksKey = "NumberOfStacks";
+    static public string MinimumNumberOfCardsInStackKey = "MinimumNumberOfCardsInStack";
+
     static public string IsCardPoolLegalKey = "IsCardPoolLegalKey";
     static public string OfficialKey = "Official";
     static public string GameModeOfficialKey = "GameModeOfficialKey";
@@ -112,6 +127,12 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string SaveRatingCardPopularity (string [] lines) {
+        string path = RatingPath () + "CardPopularity.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
     static public string SaveRatingWinnerScore (string [] lines) {
         string path = RatingPath () + "WinnerScore.txt";
         File.WriteAllLines (path, lines);
@@ -161,6 +182,25 @@ public class ServerData : MonoBehaviour {
 
     static public string [] GetRatingTokenOnRow () {
         string path = RatingTokenOnRowPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
+    static public string RatingAbilityTokenOnRowPath () {
+        return RatingPath () + "AbilityTokenOnRow.txt";
+    }
+
+    static public string SaveRatingAbilityTokenOnRow (string [] lines) {
+        string path = RatingAbilityTokenOnRowPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingAbilityTokenOnRow () {
+        string path = RatingAbilityTokenOnRowPath ();
         if (File.Exists (path)) {
             string [] lines = File.ReadAllLines (path);
             return lines;
@@ -323,6 +363,118 @@ public class ServerData : MonoBehaviour {
             Directory.CreateDirectory (path);
         }
         return path;
+    }
+
+    static public bool GetGameModeHasScoreWinCondition (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), HasScoreWinConditionKey);
+        if (s != null && s != "") {
+            return Convert.ToBoolean (s);
+        }
+        SetGameModeHasScoreWinCondition (id, true);
+        return true;
+    }
+
+    static public bool SetGameModeHasScoreWinCondition (int id, bool value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), HasScoreWinConditionKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetGameModeScoreWinConditionValue (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), ScoreWinConditionValueKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetGameModeScoreWinConditionValue (id, 500);
+        return 500;
+    }
+
+    static public int SetGameModeScoreWinConditionValue (int id, int value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), ScoreWinConditionValueKey, value.ToString ());
+        return value;
+    }
+
+    static public bool GetGameModeHasTurnWinCondition (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), HasTurnWinConditionKey);
+        if (s != null && s != "") {
+            return Convert.ToBoolean (s);
+        }
+        SetGameModeHasTurnWinCondition (id, true);
+        return true;
+    }
+
+    static public bool SetGameModeHasTurnWinCondition (int id, bool value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), HasTurnWinConditionKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetGameModeTurnWinConditionValue (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), TurnWinConditionValueKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetGameModeTurnWinConditionValue (id, 40);
+        return 40;
+    }
+
+    static public int SetGameModeTurnWinConditionValue (int id, int value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), TurnWinConditionValueKey, value.ToString ());
+        return value;
+    }
+
+    static public bool GetGameModeIsAllowedToRotateCardsDuringMatch (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), IsAllowedToRotateCardsDuringMatchKey);
+        if (s != null && s != "") {
+            return Convert.ToBoolean (s);
+        }
+        SetGameModeIsAllowedToRotateCardsDuringMatch (id, false);
+        return false;
+    }
+
+    static public bool SetGameModeIsAllowedToRotateCardsDuringMatch (int id, bool value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), IsAllowedToRotateCardsDuringMatchKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetGameModeNumberOfStacks (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), NumberOfStacksKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetGameModeTurnWinConditionValue (id, 4);
+        return 4;
+    }
+
+    static public int SetGameModeNumberOfStacks (int id, int value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), NumberOfStacksKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetGameModeMinimumNumberOfCardsInStack (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), MinimumNumberOfCardsInStackKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetGameModeTurnWinConditionValue (id, 2);
+        return 2;
+    }
+
+    static public int SetGameModeMinimumNumberOfCardsInStack (int id, int value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), MinimumNumberOfCardsInStackKey, value.ToString ());
+        return value;
     }
 
     static public string GetNextIdPath (string path) {
@@ -1017,6 +1169,16 @@ public class ServerData : MonoBehaviour {
         return offIds.ToArray ();
     }
 
+    static public int [] GetAllPlayerModePathes (string owner) {
+        string [] s = Directory.GetDirectories (PlayerModePath (owner));
+        List<int> ids = new List<int> ();
+        for (int x = 0; x < s.Length; x++) {
+            s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+            ids.Add (int.Parse (s [x]));
+        }
+        return ids.ToArray ();
+    }
+
     static public string PlayerModePath (string owner, int gameModeId) {
         string path = PlayerModePath (owner) + gameModeId + "/";
         if (!Directory.Exists (path)) {
@@ -1299,6 +1461,164 @@ public class ServerData : MonoBehaviour {
         HandClass hand = new HandClass ();
         hand.GenerateRandomHand (1);
         ServerData.SavePlayerModeSet (accountName, 1, 1, hand.HandToString ());
+    }
+
+    static public string SetUserName (string accountName, string newUserName) {
+        string path = UserPath (accountName);
+        string s = SetKeyData (KeyDataPath (path), UserNameKey, newUserName);
+        return s;
+    }
+
+    static public string GetUserName (string accountName) {
+        string path = UserPath (accountName);
+        string s = GetKeyData (KeyDataPath (path), AvatarKey);
+        if (s != null && s != "") {
+            return s;
+        } else {
+            return "";
+        }
+    }
+
+    static public int SetUserAvatar (string accountName, int value) {
+        string path = UserPath (accountName);
+        string s = SetKeyData (KeyDataPath (path), AvatarKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetUserAvatar (string accountName) {
+        string path = UserPath (accountName);
+        string s = GetKeyData (KeyDataPath (path), AvatarKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetUserAvatar (accountName, 1);
+        return 1;
+    }
+
+    static public int IncrementThisGameModeWon (string accountName, int gameModeId) {
+        return SetThisGameModeWon (accountName, gameModeId, GetThisGameModeWon (accountName, gameModeId) + 1);
+    }
+
+    static public int SetThisGameModeWon (string accountName, int gameModeId, int value) {
+        string path = PlayerModePath (accountName, gameModeId);
+        string s = SetKeyData (KeyDataPath (path), GamesWonKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetThisGameModeWon (string accountName, int gameModeId) {
+        string path = PlayerModePath (accountName, gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GamesWonKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetThisGameModeWon (accountName, gameModeId, 0);
+        return 0;
+    }
+
+    static public int IncrementThisGameModeLost (string accountName, int gameModeId) {
+        return SetThisGameModeLost (accountName, gameModeId, GetThisGameModeLost (accountName, gameModeId) + 1);
+    }
+
+    static public int SetThisGameModeLost (string accountName, int gameModeId, int value) {
+        string path = PlayerModePath (accountName, gameModeId);
+        string s = SetKeyData (KeyDataPath (path), GamesLostKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetThisGameModeLost (string accountName, int gameModeId) {
+        string path = PlayerModePath (accountName, gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GamesLostKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetThisGameModeLost (accountName, gameModeId, 0);
+        return 0;
+    }
+
+    static public int IncrementThisGameModeDrawn (string accountName, int gameModeId) {
+        return SetThisGameModeDrawn (accountName, gameModeId, GetThisGameModeDrawn (accountName, gameModeId) + 1);
+    }
+
+    static public int SetThisGameModeDrawn (string accountName, int gameModeId, int value) {
+        string path = PlayerModePath (accountName, gameModeId);
+        string s = SetKeyData (KeyDataPath (path), GamesDrawnKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetThisGameModeDrawn (string accountName, int gameModeId) {
+        string path = PlayerModePath (accountName, gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GamesDrawnKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetThisGameModeDrawn (accountName, gameModeId, 0);
+        return 0;
+    }
+
+    static public int IncrementThisGameModeUnfinished (string accountName, int gameModeId) {
+        return SetThisGameModeUnfinished (accountName, gameModeId, GetThisGameModeUnfinished (accountName, gameModeId) + 1);
+    }
+
+    static public int DecrementThisGameModeUnfinished (string accountName, int gameModeId) {
+        return SetThisGameModeUnfinished (accountName, gameModeId, GetThisGameModeUnfinished (accountName, gameModeId) - 1);
+    }
+
+    static public int SetThisGameModeUnfinished (string accountName, int gameModeId, int value) {
+        string path = PlayerModePath (accountName, gameModeId);
+        string s = SetKeyData (KeyDataPath (path), GamesUnfinishedKey, value.ToString ());
+        return value;
+    }
+
+    static public int GetThisGameModeUnfinished (string accountName, int gameModeId) {
+        string path = PlayerModePath (accountName, gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GamesUnfinishedKey);
+        if (s != null && s != "") {
+            return int.Parse (s);
+        }
+        SetThisGameModeUnfinished (accountName, gameModeId, 0);
+        return 0;
+    }
+
+    static public int GetTotalWon (string accountName) {
+        int [] ids = GetAllPlayerModePathes (accountName);
+        int sum = 0;
+        foreach (int id in ids) {
+            sum += GetThisGameModeWon (accountName, id);
+        }
+        return sum;
+    }
+
+    static public int GetTotalLost (string accountName) {
+        int [] ids = GetAllPlayerModePathes (accountName);
+        int sum = 0;
+        foreach (int id in ids) {
+            sum += GetThisGameModeLost (accountName, id);
+        }
+        return sum;
+    }
+
+    static public int GetTotalDrawn (string accountName) {
+        int [] ids = GetAllPlayerModePathes (accountName);
+        int sum = 0;
+        foreach (int id in ids) {
+            sum += GetThisGameModeDrawn (accountName, id);
+        }
+        return sum;
+    }
+
+    static public int GetTotalUnfinished (string accountName) {
+        int [] ids = GetAllPlayerModePathes (accountName);
+        int sum = 0;
+        foreach (int id in ids) {
+            sum += GetThisGameModeUnfinished (accountName, id);
+        }
+        return sum;
+    }
+
+    static public int SetPlayerAvatar (string accountName, int value) {
+        string path = UserPath (accountName);
+        string s = SetKeyData (KeyDataPath (path), AvatarKey, value.ToString ());
+        return value;
     }
 
     static public string GetServerKeyData (string key) {

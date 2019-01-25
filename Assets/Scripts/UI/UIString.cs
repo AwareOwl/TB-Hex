@@ -82,7 +82,11 @@ public class UIString {
     public const string GoBackToGameModeSelection = "GoBackToGameModeSelection";
 
     public const string GameModeEditorEditCardPool = "GameModeEditorEditCardPool";
+    public const string GameModeEditorSettings = "GameModeEditorSettings";
     public const string GameModeEditorChangeName = "GameModeEditorChangeName";
+    public const string SaveGameModeSettings = "SaveGameModeSettings";
+
+    public const string ShowProfileMenu = "ShowProfileMenu";
 
     public const string BoardEditorAbout = "BoardEditorAbout";
     public const string GoBackToGameModeEditor = "GoBackToGameModeEditor";

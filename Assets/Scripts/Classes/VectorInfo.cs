@@ -286,6 +286,21 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
+                case 28:
+                    if (IsFilledTile (vector.target) && IsAlly (vector.target, token.owner) && allyCount == 1 && match.LastPlayedToken () != null) {
+                        Triggered1.Add (vector.target);
+                        Triggered2.Add (match.LastPlayedTile ());
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 29:
+                    if (IsFilledTile (vector.target) && enemyCount <= 2) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
             }
         }
         switch (abilityType) {
@@ -293,6 +308,7 @@ public class VectorInfo {
                 if (match.LastPlayedToken () != null) {
                     Triggered1.Add (playTile);
                 }
+                break;
                 break;
 
         }

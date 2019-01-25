@@ -123,6 +123,21 @@ public class Language {
     static public string ReadyToStart;
     static public string KickPlayer;
 
+    static public string EndMatchAfterReachingScoreLimit;
+    static public string EndMatchAfterReachingTurnLimit;
+    static public string GameModeSettings;
+    static public string AllowToRotateAbilityAreaDuringMatch;
+    static public string NumberOfStacks;
+    static public string MinimumNumberOfCardsInStack;
+
+    static public string Profile;
+    static public string ThisGameVersion;
+    static public string AllGameVersions;
+    static public string WonGames;
+    static public string LostGames;
+    static public string DrawnGames;
+    static public string UnfinishedGames;
+
     static public string FreeForAll;
     static public string ShowChat;
     static public string HideChat;
@@ -293,6 +308,20 @@ public class Language {
         FailedToConnectToTheGameKey = 109;
         HideChat = UI [110];
         Refresh = UI [112];
+        EndMatchAfterReachingScoreLimit = UI [113];
+        EndMatchAfterReachingTurnLimit = UI [114];
+        GameModeSettings = UI [115];
+        AllowToRotateAbilityAreaDuringMatch = UI [116];
+        NumberOfStacks = UI [117];
+        MinimumNumberOfCardsInStack = UI [118];
+        Profile = UI [119];
+        ThisGameVersion = UI [120];
+        AllGameVersions = UI [121];
+        WonGames = UI [122];
+        LostGames = UI [123];
+        DrawnGames = UI [124];
+        UnfinishedGames = UI [125];
+
 
         path = "Languages/" + FileName [language] + UITooltipKey;
         asset = Resources.Load (path) as TextAsset;

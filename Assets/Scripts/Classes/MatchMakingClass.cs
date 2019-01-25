@@ -57,6 +57,16 @@ public class MatchMakingClass {
         for (int x = 0; x < properties.Length; x++) {
             if (properties [x] != null) {
                 match.SetPlayer (x + 1, new PlayerClass (properties [x]));
+                PlayerClass player = match.Player [x + 1];
+                if (player != null) {
+                    PlayerPropertiesClass pProperties = player.properties;
+                    if (pProperties != null) {
+                        ClientInterface client = pProperties.client;
+                        if (client != null) {
+                            ServerData.IncrementThisGameModeUnfinished (client.AccountName, gameMode);
+                        }
+                    }
+                }
             }
         }
         matches.Add (match);

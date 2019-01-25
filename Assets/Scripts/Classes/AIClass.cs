@@ -26,9 +26,13 @@ public class AIClass {
         float bestValue = -999999f;
         int bestStack = 0;
         int numberOfBests = 0;
+        if (tiles.Length == 0){
+            Debug.Log ("Board error, turn: " + match.turn.ToString() + ", board: " + match.Board.boardTemplateId.ToString() + ", all tiles count: " + match.Board.tileList.Count);
+            Debug.Log (match.finished);
+        }
         foreach (TileClass tile in tiles) {
             if (tile == null || !tile.enabled || tile.token != null) {
-                //Debug.Log ("ło kurwa");
+                Debug.Log ("Tile error");
             }
             for (int x = 0; x < player.topCardNumber.Length; x++) {
                 MatchClass tempMatch = new MatchClass (match);

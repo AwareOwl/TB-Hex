@@ -26,3 +26,5 @@
 [25] Rój
 [26] Monopol
 [27] Różnorodność
+[28] Pakt
+[29] Snajperstwo

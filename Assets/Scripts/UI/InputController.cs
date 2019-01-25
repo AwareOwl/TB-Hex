@@ -25,7 +25,8 @@ public class InputController : MonoBehaviour {
             if (ClientLogic.MyInterface.AccountName != null && ClientLogic.MyInterface.AccountName != "") {
                 for (int x = 0; x < 2; x++) {
                     //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
-                    ServerLogic.JoinGameAgainstAI (ClientLogic.MyInterface).RunAI ();
+                    //Debug.Log ("Starting match");
+                    ServerLogic.JoinGameAgainstAI (ClientLogic.MyInterface);
                     //Debug.Log (InGameUI.PlayedMatch);
                     //InGameUI.PlayedMatch.RunAI ();
                 }

@@ -111,3 +111,16 @@
 [110] Ukryj chat
 [111] Trwa usuwanie zbędnych plików. Proszę czekać.
 [112] Odśwież
+[113] Zakończenie meczu gdy zostanie osiągnięty limit punktów
+[114] Zakończenie meczu gdy zostanie osiągnięty limit tur
+[115] Ustawienia wersji gry
+[116] Zezwól na obracanie obszaru umiejętności kart w trakcie meczu
+[117] Liczba stosów kart
+[118] Minimalny limit kart na stosie kart
+[119] Profil
+[120] Ta wersja gry
+[121] Wszystkie wersje
+[122] Wygrane gry
+[123] Przegrane gry
+[124] Zremisowane gry
+[125] Nieukończone gry

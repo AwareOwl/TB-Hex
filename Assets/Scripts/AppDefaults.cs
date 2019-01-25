@@ -8,12 +8,14 @@ public class AppDefaults {
     static public Color Red = Color.red;
 
     static public int AvailableTokens = 10; // Always + 1, to include null
-    static public int AvailableAbilities = 28; // Always + 1, to include null
+    static public int AvailableAbilities = 30; // Always + 1, to include null
 
     static public Sprite [] Avatar = new Sprite [5];
+    static public Texture [] Cloud = new Texture [5];
 
     static public Shader sprite;
     static public Object Tile;
+    static public Object ChalliceTile;
 
     static public float TokenSpawnHeight = 10f;
 
@@ -22,7 +24,9 @@ public class AppDefaults {
     static AppDefaults () {
         LoadPlayerColors ();
         LoadAvatars ();
+        LoadClouds ();
         Tile = Resources.Load ("Prefabs/Tile");
+        ChalliceTile = Resources.Load ("Prefabs/ChalliceTile");
         sprite = Shader.Find ("Sprites/Default");
     }
 
@@ -34,6 +38,17 @@ public class AppDefaults {
             }
             path += x.ToString ();
             Avatar [x] = GOUI.GetSprite (path);
+        }
+    }
+
+    static public void LoadClouds () {
+        for (int x = 1; x < Avatar.Length; x++) {
+            string path = "Textures/Environment/Cloud";
+            if (x < 10) {
+                path += "0";
+            }
+            path += x.ToString ();
+            Cloud [x] = GOUI.GetTexture (path);
         }
     }
 
@@ -53,6 +68,8 @@ public class AppDefaults {
                 return new Color (0.0f, 0.05f, 0.2f);
             case 7:
                 return new Color (0.1f, 0.4f, 0.1f);
+            case 10:
+                return new Color (0.1f, 0.9f, 0.1f);
             default:
                 return Color.black;
         }
@@ -75,6 +92,8 @@ public class AppDefaults {
                 return new Color (0.6f, 0.4f, 0.3f);
             case 9:
                 return new Color (0.1f, 0.1f, 0.9f);
+            case 10:
+                return new Color (0.1f, 0.9f, 0.1f);
             default:
                 return Color.black;
         }
@@ -123,6 +142,7 @@ public class AppDefaults {
             case 23:
             case 26:
             case 27:
+            case 28:
                 return new Color (1, 1, 0);
             // Purple
             case 7:
@@ -130,6 +150,7 @@ public class AppDefaults {
             case 16:
             case 17:
             case 22:
+            case 29:
                 return new Color (0.8f, 0, 1);
             // Blue
             case 20:

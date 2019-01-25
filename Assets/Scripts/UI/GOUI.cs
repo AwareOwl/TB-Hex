@@ -262,7 +262,12 @@ public class GOUI : MonoBehaviour {
 
 	static public Sprite GetSprite (string assetName){
 		return Resources.Load (assetName, typeof (Sprite)) as Sprite;
-	}
+    }
+
+    static public Texture GetTexture (string assetName) {
+        return Resources.Load (assetName, typeof (Texture)) as Texture;
+    }
+
     static public GameObject CreateUIImage (string assetName, bool onMouseOver) {
         GameObject clone;
 
@@ -327,6 +332,24 @@ public class GOUI : MonoBehaviour {
         clone.transform.Find ("Placeholder").GetComponent<RectTransform> ().offsetMax = new Vector2 (10, -sy / 4);
         clone.transform.Find ("Text").GetComponent<Text> ().fontSize = sy /2;
         clone.transform.Find ("Text").GetComponent<RectTransform> ().offsetMax = new Vector2 (10, - sy / 4);
+
+        return clone;
+    }
+
+    static public GameObject CreateUIToggle (string text, int px, int py, int sx, int sy) {
+        GameObject clone;
+
+        clone = Instantiate (Resources.Load ("Prefabs/PreUIToggle")) as GameObject;
+        clone.transform.SetParent (UICanvas.transform);
+        SetAnchoredPosition (clone, px, py);
+        clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (sx, sy);
+        clone.GetComponent<RectTransform> ().localScale = new Vector3 (1, 1, 1);
+        //clone.transform.Find ("Label").GetComponent<Text> ().fontSize = sy / 2;
+        clone.transform.Find ("Label").GetComponent<Text> ().fontSize = sy - 6;
+        clone.transform.Find ("Label").GetComponent<Text> ().text = text;
+        //clone.transform.Find ("Label").GetComponent<RectTransform> ().offsetMax = new Vector2 (10, -sy / 4);
+        //clone.transform.Find ("Text").GetComponent<Text> ().fontSize = sy / 2;
+        //clone.transform.Find ("Text").GetComponent<RectTransform> ().offsetMax = new Vector2 (10, -sy / 4);
 
         return clone;
     }

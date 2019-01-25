@@ -342,6 +342,53 @@ public class ServerLogic : MonoBehaviour {
             officialNames.ToArray (), publicNames.ToArray (), yourNames.ToArray(), officialIds.ToArray (), publicIds.ToArray (), yourIds.ToArray(), yourIsLegal.ToArray());
     }
 
+    static public void DownloadGameModeSettings (ClientInterface client, int id) {
+        bool hasScoreWinCondition = ServerData.GetGameModeHasScoreWinCondition (id);
+        int scoreWinConditionValue = ServerData.GetGameModeScoreWinConditionValue (id);
+        bool hasTurnWinCondition = ServerData.GetGameModeHasTurnWinCondition (id);
+        int turnWinConditionValue = ServerData.GetGameModeTurnWinConditionValue (id);
+        bool isAllowedToRotateCardsDuringMatch = ServerData.GetGameModeIsAllowedToRotateCardsDuringMatch (id);
+        int numberOfStacks = ServerData.GetGameModeNumberOfStacks (id);
+        int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (id);
+
+        client.TargetDownloadGameModeSettingsToEditor (client.connectionToClient, 
+            hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue,
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack);
+    }
+
+    static public void SaveGameModeSettings (ClientInterface client, int id,
+        bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack) {
+        if (!ServerData.IsGameModeOwner (id, client.AccountName)) {
+            return;
+        }
+        ServerData.SetGameModeHasScoreWinCondition (id, hasScoreWinCondition);
+        ServerData.SetGameModeScoreWinConditionValue (id, scoreWinConditionValue);
+        ServerData.SetGameModeHasTurnWinCondition (id, hasTurnWinCondition);
+        ServerData.SetGameModeTurnWinConditionValue (id, turnWinConditionValue);
+        ServerData.SetGameModeIsAllowedToRotateCardsDuringMatch (id, isAllowedToRotateCardsDuringMatch);
+        ServerData.SetGameModeNumberOfStacks (id, numberOfStacks);
+        ServerData.SetGameModeMinimumNumberOfCardsInStack (id, minimumNumberOfCardsInStack);
+    }
+
+    static public void DownloadProfileData (ClientInterface client) {
+        string accountName = client.AccountName;
+        int gameModeId = client.GameMode;
+        string displayName = client.UserName;
+        int avatarNumber = ServerData.GetUserAvatar (accountName);
+        int thisGameModeWon = ServerData.GetThisGameModeWon (accountName, gameModeId);
+        int thisGameModeLost = ServerData.GetThisGameModeLost (accountName, gameModeId);
+        int thisGameModeDrawn = ServerData.GetThisGameModeDrawn (accountName, gameModeId);
+        int thisGameModeUnfinished = ServerData.GetThisGameModeUnfinished (accountName, gameModeId);
+        int totalWon = ServerData.GetTotalWon (accountName);
+        int totalLost = ServerData.GetTotalLost (accountName);
+        int totalDrawn = ServerData.GetTotalDrawn (accountName);
+        int totalUnfinished = ServerData.GetTotalUnfinished (accountName);
+        client.TargetDownloadProfileDataToMenu (client.connectionToClient,
+            displayName, avatarNumber, thisGameModeWon, thisGameModeLost, thisGameModeDrawn, thisGameModeUnfinished, totalWon, totalLost, totalDrawn, totalUnfinished);
+
+    }
+
     static public void CreateNewGameMode (ClientInterface client, string name) {
         int id = ServerData.GetGameModeNextId ();
         ServerData.CreateNewGameMode (client.AccountName);

@@ -42,6 +42,7 @@ public class BoardClass {
             }
         }
         this.match = match;
+        this.boardTemplateId = board.boardTemplateId;
     }
 
     public void Init () {

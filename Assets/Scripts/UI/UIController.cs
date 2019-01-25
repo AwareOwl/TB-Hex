@@ -264,6 +264,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.CardPoolEditorSaveCardPool:
             case UIString.GameModeMenuApply:
             case UIString.AvailableMatchTypesEditorApply:
+            case UIString.SaveGameModeSettings:
                 Tooltip.NewTooltip (transform, Language.Apply);
                 break;
             case UIString.DestroySubMenu:
@@ -521,6 +522,12 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.GameModeEditorEditCardPool:
                 GameModeEditor.ShowCardPoolEditor ();
                 break;
+            case UIString.GameModeEditorSettings:
+                GameModeSettingsEditor.ShowGameModeSettingsEditor ();
+                break;
+            case UIString.SaveGameModeSettings:
+                GameModeSettingsEditor.SaveGameModeSettings ();
+                break;
             case UIString.GameModeEditorEditBoard:
                 BoardEditorMenu.ShowBoardEditorMenu (id);
                 break;
@@ -529,6 +536,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.GameModeEditorSelectBoard:
                 GameModeEditor.ClickOnRow (id);
+                break;
+
+            case UIString.ShowProfileMenu:
+                ProfileMenu.ShowProfileMenu ();
                 break;
 
 

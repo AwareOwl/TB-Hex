@@ -10,6 +10,7 @@ public class EnvironmentScript : MonoBehaviour {
         get {
             if (_BackGround == null) {
                 _BackGround = new GameObject ();
+                _BackGround.AddComponent <EnvironmentScript>();
             }
             return _BackGround;
         }
@@ -19,6 +20,8 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static public GameObject [,] BackgroundTiles;
+
+    static public List<GameObject> Clouds = new List<GameObject> ();
 
     static int Theme = 1;
 
@@ -32,15 +35,26 @@ public class EnvironmentScript : MonoBehaviour {
     private void Start () {
     }
 
+    Vector3 Wind = new Vector3 (-0.4f, 0, 0);
+
     // Update is called once per frame
     void Update () {
-
+        Wind = Wind * 0.999f + new Vector3 (Random.Range (-1.5f, 0), 0, Random.Range (-0.8f, 0.8f)) * 0.001f;
+        foreach (GameObject cloud in Clouds) {
+            cloud.transform.localPosition += Wind * Time.deltaTime;
+            if (cloud.transform.localPosition.x < -18 || cloud.transform.localPosition.z < -12 || cloud.transform.localPosition.z > 12) {
+                SetRandomCloudProperties (cloud, false);
+            }
+        }
     }
+
     static public void CreateNewBackground () {
-        CreateNewBackground (Random.Range (1, 3));
+        CreateNewBackground (3);
+        //CreateNewBackground (Random.Range (1, 3));
     }
 
     static public void CreateNewBackground (int theme) {
+        Clouds = new List<GameObject> ();
         DestroyImmediate (Background);
         Theme = theme;
         switch (theme) {
@@ -49,6 +63,9 @@ public class EnvironmentScript : MonoBehaviour {
                 break;
             case 2:
                 CreateTowerBackground ();
+                break;
+            case 3:
+                CreateChalliceBackground ();
                 break;/*
             case 3:
                 CreateLavaBackground ();
@@ -184,21 +201,67 @@ public class EnvironmentScript : MonoBehaviour {
                 GameObject hex = CreateAttachedTile (x, py, y);
                 BackgroundTiles [x - minX, y - minZ] = hex;
             }
-        }/*
-        for (int x = 0; x < 50; x++) {
-            int px = Random.Range (minX, maxX);
-            int py = Random.Range (minY, maxY);
-            int pz = Random.Range (minZ, maxZ);
-            int rx = px - minX;
-            int ry = py - minY;
-            int rz = pz - minZ;
-            if (BackgroundTiles [rx, ry, rz] == null) {
-                GameObject hex = CreateAttachedTile (px, py, pz);
-                BackgroundTiles [rx, ry, rz] = hex;
-            } else {
-                x--;
+        }
+    }
+    static private void CreateChalliceBackground () {
+        disabledHeight = -1f;
+        gravity = 3f;
+        int minX = -1;
+        int maxX = 8;
+        int minY = -8;
+        int maxY = -2;
+        int minZ = -1;
+        int maxZ = 8;
+        GameObject water;
+        Material material;
+        for (int x = 0; x < (maxY - minY + 1) * 2; x += 2) {
+            water = Instantiate (Resources.Load ("Prefabs/PreWater")) as GameObject;
+            material = water.transform.GetComponent<Renderer> ().material;
+            material.color = new Color (0.45f, 0.05f, 0.275f, 0.15f);
+            material.SetFloat ("_Glossiness", 0.95f);
+            water.transform.localPosition = new Vector3 (0, -x - 0.1f, 0);
+            water.transform.parent = Background.transform;
+        }
+        /*water = Instantiate (Resources.Load ("Prefabs/PreWater")) as GameObject;
+        water.transform.GetComponent<Renderer> ().material.color = new Color (0.2f, 0f, 0.15f, 1f);
+        water.transform.localPosition = new Vector3 (0, -20, 0);
+        water.transform.parent = Background.transform;*/
+        BackgroundTiles = new GameObject [maxX - minX + 1, maxZ - minZ + 1];
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minZ; y <= maxZ; y++) {
+                int py = Random.Range (minY, maxY);
+                GameObject hex = CreateAttachedTile (x, py, y);
+                BackgroundTiles [x - minX, y - minZ] = hex;
             }
-        }*/
+        }
+
+        for (int x = 0; x < 100; x++) {
+            CreateCloud ();
+        }
+    }
+
+    static public void CreateCloud () {
+        GameObject cloud = GameObject.CreatePrimitive (PrimitiveType.Quad);
+        DestroyImmediate (cloud.GetComponent<Collider> ());
+        Material material;
+        material = cloud.GetComponent<Renderer> ().material;
+        material.shader = AppDefaults.sprite;
+        material.mainTexture = AppDefaults.Cloud [Random.Range (1, 4)];
+        SetRandomCloudProperties (cloud, true);
+        cloud.transform.parent = Background.transform;
+        Clouds.Add (cloud);
+    }
+
+    static public void SetRandomCloudProperties (GameObject cloud, bool onBoardLoad) {
+        Material material = cloud.GetComponent<Renderer> ().material;
+        material.color = new Color (Random.Range (0.65f, 0.9f), Random.Range (0.15f, 0.3f), Random.Range (0.35f, 0.5f), Random.Range (0.1f, 0.2f));
+        if (onBoardLoad) {
+            cloud.transform.localPosition = new Vector3 (Random.Range (-18, 18f), Random.Range (-10, 3f), Random.Range (-11, 11f));
+        } else {
+            cloud.transform.localPosition = new Vector3 (Random.Range (18, 18f), Random.Range (-10, 3f), Random.Range (-11, 11f));
+        }
+        cloud.transform.localEulerAngles = new Vector3 (90, 0, 0);
+        cloud.transform.localScale = new Vector3 (Random.Range (2f, 6.5f), Random.Range (2f, 6.5f), 1);
     }
     /*
     static private void CreateLavaBackground () {
@@ -248,9 +311,21 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static public GameObject CreateTile () {
-        GameObject tile = Instantiate (AppDefaults.Tile) as GameObject;
-        tile.transform.localScale = new Vector3 (1, 1, 1);
-        tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.15f);
+        GameObject tile = null;
+
+        switch (Theme) {
+            case 1:
+            case 2:
+                tile = Instantiate (AppDefaults.Tile) as GameObject;
+                tile.transform.localScale = new Vector3 (1, 1, 1);
+                tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.15f);
+                break;
+            case 3:
+                tile = Instantiate (AppDefaults.ChalliceTile) as GameObject;
+                tile.transform.localScale = new Vector3 (1, 1, 1);
+                tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.1f);
+                break;
+        }
         GameObject add;
         Color col;
 
@@ -279,16 +354,13 @@ public class EnvironmentScript : MonoBehaviour {
                 add.transform.localPosition = new Vector3 (0, -250, 0);
                 break;
             case 3:
-                col = new Color (Random.Range (0.39f, 0.43f), Random.Range (0.29f, 0.33f), Random.Range (0.29f, 0.33f));
+                if (Random.Range (0, 2) == 0) {
+                    col = new Color (Random.Range (0.29f, 0.34f), Random.Range (0.18f, 0.20f), Random.Range (0.18f, 0.21f));
+                } else {
+                    col = new Color (Random.Range (0.25f, 0.29f), Random.Range (0.18f, 0.20f), Random.Range (0.22f, 0.26f));
+                }
                 TEffect.SetColor (col);
                 AEffect.SetDrift (true);
-                add = Instantiate (AppDefaults.Tile) as GameObject;
-                col = new Color (Random.Range (0.93f, 1f), Random.Range (0.58f, 0.65f), Random.Range (0.28f, 0.35f), 0.7f);
-                add.AddComponent<VisualEffectScript> ();
-                add.GetComponent<VisualEffectScript> ().SetColor (col);
-                add.transform.parent = tile.transform;
-                add.transform.localScale = new Vector3 (1.05f, 1, 1.05f);
-                add.transform.localPosition = new Vector3 (0, -0.1f, 0);
                 break;
 
         }

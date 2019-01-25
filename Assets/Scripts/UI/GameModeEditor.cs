@@ -129,7 +129,9 @@ public class GameModeEditor : GOUI {
         Clone.name = UIString.GameModeEditorChangeName;
         Clone = CreateSprite ("UI/Butt_S_DeckPreview", 150, 315, 11, 60, 60, true);
         Clone.name = UIString.GameModeEditorEditCardPool;
-        Clone = CreateSprite ("UI/Butt_S_Help", 210, 315, 11, 60, 60, true);
+        Clone = CreateSprite ("UI/Butt_S_Settings", 210, 315, 11, 60, 60, true);
+        Clone.name = UIString.GameModeEditorSettings;
+        Clone = CreateSprite ("UI/Butt_S_Help", 270, 315, 11, 60, 60, true);
         Clone.name = UIString.GameModeEditorAbout;
 
         /*Clone = CreateSprite ("UI/Butt_M_Apply", 105, 420, 11, 90, 90, true);

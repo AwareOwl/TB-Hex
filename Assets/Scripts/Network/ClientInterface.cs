@@ -280,6 +280,40 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdDownloadGameModeSettings (int id) {
+        ServerLogic.DownloadGameModeSettings (this, id);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadGameModeSettingsToEditor (NetworkConnection target, 
+        bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack) {
+        GameModeSettingsEditor.ShowGameModeSettingsEditor (hasScoreWinCondition, 
+            scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue, 
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack);
+    }
+
+    [Command]
+    public void CmdSaveGameModeSettings (int id,
+        bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack) {
+        ServerLogic.SaveGameModeSettings (this, id,
+            hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue,
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack);
+    }
+
+    [Command]
+    public void CmdDownloadProfileData () {
+        ServerLogic.DownloadProfileData (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadProfileDataToMenu (NetworkConnection target,
+        string userName, int avatar, int thisModeWon, int thisModeLost, int thisModeDrawn, int thisModeUnfinished, int totalWon, int totalLost, int totalDrawn, int totalUnfinished) {
+        ProfileMenu.ShowProfileMenu (userName, avatar, thisModeWon, thisModeLost, thisModeDrawn, thisModeUnfinished, totalWon, totalLost, totalDrawn, totalUnfinished);
+    }
+
+    [Command]
     public void CmdCreateNewGameMode (string name) {
         ServerLogic.CreateNewGameMode (this, name);
     }

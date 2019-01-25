@@ -8,3 +8,4 @@
 [7] Wszystkie zagrywane żetony będą miały wartość większą o 1.
 [8] Pobliskie słabsze żetony nie mogą generować przyrostu punktacji.
 [9] Blokuje następną zagraną umiejętność, a gdy do tego dojdzie, zmienia się w Zwykły Żeton.
+[10] Jeśli pomiędzy turami przylega do przyjaznych żetonów których liczba jest nie większa niż wartość tego żetonu, to zwiększa i wartość o 1 i ulega destrukcji.

@@ -26,3 +26,5 @@
 [25] Tworzy do 3 Zwykłych Żetonów o wartości 1 na pustych polach będących celem.
 [26] Zmniejsza wartości najsłabszych żetonów będących celem o 1, oraz zwiększa wartości najsilniejszych żetonów będących celem o 1.
 [27] Zwiększa wartość żetonów będących celem o innym typie niż zagrany żeton o 1.
+[28] Podwój wartość ostatnio zagranego żetonu, oraz zwiększ wartość przyjaznego żetonu będącego celem o tą samą wartość.
+[29] Zniszcz do 2 żetonów będących celem.

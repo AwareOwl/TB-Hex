@@ -138,7 +138,6 @@ public class MatchClass {
                 player.UpdateVisuals (this);
             }
         }
-
         CheckFinishCondition ();
         if (!finished) {
             AfterTurn ();
@@ -240,15 +239,19 @@ public class MatchClass {
     }
 
     public void CheckFinishCondition () {
-        for (int x = 1; x <= numberOfPlayers; x++) {
-            if (Player [x] != null && Player [x].score >= Properties.scoreLimit) {
-                FinishGame (1, Properties.scoreLimit);
-                return;
+        if (Properties.scoreWinCondition) {
+            for (int x = 1; x <= numberOfPlayers; x++) {
+                if (Player [x] != null && Player [x].score >= Properties.scoreLimit) {
+                    FinishGame (1, Properties.scoreLimit);
+                    return;
+                }
             }
         }
-        if (turn >= Properties.turnLimit) {
-            FinishGame (2, Properties.turnLimit);
-            return;
+        if (Properties.turnWinCondition) {
+            if (turn >= Properties.turnLimit) {
+                FinishGame (2, Properties.turnLimit);
+                return;
+            }
         }
         if (Board.GetEmptyTiles ().Count == 0) {
             FinishGame (3, 0);
@@ -267,6 +270,25 @@ public class MatchClass {
                     winner = Player [x];
                 } else if (winner.score == Player [x].score) {
                     winner = null;
+                }
+            }
+        }
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            PlayerClass player = Player [x];
+            if (player != null) {
+                PlayerPropertiesClass properties = player.properties;
+                if (properties != null) {
+                    ClientInterface client = properties.client;
+                    if (client != null) {
+                        if (winner == player) {
+                            ServerData.IncrementThisGameModeWon (client.AccountName, Properties.gameMode);
+                        } else if (winner != null) {
+                            ServerData.IncrementThisGameModeLost (client.AccountName, Properties.gameMode);
+                        } else {
+                            ServerData.IncrementThisGameModeDrawn (client.AccountName, Properties.gameMode);
+                        }
+                        ServerData.DecrementThisGameModeUnfinished (client.AccountName, Properties.gameMode);
+                    }
                 }
             }
         }
@@ -292,7 +314,7 @@ public class MatchClass {
 
     public void NewMatch (int gameMode, int matchType, int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
-        Properties = new MatchPropertiesClass ();
+        Properties = new MatchPropertiesClass (gameMode);
         SetPlayers ();
 
         Board = new BoardClass (this);
@@ -643,6 +665,12 @@ public class MatchClass {
                 case 27:
                     ModifyTempValue (target, 1);
                     break;
+                case 28:
+                    ModifyTempValue (target, LastPlayedToken ().value);
+                    break;
+                case 29:
+                    SetDestroy (target);
+                    break;
             }
         }
     }
@@ -667,6 +695,9 @@ public class MatchClass {
                     break;
                 case 26:
                     ModifyTempValue (target, -1);
+                    break;
+                case 28:
+                    ModifyTempValue (target, LastPlayedToken ().value);
                     break;
             }
         }

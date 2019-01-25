@@ -10,7 +10,8 @@ public class RatingClass {
     static int [] winner = new int [5];
     static int [] turn = new int [42];
 
-    static float [,] mapPlayer = new float [100, 5];
+    static float [,] mapPlayer = new float [400, 5];
+
 
     static float [] edgeDanger = new float [100];
     static float [] multiTargetDanger = new float [100];
@@ -21,11 +22,13 @@ public class RatingClass {
 
     static float [] numberOfCards = new float [40]; // CardsInHand
 
-    static float [] cardNumberWinRatio = new float [60];
+    static float [] cardPopularity = new float [80];
+    static float [] cardNumberWinRatio = new float [80];
 
     static public float [,,] abilityOnStack; // AbilityType, AbilityArea (0, 2, 6 fields), stackNumber;
     static public float [,,] abilityOnRow;
     static public float [,,] tokenOnRow;
+    static public float [,,] abilityTokenOnRow; // AbilityType, TokenType, rowNumber
 
     static public float [,,,] abilityAbilitySynergy;// AbilityType, AbilityArea (0, 2, 6 fields), AbilityType, AbilityArea (0, 2, 6 fields);
     static public float [,,,] abilityTokenSynergy;
@@ -40,6 +43,7 @@ public class RatingClass {
         abilityOnStack = new float [availableAbilities, 3, 10];
         abilityOnRow = new float [availableAbilities, 3, 10];
         tokenOnRow = new float [availableTokens, 9, 10];
+        abilityTokenOnRow = new float [availableAbilities, availableTokens, 10];
         abilityAbilitySynergy = new float [availableAbilities, 3, availableAbilities, 3];
         abilityAfterAbility = new float [availableAbilities, 3, availableAbilities, 3];
         abilityAfterToken = new float [availableAbilities, 3, availableTokens, 9];
@@ -54,8 +58,17 @@ public class RatingClass {
                 }
             }
         }
+        for (int x = 0; x < abilityTokenOnRow.GetLength (0); x++) {
+            for (int y = 0; y < abilityTokenOnRow.GetLength (1); y++) {
+                for (int z = 0; z < abilityTokenOnRow.GetLength (2); z++) {
+                    abilityTokenOnRow [x, y, z] = 0.5f;
+                    //AbilityOnRow [x, y, z] = 0.5f;
+                }
+            }
+        }
         LoadAbilityOnRow ();
         LoadTokenOnRow ();
+        LoadAbilityTokenOnRow ();
         for (int x = 0; x < cardNumberWinRatio.Length; x++) {
             cardNumberWinRatio [x] = 0.5f;
         }
@@ -86,6 +99,9 @@ public class RatingClass {
         int winnerNumber = match.winner.properties.playerNumber;
         winner [winnerNumber] ++;
         winnerScore [Mathf.Max (0, match.winner.score)]++;
+        for (int x = 0; x < cardPopularity.Length; x++) {
+           cardPopularity [x] *= 0.999f;
+        }
         for (int x = 1; x <= match.numberOfPlayers; x++) {
             List<CardClass> usedCards = new List<CardClass> ();
             PlayerClass player = match.Player [x];
@@ -132,11 +148,14 @@ public class RatingClass {
                     abilityOnStack [abilityType, abilityArea, y] *= 0.999f;
                     abilityOnRow [abilityType, abilityArea, z] *= 0.999f;
                     tokenOnRow [tokenType, tokenValue, z] *= 0.999f;
+                    abilityTokenOnRow [abilityType, tokenType, z] *= 0.999f;
                     cardNumberWinRatio [card.cardNumber] *= 0.999f;
+                    cardPopularity [card.cardNumber] += 0.001f;
                     if (winnerNumber == x) {
                         abilityOnStack [abilityType, abilityArea, y] += 0.001f;
                         abilityOnRow [abilityType, abilityArea, z] += 0.001f;
                         tokenOnRow [tokenType, tokenValue, z] += 0.001f;
+                        abilityTokenOnRow [abilityType, tokenType, z] += 0.001f;
                         cardNumberWinRatio [card.cardNumber] += 0.001f;
                     }
                 }
@@ -166,10 +185,12 @@ public class RatingClass {
         SaveAbilityOnStack ();
         SaveAbilityOnRow ();
         SaveTokenOnRow ();
+        SaveAbilityTokenOnRow ();
         SaveWinnerScore ();
         SaveLoserScore ();
         SavePlayerWinRatio ();
         SaveCardNumberWinRatio ();
+        SaveCardPopularity ();
         SaveTurn ();
         SaveEdgeDanger ();
         SaveMultiTargetDanger ();
@@ -268,6 +289,16 @@ public class RatingClass {
         }
     }
 
+    static public void SaveAbilityTokenOnRow () {
+        ServerData.SaveRatingAbilityTokenOnRow (Save (abilityTokenOnRow));
+    }
+    
+    static public void LoadAbilityTokenOnRow () {
+        string [] lines = ServerData.GetRatingAbilityTokenOnRow ();
+        Load (lines, abilityTokenOnRow);
+    }
+
+
     static public void SaveWinnerScore () {
         List<string> lines = new List<string> ();
         for (int x = 0; x < winnerScore.Length; x++) {
@@ -298,6 +329,14 @@ public class RatingClass {
             lines.Add ("[" + x.ToString () + "] " + cardNumberWinRatio [x].ToString ());
         }
         ServerData.SaveRatingCardNumberWinRatio (lines.ToArray ());
+    }
+
+    static public void SaveCardPopularity () {
+        List<string> lines = new List<string> ();
+        for (int x = 0; x < cardPopularity.Length; x++) {
+            lines.Add ("[" + x.ToString () + "] " + cardPopularity [x].ToString ());
+        }
+        ServerData.SaveRatingCardPopularity (lines.ToArray ());
     }
 
     static public void SaveTurn () {
@@ -420,6 +459,43 @@ public class RatingClass {
         Load (lines, tokenAfterToken);
     }
 
+    static public void Load (string [] lines, float [,,] array) {
+        for (int x = 0; x < array.GetLength (0); x++) {
+            string [] word = null;
+            int l1 = array.GetLength (1);
+            if (lines != null && x < lines.Length) {
+                word = lines [x].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            for (int y = 0; y < l1; y++) {
+                int l2 = array.GetLength (2);
+                for (int y2 = 0; y2 < l2; y2++) {
+                    int number = 2 + y * (l2 + 1) + y2;
+                    if (word != null && number < word.Length) {
+                        array [x, y, y2] = float.Parse (word [number]);
+                    } else {
+                        array [x, y, y2] = 0.5f;
+                    }
+                }
+            }
+        }
+    }
+
+    static public string [] Save (float [,,] array) {
+        List<string> lines = new List<string> ();
+        for (int x = 0; x < array.GetLength (0); x++) {
+            string s = "[" + x.ToString () + "] ";
+            for (int y = 0; y < array.GetLength (1); y++) {
+                s += "[" + y.ToString () + "] ";
+                for (int y2 = 0; y2 < array.GetLength (2); y2++) {
+                    s += array [x, y, y2].ToString () + " ";
+                }
+            }
+            lines.Add (s);
+        }
+        return lines.ToArray ();
+    }
+
+
     static public void Load (string [] lines, float [,,,] array) {
         for (int x = 0; x < array.GetLength (0); x++) {
             string [] word = null;
@@ -443,6 +519,7 @@ public class RatingClass {
             }
         }
     }
+
     static public string [] Save (float [,,,] array) {
         List<string> lines = new List<string> ();
         for (int x = 0; x < array.GetLength (0); x++) {

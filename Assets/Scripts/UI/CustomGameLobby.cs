@@ -80,7 +80,7 @@ public class CustomGameLobby : GOUI {
             } else {
                 row [x].SetState (2);
             }
-            if (ids [number] == selectedId) {
+            if (number >= 0 && number < ids.Length && ids [number] == selectedId) {
                 row [x].SelectRow ();
             }
         }
