@@ -389,6 +389,16 @@ public class ServerLogic : MonoBehaviour {
 
     }
 
+    static public void SaveProfileSettings (ClientInterface client, string userName, int avatar) {
+        string accountName = client.AccountName;
+        if (userName != null && userName != "") {
+            client.UserName = userName;
+            ServerData.SetUserName (accountName, userName);
+        }
+        ServerData.SetUserAvatar (accountName, avatar);
+        client.TargetRefreshProfileSettings (client.connectionToClient, userName, avatar);
+    }
+
     static public void CreateNewGameMode (ClientInterface client, string name) {
         int id = ServerData.GetGameModeNextId ();
         ServerData.CreateNewGameMode (client.AccountName);

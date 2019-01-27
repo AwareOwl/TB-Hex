@@ -314,6 +314,16 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdSaveProfileSettings (string userName, int avatar) {
+        ServerLogic.SaveProfileSettings (this, userName, avatar);
+    }
+
+    [TargetRpc]
+    public void TargetRefreshProfileSettings (NetworkConnection target, string userName, int avatar) {
+        ClientLogic.RefreshProfileSettings (this, userName, avatar);
+    }
+
+    [Command]
     public void CmdCreateNewGameMode (string name) {
         ServerLogic.CreateNewGameMode (this, name);
     }

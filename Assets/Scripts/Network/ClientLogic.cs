@@ -70,4 +70,11 @@ public class ClientLogic : MonoBehaviour {
         }
         CustomGameRoom.LoadData (isHost, gameName, matchType, avatars, names, AIs);
     }
+
+    static public void RefreshProfileSettings (ClientInterface client, string userName, int avatar) {
+        if (userName != null && userName != "") {
+            client.UserName = userName;
+        }
+        ProfileMenu.ShowProfileMenu (userName, avatar);
+    }
 }

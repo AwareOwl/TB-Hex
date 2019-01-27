@@ -157,6 +157,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case "StartClient":
                 Tooltip.NewTooltip (transform, Language.JoinLocalNetworkTooltip);
                 break;
+            case UIString.ProfileSettingsAvatar:
+                Tooltip.NewTooltip (transform, Language.AvatarName [number]);
+                break;
 
             case UIString.ExitApp:
                 Tooltip.NewTooltip (transform, Language.ExitApp);
@@ -543,6 +546,15 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.ShowProfileSettings:
                 ProfileSettings.ShowProfileSettings ();
+                break;
+            case UIString.GoBackToProfileMenu:
+                ProfileMenu.GoBackToProfileMenu ();
+                break;
+            case UIString.ProfileSettingsApply:
+                ProfileSettings.ApplySettings ();
+                break;
+            case UIString.ProfileSettingsAvatar:
+                ProfileSettings.SelectAvatar (number);
                 break;
 
 

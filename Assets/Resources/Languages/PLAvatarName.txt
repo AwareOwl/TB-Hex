@@ -1,0 +1,8 @@
+﻿[0] 
+[1] Radosna malina
+[2] Pszczoła
+[3] Dusza lasu
+[4] Bestia
+[5] Błyskawica
+[6] Podejrzana roślina
+[7] Pająk

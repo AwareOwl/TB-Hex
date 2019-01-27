@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ProfileMenu : GOUI {
 
     static string userName;
-    static int avatar;
+    static public int avatar;
     static int thisModeWon;
     static int thisModeLost;
     static int thisModeDrawn;
@@ -24,6 +24,19 @@ public class ProfileMenu : GOUI {
 
     static public void ShowProfileMenu () {
         ClientLogic.MyInterface.CmdDownloadProfileData ();
+    }
+
+    static public void GoBackToProfileMenu () {
+        DestroyMenu ();
+        CurrentCanvas.AddComponent<ProfileMenu> ();
+    }
+
+    static public void ShowProfileMenu (string userName, int avatar) {
+        ProfileMenu.userName = userName;
+        ProfileMenu.avatar = avatar;
+
+        DestroyMenu ();
+        CurrentCanvas.AddComponent<ProfileMenu> ();
     }
 
     static public void ShowProfileMenu (
@@ -52,7 +65,7 @@ public class ProfileMenu : GOUI {
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 1200, 660, false);
 
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 360, 525, 11, 300, 300, false);
-        SetSprite (Clone, AppDefaults.Avatar [1]);
+        SetSprite (Clone, AppDefaults.Avatar [avatar]);
 
         Clone = CreateUIText (ClientLogic.MyInterface.UserName, 330, 315, 240, 36);
         Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;

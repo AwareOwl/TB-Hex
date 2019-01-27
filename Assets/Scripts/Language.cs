@@ -9,6 +9,7 @@ public class Language {
 
     static string UIKey = "UI";
     static string UITooltipKey = "UITooltip";
+    static string AvatarNameKey = "AvatarName";
     static string TokenNameKey = "TokenName";
     static string TokenDescriptionKey = "TokenDescription";
     static string AbilityNameKey = "AbilityName";
@@ -22,6 +23,7 @@ public class Language {
 
     static public string [] UI;
     static public string [] UITooltip;
+    static public string [] AvatarName;
     static public string [] AbilityName;
     static public string [] AbilityDescription;
     static public string [] TokenName;
@@ -346,9 +348,30 @@ public class Language {
         JoinLocalNetworkTooltip = UITooltip [1];
 
         LoadNamesAndDescriptions (language);
+        LoadAvatarNames (language);
+    }
+    static public void LoadAvatarNames (int language) {
+        string path;
+        TextAsset asset;
+        string allLines;
+        string [] lines;
+
+        path = "Languages/" + FileName [language] + AvatarNameKey;
+        asset = Resources.Load (path) as TextAsset;
+        allLines = asset.text;
+        lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
+        AvatarName = new string [lines.Length];
+        for (int x = 0; x < lines.Length; x++) {
+            int index = lines [x].IndexOf (']');
+            if (lines [x].Length > index + 2) {
+                AvatarName [x] = lines [x].Substring (index + 2);
+            } else {
+                AvatarName [x] = "";
+            }
+        }
     }
 
-    static public void LoadNamesAndDescriptions (int language) {
+     static public void LoadNamesAndDescriptions (int language) {
         string path;
         TextAsset asset;
         string allLines;

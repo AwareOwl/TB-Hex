@@ -73,6 +73,12 @@ public class Tooltip : GOUI {
         FinalizeTooltip (transform);
     }
 
+    static public void NewAvatarTooltip (Transform transform, int avatarNumber) {
+        NewTooltip ();
+        AddFragment (null, Language.AvatarName [avatarNumber], true);
+        FinalizeTooltip (transform);
+    }
+
     static public void NewAbilityTypeTooltip (Transform transform, int abilityType) {
         NewTooltip ();
         AddFragment (null, Language.AbilityName [abilityType], true);

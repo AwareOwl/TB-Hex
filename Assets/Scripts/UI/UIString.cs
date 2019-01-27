@@ -88,6 +88,9 @@ public class UIString {
 
     public const string ShowProfileMenu = "ShowProfileMenu";
     public const string ShowProfileSettings = "ShowProfileSettings";
+    public const string GoBackToProfileMenu = "GoBackToProfileMenu";
+    public const string ProfileSettingsApply = "ProfileSettingsApply";
+    public const string ProfileSettingsAvatar = "ProfileSettingsAvatar";
 
     public const string BoardEditorAbout = "BoardEditorAbout";
     public const string GoBackToGameModeEditor = "GoBackToGameModeEditor";

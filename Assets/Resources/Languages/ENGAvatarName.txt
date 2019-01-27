@@ -1,0 +1,8 @@
+[0] 
+[1] Joyful raspberry
+[2] Bee
+[3] Spirit of the forest
+[4] Beast
+[5] Thunder
+[6] Suspicious plant
+[7] Spider
