@@ -27,7 +27,6 @@ public class CardAnimation : MonoBehaviour {
         transform.localPosition -= new Vector3 (0, 0, - Mathf.Sin (shuffleTimer / shuffleTime * Mathf.PI) * shuffleLength);
         shuffleTimer -= Time.deltaTime;
         shuffleTimer = Mathf.Max (shuffleTimer, 0);
-        Debug.Log (x.ToString () + " " + numberOfStacks.ToString ());
         Vector3 dest = Vector3.Lerp (transform.localPosition, new Vector3 ((x + 0.5f - numberOfStacks / 2f) * 1.3f, 2 - 0.15f * y, -5.55f - 0.025f * y), Time.deltaTime * 4);
         transform.localPosition = dest + new Vector3 (0, 0, - Mathf.Sin (shuffleTimer / shuffleTime * Mathf.PI) * shuffleLength);
         if (stack == InGameUI.SelectedStack && position == 0) {

@@ -80,6 +80,16 @@ public class ServerVersionManager : VersionManager {
                         ConvertTo0_4_0_11 ();
                     }
                 }
+                PathVersion = 5;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
+            }
+            if (PathVersion <= 5) {
+                if (HotfixVersion <= 0) {
+                    if (DevelopVersion < 5) {
+                        ConvertTo0_5_0_5 ();
+                    }
+                }
             }
         }
 
@@ -94,6 +104,61 @@ public class ServerVersionManager : VersionManager {
         RatingClass.LoadTokenAfterToken ();
         RatingClass.LoadAbilityOnRow ();
         RatingClass.LoadTokenOnRow ();
+    }
+
+    static public void ExportRating () {
+        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
+        ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
+        ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
+        ServerData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
+        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
+        ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
+        ServerData.SaveRatingAbilityTokenOnRow (GetResource ("ExportFolder/Rating/AbilityTokenOnRow"));
+    }
+
+    //static public void 
+
+    static public void ConvertTo0_5_0_5 () {
+        ExportRating ();
+
+        int newId;
+
+        newId = ServerData.CreateNewGameMode ("");
+        ServerData.SetCardPool (newId, GetResource ("ExportFolder/v0.5/CardPools/CardPool"));
+        ServerData.SetGameModeName (newId, "Version 0.5.0");
+        ServerData.SetGameModeIsOfficial (newId, true);
+
+        int [] officialBoards = ServerData.GetAllOfficialBoards ();
+        foreach (int offId in officialBoards) {
+            ServerData.SetGameModeBoard (newId, offId);
+        }
+
+
+        int prevMode = 4;
+        int [] officialGameModeIds = ServerData.GetAllOfficialGameModes ();
+        foreach (int id in officialGameModeIds) {
+            if (ServerData.GetGameModeName (id) == "Version 0.4.0") {
+                prevMode = id;
+            }
+        }
+
+        string [] users = ServerData.GetAllUsers ();
+        foreach (string user in users) {
+            int [] ids = ServerData.GetAllPlayerModeSets (user, prevMode);
+            foreach (int id in ids) {
+                int newSetId = ServerData.CreatePlayerModeSet (user, newId, ServerData.GetPlayerModeSet (user, prevMode, id), ServerData.GetPlayerModeSetName (user, prevMode, id));
+                ServerData.SetPlayerModeSetIconNumber (user, newId, newSetId, ServerData.GetPlayerModeSetIconNumber (user, prevMode, id));
+            }
+            if (ServerData.GetUserSelectedGameMode (user) == prevMode) {
+                ServerData.SetUserSelectedGameMode (user, newId);
+            }
+        }
+
+        GameVersion = 0;
+        PathVersion = 5;
+        HotfixVersion = 0;
+        DevelopVersion = 5;
     }
 
     static public void ConvertTo0_4_0_11 () {

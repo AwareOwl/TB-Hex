@@ -90,13 +90,14 @@ public class HandClass  {
         output = Mathf.Max (output, 0.5f);
         return output;
     }
-    public void GenerateRandomHand (int gameMode) {
+    public void GenerateRandomHand (int gameModeId) {
         CardPoolClass CardPool = new CardPoolClass ();
-        CardPool.LoadFromFile (gameMode);
-        GenerateRandomHand (CardPool);
+        CardPool.LoadFromFile (gameModeId);
+        int minimumNumberOfCardsOnStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameModeId);
+        GenerateRandomHand (CardPool, minimumNumberOfCardsOnStack);
     }
 
-    public void GenerateRandomHand (CardPoolClass CardPool) {
+    public void GenerateRandomHand (CardPoolClass CardPool, int minimumNumberOfCardsOnStack) {
         int count = CardPool.Card.Count;
 
         float [] CardValue = new float [count];
@@ -170,7 +171,7 @@ public class HandClass  {
                 if (newCard.abilityArea == 1) {
                     newCard.abilityArea = Random.Range (1, 4);
                 }
-                if (y > 0) {
+                if (y >= minimumNumberOfCardsOnStack - 1) {
                     finished [x] = Random.Range (0, 2) == 0;
                 }
             }

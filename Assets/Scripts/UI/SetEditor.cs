@@ -53,6 +53,7 @@ public class SetEditor : GOUI {
     }
 
     static public void LoadData (string [] cardPool, string [] set, string name, int iconNumber, int numberOfStacks, int minimalNumberOfCardsOnStack) {
+        Debug.Log (minimalNumberOfCardsOnStack);
         SetEditor.numberOfStacks = numberOfStacks;
         SetEditor.minimumNumberOfCardsOnStack = minimalNumberOfCardsOnStack;
         LoadCardPool (cardPool);
@@ -130,7 +131,7 @@ public class SetEditor : GOUI {
 
     static public void LoadRandomSet () {
         hand = new HandClass ();
-        hand.GenerateRandomHand (cardPool);
+        hand.GenerateRandomHand (cardPool, minimumNumberOfCardsOnStack);
         LoadSet (hand);
         LoadPage (Page);
     }

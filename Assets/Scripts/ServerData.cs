@@ -451,7 +451,7 @@ public class ServerData : MonoBehaviour {
         if (s != null && s != "") {
             return int.Parse (s);
         }
-        SetGameModeTurnWinConditionValue (id, 4);
+        SetGameModeNumberOfStacks (id, 4);
         return 4;
     }
 
@@ -467,7 +467,7 @@ public class ServerData : MonoBehaviour {
         if (s != null && s != "") {
             return int.Parse (s);
         }
-        SetGameModeTurnWinConditionValue (id, 2);
+        SetGameModeMinimumNumberOfCardsInStack (id, 2);
         return 2;
     }
 
