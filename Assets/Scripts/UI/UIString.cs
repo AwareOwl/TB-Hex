@@ -38,6 +38,7 @@ public class UIString {
     public const string SelectSet = "SelectSet";
     public const string SaveSelectedSet = "SaveSelectedSet";
     public const string DeleteSet = "DeleteSet";
+    public const string SetListPageButton = "SetListPageButton";
 
     public const string ShowGameModeMenu = "ShowGameModeMenu";
     public const string GameModeMenuOfficialGameModes = "GameModeMenuOfficialGameModes";

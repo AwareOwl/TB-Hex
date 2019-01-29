@@ -26,3 +26,5 @@
 [25] Swarm
 [26] Monopoly
 [27] Diversity
+[28] Pact
+[29] Snipe

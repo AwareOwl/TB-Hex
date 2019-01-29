@@ -61,7 +61,15 @@ public class InGameUI : GOUI {
         ExitButton.name = UIString.ShowInGameMenu;
         GOUI.SetSprite (ExitButton, "UI/Butt_S_Settings", true);
     }
-    
+
+
+    static public void RotateAbilityAreaOnServer (int stackNumber) {
+        ClientLogic.MyInterface.CmdCurrentGameRotateAbilityArea (stackNumber);
+    }
+
+    static public void RotateAbilityArea (int playerNumber, int stackNumber) {
+        PlayedMatch.RotateAbilityArea (playerNumber, stackNumber);
+    }
 
     static public void SelectStack (int x) {
         /*HandClass hand = GetPlayer ().properties.hand;

@@ -24,8 +24,9 @@ public class HandClass  {
             return;
         }
         LoadFromFile (client.AccountName, client.GameMode, selectedSet);
-        if (!IsValid ()) {
-            client.TargetInvalidSet (client.connectionToClient);
+        if (!IsValid (gameMode)) {
+            int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameMode);
+            client.TargetInvalidSet (client.connectionToClient, minimumNumberOfCardsInStack);
             return;
         }
     }
@@ -38,15 +39,18 @@ public class HandClass  {
         return stack [stackNumber];
     }
 
-    public bool IsValid () {
-        bool valid = true;
-        for (int x = 0; x < stack.Length; x++) {
-            if (stack [x].card.Count < 2) {
-                valid = false;
+    public bool IsValid (int gameMode) {
+        int numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameMode);
+        if (stack.Length < numberOfStacks) {
+            return false;
+        }
+        int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameMode);
+        for (int x = 0; x < numberOfStacks; x++) {
+            if (stack [x].card.Count < minimumNumberOfCardsInStack) {
+                return false;
             }
         }
-
-        return valid;
+        return true;
     }
 
     public int GetStackSize (int stackNumber) {
@@ -203,18 +207,20 @@ public class HandClass  {
         return s.ToArray ();
     }
 
-    public void LoadFromFile (string accountName, int gameMode, int setId) {
-        LoadFromString (gameMode, ServerData.GetPlayerModeSet (accountName, gameMode, setId));
+    public void LoadFromFile (string accountName, int gameModeId, int setId) {
+        LoadFromString (gameModeId, ServerData.GetPlayerModeSet (accountName, gameModeId, setId));
     }
 
-    public void LoadFromString (int gameMode, string [] lines) {
+    public void LoadFromString (int gameModeId, string [] lines) {
         CardPoolClass cardPool = new CardPoolClass ();
-        cardPool.LoadFromFile (gameMode);
-        LoadFromString (cardPool, lines);
+        cardPool.LoadFromFile (gameModeId);
+        int numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameModeId);
+        LoadFromString (cardPool, lines, numberOfStacks);
     }
-    public void LoadFromString (CardPoolClass cardPool, string [] lines) {
-        Init (4);
-        for (int x = 0; x < 4; x++) {
+
+    public void LoadFromString (CardPoolClass cardPool, string [] lines, int numberOfStacks) {
+        Init (numberOfStacks);
+        for (int x = 0; x < numberOfStacks; x++) {
             if (lines.Length <= x) {
                 continue;
             }
@@ -234,8 +240,8 @@ public class HandClass  {
     }
 
     public void LoadFromModeString (string [] lines) {
-        Init (4);
-        for (int x = 0; x < 4; x++) {
+        Init (numberOfStacks);
+        for (int x = 0; x < numberOfStacks; x++) {
             if (lines.Length <= x) {
                 continue;
             }

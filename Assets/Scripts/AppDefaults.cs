@@ -123,6 +123,7 @@ public class AppDefaults {
             case 14:
             case 21:
             case 24:
+            case 29:
                 return Red;
             // Green
             case 2:
@@ -152,7 +153,6 @@ public class AppDefaults {
             case 16:
             case 17:
             case 22:
-            case 29:
                 return new Color (0.8f, 0, 1);
             // Blue
             case 20:

@@ -80,8 +80,8 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetInvalidSet (NetworkConnection target) {
-        GOUI.ShowMessage (Language.GetInvalidSetMessage ());
+    public void TargetInvalidSet (NetworkConnection target, int number) {
+        GOUI.ShowMessage (Language.GetInvalidSetMessage (number));
     }
 
     [TargetRpc]
@@ -105,15 +105,15 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdDownloadCardPoolToSetEditor () {
-        ServerLogic.DownloadCardPoolToSetEditor (this);
+    public void CmdDownloadDataToSetEditor (int setId) {
+        ServerLogic.DownloadDataToSetEditor (this, setId);
     }
 
     [TargetRpc]
-    public void TargetDownloadCardPoolToSetEditor (NetworkConnection target, string [] lines) {
-        SetEditor.LoadCardPool (lines);
+    public void TargetDownloadDataToSetEditor (NetworkConnection target, string [] cardPool, string [] set, string name, int icon, int numberOfStacks, int minimumNumberOfCardsPerStack) {
+        SetEditor.LoadData (cardPool, set, name, icon, numberOfStacks, minimumNumberOfCardsPerStack);
     }
-
+    
     [Command]
     public void CmdDownloadCardPoolToEditor (int gameModeId) {
         ServerLogic.DownloadCardPoolToCardPoolEditor (this, gameModeId);
@@ -171,11 +171,6 @@ public class ClientInterface : NetworkBehaviour {
     [Command]
     public void CmdSaveBoardProperties (int setId, string setName, int iconNumber) {
         ServerLogic.SaveBoardProperties (this, setId, setName, iconNumber);
-    }
-
-    [Command]
-    public void CmdDownloadSetToEditor (int setId) {
-        ServerLogic.DownloadSetToEditor (this, setId);
     }
 
     [Command]
@@ -243,6 +238,16 @@ public class ClientInterface : NetworkBehaviour {
             Debug.Log ("Play card command sent to server");
         }
         ServerLogic.CurrentGameMakeAMove (this, x, y, playerNumber, stackNumber);
+    }
+
+    [Command]
+    public void CmdCurrentGameRotateAbilityArea (int stackNumber) {
+        ServerLogic.CurrentGameRotateAbilityArea (this, playerNumber, stackNumber);
+    }
+
+    [TargetRpc]
+    public void TargetCurrentGameRotateAbilityArea (NetworkConnection target, int stackNumber) {
+        InGameUI.RotateAbilityArea (playerNumber, stackNumber);
     }
 
     [TargetRpc]

@@ -86,8 +86,9 @@ public class ServerLogic : MonoBehaviour {
                 return null;
             }
             hand1.LoadFromFile (client.AccountName, client.GameMode, selectedSet);
-            if (!hand1.IsValid ()) {
-                client.TargetInvalidSet (client.connectionToClient);
+            if (!hand1.IsValid (gameMode)) {
+                int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameMode);
+                client.TargetInvalidSet (client.connectionToClient, minimumNumberOfCardsInStack);
                 return null;
             }
         } else {
@@ -112,8 +113,9 @@ public class ServerLogic : MonoBehaviour {
             return;
         }
         hand1.LoadFromFile (client.AccountName, client.GameMode, selectedSet);
-        if (!hand1.IsValid ()) {
-            client.TargetInvalidSet (client.connectionToClient);
+        if (!hand1.IsValid (gameMode)) {
+            int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameMode);
+            client.TargetInvalidSet (client.connectionToClient, minimumNumberOfCardsInStack);
             return;
         }
         MatchMakingClass.JoinQuickQueue (client);
@@ -210,8 +212,16 @@ public class ServerLogic : MonoBehaviour {
     }
 
 
-    static public void DownloadCardPoolToSetEditor (ClientInterface client) {
-        client.TargetDownloadCardPoolToSetEditor (client.connectionToClient, ServerData.GetCardPool (client.GameMode));
+    static public void DownloadDataToSetEditor (ClientInterface client, int setId) {
+        string accountName = client.AccountName;
+        int gameMode = client.GameMode;
+        string [] cardPool = ServerData.GetCardPool (gameMode);
+        string [] set = ServerData.GetPlayerModeSet (accountName, gameMode, setId);
+        string name = ServerData.GetPlayerModeSetName (accountName, gameMode, setId);
+        int iconNumber = ServerData.GetPlayerModeSetIconNumber (accountName, gameMode, setId);
+        int numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameMode);
+        int minimumNumberOfCardsOnStack = ServerData.GetGameModeNumberOfStacks (gameMode);
+        client.TargetDownloadDataToSetEditor (client.connectionToClient, cardPool, set, name, iconNumber, numberOfStacks, minimumNumberOfCardsOnStack);
     }
 
 
@@ -244,12 +254,12 @@ public class ServerLogic : MonoBehaviour {
         int count = CustomGameClass.GetNumberOfSlots (customGame.matchType);
         for (int x = 0; x < count; x++) {
             bool tAI = customGame.AI [x];
-            if (tAI) {
-                avatars.Add (3);
+            ClientInterface tClient = customGame.clients [x];
+            if (tClient != null) {
+                avatars.Add (ServerData.GetUserAvatar (tClient.AccountName));
             } else {
                 avatars.Add (2);
             }
-            ClientInterface tClient = customGame.clients [x];
             if (tClient != null) {
                 userNames.Add (tClient.UserName);
             } else if (tAI) {
@@ -286,7 +296,7 @@ public class ServerLogic : MonoBehaviour {
             iconNumbers [x] = ServerData.GetPlayerModeSetIconNumber (accountName, gameMode, intIds [x]);
             HandClass hand = new HandClass ();
             hand.LoadFromFile (accountName, gameMode, intIds [x]);
-            legal [x] = hand.IsValid ();
+            legal [x] = hand.IsValid (gameMode);
 
         }
         int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
@@ -524,8 +534,9 @@ public class ServerLogic : MonoBehaviour {
     static public void SavePlayerModeSet (ClientInterface client, string [] lines, int setId) {
         ServerData.SavePlayerModeSet (client.AccountName, client.GameMode, setId, lines);
         HandClass hand = new HandClass ();
-        hand.LoadFromString (client.GameMode, lines);
-        if (hand.IsValid ()) {
+        int gameMode = client.GameMode;
+        hand.LoadFromString (gameMode, lines);
+        if (hand.IsValid (gameMode)) {
             client.TargetShowMessage (client.connectionToClient, Language.SetSavedKey);
         } else {
             client.TargetInvalidSavedSet (client.connectionToClient);
@@ -557,16 +568,6 @@ public class ServerLogic : MonoBehaviour {
     }
 
 
-    static public void DownloadSetToEditor (ClientInterface client, int setId) {
-        string accountName = client.AccountName;
-        int gameMode = client.GameMode;
-        string [] lines = ServerData.GetPlayerModeSet (accountName, gameMode, setId);
-        string name = ServerData.GetPlayerModeSetName (accountName, gameMode, setId);
-        int iconNumber = ServerData.GetPlayerModeSetIconNumber (accountName, gameMode, setId);
-        client.TargetDownloadSetToEditor (client.connectionToClient, lines, name, iconNumber);
-    }
-
-
     static public void CurrentGameMakeAMove (ClientInterface client, int x, int y, int playerNumber, int stackNumber) {
         if (InputController.debuggingEnabled) {
             Debug.Log ("Play card command verified on server");
@@ -579,6 +580,15 @@ public class ServerLogic : MonoBehaviour {
     static public void TargetCurrentGameMakeAMove (ClientInterface client, int moveId, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
         client.TargetCurrentGameMakeAMove (client.connectionToClient, moveId, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
         //VisualMatch.instance.ShowMatchResult (client, winnerName, winCondition, limit);
+    }
+
+    static public void CurrentGameRotateAbilityArea (ClientInterface client, int playerNumber, int stackNumber) {
+        MatchClass match = client.currentMatch;
+        if (!match.Properties.allowToRotateAbilityAreas) {
+            return;
+        }
+        match.Player [playerNumber].RotateTopCard (stackNumber);
+        client.TargetCurrentGameRotateAbilityArea (client.connectionToClient, stackNumber);
     }
 
     static public void CurrentGameFetchMissingMoves (ClientInterface client, int lastMoveId) {

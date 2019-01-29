@@ -6,6 +6,7 @@ public class PlayerPropertiesClass {
 
     public string displayName;
     public string accountName;
+    public int avatar;
     public int playerNumber;
 
     public bool conceded = false;
@@ -22,6 +23,7 @@ public class PlayerPropertiesClass {
     public string [] PlayerPropertiesToString () {
         List<string> s = new List<string> ();
         s.Add (displayName);
+        s.Add (avatar.ToString());
         s.Add (team.ToString());
         s.Add (playerNumber.ToString ());
         return s.ToArray ();
@@ -29,8 +31,9 @@ public class PlayerPropertiesClass {
 
     public void LoadFromString (string [] lines) {
         displayName = lines [0];
-        team = int.Parse (lines [1]);
-        playerNumber = int.Parse (lines [2]);
+        avatar = int.Parse (lines [1]);
+        team = int.Parse (lines [2]);
+        playerNumber = int.Parse (lines [3]);
     }
 
     public PlayerPropertiesClass () {
@@ -55,6 +58,11 @@ public class PlayerPropertiesClass {
         this.team = team;
         this.accountName = accountName;
         this.displayName = userName;
+        if (AI) {
+            this.avatar = 2;
+        } else {
+            this.avatar = ServerData.GetUserAvatar (accountName);
+        }
         this.hand = hand;
         this.client = client;
         if (AI) {

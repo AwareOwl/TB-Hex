@@ -60,7 +60,7 @@ public class ClientLogic : MonoBehaviour {
         MatchClass match = InGameUI.PlayedMatch;
         PlayerClass player = match.Player [playerNumber];
         PlayerPropertiesClass playerProperties = player.properties;
-        playerProperties.hand = new HandClass ();
+        playerProperties.hand = new HandClass (lines.Length);
         playerProperties.hand.LoadFromModeString (lines);
     }
 

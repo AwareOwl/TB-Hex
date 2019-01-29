@@ -49,8 +49,8 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static public void CreateNewBackground () {
-        CreateNewBackground (3);
-        //CreateNewBackground (Random.Range (1, 3));
+        //CreateNewBackground (2);
+        CreateNewBackground (Random.Range (1, 4));
     }
 
     static public void CreateNewBackground (int theme) {
@@ -190,7 +190,7 @@ public class EnvironmentScript : MonoBehaviour {
         int maxZ = 8;
         for (int x = 0; x < (maxY - minY + 1) * 2; x++) {
             GameObject water = Instantiate (Resources.Load ("Prefabs/PreWater")) as GameObject;
-            water.transform.GetComponent<Renderer> ().material.color = new Color (0.125f, 0.225f, 0.075f, 0.002f);
+            water.transform.GetComponent<Renderer> ().material.color = new Color (0.125f, 0.225f, 0.075f, 0.001f);
             water.transform.localPosition = new Vector3 (0, -x, 0);
             water.transform.parent = Background.transform;
         }
@@ -201,6 +201,10 @@ public class EnvironmentScript : MonoBehaviour {
                 GameObject hex = CreateAttachedTile (x, py, y);
                 BackgroundTiles [x - minX, y - minZ] = hex;
             }
+        }
+
+        for (int x = 0; x < 150; x++) {
+            CreateCloud ();
         }
     }
     static private void CreateChalliceBackground () {
@@ -254,14 +258,29 @@ public class EnvironmentScript : MonoBehaviour {
 
     static public void SetRandomCloudProperties (GameObject cloud, bool onBoardLoad) {
         Material material = cloud.GetComponent<Renderer> ().material;
-        material.color = new Color (Random.Range (0.65f, 0.9f), Random.Range (0.15f, 0.3f), Random.Range (0.35f, 0.5f), Random.Range (0.1f, 0.2f));
+        float minY = -10f;
+        float maxY = 3f;
+        switch (Theme) {
+            case 2:
+                material.color = new Color (Random.Range (0.85f, 0.95f), Random.Range (0.85f, 0.95f), Random.Range (0.85f, 0.95f), Random.Range (0.175f, 0.25f));
+                cloud.transform.localScale = new Vector3 (Random.Range (3f, 6.5f), Random.Range (3f, 6.5f), 1);
+                minY = -8;
+                maxY = 2;
+                break;
+            case 3:
+                material.color = new Color (Random.Range (0.65f, 0.9f), Random.Range (0.15f, 0.3f), Random.Range (0.35f, 0.5f), Random.Range (0.1f, 0.2f));
+                cloud.transform.localScale = new Vector3 (Random.Range (2f, 6.5f), Random.Range (2f, 6.5f), 1);
+                minY = -10;
+                maxY = 3;
+                break;
+
+        }
         if (onBoardLoad) {
-            cloud.transform.localPosition = new Vector3 (Random.Range (-18, 18f), Random.Range (-10, 3f), Random.Range (-11, 11f));
+            cloud.transform.localPosition = new Vector3 (Random.Range (-18, 18f), Random.Range (-minY, maxY), Random.Range (-11, 11f));
         } else {
-            cloud.transform.localPosition = new Vector3 (Random.Range (18, 18f), Random.Range (-10, 3f), Random.Range (-11, 11f));
+            cloud.transform.localPosition = new Vector3 (Random.Range (18, 18f), Random.Range (-minY, maxY), Random.Range (-11, 11f));
         }
         cloud.transform.localEulerAngles = new Vector3 (90, 0, 0);
-        cloud.transform.localScale = new Vector3 (Random.Range (2f, 6.5f), Random.Range (2f, 6.5f), 1);
     }
     /*
     static private void CreateLavaBackground () {

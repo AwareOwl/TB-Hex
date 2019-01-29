@@ -4,9 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class SetEditor : GOUI {
-
-    static public SetEditor instance;
-
+    
     static public HandClass hand;
 
     static CardPoolClass cardPool;
@@ -32,6 +30,9 @@ public class SetEditor : GOUI {
     static public string setName;
     static public int iconNumber;
 
+    static public int numberOfStacks;
+    static public int minimumNumberOfCardsOnStack;
+
     static public void ApplySetProperties (string setName, int iconNumber) {
         SetEditor.setName = setName;
         SetEditor.iconNumber = iconNumber;
@@ -39,15 +40,8 @@ public class SetEditor : GOUI {
     }
 
     private void Start () {
-        instance = this;
-        Collection = new VisualCard [4, 5];
-        CollectionCollider = new GameObject [4, 5];
-        Set = new VisualCard [4, 5];
-        SetCollider = new GameObject [4, 5];
-        CreateCardPoolEditorMenu ();
         CurrentGUI = this;
-        ClientLogic.MyInterface.CmdDownloadCardPoolToSetEditor ();
-        ClientLogic.MyInterface.CmdDownloadSetToEditor (setId);
+        ClientLogic.MyInterface.CmdDownloadDataToSetEditor (setId);
         DestroyImmediate (ExitButton);
         DestroyImmediate (ChatButton);
     }
@@ -58,13 +52,21 @@ public class SetEditor : GOUI {
         CurrentCanvas.AddComponent<SetEditor> ();
     }
 
+    static public void LoadData (string [] cardPool, string [] set, string name, int iconNumber, int numberOfStacks, int minimalNumberOfCardsOnStack) {
+        SetEditor.numberOfStacks = numberOfStacks;
+        SetEditor.minimumNumberOfCardsOnStack = minimalNumberOfCardsOnStack;
+        LoadCardPool (cardPool);
+        CreateCardPoolEditorMenu ();
+        LoadPageUI ();
+        LoadSet (set, name, iconNumber);
+
+    }
+
     static public void LoadCardPool (string [] s) {
         cardPool = new CardPoolClass ();
         cardPool.LoadFromString (s);
         available = new bool [cardPool.Card.Count];
         SetAllAvailable ();
-        LoadPageUI ();
-        LoadPage (0);
     }
 
     static public void SetAllAvailable () {
@@ -135,7 +137,7 @@ public class SetEditor : GOUI {
 
     static public void LoadSet (string [] lines, string name, int iconNumber) {
         hand = new HandClass ();
-        hand.LoadFromString (cardPool, lines);
+        hand.LoadFromString (cardPool, lines, numberOfStacks);
         LoadSet (hand);
         LoadPage (Page);
         SetEditor.setName = name;
@@ -196,8 +198,7 @@ public class SetEditor : GOUI {
 
     static public void LoadSet (HandClass hand) {
         SetAllAvailable ();
-        int MaxX = 4;
-        for (int x = 0; x < MaxX; x++) {
+        for (int x = 0; x < numberOfStacks; x++) {
             StackClass stack = hand.stack [x];
             for (int y = 0; y < 5; y++) {
                 if (Set [x, y] != null) {
@@ -259,8 +260,12 @@ public class SetEditor : GOUI {
 
 
     // Use this for initialization
-    void CreateCardPoolEditorMenu () {
+    static void CreateCardPoolEditorMenu () {
         GameObject Clone;
+        Collection = new VisualCard [4, 5];
+        CollectionCollider = new GameObject [4, 5];
+        Set = new VisualCard [numberOfStacks, 5];
+        SetCollider = new GameObject [numberOfStacks, 5];
 
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 300, 540, 10, 600, 1080, false);
 
@@ -296,9 +301,11 @@ public class SetEditor : GOUI {
 
         for (int x = 0; x < 4; x++) {
 
-            Clone = CreateSprite ("UI/Panel_Slot_01_SetRow", 960 + 120 * x, 535, 11, 122, 780, false);
+            if (x < numberOfStacks) {
+                Clone = CreateSprite ("UI/Panel_Slot_01_SetRow", 960 + 120 * x, 535, 11, 122, 780, false);
 
-            Clone = CreateText (x.ToString (), 960 + 120 * x, 990, 11, 0.03f);
+                Clone = CreateText (x.ToString (), 960 + 120 * x, 990, 11, 0.03f);
+            }
 
             for (int y = 0; y < 5; y++) {
                 UIController UIC;
@@ -315,14 +322,16 @@ public class SetEditor : GOUI {
 
 
 
-                Clone =
+                if (x < numberOfStacks) {
+                    Clone =
                     CreateSprite ("UI/Panel_Slot_01_CollectionCard", 960 + 120 * x, 225 + 156 * y, 12, 120, 150, false);
-                DestroyImmediate (Clone.GetComponent<SpriteRenderer> ());
-                Clone.name = UIString.SetEditorSetCard;
-                UIC = Clone.GetComponent<UIController> ();
-                UIC.x = x;
-                UIC.y = y;
-                SetCollider [x, y] = Clone;
+                    DestroyImmediate (Clone.GetComponent<SpriteRenderer> ());
+                    Clone.name = UIString.SetEditorSetCard;
+                    UIC = Clone.GetComponent<UIController> ();
+                    UIC.x = x;
+                    UIC.y = y;
+                    SetCollider [x, y] = Clone;
+                }
             }
 
         }

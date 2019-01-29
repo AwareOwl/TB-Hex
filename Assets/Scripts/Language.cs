@@ -434,6 +434,22 @@ public class Language {
         }
     }
 
+    static public string GetSetEditorDescription () {
+        string s = SetEditorDescription;
+        s = s.Replace ("%d1", SetEditor.minimumNumberOfCardsOnStack.ToString());
+        return s;
+    }
+
+    static public string GetYourSetNeedsAtLeastDCardsInEachStack () {
+        return GetYourSetNeedsAtLeastDCardsInEachStack (SetEditor.minimumNumberOfCardsOnStack);
+    }
+
+    static public string GetYourSetNeedsAtLeastDCardsInEachStack (int number) {
+        string s = YourSetNeedsDCardsInEachStack;
+        s = s.Replace ("%d1", number.ToString ());
+        return s;
+    }
+
     static public string GetAbilityDescription (int abilityType) {
         string s = AbilityDescription [abilityType];
         for (int x = 0; x < AbilityClass.AbilityValue [abilityType].Count; x++) {
@@ -470,11 +486,11 @@ public class Language {
         return UI [21].Replace ("%s", serverVersion);
     }
 
-    static public string GetInvalidSetMessage () {
-        return CantStartTheGame + " " + YourSetNeedsDCardsInEachStack;
+    static public string GetInvalidSetMessage (int number) {
+        return CantStartTheGame + " " + GetYourSetNeedsAtLeastDCardsInEachStack (number);
     }
 
     static public string GetInvalidSavedSetMessage () {
-        return SetSavedButInvalid + " " + YourSetNeedsDCardsInEachStack;
+        return SetSavedButInvalid + " " + GetYourSetNeedsAtLeastDCardsInEachStack ();
     }
 }

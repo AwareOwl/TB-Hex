@@ -183,6 +183,12 @@ public class VisualEffectScript : MonoBehaviour {
         if (drift != null) {
             drift.Add (drift [endPhase]);
         }
+        if (rotateTo != null) {
+            rotateTo.Add (rotateTo [endPhase]);
+        }
+        if (rotateVector != null) {
+            rotateVector.Add (rotateVector [endPhase]);
+        }
         endPhase++;
     }
 

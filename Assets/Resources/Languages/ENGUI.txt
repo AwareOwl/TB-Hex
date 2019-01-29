@@ -28,12 +28,12 @@
 [27] Set has been saved.
 [28] Set has been saved, but you won't be able to use it in game.
 [29] You can't start the game, because your set is not valid.
-[30] Your set has to have at least 2 cards in each stack.
+[30] Your set has to have at least %d1 cards in each stack.
 [31] Exit application.
 [32] Save set.
 [33] Go back to menu.
 [34] Let AI generate random set for you.
-[35] In this editor you can chose what cards will you use during game. Each column of your set represents one stack of cards. You need at least 2 cards in each stack if you want to play this set. Click on card with right mouse button to rotate its ability area.
+[35] In this editor you can chose what cards will you use during game. Each column of your set represents one stack of cards. You need at least %d1 cards in each stack if you want to play this set. Click on card with right mouse button to rotate its ability area.
 [36] Click to learn more about this editor.
 [37] Select card set:
 [38] Empty slot
@@ -111,3 +111,18 @@
 [110] Hide chat
 [111] Deleting old unwanted files. Please wait.
 [112] Refresh
+[113] The match ends when score limit is reached
+[114] The match ends when turn limit is reached
+[115] Game version settings
+[116] Allow to rotate ability areas on card during the game
+[117] Number of card stacks
+[118] Minimal number of cards required on every card stack
+[119] Profile
+[120] This game version
+[121] All game versions
+[122] Won games
+[123] Lost games
+[124] Drawn games
+[125] Unfinished games
+[126] Enter new user name
+[127] Select new avatar

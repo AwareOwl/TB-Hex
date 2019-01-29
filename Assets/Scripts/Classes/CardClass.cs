@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardClass : VisualClass {
+public class CardClass {
 
     public int cardNumber;
 
@@ -49,6 +49,9 @@ public class CardClass : VisualClass {
             abilityArea = (abilityArea % 3 + 1);
         }
         SetState (value, tokenType, abilityArea, abilityType);
+        if (visualCard != null) {
+            visualCard.SetState (this);
+        }
     }
 
     public void SetState (int value, int tokenType, int abilityArea, int abilityType) {

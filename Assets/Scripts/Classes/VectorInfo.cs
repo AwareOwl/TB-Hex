@@ -80,7 +80,7 @@ public class VectorInfo {
                     if (token.owner == owner) {
                         allyCount++;
                         sumOfAlliesValues += value;
-                    } else {
+                    } else if (IsEnemy (vector.target, token.owner)) {
                         enemyCount++;
                     }
                     if (!TargetPlayers.Contains (owner)) {
@@ -295,7 +295,7 @@ public class VectorInfo {
                     }
                     break;
                 case 29:
-                    if (IsFilledTile (vector.target) && enemyCount <= 2) {
+                    if (IsFilledTile (vector.target) && enemyCount <= 2 && IsEnemy (vector.target, token.owner)) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);

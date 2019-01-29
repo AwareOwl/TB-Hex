@@ -378,7 +378,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 SetEditor.LoadPage (number);
                 break;
             case UIString.SetEditorAbout:
-                GOUI.ShowMessage (Language.SetEditorDescription);
+                GOUI.ShowMessage (Language.GetSetEditorDescription ());
                 break;
 
             case UIString.ShowSetList:
@@ -386,6 +386,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.ShowMainMenu:
                 MainMenu.ShowMainMenu ();
+                break;
+            case UIString.SetListPageButton:
+                SetList.SelectPage (number);
                 break;
 
             case UIString.CreateNewSet:
@@ -617,6 +620,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             break;
                         case UIString.SetEditorCollectionCard:
                             SetEditor.RotateCardInCollection (x, y);
+                            break;
+
+                        case UIString.InGameHandCard:
+                            InGameUI.RotateAbilityAreaOnServer (x);
                             break;
                     }
                 }

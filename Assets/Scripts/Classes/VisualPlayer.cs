@@ -46,12 +46,10 @@ public class VisualPlayer {
             avatarPosition += barLength;
         }
 
-        int avatarNumber = 2;
-        if (player.properties.displayName == "AI opponent") {
-            avatarNumber = 3;
-        }
+        int avatarNumber = player.properties.avatar;
 
-        Clone = GOUI.CreateSprite ("Textures/Avatars/Avatar0" + avatarNumber.ToString ());
+        Clone = GOUI.CreateSprite ();
+        GOUI.SetSprite (Clone, AppDefaults.Avatar [avatarNumber]);
         GOUI.SetInPixScale (Clone, avatarSize, avatarSize);
         GOUI.SetInPixPosition (Clone, avatarPosition, 45, 14);
 

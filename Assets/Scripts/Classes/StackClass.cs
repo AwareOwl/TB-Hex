@@ -6,6 +6,10 @@ public class StackClass {
     
     public List<CardClass> card = new List<CardClass>();
 
+    public void RotateAbilityArea (int cardNumber) {
+        card [cardNumber].RotateArea ();
+    }
+
     public StackClass () {
 
     }

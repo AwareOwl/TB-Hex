@@ -28,12 +28,12 @@
 [27] Zestaw został zapisany.
 [28] Zestaw został zapisany, ale nie będziesz mógł go użyć w trakcie gry.
 [29] Nie można rozpocząć gry, ponieważ twój zestaw kart jest niepoprawny.
-[30] Twój zestaw powinien zawierać co najmniej 2 karty na każdym stosie.
+[30] Twój zestaw powinien zawierać co najmniej %d1 kart(y) na każdym stosie.
 [31] Wyłącz aplikację.
 [32] Zapisz zestaw.
 [33] Wróć do menu.
 [34] Pozwól SI wygenerować losowy zestaw.
-[35] W tym edytorze możesz wybrać karty z których będziesz korzystał w trakcie gry. Każda kolumna twojego zestawu kart reprezentuje jeden stos kart dostępny w trakcie gry. Musisz mieć co najmniej 2 karty w każdym stosie aby móc zagrać tym zestawem kart. Kliknij na kartę prawym przyciskiem myszy aby obrócić jej obszar umiejętności.
+[35] W tym edytorze możesz wybrać karty z których będziesz korzystał w trakcie gry. Każda kolumna twojego zestawu kart reprezentuje jeden stos kart dostępny w trakcie gry. Musisz mieć co najmniej %d1 kart(y) w każdym stosie aby móc zagrać tym zestawem kart. Kliknij na kartę prawym przyciskiem myszy aby obrócić jej obszar umiejętności.
 [36] Kliknij aby dowiedzieć się więcej o tym edytorze.
 [37] Wybierz zestaw kart:
 [38] Wolna pozycja
@@ -116,7 +116,7 @@
 [115] Ustawienia wersji gry
 [116] Zezwól na obracanie obszaru umiejętności kart w trakcie meczu
 [117] Liczba stosów kart
-[118] Minimalny limit kart na stosie kart
+[118] Minimalna liczba kart wymaganych na każdym stosie kart
 [119] Profil
 [120] Ta wersja gry
 [121] Wszystkie wersje

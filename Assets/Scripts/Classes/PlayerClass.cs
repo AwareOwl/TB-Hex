@@ -19,6 +19,10 @@ public class PlayerClass {
 
     }
 
+    public void RotateTopCard (int stackNumber) {
+        GetStack (stackNumber).RotateAbilityArea (topCardNumber [stackNumber]);
+    }
+
     public string [] PlayerToString () {
         List <string> s = new List<string> ();
         s.Add (score.ToString ());

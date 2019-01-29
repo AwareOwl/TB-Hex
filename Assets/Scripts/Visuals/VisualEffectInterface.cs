@@ -302,7 +302,7 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.SetLastColor (new Color (col.r, col.g, col.b, 1));
                 VES.SetLastPhaseTimer (0.5f);
                 VES.AddPhase ();
-                VES.SetLastScale (new Vector3 (0.4f, 0.4f, 1f));
+                VES.SetLastScale (new Vector3 (0.6f, 0.4f, 1f));
                 VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
                 VES.SetLastPhaseTimer (1.5f);
                 VES.rotateToCamera = true;
@@ -334,6 +334,50 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.SetLastPosition (new Vector3 (0, 1, 0));
                 VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
                 VES.rotateToCamera = true;
+                break;
+            case 28:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/3gram", col, triggered, autoDestroy);
+                VES.gameObject.transform.localEulerAngles = new Vector3 (90, 0, 0);
+                VES.SetLastScale (new Vector3 (1f, 1f, 1));
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1f));
+                VES.SetRotateVector (new Vector3 (0, 90, 0));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1.75f);
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Flames", col, triggered, autoDestroy);
+                VES.SetLastScale (new Vector3 (0.6f, 0.1f, 1));
+                VES.SetLastPosition (new Vector3 (0, 0.05f, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0.5f));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.8f, 0.8f, 1f));
+                VES.SetLastPosition (new Vector3 (0f, 0.45f, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1));
+                VES.SetLastPhaseTimer (0.5f);
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.6f, 0.4f, 1f));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1.5f);
+                VES.rotateToCamera = true;
+                break;
+            case 29:
+                VES = CreateSimpleEffect (anchor, "Textures/Ability/Ability29", col, triggered, autoDestroy);
+                VES.gameObject.transform.localEulerAngles = new Vector3 (90, 0, 0);
+                VES.SetLastScale (new Vector3 (1f, 1f, 1));
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1f));
+                VES.SetRotateVector (new Vector3 (0, 45, 0));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1.75f);
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Spike", col, triggered, autoDestroy);
+                VES.SetLastColor (new Color (col.r * 2, col.g, col.b, 1));
+                VES.SetLastPosition (new Vector3 (0, 2, 0));
+                VES.SetScale (new Vector3 (0.4f, 4, 1));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0, 4, 1));
+                VES.SetLastColor (new Color (col.r * 2, col.g, col.b, 0));
+                VES.rotateToCameraVertical = true;
                 break;
         }
     }
@@ -395,6 +439,31 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.AddPhase ();
                 VES.SetLastPosition (new Vector3 (0, 0, 0));
                 VES.SetLastColor (new Color (1, 0, 0, 0));
+                VES.rotateToCamera = true;
+                break;
+            case 28:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/3gram", col, triggered, autoDestroy);
+                VES.gameObject.transform.localEulerAngles = new Vector3 (90, 0, 0);
+                VES.SetLastScale (new Vector3 (1f, 1f, 1));
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1f));
+                VES.SetRotateVector (new Vector3 (0, 90, 0));
+                VES.AddPhase ();
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1.75f);
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Flames", col, triggered, autoDestroy);
+                VES.SetLastScale (new Vector3 (0.6f, 0.1f, 1));
+                VES.SetLastPosition (new Vector3 (0, 0.05f, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0.5f));
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.8f, 0.8f, 1f));
+                VES.SetLastPosition (new Vector3 (0f, 0.45f, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1));
+                VES.SetLastPhaseTimer (0.5f);
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (0.6f, 0.4f, 1f));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (1.5f);
                 VES.rotateToCamera = true;
                 break;
         }
@@ -559,6 +628,7 @@ public class VisualEffectInterface : MonoBehaviour {
             case 21:
             case 22:
             case 23:
+            case 28:
                 texturePath = VisualCard.GetIconPath (8) + "b";
                 break;
             case 26:

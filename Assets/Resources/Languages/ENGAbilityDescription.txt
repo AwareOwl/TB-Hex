@@ -26,3 +26,5 @@
 [25] Creates up to 3 Normal Tokens with value 1 on target empty fields.
 [26] Reduces values of weakest target tokens by 1, and increases values of strongest target tokens by 1.
 [27] Increases values of target tokens with different type than played token by 1.
+[28] Double value of last played token, and increase value of target ally token by the same value.
+[29] Destroy up to 2 target enemy tokens.

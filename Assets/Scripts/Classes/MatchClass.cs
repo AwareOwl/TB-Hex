@@ -273,26 +273,26 @@ public class MatchClass {
                 }
             }
         }
-        for (int x = 1; x <= numberOfPlayers; x++) {
-            PlayerClass player = Player [x];
-            if (player != null) {
-                PlayerPropertiesClass properties = player.properties;
-                if (properties != null) {
-                    ClientInterface client = properties.client;
-                    if (client != null) {
-                        if (winner == player) {
-                            ServerData.IncrementThisGameModeWon (client.AccountName, Properties.gameMode);
-                        } else if (winner != null) {
-                            ServerData.IncrementThisGameModeLost (client.AccountName, Properties.gameMode);
-                        } else {
-                            ServerData.IncrementThisGameModeDrawn (client.AccountName, Properties.gameMode);
+        if (real) {
+            for (int x = 1; x <= numberOfPlayers; x++) {
+                PlayerClass player = Player [x];
+                if (player != null) {
+                    PlayerPropertiesClass properties = player.properties;
+                    if (properties != null) {
+                        ClientInterface client = properties.client;
+                        if (client != null) {
+                            if (winner == player) {
+                                ServerData.IncrementThisGameModeWon (client.AccountName, Properties.gameMode);
+                            } else if (winner != null) {
+                                ServerData.IncrementThisGameModeLost (client.AccountName, Properties.gameMode);
+                            } else {
+                                ServerData.IncrementThisGameModeDrawn (client.AccountName, Properties.gameMode);
+                            }
+                            ServerData.DecrementThisGameModeUnfinished (client.AccountName, Properties.gameMode);
                         }
-                        ServerData.DecrementThisGameModeUnfinished (client.AccountName, Properties.gameMode);
                     }
                 }
             }
-        }
-        if (real) {
             if (visualMatch != null) {
                 string winnerName = "";
                 if (winner != null) {
@@ -319,6 +319,9 @@ public class MatchClass {
 
         Board = new BoardClass (this);
         Board.LoadRandomFromGameMode (gameMode, matchType);
+    }
+    public void RotateAbilityArea (int playerNumber, int stackNumber) {
+        Player [playerNumber].RotateTopCard (stackNumber);
     }
 
     public void MoveTopCard (int playerNumber, int stackNumber) {
