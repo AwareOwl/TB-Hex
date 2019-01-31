@@ -7,8 +7,8 @@ public class AppDefaults {
     static public Color Green = new Color (0, 0.95f, 0);
     static public Color Red = Color.red;
 
-    static public int AvailableTokens = 10; // Always + 1, to include null
-    static public int AvailableAbilities = 30; // Always + 1, to include null
+    static public int AvailableTokens = 11; // Always + 1, to include null
+    static public int AvailableAbilities = 33; // Always + 1, to include null
     static public int AvailableAvatars = 8; // Always + 1, to include null
 
     static public Sprite [] Avatar;
@@ -17,6 +17,8 @@ public class AppDefaults {
     static public Shader sprite;
     static public Object Tile;
     static public Object ChalliceTile;
+    static public Object LilyLeaf;
+    static public Object LilyFlower;
 
     static public float TokenSpawnHeight = 10f;
 
@@ -28,6 +30,8 @@ public class AppDefaults {
         LoadClouds ();
         Tile = Resources.Load ("Prefabs/Tile");
         ChalliceTile = Resources.Load ("Prefabs/ChalliceTile");
+        LilyLeaf = Resources.Load ("Prefabs/PreLilyLeaf");
+        LilyFlower = Resources.Load ("Prefabs/PreLilyFlower");
         sprite = Shader.Find ("Sprites/Default");
     }
 

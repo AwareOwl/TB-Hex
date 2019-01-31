@@ -99,6 +99,10 @@ public class VectorInfo {
         return tile != null && tile.IsFilledTile ();
     }
 
+    public bool HasRemains (TileClass tile) {
+        return tile != null && tile.HasRemains ();
+    }
+
     public bool IsEnemy (TileClass tile, int playerNumber) {
         return IsFilledTile (tile) && tile.token.owner != playerNumber && tile.token.owner != 0;
     }
@@ -301,6 +305,21 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
+                case 30:
+                    if (IsFilledTile (vector.target) && match.Player [token.owner].score >= 20) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 31:
+                case 32:
+                    if (HasRemains (vector.target)) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
             }
         }
         switch (abilityType) {
@@ -308,7 +327,6 @@ public class VectorInfo {
                 if (match.LastPlayedToken () != null) {
                     Triggered1.Add (playTile);
                 }
-                break;
                 break;
 
         }

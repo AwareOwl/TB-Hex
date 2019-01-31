@@ -28,3 +28,6 @@
 [27] Różnorodność
 [28] Pakt
 [29] Snajperstwo
+[30] Odpłata
+[31] Nawóz
+[32] Po trupach do władzy

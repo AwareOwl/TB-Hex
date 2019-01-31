@@ -10,6 +10,7 @@ public class TileClass {
     public int y;
 
     public bool enabled;
+    public bool remains;
 
     public TokenClass token;
     public BoardClass board;
@@ -21,6 +22,7 @@ public class TileClass {
     public TileClass (BoardClass board, TileClass tile) {
         this.SetXY (tile.x, tile.y);
         this.enabled = tile.enabled;
+        this.remains = tile.remains;
         if (tile.token != null) {
             this.AttachToken (new TokenClass (tile.token));
         }
@@ -34,6 +36,10 @@ public class TileClass {
 
     public bool IsEmptyTile () {
         return enabled && token == null;
+    }
+
+    public bool HasRemains () {
+        return IsEmptyTile () && remains;
     }
 
     public bool IsFilledTile () {
@@ -86,6 +92,7 @@ public class TileClass {
     public TokenClass DestroyToken () {
         if (token != null) {
             token.DestroyToken ();
+            remains = true;
             token = null;
         }
         return token;

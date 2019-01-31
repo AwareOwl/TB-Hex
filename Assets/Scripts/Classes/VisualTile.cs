@@ -50,6 +50,7 @@ public class VisualTile {
     }
 
     public void EnableTile (bool enable) {
+        Tile.GetComponent<VisualEffectScript> ().SetColor (EnvironmentScript.TileColor (enable));
         if (enable) {
             Anchor.GetComponent<VisualEffectScript> ().PushToHeight (0);
             Border.GetComponent<Renderer> ().enabled = false;

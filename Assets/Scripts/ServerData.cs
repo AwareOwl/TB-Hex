@@ -279,7 +279,45 @@ public class ServerData : MonoBehaviour {
             string [] lines = File.ReadAllLines (path);
             return lines;
         }
-        return null;
+        return new string [0];
+    }
+
+    static public string RatingAbilityStackSizePath () {
+        return RatingPath () + "AbilityStackSize.txt";
+    }
+
+    static public string SaveRatingAbilityStackSize (string [] lines) {
+        string path = RatingAbilityStackSizePath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingAbilityStackSize () {
+        string path = RatingAbilityStackSizePath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return new string [0];
+    }
+
+    static public string RatingTokenStackSizePath () {
+        return RatingPath () + "TokenStackSize.txt";
+    }
+
+    static public string SaveRatingTokenStackSize (string [] lines) {
+        string path = RatingTokenStackSizePath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingTokenStackSize () {
+        string path = RatingTokenStackSizePath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return new string [0];
     }
 
     static public string RatingAbilityAfterAbilityPath () {

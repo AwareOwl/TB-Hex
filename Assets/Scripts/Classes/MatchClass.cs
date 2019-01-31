@@ -99,6 +99,7 @@ public class MatchClass {
             if (token != null) {
                 int tokenValue = token.value;
                 int value = tokenValue;
+                VectorInfo info = GetTokenVectorInfo (tile, token);
                 switch (token.type) {
                     case 1:
                         value *= 2;
@@ -111,8 +112,10 @@ public class MatchClass {
                             value = 0;
                         }
                         break;
+                    case 10:
+                        value += info.emptyTileCount;
+                        break;
                 }
-                VectorInfo info = GetTokenVectorInfo (tile, token);
                 foreach (AbilityVector vector in info.vectors) {
                     TokenClass targetToken = vector.target.token;
                     if (targetToken != null) {
@@ -588,21 +591,12 @@ public class MatchClass {
                     DisableEmptyTile (target);
                     break;
                 case 4:
-                    if (Player.Length <= playerNumber || playerNumber < 0) {
-                        Debug.Log ("15");
-                    }
-                    if (Player [playerNumber] == null) {
-                        Debug.Log ("42");
-                    }
                     Player [playerNumber].AddScore (GetTokenValue (target));
                     break;
                 case 6:
                     ModifyTempValue (tile, -1);
                     break;
                 case 8:
-                    if (LastPlayedToken () == null || LastPlayedToken ().tile == null) {
-                        Debug.Log ("16");
-                    }
                     ModifyTempValue (LastPlayedToken ().tile, -1);
                     break;
                 case 9:
@@ -615,9 +609,6 @@ public class MatchClass {
                     ModifyTempValue (target, -4);
                     break;
                 case 13:
-                    if (target.token == null) {
-                        Debug.Log ("17");
-                    }
                     ModifyTempValue (target, tile.token.value - target.token.value);
                     break;
                 case 14:
@@ -631,16 +622,10 @@ public class MatchClass {
                     ChangeType (target, tokenType);
                     break;
                 case 17:
-                    if (target.token == null) {
-                        Debug.Log ("48");
-                    }
                     ChangeType (tile, target.token.type);
                     ChangeType (target, tokenType);
                     break;
                 case 18:
-                    if (LastPlayedToken () == null) {
-                        Debug.Log ("18");
-                    }
                     CreateToken (target, LastPlayedToken ().type, LastPlayedToken ().value, playerNumber);
                     break;
                 case 19:
@@ -651,15 +636,13 @@ public class MatchClass {
                     break;
                 case 23:
                     ModifyTempValue (target, 1);
-                    if (info.Triggered2.Count == 0) {
-                        Debug.Log ("19");
-                    }
                     ModifyTempValue (info.Triggered2 [0], -1);
                     break;
                 case 24:
                     ModifyTempValue (target, -info.allyCount);
                     break;
                 case 25:
+                case 31:
                     CreateToken (target, 0, 1, playerNumber);
                     break;
                 case 26:
@@ -672,7 +655,11 @@ public class MatchClass {
                     ModifyTempValue (target, LastPlayedToken ().value);
                     break;
                 case 29:
+                case 30:
                     SetDestroy (target);
+                    break;
+                case 32:
+                    ModifyTempValue (tile, target.token.value);
                     break;
             }
         }

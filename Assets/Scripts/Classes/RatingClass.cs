@@ -27,7 +27,9 @@ public class RatingClass {
 
     static public float [,,] abilityOnStack; // AbilityType, AbilityArea (0, 2, 6 fields), stackNumber;
     static public float [,,] abilityOnRow;
+    static public float [,,] abilityStackSize;
     static public float [,,] tokenOnRow;
+    static public float [,,] tokenStackSize;
     static public float [,,] abilityTokenOnRow; // AbilityType, TokenType, rowNumber
 
     static public float [,,,] abilityAbilitySynergy;// AbilityType, AbilityArea (0, 2, 6 fields), AbilityType, AbilityArea (0, 2, 6 fields);
@@ -42,7 +44,9 @@ public class RatingClass {
         int availableTokens = AppDefaults.AvailableTokens;
         abilityOnStack = new float [availableAbilities, 3, 10];
         abilityOnRow = new float [availableAbilities, 3, 10];
+        abilityStackSize = new float [availableAbilities, 3, 10];
         tokenOnRow = new float [availableTokens, 9, 10];
+        tokenStackSize = new float [availableTokens, 9, 10];
         abilityTokenOnRow = new float [availableAbilities, availableTokens, 10];
         abilityAbilitySynergy = new float [availableAbilities, 3, availableAbilities, 3];
         abilityAfterAbility = new float [availableAbilities, 3, availableAbilities, 3];
@@ -67,7 +71,9 @@ public class RatingClass {
             }
         }
         LoadAbilityOnRow ();
+        LoadAbilityStackSize ();
         LoadTokenOnRow ();
+        LoadTokenStackSize ();
         LoadAbilityTokenOnRow ();
         for (int x = 0; x < cardNumberWinRatio.Length; x++) {
             cardNumberWinRatio [x] = 0.5f;
@@ -147,14 +153,18 @@ public class RatingClass {
                     usedCards.Add (card);
                     abilityOnStack [abilityType, abilityArea, y] *= 0.999f;
                     abilityOnRow [abilityType, abilityArea, z] *= 0.999f;
+                    abilityStackSize [abilityType, abilityArea, cardCount] *= 0.999f;
                     tokenOnRow [tokenType, tokenValue, z] *= 0.999f;
+                    tokenStackSize [tokenType, tokenValue, cardCount] *= 0.999f;
                     abilityTokenOnRow [abilityType, tokenType, z] *= 0.999f;
                     cardNumberWinRatio [card.cardNumber] *= 0.999f;
                     cardPopularity [card.cardNumber] += 0.001f;
                     if (winnerNumber == x) {
                         abilityOnStack [abilityType, abilityArea, y] += 0.001f;
                         abilityOnRow [abilityType, abilityArea, z] += 0.001f;
+                        abilityStackSize [abilityType, abilityArea, cardCount] += 0.001f;
                         tokenOnRow [tokenType, tokenValue, z] += 0.001f;
+                        tokenStackSize [tokenType, tokenValue, cardCount] += 0.001f;
                         abilityTokenOnRow [abilityType, tokenType, z] += 0.001f;
                         cardNumberWinRatio [card.cardNumber] += 0.001f;
                     }
@@ -184,7 +194,9 @@ public class RatingClass {
         Debug.Log ("Test");
         SaveAbilityOnStack ();
         SaveAbilityOnRow ();
+        SaveAbilityStackSize ();
         SaveTokenOnRow ();
+        SaveTokenStackSize ();
         SaveAbilityTokenOnRow ();
         SaveWinnerScore ();
         SaveLoserScore ();
@@ -457,6 +469,24 @@ public class RatingClass {
     static public void LoadTokenAfterToken () {
         string [] lines = ServerData.GetRatingTokenAfterToken ();
         Load (lines, tokenAfterToken);
+    }
+    
+    static public void LoadAbilityStackSize () {
+        string [] lines = ServerData.GetRatingAbilityStackSize ();
+        Load (lines, abilityStackSize);
+    }
+
+    static public void SaveAbilityStackSize () {
+        ServerData.SaveRatingAbilityStackSize (Save (abilityStackSize));
+    }
+
+    static public void LoadTokenStackSize () {
+        string [] lines = ServerData.GetRatingTokenStackSize ();
+        Load (lines, tokenStackSize);
+    }
+
+    static public void SaveTokenStackSize () {
+        ServerData.SaveRatingTokenStackSize (Save (tokenStackSize));
     }
 
     static public void Load (string [] lines, float [,,] array) {
