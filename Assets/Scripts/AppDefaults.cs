@@ -7,8 +7,8 @@ public class AppDefaults {
     static public Color Green = new Color (0, 0.95f, 0);
     static public Color Red = Color.red;
 
-    static public int AvailableTokens = 11; // Always + 1, to include null
-    static public int AvailableAbilities = 33; // Always + 1, to include null
+    static public int AvailableTokens = 14; // Always + 1, to include null
+    static public int AvailableAbilities = 35; // Always + 1, to include null
     static public int AvailableAvatars = 8; // Always + 1, to include null
 
     static public Sprite [] Avatar;
@@ -60,22 +60,33 @@ public class AppDefaults {
 
     static public Color GetBorderColorMain (int type) {
         switch (type) {
+            // dark
             case 0:
             case 6:
                 return new Color (0.1f, 0.1f, 0.1f);
+            // Yellowish
             case 1:
+            case 12:
                 return new Color (0.8f, 0.6f, 0.1f);
+            // Dark yellow
             case 2:
             case 8:
                 return new Color (0.1f, 0.1f, 0.0f);
+            // Dark blue
             case 3:
             case 4:
             case 5:
                 return new Color (0.0f, 0.05f, 0.2f);
+            // Dark green
+            case 11:
             case 7:
                 return new Color (0.1f, 0.4f, 0.1f);
+            // Dark pink
             case 10:
-                return new Color (0.1f, 0.9f, 0.1f);
+                return new Color (0.6f, 0.4f, 0.3f);
+            // Dark Orange
+            case 13:
+                return new Color (0.7f, 0.4f, 0.1f);
             default:
                 return Color.black;
         }
@@ -87,19 +98,23 @@ public class AppDefaults {
                 return new Color (0.6f, 0f, 0.1f);
             case 3:
                 return new Color (0.0f, 0.9f, 0f);
+                // Red
             case 4:
             case 5:
+            case 11:
+            case 13:
                 return new Color (0.9f, 0, 0);
             case 6:
                 return new Color (0.7f, 0.7f, 0.7f);
             case 7:
+            case 10:
                 return new Color (0.8f, 0.8f, 0f);
             case 8:
                 return new Color (0.6f, 0.4f, 0.3f);
+            case 12:
+                return new Color (0.8f, 0.45f, 0.125f);
             case 9:
                 return new Color (0.1f, 0.1f, 0.9f);
-            case 10:
-                return new Color (0.1f, 0.9f, 0.1f);
             default:
                 return Color.black;
         }
@@ -128,18 +143,21 @@ public class AppDefaults {
             case 21:
             case 24:
             case 29:
+            case 30:
                 return Red;
             // Green
             case 2:
             case 9:
             case 18:
             case 25:
+            case 31:
                 return Green;
             // Orange
             case 3:
             case 5:
             case 11:
             case 19:
+            case 34:
                 return new Color (1, 0.5f, 0);
             // Yellow
             case 4:
@@ -150,6 +168,7 @@ public class AppDefaults {
             case 26:
             case 27:
             case 28:
+            case 32:
                 return new Color (1, 1, 0);
             // Purple
             case 7:
@@ -157,6 +176,7 @@ public class AppDefaults {
             case 16:
             case 17:
             case 22:
+            case 33:
                 return new Color (0.8f, 0, 1);
             // Blue
             case 20:

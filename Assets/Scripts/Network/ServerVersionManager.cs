@@ -356,7 +356,7 @@ public class ServerVersionManager : VersionManager {
             ServerData.SetUserKeyData (s2, ServerData.PasswordKey,
                 ServerData.EncryptString (ServerData.UserPassword (s2)));
             HandClass hand = new HandClass ();
-            hand.GenerateRandomHand (1);
+            hand.GenerateRandomHand (1, null);
             ServerData.SavePlayerModeSet (s2, 1, 1, hand.HandToString ());
         }
         DevelopVersion = 37;

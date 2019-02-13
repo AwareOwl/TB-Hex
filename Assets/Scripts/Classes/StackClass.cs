@@ -27,7 +27,7 @@ public class StackClass {
             Add (null);
         }
         if (this.card.Count == index) {
-            Add (card);
+            Add (new CardClass (card));
         } else {
             this.card [index] = card;
         }

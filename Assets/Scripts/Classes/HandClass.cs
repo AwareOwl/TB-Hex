@@ -87,57 +87,74 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output = Mathf.Max (output, 0.5f);
+        output = Mathf.Clamp (output, 0.8f, 2.1f);
         return output;
     }
-    public void GenerateRandomHand (int gameModeId) {
+
+    public void GenerateRandomHand (int gameModeId, AIClass AI) {
         CardPoolClass CardPool = new CardPoolClass ();
         CardPool.LoadFromFile (gameModeId);
         int minimumNumberOfCardsOnStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameModeId);
-        GenerateRandomHand (CardPool, minimumNumberOfCardsOnStack);
+        GenerateRandomHand (CardPool, RatingClass.PopularityRating (gameModeId), AI, minimumNumberOfCardsOnStack);
     }
 
-    public void GenerateRandomHand (CardPoolClass CardPool, int minimumNumberOfCardsOnStack) {
+    public void GenerateRandomHand (CardPoolClass CardPool, float [] CardValue, AIClass AI, int minimumNumberOfCardsOnStack) {
         int count = CardPool.Card.Count;
 
-        float [] CardValue = new float [count];
-        float [] modifier = new float [count];
-        for (int x = 0; x < count; x++) {
-            CardValue [x] = 1f;
+        if (AI == null) {
+            AI = new AIClass ();
         }
 
-        bool [] finished = new bool [numberOfStacks];
+        //if (CardValue == null) {
+        if (true) {
+            CardValue = new float [count];
+            for (int x = 0; x < count; x++) {
+                CardValue [x] = 1f;
+            }
+        }
+        float [] modifier = new float [count];
+        
+        int [] stackSize = new int [numberOfStacks];
         float SumOfValues = -1;
+
+        for (int x = 0; x < numberOfStacks; x++) {
+            stackSize [x] = minimumNumberOfCardsOnStack;
+            while (stackSize [x] < 5 && Random.Range (0, 2) == 0) {
+                stackSize [x]++;
+            }
+        }
 
         for (int y = 0; y < 5; y++) {
             if (SumOfValues == 0) {
                 break;
             }
             for (int x = 0; x < numberOfStacks; x++) {
-                if (finished [x]) {
+                if (stackSize [x] <= y) {
                     continue;
                 }
                 SumOfValues = 0;
                 for (int z = 0; z < CardValue.Length; z++) {
                     CardClass card = CardPool.Card [z];
                     modifier [z] = CardValue [z];
-                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], 10)
-                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.value, y], 10)
-                        * Normalize (RatingClass.abilityTokenOnRow [card.abilityType, card.tokenType, y], 20);
+                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], AI.abilityRow)
+                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.value, y], AI.tokenRow)
+                        * Normalize (RatingClass.abilityTokenOnRow [card.abilityType, card.tokenType, y], AI.abilityTokenRow)
+                        * Normalize (RatingClass.abilityStackSize [card.abilityType, card.AreaSize (), stackSize [x]], AI.tokenRow)
+                        * Normalize (RatingClass.tokenStackSize [card.tokenType, card.value, stackSize [x]], AI.tokenRow);
                     if (y > 0) {
                         CardClass prevCard = stack [x].card [y - 1];
                         modifier [z] *= Normalize (RatingClass.abilityAfterAbility [
                             card.abilityType, card.AreaSize(),
-                            prevCard.abilityType, prevCard.AreaSize()], 8);
+                            prevCard.abilityType, prevCard.AreaSize()], AI.abilityAfterAbility);
                         modifier [z] *= Normalize (RatingClass.abilityAfterToken [
                             card.abilityType, card.AreaSize (),
-                            prevCard.tokenType, prevCard.value], 8);
+                            prevCard.tokenType, prevCard.value], AI.abilityAfterToken);
                         modifier [z] *= Normalize (RatingClass.tokenAfterAbility [
                             card.tokenType, card.value,
-                            prevCard.abilityType, prevCard.AreaSize ()], 8);
+                            prevCard.abilityType, prevCard.AreaSize ()], AI.tokenAfterAbility);
                         modifier [z] *= Normalize (RatingClass.tokenAfterToken [
                             card.tokenType, card.value,
-                            prevCard.tokenType, prevCard.value], 8);
+                            prevCard.tokenType, prevCard.value], AI.tokenAfterToken);
                     }
                     SumOfValues += modifier [z];
                 }
@@ -156,23 +173,27 @@ public class HandClass  {
                 CardValue [id] = 0;
                 int abilityType = CardPool.Card [id].abilityType;
                 int abilityArea = CardPool.Card [id].AreaSize ();
+                int tokenType = CardPool.Card [id].tokenType;
+                int tokenValue = CardPool.Card [id].value;
                 for (int z = 0; z < count; z++) {
                     int abilityType2 = CardPool.Card [z].abilityType;
-                    int abilityArea2 = CardPool.Card [id].AreaSize ();
-                    CardValue [z] *= Normalize (RatingClass.abilityAbilitySynergy [
-                        Mathf.Min (abilityType, abilityType2),
-                        Mathf.Min (abilityArea, abilityArea2),
-                        Mathf.Max (abilityType, abilityType2),
-                        Mathf.Max (abilityArea, abilityArea2)], 8);
+                    int abilityArea2 = CardPool.Card [z].AreaSize ();
+                    int tokenType2 = CardPool.Card [z].tokenType;
+                    int tokenValue2 = CardPool.Card [z].value;
+                    if (abilityType < abilityType2) {
+                        CardValue [z] *= Normalize (RatingClass.abilityAbilitySynergy [abilityType, abilityArea, abilityType2, abilityArea2], AI.abilityAbilitySynergy);
+                    } else {
+                        CardValue [z] *= Normalize (RatingClass.abilityAbilitySynergy [abilityType2, abilityArea2, abilityType, abilityArea], AI.abilityAbilitySynergy);
+                    }
+                    CardValue [z] *= Normalize (RatingClass.abilityTokenSynergy [abilityType, abilityArea, tokenType2, tokenValue2], AI.abilityTokenSynergy);
+                    CardValue [z] *= Normalize (RatingClass.abilityTokenSynergy [abilityType2, abilityArea2, tokenType, tokenValue], AI.abilityTokenSynergy);
+
                 }
 
                 stack [x].Add (new CardClass (CardPool.Card [id]));
                 CardClass newCard = stack [x].card [y];
                 if (newCard.abilityArea == 1) {
                     newCard.abilityArea = Random.Range (1, 4);
-                }
-                if (y >= minimumNumberOfCardsOnStack - 1) {
-                    finished [x] = Random.Range (0, 2) == 0;
                 }
             }
         }

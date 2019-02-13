@@ -65,7 +65,7 @@ public class TokenClass {
 
     public void Update () {
         if (value <= 0 || destroyed) {
-            DestroyToken ();
+            tile.DestroyToken ();
         }
     }
 

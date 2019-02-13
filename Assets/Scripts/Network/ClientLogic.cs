@@ -18,10 +18,14 @@ public class ClientLogic : MonoBehaviour {
             //ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
             //SetEditor.ShowSetEditorMenu ();
 
+            //AIRatingMenu.ShowAIRatingMenuMenu (MyInterface.GameMode);
+            //AIRatingMenu.RefreshPage ();
             MainMenu.ShowMainMenu ();
         } else {
             //ServerLogic.JoinGameAgainstAI (ClientLogic.MyInterface).RunAI ();
-            MainMenu.ShowMainMenu ();
+            AIRatingMenu.ShowAIRatingMenuMenu (MyInterface.GameMode);
+            AIRatingMenu.RefreshPage ();
+            //MainMenu.ShowMainMenu ();
         }
     }
 

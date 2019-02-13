@@ -6,16 +6,52 @@ public class AIClass {
 
     int difficulty = 100;
 
-    public int edgeDanger = 5;
+    public int edgeDanger = 8;
     public int surroundDanger = 5;
     public int multiTargetDanger = 5;
+
+    public int abilityRow = 9;
+    public int tokenRow = 9;
+    public int abilityTokenRow = 18;
+    public int abilityStackSize = 5;
+    public int tokenStackSize = 5;
+
+    public int abilityAfterAbility = 8;
+    public int abilityAfterToken = 8;
+    public int tokenAfterAbility = 8;
+    public int tokenAfterToken = 8;
+    public int abilityAbilitySynergy = 8;
+    public int abilityTokenSynergy = 8;
+
+    public int abilityAgainstAbility = 8;
+    public int abilityAgainstToken = 8;
+    public int tokenAgainstAbility = 8;
+    public int tokenAgainstToken = 8;
 
     public float MaxEmptyTileCount;
 
     public AIClass () {
-        edgeDanger = Random.Range (0, 10);
-        surroundDanger = Random.Range (0, 10);
-        multiTargetDanger = Random.Range (0, 10);
+        edgeDanger = Random.Range (0, 13);
+        surroundDanger = Random.Range (1, 7);
+        multiTargetDanger = Random.Range (0, 8);
+
+        abilityRow = Random.Range (6, 13);
+        tokenRow = Random.Range (6, 13);
+        abilityTokenRow = Random.Range (12, 26);
+        abilityStackSize = Random.Range (3, 6);
+        tokenStackSize = Random.Range (3, 5);
+
+        abilityAfterAbility = Random.Range (4, 9);
+        abilityAfterToken = Random.Range (3, 11);
+        tokenAfterAbility = Random.Range (3, 11);
+        tokenAfterToken = Random.Range (4, 10);
+        abilityAbilitySynergy = Random.Range (4, 7);
+        abilityTokenSynergy = Random.Range (4, 11);
+
+        abilityAgainstAbility = Random.Range (4, 7);
+        abilityAgainstToken = Random.Range (4, 7);
+        tokenAgainstAbility = Random.Range (4, 7);
+        tokenAgainstToken = Random.Range (4, 7);
     }
 
     public Vector3Int FindBestMove (MatchClass match) {
@@ -152,7 +188,7 @@ public class AIClass {
                             tokenValue = valueOverTime (tokenValue, -3, targetValue, turnsLeft);
                             break;
                         case 8:
-                            if (tile.token.value < vector.target.token.value) {
+                            if (tokenValue < targetValue) {
                                 tokenValue = 0;
                             }
                             break;
@@ -162,6 +198,7 @@ public class AIClass {
                 tokenValue = Mathf.Max (tokenValue, 0);
                 switch (tokenType) {
                     case 1:
+                    case 12:
                         tokenValue *= 1.9f;
                         break;
                     case 2:
@@ -171,10 +208,24 @@ public class AIClass {
                         tokenValue = (tokenValue * (tokenValue + 1) - Mathf.Max (tokenValue - turnsLeft, 0) * (tokenValue - turnsLeft + 1)) / 2 / turnsLeft;
                         break;
                     case 9:
+                    case 11:
                         tokenValue += 1;
                         break;
+                    case 10:
+                        tokenValue = valueOverTime (tokenValue + oVE.emptyTileCount, - oVE.emptyTileCount, 2, turnsLeft);
+                        break;
+                    case 13:
+                        tokenValue += 0.3f / tokenValue;
+                        break;
                 }
-                riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);
+                switch (tokenType) {
+                    case 12:
+                        riskValue = Mathf.Sqrt (tokenValue) - 0.2f;
+                        break;
+                    default:
+                        riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);
+                        break;
+                }
                 riskValue *= Mathf.Min (1f, (
                     dangerCount * surroundDanger +
                     edgeCount * edgeDanger) / 100f);

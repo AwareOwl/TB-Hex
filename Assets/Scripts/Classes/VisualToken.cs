@@ -147,6 +147,7 @@ public class VisualToken {
                 BorderAccent.Add (Clone);
                 break;
             case 5:
+            case 12:
                 for (int x = 0; x < 8; x++) {
                     Clone = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBorderSpike")) as GameObject;
                     VES = Clone.AddComponent<VisualEffectScript> ();
@@ -160,6 +161,8 @@ public class VisualToken {
                 }
                 break;
             case 7:
+            case 11:
+            case 13:
                 Clone = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBorderSpike")) as GameObject;
                 VES = Clone.AddComponent<VisualEffectScript> ();
                 VES.SetColor (AppDefaults.GetBorderColorAccent (type));
@@ -191,6 +194,18 @@ public class VisualToken {
                 Clone.transform.localPosition = new Vector3 (0, 0, 0);
                 Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
                 BorderAccent.Add (Clone);
+                break;
+            case 10:
+                for (int x = 0; x < 3; x++) {
+                    Clone = GameObject.Instantiate (Resources.Load ("Prefabs/RootAccent")) as GameObject;
+                    VES = Clone.AddComponent<VisualEffectScript> ();
+                    VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                    Clone.transform.parent = Anchor.transform;
+                    Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+                    Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                    Clone.transform.localEulerAngles = new Vector3 (0, 30 + x * 120, 0);
+                    BorderAccent.Add (Clone);
+                }
                 break;
         }
     }

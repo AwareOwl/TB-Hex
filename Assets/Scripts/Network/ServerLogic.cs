@@ -79,6 +79,7 @@ public class ServerLogic : MonoBehaviour {
             client.TargetShowMessage (client.connectionToClient, Language.GameVersionDoesNotMeetRequirementsKey);
             return null;
         }
+        AIClass AI1 = null;
         if (!InputController.autoRunAI) {
             int selectedSet = ServerData.GetPlayerModeSelectedSet (accountName, gameMode);
             if (!ServerData.GetPlayerModeSelectedSetExists (accountName, gameMode)) {
@@ -92,13 +93,15 @@ public class ServerLogic : MonoBehaviour {
                 return null;
             }
         } else {
-            hand1.GenerateRandomHand (gameMode);
+            AI1 = new AIClass ();
+            hand1.GenerateRandomHand (gameMode, AI1);
         }
         HandClass hand2 = new HandClass ();
-        hand2.GenerateRandomHand (gameMode);
+        AIClass AI2 = new AIClass ();
+        hand2.GenerateRandomHand (gameMode, AI2);
         MatchClass match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
-            new PlayerPropertiesClass (1, InputController.autoRunAI, client.AccountName, client.UserName, hand1, client),
-            new PlayerPropertiesClass (2, true, "AI opponent", "AI opponent", hand2, null) });
+            new PlayerPropertiesClass (1, AI1, client.AccountName, client.UserName, hand1, client),
+            new PlayerPropertiesClass (2, AI2, "AI opponent", "AI opponent", hand2, null) });
         StartMatch (match);
         return match;
     }

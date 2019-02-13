@@ -18,6 +18,7 @@ public class MatchClass {
     public bool real = true;
     public bool updateBoard = false;
 
+    public MoveHistoryClass ThisTurnMove;
     public MoveHistoryClass LastMove;
     public int lastMoveId = 0;
 
@@ -97,11 +98,15 @@ public class MatchClass {
         foreach (TileClass tile in Board.tileList) {
             TokenClass token = tile.token;
             if (token != null) {
+                if (token.owner >= playerIncome.Length) {
+                    continue;
+                }
                 int tokenValue = token.value;
                 int value = tokenValue;
                 VectorInfo info = GetTokenVectorInfo (tile, token);
                 switch (token.type) {
                     case 1:
+                    case 12:
                         value *= 2;
                         break;
                     case 2:
@@ -190,6 +195,11 @@ public class MatchClass {
 
         UpdateBoard ();
         UpdateVisuals ();
+        NewTurn ();
+    }
+
+    public void NewTurn () {
+        ThisTurnMove = null;
         IncrementTurnOfPlayer ();
         turn++;
     }
@@ -420,8 +430,11 @@ public class MatchClass {
         prevMatch = new MatchClass (this);
         PlayerClass player = Player [playerNumber];
         TokenClass token = PlayToken (tile, card, playerNumber);
-        UseAbility (tile, playerNumber, card.abilityArea, card.abilityType);
+        int abilityType = card.abilityType;
+        SaveThisTurnMove (tile.x, tile.y, playerNumber, stackNumber, card, token);
+        UseAbility (tile, playerNumber, card.abilityArea, abilityType);
         SaveLastMove (tile.x, tile.y, playerNumber, stackNumber, card, token);
+        AILearning (abilityType);
         updateBoard = true;
         UpdateBoard ();
         UpdateVisuals ();
@@ -449,8 +462,12 @@ public class MatchClass {
         }
     }
 
+    public void SaveThisTurnMove (int x, int y, int playerNumber, int stackNumber, CardClass playedCard, TokenClass token) {
+        ThisTurnMove = new MoveHistoryClass (lastMoveId + 1, x, y, playerNumber, stackNumber, playedCard, token, LastMove);
+    }
+
     public void SaveLastMove (int x, int y, int playerNumber, int stackNumber, CardClass playedCard, TokenClass token) {
-        LastMove = new MoveHistoryClass (lastMoveId + 1, x, y, playerNumber, stackNumber, playedCard, token, LastMove);
+        LastMove = ThisTurnMove;
         Player [playerNumber].LastMove = new MoveHistoryClass (lastMoveId + 1, x, y, playerNumber, stackNumber, playedCard, token, Player [playerNumber].LastMove);
     }
 
@@ -482,7 +499,19 @@ public class MatchClass {
         return info;
     }
 
+    public void TokenLeavesTile (TokenClass token) {
+        switch (token.type) {
+            case 13:
+                if (ThisTurnPlayedToken () != null) {
+                    SetDestroy (ThisTurnPlayedTile ());
+                }
+                break;
+        }
+
+    }
+
     public void DestroyToken (TokenClass token, int x, int y) {
+        TokenLeavesTile (token);
         TileClass tile = Board.GetTile (x, y);
         VectorInfo VI = GetTokenVectorInfo (tile, token);
         switch (token.type) {
@@ -493,6 +522,9 @@ public class MatchClass {
                 break;
             case 9:
                 Board.BeforeAbilityTriggers.Remove (tile);
+                break;
+            case 12:
+                Player [token.owner].score -= 20;
                 break;
         }
         foreach (TileClass target in VI.Triggered1) {
@@ -529,6 +561,29 @@ public class MatchClass {
         UseAbilityTrigger2 (info, tile, playerNumber, abilityType, tokenType);
         UseAbilityVector (info, tile, playerNumber, abilityType, tokenType);
         UseAbilityConstant (info, tile, playerNumber, abilityType, tokenType);
+    }
+
+    public void AILearning (int abilityType) {
+        if (!real) {
+            return;
+        }
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            PlayerClass player = Player [x];
+            if (player != null) {
+                PlayerPropertiesClass properties = player.properties;
+                if (properties != null) {
+                    AIClass AI = properties.AI;
+                    if (AI != null) {
+                        switch (abilityType) {
+                            case 5:
+                                AI.edgeDanger += 3;
+                                break;
+                        }
+                    }
+                }
+            }
+
+        }
     }
 
     public int VerifyAbilityType (TileClass tile, int abilityType) {
@@ -619,6 +674,7 @@ public class MatchClass {
                     ModifyTempValue (target, -target.token.value);
                     break;
                 case 16:
+                case 33:
                     ChangeType (target, tokenType);
                     break;
                 case 17:
@@ -654,12 +710,11 @@ public class MatchClass {
                 case 28:
                     ModifyTempValue (target, LastPlayedToken ().value);
                     break;
-                case 29:
                 case 30:
                     SetDestroy (target);
                     break;
                 case 32:
-                    ModifyTempValue (tile, target.token.value);
+                    ModifyTempValue (tile, 1);
                     break;
             }
         }
@@ -700,6 +755,7 @@ public class MatchClass {
             }
             switch (abilityType) {
                 case 5:
+                case 34:
                     if (vector.target == null) {
                         Debug.Log ("20");
                     }
@@ -724,11 +780,33 @@ public class MatchClass {
                     }
                 }
                 break;
+            case 30:
+            case 31:
+                Player [playerNumber].AddScore (-20);
+                break;
         }
     }
 
     public void ChangeType (TileClass tile, int newType) {
         tile.token.ChangeType (newType);
+    }
+
+    public TileClass ThisTurnPlayedTile () {
+        if (ThisTurnMove == null) {
+            return null;
+        }
+        TokenClass token = ThisTurnMove.playedToken;
+        if (token != null) {
+            return Board.tile [token.x, token.y];
+        }
+        return null;
+    }
+
+    public TokenClass ThisTurnPlayedToken () {
+        if (ThisTurnMove == null) {
+            return null;
+        }
+        return ThisTurnPlayedTile ().token;
     }
 
     public TileClass LastPlayedTile () {
@@ -771,7 +849,7 @@ public class MatchClass {
 
     public TokenClass PlayToken (TileClass tile, CardClass card, int playerNumber) {
         if (tile != null) {
-            TokenClass token = CreateToken (tile, card.tokenType, card.value + Board.NumberOfTypes [7], playerNumber);
+            TokenClass token = CreateToken (tile, card.tokenType, card.value + Board.NumberOfTypes [7] - Board.NumberOfTypes [11], playerNumber);
             //TokenClass token = tile.CreateToken (card, playerNumber);
             if (tile.visualTile != null) {
                 tile.token.visualToken.DelayedAddPlayAnimation ();
@@ -804,6 +882,7 @@ public class MatchClass {
         TileClass destinationTile = Board.GetTile (destX, destY);
         if (sourceTile != null && sourceTile.token != null) {
             TokenClass sourceToken = sourceTile.token;
+            TokenLeavesTile (sourceToken);
             if (destinationTile != null && destinationTile.enabled) {
                 if (destinationTile.token == null) {
                     sourceTile.AttachToken (null);
@@ -822,16 +901,12 @@ public class MatchClass {
             if (destinationTile != null && destinationTile.enabled) {
                 TokenClass destinationToken = destinationTile.token;
                 if (destinationToken != null) {
+                    TokenLeavesTile (destinationToken);
+                    TokenLeavesTile (sourceToken);
                     sourceTile.AttachToken (destinationToken);
                     destinationTile.AttachToken (sourceToken);
                 }
             }
-        }
-    }
-
-    public void DestroyToken (TileClass tile) {
-        if (tile != null && tile.token != null) {
-            tile.token.DestroyToken ();
         }
     }
 

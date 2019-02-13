@@ -1,11 +1,14 @@
 ﻿[0] Brak specjalnych właściwości.
-[1] Generuje podwójną liczbę punktów.
+[1] Generuje podwójny przyrost punktacji.
 [2] Zamiast generować punkty odejmuje je.
 [3] Pomiędzy turami zwiększa wartość najsłabszego pobliskiego żetonu o 1.
 [4] Pomiędzy turami zmniejsza wartość najsilniejszego pobliskiego żetonu o 1.
 [5] Pomiędzy turami zmniejsza swoją wartość o 1. Gdy zostaje zniszczony, redukuje wartość pobliskich żetonów o 3.
 [6] Generuje przyrost punktacji tylko w trakcie tur właściciela.
-[7] Wszystkie zagrywane żetony będą miały wartość większą o 1.
+[7] Wszystkie zagrywane żetony (każdego z graczy) będą miały wartość większą o 1.
 [8] Pobliskie słabsze żetony nie mogą generować przyrostu punktacji.
 [9] Blokuje następną zagraną umiejętność, a gdy do tego dojdzie, zmienia się w Zwykły Żeton.
 [10] Generuje dodatkowy punkt przyrostu punktacji za każde sąsiadujące pole nie okupowane przez żeton.
+[11] Wszystkie zagrywane żetony (każdego z graczy) będą miały wartość mniejszą o 1.
+[12] Generuje podwójny przyrost punktacji. Gdy zostanie zniszczony, właściciel traci 20 punktów.
+[13] Kiedykolwiek ten żeton opuści pole, wartość żetonu zagranego w tej turze spada o 1.

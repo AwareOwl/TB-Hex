@@ -91,8 +91,8 @@ public class TileClass {
 
     public TokenClass DestroyToken () {
         if (token != null) {
-            token.DestroyToken ();
             remains = true;
+            token.DestroyToken ();
             token = null;
         }
         return token;

@@ -123,6 +123,14 @@ public class VectorInfo {
         }
     }
 
+    public bool IsPushableToEmptyTile (TileClass sourceTile, TileClass destinationTile) {
+        if (IsFilledTile (sourceTile) && IsEmptyTile (destinationTile)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void CheckTokenTriggers (MatchClass match, TileClass tokenTile, TokenClass token) {
         if (token == null) {
             return;
@@ -306,6 +314,7 @@ public class VectorInfo {
                     }
                     break;
                 case 30:
+                case 33:
                     if (IsFilledTile (vector.target) && match.Player [token.owner].score >= 20) {
                         Triggered1.Add (vector.target);
                     } else {
@@ -318,6 +327,13 @@ public class VectorInfo {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 34:
+                    if (IsPushableToEmptyTile (vector.target, vector.pushTarget)) {
+                        TriggeredVector.Add (vector);
+                    } else {
+                        NotTriggeredVector.Add (vector);
                     }
                     break;
             }

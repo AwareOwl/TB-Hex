@@ -154,8 +154,9 @@ public class CustomGameClass {
                 properties [x] = new PlayerPropertiesClass (x + 1, clients [x]);
             } else if (AI [x]) {
                 HandClass hand2 = new HandClass ();
-                hand2.GenerateRandomHand (gameMode);
-                properties [x] = new PlayerPropertiesClass (x + 1, true, "AI opponent", "AI opponent", hand2, null);
+                AIClass AI = new AIClass ();
+                hand2.GenerateRandomHand (gameMode, AI);
+                properties [x] = new PlayerPropertiesClass (x + 1, AI, "AI opponent", "AI opponent", hand2, null);
             } else {
                 properties [x] = null;
             }

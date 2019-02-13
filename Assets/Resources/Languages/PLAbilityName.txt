@@ -31,3 +31,5 @@
 [30] Odpłata
 [31] Nawóz
 [32] Po trupach do władzy
+[33] Wirus
+[34] Strach

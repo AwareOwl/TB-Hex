@@ -131,7 +131,7 @@ public class SetEditor : GOUI {
 
     static public void LoadRandomSet () {
         hand = new HandClass ();
-        hand.GenerateRandomHand (cardPool, minimumNumberOfCardsOnStack);
+        hand.GenerateRandomHand (cardPool, null, null, minimumNumberOfCardsOnStack);
         LoadSet (hand);
         LoadPage (Page);
     }

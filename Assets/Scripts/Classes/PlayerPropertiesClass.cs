@@ -47,26 +47,24 @@ public class PlayerPropertiesClass {
     }*/
 
     public PlayerPropertiesClass (int team, ClientInterface client) {
-        NewPlayerProperties (team, false, client.AccountName, client.UserName, new HandClass (client), client);
+        NewPlayerProperties (team, null, client.AccountName, client.UserName, new HandClass (client), client);
     }
 
-    public PlayerPropertiesClass (int team, bool AI, string accountName, string userName, HandClass hand, ClientInterface client) {
+    public PlayerPropertiesClass (int team, AIClass AI, string accountName, string userName, HandClass hand, ClientInterface client) {
         NewPlayerProperties (team, AI, accountName, userName, hand, client);
     }
 
-    public void NewPlayerProperties (int team, bool AI, string accountName, string userName, HandClass hand, ClientInterface client) {
+    public void NewPlayerProperties (int team, AIClass AI, string accountName, string userName, HandClass hand, ClientInterface client) {
         this.team = team;
         this.accountName = accountName;
         this.displayName = userName;
-        if (AI) {
+        if (AI != null) {
             this.avatar = 2;
         } else {
             this.avatar = ServerData.GetUserAvatar (accountName);
         }
         this.hand = hand;
         this.client = client;
-        if (AI) {
-            this.AI = new AIClass ();
-        }
+        this.AI = AI;
     }
 }

@@ -32,8 +32,9 @@ public class InputController : MonoBehaviour {
                 }
             }
             if (timer > 5) {
-                timer -= 20;
+                timer -= 30;
                 RatingClass.SaveEverything ();
+                AIRatingMenu.RefreshPage ();
             }
         }
         if (Input.GetKey ("d") && Input.GetKeyDown ("b")) {
