@@ -222,13 +222,13 @@ public class VisualMatch : MonoBehaviour {
         client.ShuffleCardVisual (card);
     }
 
-    public void UpdateCardVisuals (PlayerClass player, int stackNumber, int cardNumber, int position) {
-        StartCoroutine (IEUpdateCardVisuals (player, stackNumber, cardNumber, position));
+    public void UpdateCardVisuals (PlayerClass player, int stackNumber, int stackSize, int cardNumber, int position) {
+        StartCoroutine (IEUpdateCardVisuals (player, stackNumber, stackSize, cardNumber, position));
     }
 
-    public IEnumerator IEUpdateCardVisuals (PlayerClass client, int stackNumber, int cardNumber, int position) {
+    public IEnumerator IEUpdateCardVisuals (PlayerClass client, int stackNumber, int stackSize, int cardNumber, int position) {
         yield return new WaitForSeconds (GlobalTimer);
-        client.UpdateCardVisuals (stackNumber, cardNumber, position);
+        client.UpdateCardVisuals (stackNumber, stackSize, cardNumber, position);
     }
 
 

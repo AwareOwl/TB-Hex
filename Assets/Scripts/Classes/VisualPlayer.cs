@@ -108,7 +108,7 @@ public class VisualPlayer {
             avatarPosition += barLength;
         }*/
 
-        float percentage = Mathf.Min (1f * score / scoreLimit, 1);
+        float percentage = Mathf.Clamp (1f * score / scoreLimit, 0, 1);
         GOUI.SetInPixScale (HealthBar, (int) (percentage * barLength), 30);
         if (ally) {
             GOUI.SetInPixPosition (HealthBar, barPosition - (int) (barLength / 2 * (1 - percentage)), 25, 12);

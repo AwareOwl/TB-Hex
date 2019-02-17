@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameModeEditor : GOUI {
 
+    static public bool editMode = false;
+
     static GameObject Background;
 
     static public string gameModeName;
@@ -20,21 +22,17 @@ public class GameModeEditor : GOUI {
     static int currentPage;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         CurrentGUI = this;
-        CreateGameModeEditor ();
-        ClientLogic.MyInterface.CmdDownloadGameModeToEditor (gameModeId);
     }
 
     static public void ShowGameModeEditor () {
-        DestroyMenu ();
-        GameModeEditor editor = CurrentCanvas.AddComponent<GameModeEditor> ();
+        ClientLogic.MyInterface.CmdDownloadGameModeToEditor (gameModeId);
     }
 
     static public void ShowGameModeEditor (int gameModeId) {
-        DestroyMenu ();
-        GameModeEditor editor = CurrentCanvas.AddComponent<GameModeEditor> ();
         GameModeEditor.gameModeId = gameModeId;
+        ShowGameModeEditor ();
     }
 
     static public void DeleteBoard (int boardId) {
@@ -66,9 +64,18 @@ public class GameModeEditor : GOUI {
         ClientLogic.MyInterface.CmdSaveGameModeProperties (gameModeId, name, iconNumber);
     }
 
-    static public void RefreshPageButtons () {
+    static public int PageLimit () {
         int count = boardIds.Length;
-        int pageLimit = (count) / 5 + 1;
+        if (editMode) {
+            return count / 5 + 1;
+        } else {
+            return (count - 1) / 5 + 1;
+        }
+    }
+
+    static public void RefreshPageButtons () {
+        int pageLimit = PageLimit ();
+        Debug.Log (pageLimit);
         pageUI.Init (9, pageLimit, new Vector2Int (480, 780), UIString.GameModeEditorPageButton);
     }
 
@@ -83,7 +90,7 @@ public class GameModeEditor : GOUI {
                 if (boardIds [number] == selectedRow) {
                     row [x].SelectRow ();
                 }
-            } else if (number == count) {
+            } else if (number == count && editMode) {
                 row [x].SetState (1);
             } else {
                 row [x].SetState (2);
@@ -92,13 +99,18 @@ public class GameModeEditor : GOUI {
         pageUI.SelectPage (currentPage);
     }
 
-    static public void LoadDataToEditor (int gameModeId, string gameModeName, string [] boardNames, int [] boardIds, bool [] boardIsLegal) {
-        currentPage = 0;
+    static public void LoadDataToEditor (bool editMode, int gameModeId, string gameModeName, string [] boardNames, int [] boardIds, bool [] boardIsLegal) {
+        DestroyMenu ();
+        CurrentCanvas.AddComponent<GameModeEditor> ();
+        GameModeEditor.editMode = editMode;
+        CreateGameModeEditor ();
         GameModeEditor.gameModeId = gameModeId;
         GameModeEditor.gameModeName = gameModeName;
         GameModeEditor.boardNames = boardNames;
         GameModeEditor.boardIds = boardIds;
         GameModeEditor.boardIsLegal = boardIsLegal;
+        currentPage = Mathf.Min (PageLimit (), currentPage);
+        Debug.Log (currentPage);
         RefreshPageButtons ();
         ShowPage ();
     }
@@ -125,8 +137,10 @@ public class GameModeEditor : GOUI {
         Background = CreateSprite ("UI/Panel_Window_01_Sliced", 195, 330, 10, 390, 390, false);
         Clone = CreateUIText (Language.Tools + ":", 195, 225, 520, 36);
 
-        Clone = CreateSprite ("UI/Butt_S_Name", 90, 315, 11, 60, 60, true);
-        Clone.name = UIString.GameModeEditorChangeName;
+        if (editMode) {
+            Clone = CreateSprite ("UI/Butt_S_Name", 90, 315, 11, 60, 60, true);
+            Clone.name = UIString.GameModeEditorChangeName;
+        }
         Clone = CreateSprite ("UI/Butt_S_DeckPreview", 150, 315, 11, 60, 60, true);
         Clone.name = UIString.GameModeEditorEditCardPool;
         Clone = CreateSprite ("UI/Butt_S_Settings", 210, 315, 11, 60, 60, true);

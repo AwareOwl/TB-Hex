@@ -126,3 +126,4 @@
 [125] Unfinished games
 [126] Enter new user name
 [127] Select new avatar
+[128] In this menu you can view content of someone else's game version.

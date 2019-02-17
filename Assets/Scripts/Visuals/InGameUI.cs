@@ -84,6 +84,7 @@ public class InGameUI : GOUI {
 
     float fetchMissingPacketsTimer = -2;
 
+    bool stacksZoomed;
 
     public void Update () {
         fetchMissingPacketsTimer += Time.deltaTime;
@@ -108,8 +109,15 @@ public class InGameUI : GOUI {
             //Debug.Log (PlayedMatch.Mov)
         }
         if (Input.GetKeyDown ("p")) {
-            ClientLogic.MyInterface.CmdCurrentGameFetchMissingMoves (PlayedMatch.lastMoveId);
+            //ClientLogic.MyInterface.CmdCurrentGameFetchMissingMoves (PlayedMatch.lastMoveId);
             //Debug.Log (PlayedMatch.Mov)
+        }
+        if (Input.GetKeyDown ("h")){
+            stacksZoomed = !stacksZoomed;
+            int count = CardAnimation.stackZoomed.Length;
+            for (int x = 0; x < count; x++) {
+                CardAnimation.stackZoomed [x] = stacksZoomed;
+            }
         }
         /*if (Input.GetKeyDown ("r")) {
             ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
@@ -243,12 +251,14 @@ public class InGameUI : GOUI {
             int abilityArea = card.abilityArea;
             int tokenType = card.tokenType;
             int tokenValue = card.value;
-            int tokenModifier = PlayedMatch.Board.NumberOfTypes [7];
+            int tokenModifier = PlayedMatch.Board.NumberOfTypes [7] - PlayedMatch.Board.NumberOfTypes [11];
             tokenValue += tokenModifier;
 
             VisualToken token = new VisualToken ();
             if (tokenModifier > 0) {
                 token.Text.GetComponent<Renderer> ().material.color = new Color (0, 0.5f, 0);
+            } else if (tokenModifier < 0) {
+                token.Text.GetComponent<Renderer> ().material.color = new Color (0.5f, 0, 0);
             }
             token.AddCreateAnimation ();
             token.SetState (MyPlayerNumber, tokenType, tokenValue);

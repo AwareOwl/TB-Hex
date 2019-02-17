@@ -514,24 +514,28 @@ public class MatchClass {
         TokenLeavesTile (token);
         TileClass tile = Board.GetTile (x, y);
         VectorInfo VI = GetTokenVectorInfo (tile, token);
-        switch (token.type) {
+        int tokenType = token.type;
+        switch (tokenType) {
             case 5:
                 if (visualMatch != null) {
-                    visualMatch.CreateRealTokenEffect (tile, token.type);
+                    visualMatch.CreateRealTokenEffect (tile, tokenType);
                 }
                 break;
             case 9:
                 Board.BeforeAbilityTriggers.Remove (tile);
                 break;
             case 12:
+                if (visualMatch != null) {
+                    visualMatch.CreateRealTokenEffect (tile, tokenType);
+                }
                 Player [token.owner].score -= 20;
                 break;
         }
         foreach (TileClass target in VI.Triggered1) {
-            switch (token.type) {
+            switch (tokenType) {
                 case 5:
                     if (visualMatch != null) {
-                        visualMatch.CreateRealTokenVectorEffect (tile, target, token.type);
+                        visualMatch.CreateRealTokenVectorEffect (tile, target, tokenType);
                     }
                     ModifyTempValue (target, -3);
                     break;

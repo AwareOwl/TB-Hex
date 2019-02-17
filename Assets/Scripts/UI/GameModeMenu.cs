@@ -16,7 +16,7 @@ public class GameModeMenu : GOUI {
     static bool [] yourIsLegal;
     static int currentGroup;
 
-    static int currentPage;
+    static int [] currentPage = new int [3];
 
     static int selectedId;
 
@@ -58,7 +58,7 @@ public class GameModeMenu : GOUI {
 
     static public void SelectGroup (int number) {
         currentGroup = number;
-        currentPage = 0;
+        currentPage [currentGroup] = Mathf.Min (currentPage [currentGroup], PageLimit ());
         for (int x = 0; x < groupButton.Length; x++) {
             groupButton [x].GetComponent<UIController> ().FreeAndUnlcok ();
         }
@@ -67,12 +67,16 @@ public class GameModeMenu : GOUI {
         ShowPage ();
     }
 
-    static public void CreatePageButtons () {
+    static public int PageLimit () {
         int count = ids [currentGroup].Length;
         if (currentGroup == 2) {
             count++;
         }
-        int pageLimit = (count - 1) / 5 + 1;
+        return (count - 1) / 5 + 1;
+    }
+
+    static public void CreatePageButtons () {
+        int pageLimit = PageLimit ();
         GameObject pageUIObject = new GameObject ();
         if (pageUI == null) {
             pageUI = pageUIObject.AddComponent<PageUI> ();
@@ -81,7 +85,7 @@ public class GameModeMenu : GOUI {
     }
 
     static public void SelectPage (int number) {
-        currentPage = number;
+        currentPage [currentGroup] = number;
         ShowPage ();
     }
 
@@ -97,7 +101,7 @@ public class GameModeMenu : GOUI {
 
     static public void ShowPage () {
         for (int x = 0; x < 5; x++) {
-            int number = currentPage * 5 + x;
+            int number = currentPage [currentGroup] * 5 + x;
             int count = ids [currentGroup].Length;
             row [x].FreeRow ();
             if (number < count) {
@@ -115,13 +119,14 @@ public class GameModeMenu : GOUI {
                 row [x].SetState (2);
             }
             if (currentGroup != 2) {
-                if (number >= count) {
+                if (number < count) {
+                    row [x].SetState (6);
+                } else {
                     row [x].SetState (2);
                 }
-                row [x].SetState (3);
             }
         }
-        pageUI.SelectPage (currentPage);
+        pageUI.SelectPage (currentPage [currentGroup]);
     }
 
     static public void ShowGameModeMenu () {

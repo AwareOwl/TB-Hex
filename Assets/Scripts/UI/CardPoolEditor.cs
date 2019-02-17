@@ -32,12 +32,15 @@ public class CardPoolEditor : GOUI {
     static GameObject EmptyCardSlot;
     static VisualCard [] CardSlot;
 
+    static public bool editMode;
+
     private void Start () {
         instance = this;
         NumberOfButtons [2] = AppDefaults.AvailableTokens;
         NumberOfButtons [4] = AppDefaults.AvailableAbilities;
         CreateCardPoolEditorMenu ();
         CurrentGUI = this;
+        editMode = GameModeEditor.editMode;
 
         ClientLogic.MyInterface.CmdDownloadCardPoolToEditor (currentId);
         //EditedCardPool.EnableVisualisation ();
@@ -196,6 +199,7 @@ public class CardPoolEditor : GOUI {
 
         AddButtons (px, py, maxX, maxY);
 
+        if (editMode) {
         maxY += 1;
 
         py += 150 + dy;
@@ -221,6 +225,8 @@ public class CardPoolEditor : GOUI {
         //py += 150 + dy;
 
         AddButtons (px, py, maxX, maxY);
+
+        }
 
         for (int x = 1; x < 5; x++) {
             SelectButton (x, Selected [x]);
@@ -250,7 +256,9 @@ public class CardPoolEditor : GOUI {
                 button.GetComponent<UIController> ().FreeAndUnlcok ();
             }
         }
-        Buttons [type] [number].GetComponent<UIController> ().PressAndLock ();
+        if (Buttons [type] != null) {
+            Buttons [type] [number].GetComponent<UIController> ().PressAndLock ();
+        }
     }
 
     static int type = 0;

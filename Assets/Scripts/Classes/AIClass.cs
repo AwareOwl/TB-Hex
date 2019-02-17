@@ -106,7 +106,6 @@ public class AIClass {
         float value = 0;
         float playerValue = 4f;
         float myTurnsToWin = TurnToWinPredict (match, playerNumber);
-        float myScoreIncome = match.Player [playerNumber].scoreIncome;
         for (int x = 1; x <= match.numberOfPlayers; x++) {
             if (x != playerNumber) {
                 playerValue *= TurnToWinPredict (match, x)/ myTurnsToWin;
@@ -212,7 +211,7 @@ public class AIClass {
                         tokenValue += 1;
                         break;
                     case 10:
-                        tokenValue = valueOverTime (tokenValue + oVE.emptyTileCount, - oVE.emptyTileCount, 2, turnsLeft);
+                        tokenValue = valueOverTime (tokenValue + oVE.emptyTileCount, - oVE.emptyTileCount, oVE.emptyTileCount, turnsLeft);
                         break;
                     case 13:
                         tokenValue += 0.3f / tokenValue;

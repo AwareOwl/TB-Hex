@@ -23,7 +23,6 @@ public class SetList : GOUI {
 	// Use this for initialization
 	void Start () {
         CurrentGUI = this;
-        currentPage = 0;
         CreateSetList ();
         ClientLogic.MyInterface.CmdDownloadSetList ();
 	}
@@ -40,13 +39,18 @@ public class SetList : GOUI {
         SetList.iconNumber = iconNumber;
         SetList.legal = legal;
         RefreshPageButtons ();
-        RefreshPage ();
+        SelectPage (Mathf.Min (PageCount (), currentPage));
         SelectSet (selectedSet);
     }
 
-    static public void RefreshPageButtons () {
+    static public int PageCount () {
         int count = setName.Length;
-        int pageLimit = (count) / 5 + 1;
+        return (count) / 5 + 1;
+
+    }
+
+    static public void RefreshPageButtons () {
+        int pageLimit = PageCount ();
         pageUI.Init (9, pageLimit, new Vector2Int (480, 780), UIString.SetListPageButton);
     }
 

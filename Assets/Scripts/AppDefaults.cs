@@ -6,8 +6,9 @@ public class AppDefaults {
 
     static public Color Green = new Color (0, 0.95f, 0);
     static public Color Red = Color.red;
+    static public Color Yellow = new Color (1, 1, 0);
 
-    static public int AvailableTokens = 14; // Always + 1, to include null
+    static public int AvailableTokens = 13; // Always + 1, to include null
     static public int AvailableAbilities = 35; // Always + 1, to include null
     static public int AvailableAvatars = 8; // Always + 1, to include null
 
@@ -68,6 +69,9 @@ public class AppDefaults {
             case 1:
             case 12:
                 return new Color (0.8f, 0.6f, 0.1f);
+            // Darker orange
+            case 10:
+                return new Color (0.55f, 0.275f, 0.1f);
             // Dark yellow
             case 2:
             case 8:
@@ -82,7 +86,7 @@ public class AppDefaults {
             case 7:
                 return new Color (0.1f, 0.4f, 0.1f);
             // Dark pink
-            case 10:
+            case 100:
                 return new Color (0.6f, 0.4f, 0.3f);
             // Dark Orange
             case 13:
@@ -169,7 +173,7 @@ public class AppDefaults {
             case 27:
             case 28:
             case 32:
-                return new Color (1, 1, 0);
+                return Yellow;
             // Purple
             case 7:
             case 10:

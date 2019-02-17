@@ -119,21 +119,21 @@ public class PlayerClass {
         int position = (stackSize - topCardNumber [stackNumber] + cardNumber) % stackSize;
         if (card.visualCard != null) {
             if (VisualMatch.instance != null) {
-                VisualMatch.instance.UpdateCardVisuals (this, stackNumber, cardNumber, position);
+                VisualMatch.instance.UpdateCardVisuals (this, stackNumber, stackSize, cardNumber, position);
             } else {
-                UpdateCardVisuals (stackNumber, cardNumber, position);
+                UpdateCardVisuals (stackNumber, stackSize, cardNumber, position);
             }
         } 
     }
 
-    public void UpdateCardVisuals (int stackNumber, int cardNumber, int position) {
+    public void UpdateCardVisuals (int stackNumber, int stackSize, int cardNumber, int position) {
         CardClass card = GetCard (stackNumber, cardNumber);
         if (card.visualCard == null) {
             return;
         }
         GameObject anchor = card.visualCard.Anchor;
         if (anchor.GetComponent<CardAnimation> () == null) {
-            anchor.AddComponent<CardAnimation> ().Init (card.visualCard, stackNumber, GetNumberOfStacks (), position);
+            anchor.AddComponent<CardAnimation> ().Init (card.visualCard, stackNumber, stackSize, GetNumberOfStacks (), position);
         } else {
             anchor.GetComponent<CardAnimation> ().position = position;
         }

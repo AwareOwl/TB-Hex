@@ -123,7 +123,12 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void SetHoverObjectColor (Color color) {
         if (HoverObject != null){
-            HoverObject.GetComponent<VisualEffectScript> ().SetColor (color);
+            if (BoardEditorMenu.instance != null) {
+                HoverObject.GetComponent<VisualEffectScript> ().SetColor (color);
+            } else {
+                bool highlighted = color.a != 0;
+                tile.visualTile.Tile.GetComponent<VisualEffectScript> ().highlighted = highlighted;
+            }
         }
     }
 
@@ -516,7 +521,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 GameModeEditor.ShowGameModeEditor (id);
                 break;
             case UIString.GameModeEditorAbout:
-                GOUI.ShowMessage (Language.GameModeEditorDescription);
+                if (GameModeEditor.editMode) {
+                    GOUI.ShowMessage (Language.GameModeEditorDescription);
+                } else {
+                    GOUI.ShowMessage (Language.GameModeEditorReadOnlyDescription);
+                }
                 break;
 
             case UIString.GameModeEditorCreateNewBoard:
@@ -608,6 +617,20 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             if (Input.GetMouseButtonDown (0)) {
                 SetOnMouseClickSprite ();
                 Pressed = true;
+            }
+            if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
+                switch (name) {
+                    case UIString.InGameHandCard:
+                        CardAnimation.stackZoomed [x] = true;
+                        break;
+                }
+            }
+            if (Input.GetAxis ("Mouse ScrollWheel") < 0f) {
+                switch (name) {
+                    case UIString.InGameHandCard:
+                        CardAnimation.stackZoomed [x] = false;
+                        break;
+                }
             }
             if (Input.GetMouseButtonDown (1)) {
                 Pressed1 = true;

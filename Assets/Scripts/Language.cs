@@ -98,6 +98,7 @@ public class Language {
     static public string EnterNewGameVersionName;
 
     static public string GameModeEditorDescription;
+    static public string GameModeEditorReadOnlyDescription;
 
     static public string AvailableBoards;
     static public string Tools;
@@ -328,6 +329,7 @@ public class Language {
         UnfinishedGames = UI [125];
         EnterNewUserName = UI [126];
         ChoseNewAvatar = UI [127];
+        GameModeEditorReadOnlyDescription = UI [128];
 
 
         path = "Languages/" + FileName [language] + UITooltipKey;

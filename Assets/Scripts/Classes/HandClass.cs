@@ -247,6 +247,7 @@ public class HandClass  {
                 continue;
             }
             string [] word = lines [x].Split (new char [] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+            int row = 0;
             for (int y = 0; y < word.Length / 2; y++) {
                 int cardNumber = int.Parse (word [y * 2]);
                 if (cardPool.Card.Count <= cardNumber) {
@@ -254,9 +255,10 @@ public class HandClass  {
                 }
                 stack [x].card.Add (cardPool.Card [cardNumber]);
                 int abilityArea = int.Parse (word [y * 2 + 1]);
-                if (stack [x].card [y].abilityArea < 3 && abilityArea < 3) {
-                    stack [x].card [y].abilityArea = abilityArea;
+                if (stack [x].card [row].abilityArea < 3 && abilityArea < 3) {
+                    stack [x].card [row].abilityArea = abilityArea;
                 }
+                row ++;
             }
         }
     }

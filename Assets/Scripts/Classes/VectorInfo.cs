@@ -344,6 +344,12 @@ public class VectorInfo {
                     Triggered1.Add (playTile);
                 }
                 break;
+            case 30:
+            case 33:
+                if (match.Player [token.owner].score >= 20) {
+                    Triggered2.Add (playTile);
+                }
+                break;
 
         }
         switch (abilityType) {

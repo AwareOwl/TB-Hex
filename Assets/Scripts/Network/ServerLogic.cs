@@ -327,7 +327,7 @@ public class ServerLogic : MonoBehaviour {
                 }
             }
             foreach (string owner in owners) {
-                if (client.AccountName == owner && !ServerData.GetGameModeDeleted (id)) {
+                if (accountName == owner && !ServerData.GetGameModeDeleted (id)) {
                     yourIds.Add (id);
                     if (ServerData.GetIsGameModeLegal (id)) {
                         yourIsLegal.Add (true);
@@ -458,9 +458,6 @@ public class ServerLogic : MonoBehaviour {
                 break;
             }
         }
-        if (!isClientOwner) {
-            return;
-        }
         int [] ids = ServerData.GetAllGameModeBoards (gameModeId);
         int count = ids.Length;
         string [] names = new string [count];
@@ -470,7 +467,7 @@ public class ServerLogic : MonoBehaviour {
             isLegal [x] = ServerData.GetIsBoardLegal (ids [x]);
         }
         string gameModeName = ServerData.GetGameModeName (gameModeId);
-        client.TargetDownloadGameModeToEditor (client.connectionToClient, gameModeId, gameModeName, names, ids, isLegal);
+        client.TargetDownloadGameModeToEditor (client.connectionToClient, isClientOwner, gameModeId, gameModeName, names, ids, isLegal);
     }
 
     static public void DownloadBoardToEditor (ClientInterface client, int boardId) {

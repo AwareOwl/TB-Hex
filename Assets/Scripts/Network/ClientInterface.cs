@@ -344,8 +344,8 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadGameModeToEditor (NetworkConnection target, int gameModeId, string gameModeName, string [] boardNames, int [] boardIds, bool [] boardIsLegal) {
-        GameModeEditor.LoadDataToEditor (gameModeId, gameModeName, boardNames, boardIds, boardIsLegal);
+    public void TargetDownloadGameModeToEditor (NetworkConnection target, bool editMode, int gameModeId, string gameModeName, string [] boardNames, int [] boardIds, bool [] boardIsLegal) {
+        GameModeEditor.LoadDataToEditor (editMode, gameModeId, gameModeName, boardNames, boardIds, boardIsLegal);
     }
 
     [Command]

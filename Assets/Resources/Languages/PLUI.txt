@@ -126,3 +126,4 @@
 [125] Nieukończone gry
 [126] Wprowadź nową nazwę użytkownika
 [127] Wybierz nowy avatar
+[128] W tym menu możesz podglądać zawartość cudzej wersji gry.

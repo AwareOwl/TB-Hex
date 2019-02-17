@@ -11,4 +11,3 @@
 [10] Generuje dodatkowy punkt przyrostu punktacji za każde sąsiadujące pole nie okupowane przez żeton.
 [11] Wszystkie zagrywane żetony (każdego z graczy) będą miały wartość mniejszą o 1.
 [12] Generuje podwójny przyrost punktacji. Gdy zostanie zniszczony, właściciel traci 20 punktów.
-[13] Kiedykolwiek ten żeton opuści pole, wartość żetonu zagranego w tej turze spada o 1.

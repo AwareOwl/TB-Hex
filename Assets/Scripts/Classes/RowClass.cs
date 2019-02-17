@@ -189,6 +189,16 @@ public class RowClass : GOUI {
                 Option.GetComponent<Renderer> ().enabled = false;
                 Option.GetComponent<Collider> ().enabled = false;
                 break;
+            case 6:
+                Icon.GetComponent<Renderer> ().enabled = false;
+                Icon.GetComponent<Collider> ().enabled = false;
+                Edit.GetComponent<Renderer> ().enabled = false;
+                Edit.GetComponent<Collider> ().enabled = false;
+                SetSprite (Option, "UI/Butt_S_Help", true);
+                Option.name = UIString.ShowGameModeEditor;
+                Option.GetComponent<Renderer> ().enabled = true;
+                Option.GetComponent<Collider> ().enabled = true;
+                break;
 
         }
         if (mode != 3) {

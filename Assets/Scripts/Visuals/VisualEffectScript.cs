@@ -7,6 +7,7 @@ public class VisualEffectScript : MonoBehaviour {
 	public bool triggered = true;
     public bool destroyOnEnd = false;
     public bool destroyThisOnEnd = false;
+    public bool highlighted = false;
     public int endPhase = 1;
     
 	float timer;
@@ -231,7 +232,11 @@ public class VisualEffectScript : MonoBehaviour {
             + basicColor [Mathf.Min (currentPhase + 1, endPhase)] * percentageTimer;
             foreach (Renderer renderer in renderers) {
                 if (triggered) {
-                    renderer.material.color = newColor;
+                    if (highlighted) {
+                        renderer.material.color = new Color (newColor.r * 1.2f + 0.1f, newColor.g * 1.2f + 0.1f, newColor.b * 1.2f + 0.1f, newColor.a);
+                    } else {
+                        renderer.material.color = newColor;
+                    }
                 } else {
                     renderer.material.color = new Color (0.25f, 0.25f, 0.25f, newColor.a) * 0.7f + newColor * 0.3f;
                 }

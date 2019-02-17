@@ -33,8 +33,8 @@ public class VisualTile {
         Collider.GetComponent<UIController> ().tile = this.tile;
         Collider.GetComponent<UIController> ().x = x;
         Collider.GetComponent<UIController> ().y = y;
-        Collider.GetComponent<UIController> ().HoverObject = Collider.transform.Find ("Hover").gameObject;
         GameObject Hover = Collider.transform.Find ("Hover").gameObject;
+        Collider.GetComponent<UIController> ().HoverObject = Hover;
         Hover.GetComponent<Renderer> ().material.color = new Color (0, 0, 0, 0);
         Hover.AddComponent<VisualEffectScript> ();
         Border = Collider.transform.Find ("Quad").gameObject;
