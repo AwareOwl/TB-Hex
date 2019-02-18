@@ -229,7 +229,9 @@ public class ServerLogic : MonoBehaviour {
 
 
     static public void DownloadCardPoolToCardPoolEditor (ClientInterface client, int gameModeId) {
-        client.TargetDownloadCardPoolToEditor (client.connectionToClient, gameModeId, ServerData.GetCardPool (gameModeId));
+        string accountName = client.AccountName;
+        bool isClientOwner = ServerData.IsGameModeOwner (gameModeId, accountName);
+        client.TargetDownloadCardPoolToEditor (client.connectionToClient, isClientOwner, gameModeId, ServerData.GetCardPool (gameModeId));
     }
 
     static public void DownloadListOfCustomGames (ClientInterface client) {
@@ -356,6 +358,8 @@ public class ServerLogic : MonoBehaviour {
     }
 
     static public void DownloadGameModeSettings (ClientInterface client, int id) {
+        string accountName = client.AccountName;
+        bool isClientOwner = ServerData.IsGameModeOwner (id, accountName);
         bool hasScoreWinCondition = ServerData.GetGameModeHasScoreWinCondition (id);
         int scoreWinConditionValue = ServerData.GetGameModeScoreWinConditionValue (id);
         bool hasTurnWinCondition = ServerData.GetGameModeHasTurnWinCondition (id);
@@ -363,8 +367,9 @@ public class ServerLogic : MonoBehaviour {
         bool isAllowedToRotateCardsDuringMatch = ServerData.GetGameModeIsAllowedToRotateCardsDuringMatch (id);
         int numberOfStacks = ServerData.GetGameModeNumberOfStacks (id);
         int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (id);
-
+        
         client.TargetDownloadGameModeSettingsToEditor (client.connectionToClient, 
+            isClientOwner,
             hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue,
             isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack);
     }
@@ -471,10 +476,19 @@ public class ServerLogic : MonoBehaviour {
     }
 
     static public void DownloadBoardToEditor (ClientInterface client, int boardId) {
+        string [] owners = ServerData.GetBoardOwners (boardId);
+        string accountName = client.AccountName;
+        bool isClientOwner = false;
+        foreach (string s in owners) {
+            if (accountName == s) {
+                isClientOwner = true;
+                break;
+            }
+        }
         string boardName = ServerData.GetBoardName (boardId);
         string [] board = ServerData.GetBoard (boardId);
         int [] matchTypes = ServerData.GetBoardMatchTypes (boardId);
-        client.TargetDownloadBoardToEditor (client.connectionToClient, boardId, boardName, board, matchTypes);
+        client.TargetDownloadBoardToEditor (client.connectionToClient, isClientOwner, boardId, boardName, board, matchTypes);
     }
 
     static public void SaveBoard (ClientInterface client, int boardId, string [] board) {

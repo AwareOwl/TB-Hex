@@ -126,4 +126,10 @@
 [125] Nieukończone gry
 [126] Wprowadź nową nazwę użytkownika
 [127] Wybierz nowy avatar
-[128] W tym menu możesz podglądać zawartość cudzej wersji gry.
+[128] W tym menu możesz przeglądać zawartość cudzej wersji gry.
+[129] W tym menu możesz przeglądać pulę kart w cudzej wersji gry.
+[130] W tym menu możesz przyjrzeć się cudzej mapie.
+[131] Przyjrzyj się tej mapie
+[132] Przyjrzyj się puli kart dostępnej w tej wersji gry
+[133] Przyjrzyj się tej wersji gry
+[134] Kliknij aby dowiedzieć się więcej o tym menu

@@ -75,7 +75,6 @@ public class GameModeEditor : GOUI {
 
     static public void RefreshPageButtons () {
         int pageLimit = PageLimit ();
-        Debug.Log (pageLimit);
         pageUI.Init (9, pageLimit, new Vector2Int (480, 780), UIString.GameModeEditorPageButton);
     }
 
@@ -89,6 +88,9 @@ public class GameModeEditor : GOUI {
                 row [x].SetState (boardNames [number], boardIds [number], 0, legal);
                 if (boardIds [number] == selectedRow) {
                     row [x].SelectRow ();
+                }
+                if (!editMode) {
+                    row [x].SetState (6);
                 }
             } else if (number == count && editMode) {
                 row [x].SetState (1);
@@ -110,7 +112,6 @@ public class GameModeEditor : GOUI {
         GameModeEditor.boardIds = boardIds;
         GameModeEditor.boardIsLegal = boardIsLegal;
         currentPage = Mathf.Min (PageLimit (), currentPage);
-        Debug.Log (currentPage);
         RefreshPageButtons ();
         ShowPage ();
     }

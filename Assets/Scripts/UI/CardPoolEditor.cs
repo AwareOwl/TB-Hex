@@ -42,6 +42,7 @@ public class CardPoolEditor : GOUI {
         CurrentGUI = this;
         editMode = GameModeEditor.editMode;
 
+        DestroyTemplateButtons ();
         ClientLogic.MyInterface.CmdDownloadCardPoolToEditor (currentId);
         //EditedCardPool.EnableVisualisation ();
         //EditedCardPool.LoadFromFile (1);
@@ -78,6 +79,9 @@ public class CardPoolEditor : GOUI {
     }
 
     static public void CardAction (int number) {
+        if (!editMode) {
+            return;
+        }
         EditedCardPool.SetCard (number + DeltaNumber (), Selected [1] + 1, Selected [2], Selected [3] * 3 + 1, Selected [4]);
         RefreshPage ();
         /*UpdateCard (number);
@@ -100,7 +104,13 @@ public class CardPoolEditor : GOUI {
         for (int x = 0; x < count; x++) {
             UpdateCard (x);
         }
-        int pageLimit = EditedCardPool.Card.Count / count + 1;
+        int cardPoolCount = EditedCardPool.Card.Count;
+        int pageLimit;
+        if (editMode) {
+            pageLimit = cardPoolCount / count + 1;
+        } else {
+            pageLimit = (cardPoolCount - 1) / count + 1;
+        }
         pageUI.Init (17, pageLimit, new Vector2Int (390, 770), UIString.CardPoolEditorPageButton);
     }
 
@@ -136,7 +146,7 @@ public class CardPoolEditor : GOUI {
                 CardSlot [number].DestroyVisual ();
                 CardSlot [number] = null;
             }
-            if (cardNumber == EditedCardPool.Card.Count) {
+            if (cardNumber == EditedCardPool.Card.Count && editMode) {
                 SetEmptySlot (number);
             }
         }
@@ -174,7 +184,6 @@ public class CardPoolEditor : GOUI {
 
     static public void CreateCardPoolEditorMenu () {
 
-        DestroyImmediate (ExitButton);
 
         Buttons = new GameObject [NumberOfButtons.Length] [];
         for (int x = 0; x < NumberOfButtons.Length; x++) {
@@ -200,31 +209,31 @@ public class CardPoolEditor : GOUI {
         AddButtons (px, py, maxX, maxY);
 
         if (editMode) {
-        maxY += 1;
+            maxY += 1;
 
-        py += 150 + dy;
+            py += 150 + dy;
 
-        AddButtons (px, py, maxX, maxY);
+            AddButtons (px, py, maxX, maxY);
 
-        maxY += 3;
+            maxY += 3;
 
-        py += 270 + dy;
+            py += 270 + dy;
 
-        AddButtons (px, py, maxX, maxY);
+            AddButtons (px, py, maxX, maxY);
 
-        py += 270 + dy;
+            py += 270 + dy;
 
-        maxY = 2;
+            maxY = 2;
 
-        AddButtons (px, py, maxX, maxY);
+            AddButtons (px, py, maxX, maxY);
 
-        maxX = 17;
+            maxX = 17;
 
-        sx = 90 + 60 * maxX;
-        px += sx / 2 + px - 30;
-        //py += 150 + dy;
+            sx = 90 + 60 * maxX;
+            px += sx / 2 + px - 30;
+            //py += 150 + dy;
 
-        AddButtons (px, py, maxX, maxY);
+            AddButtons (px, py, maxX, maxY);
 
         }
 
@@ -257,7 +266,9 @@ public class CardPoolEditor : GOUI {
             }
         }
         if (Buttons [type] != null) {
-            Buttons [type] [number].GetComponent<UIController> ().PressAndLock ();
+            if (Buttons [type] [number] != null) {
+                Buttons [type] [number].GetComponent<UIController> ().PressAndLock ();
+            }
         }
     }
 
@@ -296,6 +307,9 @@ public class CardPoolEditor : GOUI {
         for (int y = 0; y < maxY; y++) {
             for (int x = 0; x < maxX; x++) {
                 int number = x + y * maxX;
+                if (!editMode && type == 0 && number == 0) {
+                    continue;
+                }
                 if (number >= NumberOfButtons [type]) {
                     continue;
                 }

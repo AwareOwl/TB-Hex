@@ -42,8 +42,7 @@ public class SetEditor : GOUI {
     private void Start () {
         CurrentGUI = this;
         ClientLogic.MyInterface.CmdDownloadDataToSetEditor (setId);
-        DestroyImmediate (ExitButton);
-        DestroyImmediate (ChatButton);
+        DestroyTemplateButtons ();
     }
 
     static public void ShowSetEditorMenu (int setId) {

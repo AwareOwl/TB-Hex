@@ -44,6 +44,11 @@ public class GOUI : MonoBehaviour {
     virtual public void DestroyThis () {
     }
 
+    public void DestroyTemplateButtons () {
+        DestroyImmediate (ExitButton);
+        DestroyImmediate (ChatButton);
+    }
+
     virtual public void ShowPropertiesMenu () {
     }
 
@@ -258,7 +263,19 @@ public class GOUI : MonoBehaviour {
 			CS.OnMouseOverSprite = GetSprite (assetName + "_H");
 			CS.OnMouseClickSprite = GetSprite (assetName + "_P");
 		}
-	}
+    }
+
+    static public void SetInteractible (GameObject obj, bool interactible) {
+        UIController CS = obj.GetComponent<UIController> ();
+        CS.interactible = interactible;
+    }
+
+    static public void RemoveOnMouseOver (GameObject obj) {
+        UIController CS = obj.GetComponent<UIController> ();
+        CS.OnMouseOverSprite = null;
+        CS.OnMouseClickSprite = null;
+        CS.Text = null;
+    }
 
 	static public Sprite GetSprite (string assetName){
 		return Resources.Load (assetName, typeof (Sprite)) as Sprite;

@@ -14,6 +14,8 @@ public class GameModeSettingsEditor : GOUI {
     static InputField numberOfStacksInputField;
     static InputField minimumNumberOfCardsPerStackInputField;
 
+    static bool editMode;
+
     static bool hasScoreWinCondition;
     static int scoreWinConditionValue;
     static bool hasTurnWinCondition;
@@ -44,9 +46,10 @@ public class GameModeSettingsEditor : GOUI {
         ClientLogic.MyInterface.CmdDownloadGameModeSettings (GameModeEditor.gameModeId);
     }
 
-    static public void ShowGameModeSettingsEditor (bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
+    static public void ShowGameModeSettingsEditor (bool isClientOwner, bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
         bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack) {
 
+        editMode = isClientOwner;
         GameModeSettingsEditor.hasScoreWinCondition = hasScoreWinCondition;
         GameModeSettingsEditor.scoreWinConditionValue = scoreWinConditionValue;
         GameModeSettingsEditor.hasTurnWinCondition = hasTurnWinCondition;
@@ -86,6 +89,9 @@ public class GameModeSettingsEditor : GOUI {
         Clone = CreateUIToggle (Language.EndMatchAfterReachingScoreLimit, 690, 390, 900, 36);
         hasScoreLimitToggle = Clone.GetComponent<Toggle> ();
         hasScoreLimitToggle.isOn = hasScoreWinCondition;
+        if (!editMode) {
+            hasScoreLimitToggle.interactable = false;
+        }
         //Garbage.Add (Clone);
 
         Clone = CreateInputField ("", 1200, 390, 90, 60);
@@ -101,11 +107,17 @@ public class GameModeSettingsEditor : GOUI {
                 scoreInputField.text = "1";
             }
         });
+        if (!editMode) {
+            scoreInputField.interactable = false;
+        }
         Garbage.Add (Clone);
 
         Clone = CreateUIToggle (Language.EndMatchAfterReachingTurnLimit, 690, 450, 900, 36);
         hasTurnLimitToggle = Clone.GetComponent<Toggle> ();
         hasTurnLimitToggle.isOn = hasTurnWinCondition;
+        if (!editMode) {
+            hasTurnLimitToggle.interactable = false;
+        }
         //Garbage.Add (Clone);
 
         Clone = CreateInputField ("", 1200, 450, 90, 60);
@@ -121,11 +133,17 @@ public class GameModeSettingsEditor : GOUI {
                 turnInputField.text = "1";
             }
         });
+        if (!editMode) {
+            turnInputField.interactable = false;
+        }
         Garbage.Add (Clone);
 
         Clone = CreateUIToggle (Language.AllowToRotateAbilityAreaDuringMatch, 690, 510, 900, 36);
         isAllowedToRotateCardsToggle = Clone.GetComponent<Toggle> ();
         isAllowedToRotateCardsToggle.isOn = isAllowedToRotateCardsDuringMatch;
+        if (!editMode) {
+            isAllowedToRotateCardsToggle.interactable = false;
+        }
 
         /*
         Clone = CreateInputField ("40", 1200, 570, 90, 60);
@@ -161,6 +179,9 @@ public class GameModeSettingsEditor : GOUI {
                 numberOfStacksInputField.text = "4";
             }
         });
+        if (!editMode) {
+            numberOfStacksInputField.interactable = false;
+        }
         Garbage.Add (Clone);
 
 
@@ -184,10 +205,14 @@ public class GameModeSettingsEditor : GOUI {
                 minimumNumberOfCardsPerStackInputField.text = "5";
             }
         });
+        if (!editMode) {
+            minimumNumberOfCardsPerStackInputField.interactable = false;
+        }
 
-
-        Clone = CreateSprite ("UI/Butt_M_Apply", 240, 750, 11, 90, 90, true);
-        Clone.name = UIString.SaveGameModeSettings;
+        if (editMode) {
+            Clone = CreateSprite ("UI/Butt_M_Apply", 240, 750, 11, 90, 90, true);
+            Clone.name = UIString.SaveGameModeSettings;
+        }
 
         Clone = CreateSprite ("UI/Butt_M_Discard", 1200, 750, 11, 90, 90, true);
         Clone.name = UIString.GoBackToGameModeEditor;

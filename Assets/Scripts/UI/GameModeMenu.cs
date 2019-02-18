@@ -14,7 +14,7 @@ public class GameModeMenu : GOUI {
     static string [][] names;
     static int [][] ids;
     static bool [] yourIsLegal;
-    static int currentGroup;
+    static public int currentGroup;
 
     static int [] currentPage = new int [3];
 

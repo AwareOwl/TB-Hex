@@ -127,3 +127,9 @@
 [126] Enter new user name
 [127] Select new avatar
 [128] In this menu you can view content of someone else's game version.
+[129] In this menu you can view card pool of someone else's game version.
+[130] In this menu you can view someone else's board.
+[131] View this board
+[132] View card pool available in this game mode
+[133] View this game mode
+[134] Click to learn more about this menu

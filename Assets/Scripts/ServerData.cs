@@ -770,6 +770,16 @@ public class ServerData : MonoBehaviour {
         return GameModeContentPath (id) + "Owner.txt";
     }
 
+    static public bool GetIsGameModeOwner (int id, string accountName) {
+        string [] owners = GetGameModeOwners (id);
+        foreach (string s in owners) {
+            if (accountName == s) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static public string [] GetGameModeOwners (int id) {
         string path = GameModeOwnerPath (id);
         string [] lines;

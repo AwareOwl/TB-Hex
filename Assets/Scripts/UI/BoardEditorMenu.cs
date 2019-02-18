@@ -19,6 +19,8 @@ public class BoardEditorMenu : GOUI {
     static public int Value;
     static public int TokenType;
 
+    static public bool editMode;
+
     static public int [] matchTypes;
 
     static int [] NumberOfButtons = new int [] { 5, 3, 5, 9, 8 };
@@ -29,21 +31,25 @@ public class BoardEditorMenu : GOUI {
         EditedBoard.DestroyAllVisuals ();
     }
 
-    private void Start () {
+    private void Awake () {
         instance = this;
+        CurrentGUI = this;
+    }
+
+    static public void LoadDataToEditor (int id, bool isClientOwner, string boardName, string [] board, int [] matchTypes) {
+        DestroyMenu ();
+        currentId = id;
+        editMode = isClientOwner;
+        CurrentCanvas.AddComponent<BoardEditorMenu> ();
+
         EnvironmentScript.CreateNewBackground (1);
         CreateBoardEditorMenu ();
         CameraScript.SetBoardEditorCamera ();
-        CurrentGUI = this;
 
         EditedBoard = new BoardClass ();
         EditedBoard.EnableVisualisation ();
         EditedBoard.CreateNewBoard ();
-        ClientLogic.MyInterface.CmdDownloadBoard (currentId);
-    }
 
-    static public void LoadDataToEditor (int id, string boardName, string [] board, int [] matchTypes) {
-        currentId = id;
         BoardEditorMenu.boardName = boardName;
         EditedBoard.LoadFromString (board);
         BoardEditorMenu.matchTypes = matchTypes;
@@ -59,13 +65,15 @@ public class BoardEditorMenu : GOUI {
     }
 
     static public void ShowBoardEditorMenu (int id) {
-        DestroyMenu ();
         currentId = id;
-        CurrentCanvas.AddComponent<BoardEditorMenu> ();
+        ClientLogic.MyInterface.CmdDownloadBoard (currentId);
         //EnvironmentScript.CreateRandomBoard ();
     }
 
     static public void TileAction (int x, int y) {
+        if (!editMode) {
+            return;
+        }
         EnableTile (x, y);
         SetToken (x, y);
     }
@@ -118,25 +126,27 @@ public class BoardEditorMenu : GOUI {
 
         AddButtons (px, py, maxX, maxY);
 
-        py += 120 + dy;
+        if (editMode) {
+            py += 120 + dy;
 
-        AddButtons (px, py, maxX, maxY);
+            AddButtons (px, py, maxX, maxY);
 
-        py += 120 + dy;
+            py += 120 + dy;
 
-        AddButtons (px, py, maxX, maxY);
+            AddButtons (px, py, maxX, maxY);
 
-        maxY += 1;
+            maxY += 1;
 
-        py += 150 + dy;
+            py += 150 + dy;
 
-        AddButtons (px, py, maxX, maxY);
+            AddButtons (px, py, maxX, maxY);
 
-        maxY += 1;
+            maxY += 1;
 
-        py += 210 + dy;
+            py += 210 + dy;
 
-        AddButtons (px, py, maxX, maxY);
+            AddButtons (px, py, maxX, maxY);
+        }
 
         for (int x = 1; x < 5; x++) {
             SelectButton (x, Selected [x]);
@@ -147,10 +157,16 @@ public class BoardEditorMenu : GOUI {
 
     static public void SelectButton (int type, int number) {
         Selected [type] = number;
-        foreach (GameObject button in Buttons [type]) {
-            button.GetComponent<UIController> ().FreeAndUnlcok ();
+        if (Buttons [type] != null) {
+            foreach (GameObject button in Buttons [type]) {
+                if (button != null) {
+                    button.GetComponent<UIController> ().FreeAndUnlcok ();
+                }
+            }
+            if (Buttons [type] [number]) {
+                    Buttons [type] [number].GetComponent<UIController> ().PressAndLock ();
+            }
         }
-        Buttons [type] [number].GetComponent<UIController> ().PressAndLock ();
     }
 
     static int type = 0;
@@ -187,6 +203,9 @@ public class BoardEditorMenu : GOUI {
         for (int y = 0; y < maxY; y++) {
             for (int x = 0; x < maxX; x++) {
                 int number = x + y * maxX;
+                if (!editMode && number < 2) {
+                    continue;
+                }
                 if (number >= NumberOfButtons [type]) {
                     continue;
                 }

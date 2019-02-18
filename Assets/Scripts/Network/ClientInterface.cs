@@ -120,7 +120,8 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadCardPoolToEditor (NetworkConnection target, int gameModeId, string [] lines) {
+    public void TargetDownloadCardPoolToEditor (NetworkConnection target, bool isClientOwner, int gameModeId, string [] lines) {
+        Debug.Log (lines);
         CardPoolEditor.LoadDataToEditor (gameModeId, lines);
     }
 
@@ -291,10 +292,12 @@ public class ClientInterface : NetworkBehaviour {
 
     [TargetRpc]
     public void TargetDownloadGameModeSettingsToEditor (NetworkConnection target, 
+        bool isClientOwner,
         bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
         bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack) {
-        GameModeSettingsEditor.ShowGameModeSettingsEditor (hasScoreWinCondition, 
-            scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue, 
+        GameModeSettingsEditor.ShowGameModeSettingsEditor (
+            isClientOwner, 
+            hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue, 
             isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack);
     }
 
@@ -364,8 +367,8 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadBoardToEditor (NetworkConnection target, int boardId, string boardName, string [] board, int [] matchTypes) {
-        BoardEditorMenu.LoadDataToEditor (boardId, boardName, board, matchTypes);
+    public void TargetDownloadBoardToEditor (NetworkConnection target, bool isClientOwner, int boardId, string boardName, string [] board, int [] matchTypes) {
+        BoardEditorMenu.LoadDataToEditor (boardId, isClientOwner, boardName, board, matchTypes);
     }
 
     [Command]

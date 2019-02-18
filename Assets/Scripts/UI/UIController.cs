@@ -29,6 +29,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public float timeToTooltip = 0.25f;
 
     public bool Over = false;
+    public bool interactible = true;
     public bool Pressed;
     public bool Pressed1;
     public bool PressedAndLocked;
@@ -42,6 +43,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         PressedAndLocked = true;
         SetOnMouseClickSprite ();
     }
+
     public void FreeAndUnlcok () {
         PressedAndLocked = false;
         if (!Over) {
@@ -53,21 +55,23 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter (PointerEventData eventData) {
         Over = true;
-        if (!Pressed) {
+        if (!Pressed && interactible) {
             SetOnMouseOverSprite ();
         }
     }
 
     public void OnPointerExit (PointerEventData eventData) {
-        if (!Pressed) {
+        if (!Pressed && interactible) {
             SetNormalSprite ();
         }
         Over = false;
     }
 
     public void OnPointerDown (PointerEventData eventData) {
-        SetOnMouseClickSprite ();
-        Pressed = true;
+        if (!interactible) {
+            SetOnMouseClickSprite ();
+            Pressed = true;
+        }
     }
 
 
@@ -203,7 +207,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
 
             case UIString.ShowGameModeEditor:
-                Tooltip.NewTooltip (transform, Language.EditThisGameVersion);
+                if (GameModeMenu.currentGroup < 2) {
+                    Tooltip.NewTooltip (transform, Language.ViewGameModeEditor);
+                } else {
+                    Tooltip.NewTooltip (transform, Language.EditThisGameVersion);
+                }
                 break;
             case UIString.CreateNewGameMode:
                 Tooltip.NewTooltip (transform, Language.AddNewGameVersion);
@@ -222,10 +230,18 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 Tooltip.NewTooltip (transform, Language.DeleteThisBoard);
                 break;
             case UIString.GameModeEditorEditBoard:
-                Tooltip.NewTooltip (transform, Language.EditThisBoard);
+                if (GameModeEditor.editMode) {
+                    Tooltip.NewTooltip (transform, Language.EditThisBoard);
+                } else {
+                    Tooltip.NewTooltip (transform, Language.ViewBoardEditor);
+                }
                 break;
             case UIString.GameModeEditorEditCardPool:
-                Tooltip.NewTooltip (transform, Language.EditAvailableCardPool);
+                if (GameModeEditor.editMode) {
+                    Tooltip.NewTooltip (transform, Language.EditAvailableCardPool);
+                } else {
+                    Tooltip.NewTooltip (transform, Language.ViewCardPoolEditor);
+                }
                 break;
             case UIString.GameModeEditorChangeName:
                 Tooltip.NewTooltip (transform, Language.ChangeGameVersionName);
@@ -283,6 +299,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
 
     public void OnClickAction () {
+        if (!interactible) {
+            return;
+        }
         if (pageUI != null) {
             pageUI.SelectPage (number);
         }
@@ -356,7 +375,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 CardPoolEditor.CardAction (number);
                 break;
             case UIString.CardPoolEditorAbout:
-                GOUI.ShowMessage (Language.CardPoolEditorDescription);
+                if (GameModeEditor.editMode) {
+                    GOUI.ShowMessage (Language.CardPoolEditorDescription);
+                } else {
+                    GOUI.ShowMessage (Language.CardPoolEditorReadOnlyDescription);
+                }
                 break;
             case UIString.CardPoolEditorPageButton:
                 CardPoolEditor.SelectPage (number);
@@ -578,7 +601,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 GameModeEditor.ShowGameModeEditor ();
                 break;
             case UIString.BoardEditorAbout:
-                GOUI.ShowMessage (Language.BoardEditorDescription);
+                if (BoardEditorMenu.editMode) {
+                    GOUI.ShowMessage (Language.BoardEditorDescription);
+                } else {
+                    GOUI.ShowMessage (Language.BoardEditorReadOnlyDescription);
+                }
                 break;
 
             case UIString.GameModeMenuApply:
@@ -615,8 +642,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 timer += Time.deltaTime;
             }
             if (Input.GetMouseButtonDown (0)) {
-                SetOnMouseClickSprite ();
-                Pressed = true;
+                if (interactible) {
+                    SetOnMouseClickSprite ();
+                    Pressed = true;
+                }
             }
             if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
                 switch (name) {

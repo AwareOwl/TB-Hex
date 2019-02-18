@@ -97,6 +97,7 @@ public class Language {
     static public string GoBackToGameVersionSelection;
     static public string EnterNewGameVersionName;
 
+    static public string ViewGameModeEditor;
     static public string GameModeEditorDescription;
     static public string GameModeEditorReadOnlyDescription;
 
@@ -111,12 +112,16 @@ public class Language {
     static public string SaveThisBoard;
     static public string ChangeBoardName;
     static public string GoBackToGameVersionEditor;
+    static public string ViewBoardEditor;
     static public string BoardEditorDescription;
+    static public string BoardEditorReadOnlyDescription;
     static public string EnterNewBoardName;
     static public string SelectAvailableMatchTypes;
 
     static public string OpenCardPoolEditor;
+    static public string ViewCardPoolEditor;
     static public string CardPoolEditorDescription;
+    static public string CardPoolEditorReadOnlyDescription;
 
     static public string CustomGame;
     static public string AvailableGames;
@@ -330,6 +335,11 @@ public class Language {
         EnterNewUserName = UI [126];
         ChoseNewAvatar = UI [127];
         GameModeEditorReadOnlyDescription = UI [128];
+        CardPoolEditorReadOnlyDescription = UI [129];
+        BoardEditorReadOnlyDescription = UI [130];
+        ViewBoardEditor = UI [131];
+        ViewCardPoolEditor = UI [132];
+        ViewGameModeEditor = UI [133];
 
 
         path = "Languages/" + FileName [language] + UITooltipKey;

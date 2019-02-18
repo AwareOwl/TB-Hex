@@ -8,6 +8,8 @@ public class AvailableMatchTypesEditor : GOUI {
     static GameObject [] typeButtons;
     static bool [] matchTypes;
 
+    static bool editMode;
+
     static public List<GameObject> Garbage = new List<GameObject> ();
 
     override public void DestroyThis () {
@@ -25,6 +27,7 @@ public class AvailableMatchTypesEditor : GOUI {
 
     static public void ShowAvailableMatchTypesEditor () {
         DestroySubMenu ();
+        editMode = BoardEditorMenu.editMode;
         CurrentCanvas.AddComponent<AvailableMatchTypesEditor> ();
     }
 
@@ -62,15 +65,21 @@ public class AvailableMatchTypesEditor : GOUI {
         for (int x = 0; x < numberOfButtons; x++) {
             Clone = CreateSpriteWithText ("UI/Butt_M_EmptySquare",
                 CustomGameClass.GetMatchTypeName (x), 540 + 120 * x, 535, 21, 120, 60);
-            Clone.name = UIString.AvailableMatchTypesEditorButton;
+            if (editMode) {
+                Clone.name = UIString.AvailableMatchTypesEditorButton;
+            } else {
+                SetInteractible (Clone, false);
+            }
             Clone.GetComponent<UIController> ().number = x;
             typeButtons [x] = Clone;
             Garbage.Add (Clone);
         }
 
-        Clone = CreateSprite ("UI/Butt_M_Apply", 495, 645, 21, 90, 90, true);
-        Clone.name = UIString.AvailableMatchTypesEditorApply;
-        Garbage.Add (Clone);
+        if (editMode) {
+            Clone = CreateSprite ("UI/Butt_M_Apply", 495, 645, 21, 90, 90, true);
+            Clone.name = UIString.AvailableMatchTypesEditorApply;
+            Garbage.Add (Clone);
+        }
 
         Clone = CreateSprite ("UI/Butt_M_Discard", 945, 645, 21, 90, 90, true);
         Clone.name = UIString.DestroySubMenu;

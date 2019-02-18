@@ -195,7 +195,14 @@ public class RowClass : GOUI {
                 Edit.GetComponent<Renderer> ().enabled = false;
                 Edit.GetComponent<Collider> ().enabled = false;
                 SetSprite (Option, "UI/Butt_S_Help", true);
-                Option.name = UIString.ShowGameModeEditor;
+                switch (listMode) {
+                    case (GameModeList):
+                        Option.name = UIString.ShowGameModeEditor;
+                        break;
+                    case (BoardList):
+                        Option.name = UIString.GameModeEditorEditBoard;
+                        break;
+                }
                 Option.GetComponent<Renderer> ().enabled = true;
                 Option.GetComponent<Collider> ().enabled = true;
                 break;
