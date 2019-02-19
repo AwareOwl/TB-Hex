@@ -71,6 +71,7 @@ public class RowClass : GOUI {
         switch (mode) {
             case 0:
             case 3:
+            case 6:
                 switch (listMode) {
                     case (SetList):
                         RowBackground.name = UIString.SelectSet;

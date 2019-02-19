@@ -901,11 +901,12 @@ public class ServerData : MonoBehaviour {
         if (File.Exists (path)) {
             string [] lines = File.ReadAllLines (path);
             int count = lines.Length;
-            int [] ids = new int [count];
+            List<int> ids = new List<int> ();
             for (int x = 0; x < count; x++) {
-                ids [x] = int.Parse (lines [x]);
+                ids.Add (int.Parse (lines [x]));
             }
-            return ids;
+            ids.Sort ((a, b) => (a.CompareTo (b)));
+            return ids.ToArray();
         } else {
             return new int [0];
         }
@@ -922,6 +923,7 @@ public class ServerData : MonoBehaviour {
                 }
             }
         }
+        allTypes.Sort ((a, b) => (a.CompareTo (b)));
         return allTypes.ToArray ();
     }
 
@@ -949,6 +951,7 @@ public class ServerData : MonoBehaviour {
                 officialIds.Add (id);
             }
         }
+        officialIds.Sort ((a, b) => (a.CompareTo (b)));
         return officialIds.ToArray ();
     }
 

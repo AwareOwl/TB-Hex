@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -90,6 +91,16 @@ public class ServerVersionManager : VersionManager {
                         ConvertTo0_5_0_5 ();
                     }
                 }
+                PathVersion = 6;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
+            }
+            if (PathVersion <= 6) {
+                if (HotfixVersion <= 0) {
+                    if (DevelopVersion < 5) {
+                        ConvertTo0_6_0_5 ();
+                    }
+                }
             }
         }
 
@@ -120,6 +131,67 @@ public class ServerVersionManager : VersionManager {
     }
 
     //static public void 
+    static public void ConvertTo0_6_0_5 () {
+        int newId;
+        newId = ServerData.CreateNewGameMode ("");
+        ServerData.SetCardPool (newId, GetResource ("ExportFolder/v0.6/CardPools/CardPool"));
+        ServerData.SetGameModeName (newId, "Version 0.6.0");
+        ServerData.SetGameModeIsOfficial (newId, true);
+
+        int newBoardId;
+        for (int x = 0; x < 2; x++) {
+            newBoardId = ServerData.SaveNewBoard (newId, "Path0.6.0.0", "Board " + (9 + x).ToString (),
+            GetResource ("ExportFolder/v0.6/Boards/Board" + (9 + x).ToString ()));
+            ServerData.SetBoardIsOfficial (newBoardId, true);
+        }
+
+        int gM1 = 4;
+        int [] officialGameModeIds = ServerData.GetAllOfficialGameModes ();
+        foreach (int id in officialGameModeIds) {
+            if (ServerData.GetGameModeName (id) == "Version 0.1.0") {
+                gM1 = id;
+            }
+        }
+
+        int [] gM1boards = ServerData.GetAllGameModeBoards (gM1);
+        foreach (int gmb in gM1boards) {
+            ServerData.RemoveGameModeBoard (gM1, gmb);
+        }
+
+        int [] officialBoards = ServerData.GetAllOfficialBoards ();
+        foreach (int offId in officialBoards) {
+            string name = ServerData.GetBoardName (offId);
+            Debug.Log (offId.ToString() + " " + name);
+            switch (name) {
+                case "Board 1":
+                case "Board 2":
+                case "Board 3":
+                case "Board 4":
+                    ServerData.SetGameModeBoard (gM1, offId);
+                    break;
+
+            }
+            if (name == "Board6") {
+                ServerData.SetBoardName (offId, "Board 6");
+            }
+            if (name == "Board7") {
+                ServerData.SetBoardName (offId, "Board 7");
+            }
+            if (name == "Board8") {
+                ServerData.SetBoardName (offId, "Board 8");
+            }
+            if (name != "Board6") {
+                ServerData.SetGameModeBoard (newId, offId);
+            }
+        }
+
+        CopyPlayerGameModeSets ("Version 0.5.0", newId);
+
+        GameVersion = 0;
+        PathVersion = 6;
+        HotfixVersion = 0;
+        DevelopVersion = 5;
+    }
 
     static public void ConvertTo0_5_0_5 () {
         ExportRating ();
@@ -375,5 +447,28 @@ public class ServerVersionManager : VersionManager {
         PathVersion = 0;
         HotfixVersion = 0;
         DevelopVersion = 34;
+    }
+
+    static public void CopyPlayerGameModeSets (string prevModeName,  int newId) {
+
+        int prevMode = 4;
+        int [] officialGameModeIds = ServerData.GetAllOfficialGameModes ();
+        foreach (int id in officialGameModeIds) {
+            if (ServerData.GetGameModeName (id) == prevModeName) {
+                prevMode = id;
+            }
+        }
+
+        string [] users = ServerData.GetAllUsers ();
+        foreach (string user in users) {
+            int [] ids = ServerData.GetAllPlayerModeSets (user, prevMode);
+            foreach (int id in ids) {
+                int newSetId = ServerData.CreatePlayerModeSet (user, newId, ServerData.GetPlayerModeSet (user, prevMode, id), ServerData.GetPlayerModeSetName (user, prevMode, id));
+                ServerData.SetPlayerModeSetIconNumber (user, newId, newSetId, ServerData.GetPlayerModeSetIconNumber (user, prevMode, id));
+            }
+            if (ServerData.GetUserSelectedGameMode (user) == prevMode) {
+                ServerData.SetUserSelectedGameMode (user, newId);
+            }
+        }
     }
 }

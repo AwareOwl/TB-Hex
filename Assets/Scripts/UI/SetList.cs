@@ -39,7 +39,7 @@ public class SetList : GOUI {
         SetList.iconNumber = iconNumber;
         SetList.legal = legal;
         RefreshPageButtons ();
-        SelectPage (Mathf.Min (PageCount (), currentPage));
+        SelectPage (Mathf.Clamp (currentPage, 0, PageCount ()-1));
         SelectSet (selectedSet);
     }
 

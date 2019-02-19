@@ -58,7 +58,7 @@ public class GameModeMenu : GOUI {
 
     static public void SelectGroup (int number) {
         currentGroup = number;
-        currentPage [currentGroup] = Mathf.Min (currentPage [currentGroup], PageLimit ());
+        currentPage [currentGroup] = Mathf.Clamp (currentPage [currentGroup], 0, PageLimit () - 1);
         for (int x = 0; x < groupButton.Length; x++) {
             groupButton [x].GetComponent<UIController> ().FreeAndUnlcok ();
         }

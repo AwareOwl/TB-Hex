@@ -111,7 +111,7 @@ public class GameModeEditor : GOUI {
         GameModeEditor.boardNames = boardNames;
         GameModeEditor.boardIds = boardIds;
         GameModeEditor.boardIsLegal = boardIsLegal;
-        currentPage = Mathf.Min (PageLimit (), currentPage);
+        currentPage = Mathf.Clamp (currentPage, 0, PageLimit () - 1);
         RefreshPageButtons ();
         ShowPage ();
     }
