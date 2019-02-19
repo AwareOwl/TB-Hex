@@ -714,6 +714,7 @@ public class MatchClass {
                 case 28:
                     ModifyTempValue (target, LastPlayedToken ().value);
                     break;
+                case 29:
                 case 30:
                     SetDestroy (target);
                     break;

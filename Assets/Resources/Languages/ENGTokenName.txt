@@ -8,3 +8,6 @@
 [7] Token of Inflation
 [8] Token of Suppression
 [9] Token of Negation
+[10] Token of Ease
+[11] Token of Deflation
+[12] Token of Risk

@@ -31,5 +31,5 @@
 [30] Poświęć 20 zdobytych punktów aby zniszczyć wszystkie żetony będące celem.
 [31] Utwórz Zwykłe Żetony o wartości 1 na szczątkach zniszczonych żetonów będących celem.
 [32] Zwiększa wartość zagrywanego żetonu o 1 za każde szczątki zniszczonych żetonów będących celem.
-[33] Poświęć 20 zdobytych punktów aby zmienić typ żetonów będących celem na typ zagranego żetonu.
+[33] Poświęć 20 zdobytych punktów aby zmienić typy żetonów będących celem na typ zagranego żetonu.
 [34] Odpycha żetony będące celem od zagrywanego żetonu, o ile mogą być odepchnięte na puste pola.

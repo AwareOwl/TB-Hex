@@ -11,6 +11,7 @@ public class VisualTile {
     public GameObject Tile;
     public GameObject Collider;
     public GameObject Border;
+    public GameObject Remains;
 
     public VisualTile () {
     }
@@ -19,6 +20,30 @@ public class VisualTile {
         this.tile = tile;
         CreateTile (tile.x, tile.y);
         EnableTile (tile.enabled);
+    }
+
+    public void DelayedCreateRemains () {
+        if (VisualMatch.instance != null) {
+            VisualMatch.instance.CreateRemains (this);
+        } else {
+            CreateRemains ();
+        }
+    }
+
+    public void CreateRemains () {
+        GameObject Clone;
+        if (Remains == null) {
+            Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
+            Clone.transform.parent = Anchor.transform;
+            Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+            Clone.transform.localPosition = new Vector3 (0, 0.06f, 0);
+            Clone.transform.localScale = new Vector3 (1, 1, 1);
+            Clone.GetComponent<Renderer> ().material.shader = AppDefaults.sprite;
+            Clone.GetComponent<Renderer> ().material.mainTexture = Resources.Load ("Textures/Effects/Dot") as Texture;
+            Clone.GetComponent<Renderer> ().material.color = new Color (0.1f, 0.1f, 0.1f, 0.2f);
+            Collider.GetComponent<UIController> ().number = 1;
+            Remains = Clone;
+        }
     }
 
     void CreateTile (int x, int y) {

@@ -243,6 +243,14 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                     Tooltip.NewTooltip (transform, Language.ViewCardPoolEditor);
                 }
                 break;
+            case UIString.GameModeEditorSettings:
+                if (GameModeEditor.editMode) {
+                    Tooltip.NewTooltip (transform, Language.EditGameModeSettings);
+                } else {
+                    Tooltip.NewTooltip (transform, Language.ViewGameModeSettings);
+                }
+                break;
+                break;
             case UIString.GameModeEditorChangeName:
                 Tooltip.NewTooltip (transform, Language.ChangeGameVersionName);
                 break;
@@ -274,6 +282,13 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 } else {
                     Tooltip.NewTooltip (transform, Language.HideChat);
                 }
+                break;
+
+            case UIString.CardPoolEditorNextAbilityPage:
+                Tooltip.NewTooltip (transform, Language.NextPage);
+                break;
+            case UIString.CardPoolEditorPrevAbilityPage:
+                Tooltip.NewTooltip (transform, Language.PrevPage);
                 break;
 
             case UIString.SetEditorAbout:
@@ -370,6 +385,12 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.CardPoolEditorAbilityType:
                 CardPoolEditor.SelectButton (4, number);
+                break;
+            case UIString.CardPoolEditorNextAbilityPage:
+                CardPoolEditor.NextAbilityPage ();
+                break;
+            case UIString.CardPoolEditorPrevAbilityPage:
+                CardPoolEditor.PrevAbilityPage ();
                 break;
             case UIString.CardPoolEditorCard:
                 CardPoolEditor.CardAction (number);

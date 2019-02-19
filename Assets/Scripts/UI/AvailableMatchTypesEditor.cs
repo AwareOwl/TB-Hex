@@ -57,7 +57,12 @@ public class AvailableMatchTypesEditor : GOUI {
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 20, 660, 420, false);
         Garbage.Add (Clone);
 
-        Clone = CreateUIText (Language.SelectAvailableMatchTypes + ":", 720, 440, 520, 36);
+        string text = Language.SelectAvailableMatchTypes + ":";
+        if (!editMode) {
+            text = Language.AvailableMatchTypes;
+        }
+
+        Clone = CreateUIText (text, 720, 440, 520, 36);
         Garbage.Add (Clone);
 
         typeButtons = new GameObject [numberOfButtons];

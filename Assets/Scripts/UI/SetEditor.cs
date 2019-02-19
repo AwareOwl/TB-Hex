@@ -52,7 +52,6 @@ public class SetEditor : GOUI {
     }
 
     static public void LoadData (string [] cardPool, string [] set, string name, int iconNumber, int numberOfStacks, int minimalNumberOfCardsOnStack) {
-        Debug.Log (minimalNumberOfCardsOnStack);
         SetEditor.numberOfStacks = numberOfStacks;
         SetEditor.minimumNumberOfCardsOnStack = minimalNumberOfCardsOnStack;
         LoadCardPool (cardPool);

@@ -92,6 +92,9 @@ public class TileClass {
     public TokenClass DestroyToken () {
         if (token != null) {
             remains = true;
+            if (visualTile != null) {
+                visualTile.DelayedCreateRemains ();
+            }
             token.DestroyToken ();
             token = null;
         }

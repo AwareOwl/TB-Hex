@@ -162,6 +162,14 @@ public class Language {
     static public string Apply;
     static public string Close;
 
+    static public string NextPage;
+    static public string PrevPage;
+
+    static public string EditGameModeSettings;
+    static public string ViewGameModeSettings;
+
+    static public string AvailableMatchTypes;
+
     static public string WaitingInQueue;
     static public string Cancel;
 
@@ -340,6 +348,11 @@ public class Language {
         ViewBoardEditor = UI [131];
         ViewCardPoolEditor = UI [132];
         ViewGameModeEditor = UI [133];
+        NextPage = UI [134];
+        PrevPage = UI [135];
+        EditGameModeSettings = UI [136];
+        ViewGameModeSettings = UI [137];
+        AvailableMatchTypes = UI [138];
 
 
         path = "Languages/" + FileName [language] + UITooltipKey;

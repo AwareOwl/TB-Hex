@@ -13,7 +13,7 @@
 [12] Thunder
 [13] Equality
 [14] Crush
-[15] exploitation
+[15] Exploitation
 [16] Inspiration
 [17] Identity thief
 [18] Replication
@@ -28,3 +28,8 @@
 [27] Diversity
 [28] Pact
 [29] Snipe
+[30] Payback
+[31] Fertilizer
+[32] Essence of bodies
+[33] Viral greed
+[34] Fear

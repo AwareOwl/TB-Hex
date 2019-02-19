@@ -115,7 +115,11 @@ public class VisualPlayer {
         } else {
             GOUI.SetInPixPosition (HealthBar, barPosition + (int) ((barLength * (1 - percentage) + 1) / 2), 25, 12);
         }
-        ScoreText.GetComponent<TextMesh> ().text = score.ToString () + " (+" + scoreIncome.ToString () + ")";
+        if (scoreIncome >= 0) {
+            ScoreText.GetComponent<TextMesh> ().text = score.ToString () + " (+" + scoreIncome.ToString () + ")";
+        } else {
+            ScoreText.GetComponent<TextMesh> ().text = score.ToString () + " (" + scoreIncome.ToString () + ")";
+        }
     }
 
     public void DelayedSetPlayerHealthBar (int score, int scoreIncome, int scoreLimit) {

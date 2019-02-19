@@ -128,8 +128,12 @@
 [127] Wybierz nowy avatar
 [128] W tym menu możesz przeglądać zawartość cudzej wersji gry.
 [129] W tym menu możesz przeglądać pulę kart w cudzej wersji gry.
-[130] W tym menu możesz przyjrzeć się cudzej mapie.
-[131] Przyjrzyj się tej mapie
+[130] W tym menu możesz przyjrzeć się cudzej planszy.
+[131] Przyjrzyj się tej planszy
 [132] Przyjrzyj się puli kart dostępnej w tej wersji gry
 [133] Przyjrzyj się tej wersji gry
-[134] Kliknij aby dowiedzieć się więcej o tym menu
+[134] Następna strona
+[135] Poprzednia strona
+[136] Modyfikuj ustawienia tego trybu gry
+[137] Przejrzyj ustawienia tego trybu gry
+[138] Dostępne wersje potyczek

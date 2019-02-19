@@ -132,4 +132,8 @@
 [131] View this board
 [132] View card pool available in this game mode
 [133] View this game mode
-[134] Click to learn more about this menu
+[134] Next page
+[135] Previous page
+[136] Edit settings of this game mode
+[137] View settings of this game mode
+[138] Available match types

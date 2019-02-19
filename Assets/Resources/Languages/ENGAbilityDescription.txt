@@ -28,3 +28,8 @@
 [27] Increases values of target tokens with different type than played token by 1.
 [28] Double value of last played token, and increase value of target ally token by the same value.
 [29] Destroy up to 2 target enemy tokens.
+[30] Sacrifice 20 earned points to destroy all target tokens.
+[31] Create 1-value Normal tokens on target remains of destroyed tokens.
+[32] Increases value of played token by 1 for every target remains of destroyed tokens.
+[33] Sacrifice 20 earned points to change types of target tokens to type of played token.
+[34] Pushes target tokens away from played token, if it's possible to push them on empty tiles.

@@ -81,8 +81,13 @@ public class GOUI : MonoBehaviour {
 
     static public GameObject CreateText (string s) {
         GameObject Clone = CreateText ();
-        Clone.GetComponent<TextMesh> ().text = s;
+        SetText (Clone, s);
         return Clone;
+    }
+
+    static public GameObject SetText (GameObject obj, string s) {
+        obj.GetComponent<TextMesh> ().text = s;
+        return obj;
     }
 
     static public GameObject CreateText () {

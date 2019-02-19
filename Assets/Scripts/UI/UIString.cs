@@ -11,6 +11,8 @@ public class UIString {
     public const string CardPoolEditorTokenType = "CardPoolEditorTokenType";
     public const string CardPoolEditorAbilityArea = "CardPoolEditorAbilityArea";
     public const string CardPoolEditorAbilityType = "CardPoolEditorAbilityType";
+    public const string CardPoolEditorNextAbilityPage = "CardPoolEditorNextAbilityPage";
+    public const string CardPoolEditorPrevAbilityPage = "CardPoolEditorPrevAbilityPage";
 
     public const string CardPoolEditorCard = "CardPoolEditorCard";
     public const string CardPoolEditorNewCard = "CardPoolEditorNewCard";

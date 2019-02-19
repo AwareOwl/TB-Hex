@@ -5,6 +5,9 @@
 [4] Between turns decreases value of nearby strongest token by 1.
 [5] Between turns decreases its value by 1. When it becomes destroyed, it reduces value of nearby tokens by 3.
 [6] Generates income only during owner turns;
-[7] All played tokens will have their value increased by 1.
+[7] All played tokens (of any player) will have their value increased by 1.
 [8] Nearby weaker tokens can't generate score income.
 [9] Blocks next played ability, then it changes into normal token.
+[10] Generates additional point of score income for every nearby empty tile.
+[11] All played tokens (of any player) will have their value increased by 1.
+[12] Generates double score income. When it becomes destroyed, it reduces its owner score by 20.

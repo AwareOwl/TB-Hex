@@ -30,6 +30,6 @@
 [29] Snajperstwo
 [30] Odpłata
 [31] Nawóz
-[32] Po trupach do władzy
-[33] Wirus
+[32] Esencja ciał
+[33] Wirusowa chciwość
 [34] Strach

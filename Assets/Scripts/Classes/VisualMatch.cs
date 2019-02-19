@@ -39,6 +39,14 @@ public class VisualMatch : MonoBehaviour {
         new GameObject ().AddComponent<UsedCardPreview> ().Init (playerNumber, player, playerPosition, card);
     }
 
+    public void CreateRemains (VisualTile tile) {
+        StartCoroutine (IECreateRemains (tile));
+    }
+
+    public IEnumerator IECreateRemains (VisualTile tile) {
+        yield return new WaitForSeconds (GlobalTimer);
+        tile.CreateRemains ();
+    }
 
 
     public void EnableTile (VisualTile tile, bool enable) {
