@@ -49,6 +49,7 @@ public class InGameUI : GOUI {
     private void Start () {
         instance = this;
         CurrentGUI = this;
+        RemoveAllZooms ();
 
         MyPlayerNumber = ClientLogic.MyInterface.playerNumber;
         NumberOfPlayers = PlayedMatch.numberOfPlayers;
@@ -85,6 +86,11 @@ public class InGameUI : GOUI {
     float fetchMissingPacketsTimer = -2;
 
     bool stacksZoomed;
+
+    public void RemoveAllZooms () {
+        stacksZoomed = false;
+        CardAnimation.RemoveAllZooms ();
+    }
 
     public void Update () {
         fetchMissingPacketsTimer += Time.deltaTime;

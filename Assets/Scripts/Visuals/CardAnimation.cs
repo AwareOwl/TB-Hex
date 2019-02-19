@@ -15,6 +15,12 @@ public class CardAnimation : MonoBehaviour {
     public const float shuffleTime = 0.5f;
     public float shuffleTimer = 0;
 
+    static public void RemoveAllZooms () {
+        for (int x = 0; x < stackZoomed.Length; x++) {
+            stackZoomed [x] = false;
+        }
+    }
+
     public void Init (VisualCard visual, int stack, int stackSize, int numberOfStacks, int position) {
         this.visual = visual;
         this.stack = stack;
