@@ -624,27 +624,7 @@ public class RatingClass {
 
     static public void LoadAbilityAbilitySynergy () {
         string [] lines = ServerData.GetRatingAbilityAbilitySynergy ();
-        for (int x = 0; x < abilityAbilitySynergy.GetLength (0); x++) {
-            string [] word = null;
-            int l1 = abilityAbilitySynergy.GetLength (1);
-            for (int x2 = 0; x2 < l1; x2++) {
-                int lineNumber = 1 + x * (l1 + 1) + x2;
-                if (lines != null && lineNumber < lines.Length) {
-                    word = lines [lineNumber].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                }
-                for (int y = 0; y < abilityAbilitySynergy.GetLength (2); y++) {
-                    int l2 = abilityAbilitySynergy.GetLength (3);
-                    for (int y2 = 0; y2 < l2; y2++) {
-                        int number = 2 + y * (l2 + 1) + y2;
-                        if (word != null && number < word.Length) {
-                            abilityAbilitySynergy [x, x2, y, y2] = float.Parse (word [number]);
-                        } else {
-                            abilityAbilitySynergy [x, x2, y, y2] = 0.5f;
-                        }
-                    }
-                }
-            }
-        }
+        Load (lines, abilityAbilitySynergy);
     }
 
 

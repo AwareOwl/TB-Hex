@@ -100,8 +100,8 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 5) {
                         ConvertTo0_6_0_5 ();
                     }
-                    if (DevelopVersion < 8) {
-                        ConvertTo0_6_0_8 ();
+                    if (DevelopVersion < 11) {
+                        ConvertTo0_6_0_11 ();
                     }
                 }
             }
@@ -112,20 +112,29 @@ public class ServerVersionManager : VersionManager {
     static public void FinalizeServerVersion () {
         ServerData.SetServerKeyData (ServerData.VersionKey, GetVersion ());
         RatingClass.LoadAbilityAbilitySynergy ();
+        RatingClass.LoadAbilityTokenSynergy ();
+
         RatingClass.LoadAbilityAfterAbility ();
         RatingClass.LoadAbilityAfterToken ();
         RatingClass.LoadTokenAfterAbility ();
         RatingClass.LoadTokenAfterToken ();
+
         RatingClass.LoadAbilityOnRow ();
+        RatingClass.LoadAbilityStackSize ();
         RatingClass.LoadTokenOnRow ();
+        RatingClass.LoadTokenStackSize ();
+        RatingClass.LoadAbilityTokenOnRow ();
     }
 
     static public void ExportRating () {
         ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbilityTokenSynergy (GetResource ("ExportFolder/Rating/AbilityTokenSynergy"));
+
         ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
         ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
         ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
         ServerData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
+
         ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
         ServerData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
         ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
@@ -133,11 +142,12 @@ public class ServerVersionManager : VersionManager {
         ServerData.SaveRatingAbilityTokenOnRow (GetResource ("ExportFolder/Rating/AbilityTokenOnRow"));
     }
 
-    static public void ConvertTo0_6_0_8 () {
+    static public void ConvertTo0_6_0_11 () {
+        ExportRating ();
         GameVersion = 0;
         PathVersion = 6;
         HotfixVersion = 0;
-        DevelopVersion = 8;
+        DevelopVersion = 11;
     }
 
     //static public void 
@@ -171,7 +181,6 @@ public class ServerVersionManager : VersionManager {
         int [] officialBoards = ServerData.GetAllOfficialBoards ();
         foreach (int offId in officialBoards) {
             string name = ServerData.GetBoardName (offId);
-            Debug.Log (offId.ToString() + " " + name);
             switch (name) {
                 case "Board 1":
                 case "Board 2":

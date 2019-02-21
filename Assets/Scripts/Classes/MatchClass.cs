@@ -820,13 +820,19 @@ public class MatchClass {
         }
         TokenClass token = LastMove.playedToken;
         if (token != null) {
+            if (ThisTurnMove != null) {
+                TokenClass token2 = ThisTurnMove.playedToken;
+                if (token2 != null && token.x == token2.x && token.y == token2.y) {
+                    return null;
+                }
+            }
             return Board.tile [token.x, token.y];
         }
         return null;
     }
 
     public TokenClass LastPlayedToken () {
-        if (LastMove == null) {
+        if (LastMove == null || LastPlayedTile () == null) {
             return null;
         }
         return LastPlayedTile ().token;

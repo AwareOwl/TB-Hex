@@ -155,6 +155,7 @@ public class AppDefaults {
             case 18:
             case 25:
             case 31:
+            case 36:
                 return Green;
             // Orange
             case 3:

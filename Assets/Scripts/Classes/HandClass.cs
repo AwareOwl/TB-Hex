@@ -95,7 +95,7 @@ public class HandClass  {
         CardPoolClass CardPool = new CardPoolClass ();
         CardPool.LoadFromFile (gameModeId);
         int minimumNumberOfCardsOnStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameModeId);
-        GenerateRandomHand (CardPool, RatingClass.PopularityRating (gameModeId), AI, minimumNumberOfCardsOnStack);
+        GenerateRandomHand (CardPool, /*RatingClass.PopularityRating (gameModeId)*/ null, AI, minimumNumberOfCardsOnStack);
     }
 
     public void GenerateRandomHand (CardPoolClass CardPool, float [] CardValue, AIClass AI, int minimumNumberOfCardsOnStack) {

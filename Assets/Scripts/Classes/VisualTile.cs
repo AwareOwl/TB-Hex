@@ -36,7 +36,7 @@ public class VisualTile {
             Clone = GameObject.CreatePrimitive (PrimitiveType.Quad);
             Clone.transform.parent = Anchor.transform;
             Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-            Clone.transform.localPosition = new Vector3 (0, 0.06f, 0);
+            Clone.transform.localPosition = new Vector3 (0, 0.09f, 0);
             Clone.transform.localScale = new Vector3 (1, 1, 1);
             Clone.GetComponent<Renderer> ().material.shader = AppDefaults.sprite;
             Clone.GetComponent<Renderer> ().material.mainTexture = Resources.Load ("Textures/Effects/Dot") as Texture;

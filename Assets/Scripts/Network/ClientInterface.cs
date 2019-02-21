@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.6.0.8");
+            CmdCompareServerVersion ("0.6.0.11");
         }
     }
 
