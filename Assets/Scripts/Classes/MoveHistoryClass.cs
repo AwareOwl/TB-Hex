@@ -11,6 +11,8 @@ public class MoveHistoryClass  {
     public int y;
     public int playerNumber;
     public int stackNumber;
+    public int usedCardStack;
+    public int usedCardNumber;
     public CardClass usedCard;
     public TokenClass playedToken;
 
@@ -18,13 +20,15 @@ public class MoveHistoryClass  {
 
     }
 
-    public MoveHistoryClass (int moveId, int x, int y, int playerNumber, int stackNumber, CardClass usedCard, TokenClass playedToken, MoveHistoryClass prev) {
+    public MoveHistoryClass (int moveId, int x, int y, int playerNumber, int stackNumber,  int usedCardNumber, CardClass usedCard, TokenClass playedToken, MoveHistoryClass prev) {
         this.moveId = moveId;
         this.x = x;
         this.y = y;
         this.playerNumber = playerNumber;
         this.stackNumber = stackNumber;
         this.usedCard = usedCard;
+        this.usedCardStack = usedCardStack;
+        this.usedCardNumber = usedCardNumber;
         this.playedToken = playedToken;
         this.prev = prev;
     }

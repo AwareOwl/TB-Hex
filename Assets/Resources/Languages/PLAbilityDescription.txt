@@ -33,3 +33,8 @@
 [32] Zwiększa wartość zagrywanego żetonu o 1 za każde szczątki zniszczonych żetonów będących celem.
 [33] Poświęć 20 zdobytych punktów aby zmienić typy żetonów będących celem na typ zagranego żetonu.
 [34] Odpycha żetony będące celem od zagrywanego żetonu, o ile mogą być odepchnięte na puste pola.
+[35] Niszczy słabsze żetony będące celem.
+[36] Zamienia miejscami 2 żetony będące celem.
+[37] Zamienia typy 2 żetonów będących celem.
+[38] Zwiększa wartość zagrywanego żetonu o 1 za każdy żeton będący celem o typie innym niż zagrywany żeton.
+[39] Właściciele żetonów będących celem redukują wartość ostatnio zagranych przez nich karty o 1.

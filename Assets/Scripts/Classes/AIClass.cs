@@ -13,15 +13,19 @@ public class AIClass {
     public int abilityRow = 9;
     public int tokenRow = 9;
     public int abilityTokenRow = 18;
+
     public int abilityStackSize = 5;
     public int tokenStackSize = 5;
+    public int abilityTokenStackSize = 5;
 
     public int abilityAfterAbility = 8;
     public int abilityAfterToken = 8;
     public int tokenAfterAbility = 8;
     public int tokenAfterToken = 8;
-    public int abilityAbilitySynergy = 8;
-    public int abilityTokenSynergy = 8;
+
+    public int ability_AbilitySynergy = 8;
+    public int ability_TokenSynergy = 8;
+    public int token_TokenSynergy = 8;
 
     public int abilityAgainstAbility = 8;
     public int abilityAgainstToken = 8;
@@ -31,22 +35,26 @@ public class AIClass {
     public float MaxEmptyTileCount;
 
     public AIClass () {
-        edgeDanger = Random.Range (0, 13);
-        surroundDanger = Random.Range (1, 7);
+        edgeDanger = Random.Range (0, 12);
+        surroundDanger = Random.Range (3, 8);
         multiTargetDanger = Random.Range (0, 8);
 
-        abilityRow = Random.Range (6, 13);
-        tokenRow = Random.Range (6, 13);
-        abilityTokenRow = Random.Range (12, 26);
-        abilityStackSize = Random.Range (3, 6);
-        tokenStackSize = Random.Range (3, 5);
+        abilityRow = Random.Range (7, 13);
+        tokenRow = Random.Range (8, 14);
+        abilityTokenRow = Random.Range (12, 27);
 
-        abilityAfterAbility = Random.Range (4, 9);
-        abilityAfterToken = Random.Range (3, 11);
-        tokenAfterAbility = Random.Range (3, 11);
-        tokenAfterToken = Random.Range (4, 10);
-        abilityAbilitySynergy = Random.Range (4, 7);
-        abilityTokenSynergy = Random.Range (4, 11);
+        abilityStackSize = Random.Range (3, 8);
+        tokenStackSize = Random.Range (2, 6);
+        abilityTokenStackSize = Random.Range (5, 8);
+
+        abilityAfterAbility = Random.Range (5, 9);
+        abilityAfterToken = Random.Range (2, 11);
+        tokenAfterAbility = Random.Range (3, 12);
+        tokenAfterToken = Random.Range (1, 11);
+
+        ability_AbilitySynergy = Random.Range (4, 8);
+        ability_TokenSynergy = Random.Range (5, 17);
+        token_TokenSynergy = Random.Range (4, 7);
 
         abilityAgainstAbility = Random.Range (4, 7);
         abilityAgainstToken = Random.Range (4, 7);
@@ -70,7 +78,7 @@ public class AIClass {
             if (tile == null || !tile.enabled || tile.token != null) {
                 Debug.Log ("Tile error");
             }
-            for (int x = 0; x < player.topCardNumber.Length; x++) {
+            for (int x = 0; x < player.hand.stack.Length; x++) {
                 MatchClass tempMatch = new MatchClass (match);
                 tempMatch.real = false;
                 tempMatch.PlayCard (tile.x, tile.y, playerNumber, x);
@@ -174,12 +182,12 @@ public class AIClass {
                     int targetValue = targetToken.value;
                     switch (targetType) {
                         case 3:
-                            if (tVE.WeakestTargets.Count == 1 && tVE.WeakestTargets [0] == tile) {
+                            if (tVE.weakestTargets.Count == 1 && tVE.weakestTargets [0] == tile) {
                                 tokenValue = valueOverTime (tokenValue, 1, 1, turnsLeft);
                             }
                             break;
                         case 4:
-                            if (tVE.StrongestTargets.Count == 1 && tVE.StrongestTargets [0] == tile) {
+                            if (tVE.strongestTargets.Count == 1 && tVE.strongestTargets [0] == tile) {
                                 tokenValue = valueOverTime (tokenValue, -1, 1, turnsLeft);
                             }
                             break;
@@ -205,6 +213,9 @@ public class AIClass {
                         break;
                     case 5:
                         tokenValue = (tokenValue * (tokenValue + 1) - Mathf.Max (tokenValue - turnsLeft, 0) * (tokenValue - turnsLeft + 1)) / 2 / turnsLeft;
+                        break;
+                    case 6:
+                        tokenValue *= 1.06f / match.numberOfPlayers;
                         break;
                     case 9:
                     case 11:

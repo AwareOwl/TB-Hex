@@ -185,7 +185,7 @@ public class ServerLogic : MonoBehaviour {
                 client.TargetDownloadCurrentGamePlayerProperties (client.connectionToClient,
                     x, playerProperties.PlayerPropertiesToString ());
                 if (client.playerNumber == playerProperties.playerNumber) {
-                    HandClass hand = playerProperties.hand;
+                    HandClass hand = player.hand;
                     client.TargetDownloadCurrentGameHand (client.connectionToClient,
                         x, hand.ModeHandToString ());
                 }
@@ -549,7 +549,7 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SavePlayerModeSet (client.AccountName, client.GameMode, setId, lines);
         HandClass hand = new HandClass ();
         int gameMode = client.GameMode;
-        hand.LoadFromString (gameMode, lines);
+        hand.LoadFromFileString (gameMode, lines);
         if (hand.IsValid (gameMode)) {
             client.TargetShowMessage (client.connectionToClient, Language.SetSavedKey);
         } else {
@@ -613,7 +613,7 @@ public class ServerLogic : MonoBehaviour {
         if (mHistory != null && mHistory.moveId > lastMoveId) {
             CurrentGameFetchMissingMoves (client, lastMoveId, mHistory.prev);
             CardClass card = mHistory.usedCard;
-            TargetCurrentGameMakeAMove (client, mHistory.moveId, mHistory.x, mHistory.y, mHistory.playerNumber, mHistory.stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.value);
+            TargetCurrentGameMakeAMove (client, mHistory.moveId, mHistory.x, mHistory.y, mHistory.playerNumber, mHistory.stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.tokenValue);
         }
     }
 

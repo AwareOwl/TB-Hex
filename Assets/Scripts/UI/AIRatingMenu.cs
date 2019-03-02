@@ -18,6 +18,7 @@ public class AIRatingMenu : GOUI {
     private void Update () {
         if (Input.GetKeyDown ("r")) {
             ShowAIRatingMenuMenu (gameModeId);
+            RefreshPage ();
         }
     }
 
@@ -34,6 +35,7 @@ public class AIRatingMenu : GOUI {
 
         count = cardPool.Card.Count;
         Card = new GameObject [count];
+        Text = new GameObject [count];
 
         for (int z = 0; z < count; z++) {
             card = new VisualCard (cardPool.Card [z]);
@@ -45,9 +47,10 @@ public class AIRatingMenu : GOUI {
             card.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
 
             GameObject Clone = CreateText (z.ToString ());
-            Clone.transform.localScale = Vector3.one * 0.03f;
+            Clone.transform.localScale = Vector3.one * 0.025f;
             Clone.transform.SetParent (Card [z].transform);
             Clone.transform.localPosition = new Vector3 (0, 0, -1.1f);
+            Text [z] = Clone;
 
         }
 
@@ -68,6 +71,7 @@ public class AIRatingMenu : GOUI {
                 }
 
                 SetInPixPosition (Card [Popularity [number]], 50 + 110 * x, 80 + 145 * y, 12);
+                Text [number].GetComponent <TextMesh>().text = number.ToString () + " (" + RatingClass.cardPopularity [number].ToString() + ")";
             }
         }
     }

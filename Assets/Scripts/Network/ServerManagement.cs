@@ -7,7 +7,7 @@ public class ServerManagement : MonoBehaviour {
     bool AutoDeleteAllFinished = true;
 
     private void Awake () {
-        //ServerData.SaveBackUp ();
+        ServerData.SaveBackUp ();
         //ServerData.DeleteBackUps ();
         ServerData.SetInitVector ();
         ServerVersionManager.CheckServerVersion ();

@@ -15,7 +15,7 @@ public class PlayerPropertiesClass {
 
     public AIClass AI;
 
-    public HandClass hand;
+    public HandClass startingHand;
 
     public ClientInterface client;
 
@@ -63,7 +63,7 @@ public class PlayerPropertiesClass {
         } else {
             this.avatar = ServerData.GetUserAvatar (accountName);
         }
-        this.hand = hand;
+        this.startingHand = hand;
         this.client = client;
         this.AI = AI;
     }

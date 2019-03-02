@@ -101,8 +101,18 @@ public class TileClass {
         return token;
     }
 
+    public void CreateRemains () {
+        remains = true;
+        Debug.Log (visualTile);
+        if (visualTile != null) {
+            Debug.Log (visualTile.Remains);
+            visualTile.CreateRemains ();
+        }
+    }
+
     public TokenClass CreateToken (int type, int value, int owner) {
         if (enabled && token == null) {
+            Debug.Log (visualTile);
             token = new TokenClass (this, type, value, owner);
             switch (token.type) {
                 case 9:

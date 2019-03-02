@@ -256,7 +256,7 @@ public class InGameUI : GOUI {
             int abilityType = card.abilityType;
             int abilityArea = card.abilityArea;
             int tokenType = card.tokenType;
-            int tokenValue = card.value;
+            int tokenValue = card.tokenValue;
             int tokenModifier = PlayedMatch.Board.NumberOfTypes [7] - PlayedMatch.Board.NumberOfTypes [11];
             tokenValue += tokenModifier;
 
@@ -287,7 +287,7 @@ public class InGameUI : GOUI {
                     GameObject Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, false, false);
                     Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
                     if (PlayedMatch.LastMove != null) {
-                        abilityType = PlayedMatch.LastMove.usedCard.abilityType;
+                        abilityType = PlayedMatch.GetLastPlayedCard ().abilityType;
                     }
                     break;
             }

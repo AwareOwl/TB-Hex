@@ -11,3 +11,4 @@
 [10] Żeton Swobody
 [11] Żeton Deflacji
 [12] Żeton Ryzyka
+[13] Żeton Czasu

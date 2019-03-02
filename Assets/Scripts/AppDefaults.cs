@@ -9,7 +9,7 @@ public class AppDefaults {
     static public Color Yellow = new Color (1, 1, 0);
 
     static public int AvailableTokens = 13; // Always + 1, to include null
-    static public int AvailableAbilities = 35; // Always + 1, to include null
+    static public int AvailableAbilities = 40; // Always + 1, to include null
     static public int AvailableAvatars = 8; // Always + 1, to include null
 
     static public Sprite [] Avatar;
@@ -76,6 +76,9 @@ public class AppDefaults {
             case 2:
             case 8:
                 return new Color (0.1f, 0.1f, 0.0f);
+            // Bright blue
+            case 13:
+                return new Color (0.5f, 0.5f, 1f);
             // Dark blue
             case 3:
             case 4:
@@ -89,7 +92,7 @@ public class AppDefaults {
             case 100:
                 return new Color (0.6f, 0.4f, 0.3f);
             // Dark Orange
-            case 13:
+            //case 13:
                 return new Color (0.7f, 0.4f, 0.1f);
             default:
                 return Color.black;
@@ -148,6 +151,7 @@ public class AppDefaults {
             case 24:
             case 29:
             case 30:
+            case 35:
                 return Red;
             // Green
             case 2:
@@ -155,7 +159,6 @@ public class AppDefaults {
             case 18:
             case 25:
             case 31:
-            case 36:
                 return Green;
             // Orange
             case 3:
@@ -163,6 +166,7 @@ public class AppDefaults {
             case 11:
             case 19:
             case 34:
+            case 36:
                 return new Color (1, 0.5f, 0);
             // Yellow
             case 4:
@@ -174,6 +178,7 @@ public class AppDefaults {
             case 27:
             case 28:
             case 32:
+            case 38:
                 return Yellow;
             // Purple
             case 7:
@@ -182,9 +187,11 @@ public class AppDefaults {
             case 17:
             case 22:
             case 33:
+            case 37:
                 return new Color (0.8f, 0, 1);
             // Blue
             case 20:
+            case 39:
                 return new Color (0.2f, 0.2f, 1);
         }
         return Color.white;

@@ -33,3 +33,8 @@
 [32] Esencja ciał
 [33] Wirusowa chciwość
 [34] Strach
+[35] Potężniejsze zmiażdżenie
+[36] Podmiana
+[37] Odwrócenie ról
+[38] Przygotowanie
+[39] Nieopłacalna powtarzalność

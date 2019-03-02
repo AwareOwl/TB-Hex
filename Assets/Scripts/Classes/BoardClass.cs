@@ -165,6 +165,8 @@ public class BoardClass {
                 s2 += " " + tile.token.value;
                 s2 += " " + tile.token.owner;
             }
+            s2 += " ";
+            s2 += tile.remains ? 1 : 0;
             s.Add (s2);
             s3 += s2 + Environment.NewLine;
         }
@@ -193,13 +195,29 @@ public class BoardClass {
             int [] i = Array.ConvertAll (s, Int32.Parse);
             int px = i [0];
             int py = i [1];
-            if (i [2] == 1) {
+            bool enabled = i [2] == 1;
+            if (enabled) {
                 EnableTile (px, py);
             } else {
                 DisableTile (px, py);
             }
-            if (i.Length > 3) {
-                tile [px, py].CreateToken (i [3], i [4], i [5]);
+            switch (i.Length) {
+                case 4:
+                    if (i [3] == 1) {
+                        Debug.Log ("wat");
+                        tile [px, py].CreateRemains ();
+                    }
+                    break;
+                case 6:
+                    tile [px, py].CreateToken (i [3], i [4], i [5]);
+                    break;
+                case 7:
+                    tile [px, py].CreateToken (i [3], i [4], i [5]);
+                    if (i [6] == 1) {
+                        Debug.Log ("wat");
+                        tile [px, py].CreateRemains ();
+                    }
+                    break;
             }
         }
     }

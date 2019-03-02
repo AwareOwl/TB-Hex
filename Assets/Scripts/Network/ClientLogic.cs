@@ -63,9 +63,8 @@ public class ClientLogic : MonoBehaviour {
     static public void LoadCurrentGameHand (int playerNumber, string [] lines) {
         MatchClass match = InGameUI.PlayedMatch;
         PlayerClass player = match.Player [playerNumber];
-        PlayerPropertiesClass playerProperties = player.properties;
-        playerProperties.hand = new HandClass (lines.Length);
-        playerProperties.hand.LoadFromModeString (lines);
+        player.hand = new HandClass (lines.Length / 2);
+        player.hand.LoadFromModeString (lines);
     }
 
     static public void LoadCustomGameRoom (bool isHost, string gameName, int matchType, int [] avatars, string [] names, bool [] AIs) {

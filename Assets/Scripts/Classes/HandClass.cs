@@ -15,6 +15,14 @@ public class HandClass  {
         Init (numberOfStacks);
     }
 
+    public HandClass (HandClass hand) {
+        this.numberOfStacks = hand.numberOfStacks;
+        this.stack = new StackClass [numberOfStacks];
+        for (int x = 0; x < numberOfStacks; x++) {
+            stack [x] = new StackClass (hand.stack [x]);
+        }
+    }
+
     public HandClass (ClientInterface client) {
         string accountName = client.AccountName;
         int gameMode = client.GameMode;
@@ -87,7 +95,7 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output = Mathf.Clamp (output, 0.8f, 2.1f);
+        output = Mathf.Clamp (output, 0.96f, 2f);
         return output;
     }
 
@@ -137,10 +145,12 @@ public class HandClass  {
                     CardClass card = CardPool.Card [z];
                     modifier [z] = CardValue [z];
                     modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], AI.abilityRow)
-                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.value, y], AI.tokenRow)
+                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.tokenValue, y], AI.tokenRow)
                         * Normalize (RatingClass.abilityTokenOnRow [card.abilityType, card.tokenType, y], AI.abilityTokenRow)
+
                         * Normalize (RatingClass.abilityStackSize [card.abilityType, card.AreaSize (), stackSize [x]], AI.tokenRow)
-                        * Normalize (RatingClass.tokenStackSize [card.tokenType, card.value, stackSize [x]], AI.tokenRow);
+                        * Normalize (RatingClass.tokenStackSize [card.tokenType, card.tokenValue, stackSize [x]], AI.tokenRow)
+                        * Normalize (RatingClass.abilityTokenStackSize [card.tokenType, card.tokenType, stackSize [x]], AI.tokenRow);
                     if (y > 0) {
                         CardClass prevCard = stack [x].card [y - 1];
                         modifier [z] *= Normalize (RatingClass.abilityAfterAbility [
@@ -148,13 +158,13 @@ public class HandClass  {
                             prevCard.abilityType, prevCard.AreaSize()], AI.abilityAfterAbility);
                         modifier [z] *= Normalize (RatingClass.abilityAfterToken [
                             card.abilityType, card.AreaSize (),
-                            prevCard.tokenType, prevCard.value], AI.abilityAfterToken);
+                            prevCard.tokenType, prevCard.tokenValue], AI.abilityAfterToken);
                         modifier [z] *= Normalize (RatingClass.tokenAfterAbility [
-                            card.tokenType, card.value,
+                            card.tokenType, card.tokenValue,
                             prevCard.abilityType, prevCard.AreaSize ()], AI.tokenAfterAbility);
                         modifier [z] *= Normalize (RatingClass.tokenAfterToken [
-                            card.tokenType, card.value,
-                            prevCard.tokenType, prevCard.value], AI.tokenAfterToken);
+                            card.tokenType, card.tokenValue,
+                            prevCard.tokenType, prevCard.tokenValue], AI.tokenAfterToken);
                     }
                     SumOfValues += modifier [z];
                 }
@@ -174,19 +184,24 @@ public class HandClass  {
                 int abilityType = CardPool.Card [id].abilityType;
                 int abilityArea = CardPool.Card [id].AreaSize ();
                 int tokenType = CardPool.Card [id].tokenType;
-                int tokenValue = CardPool.Card [id].value;
+                int tokenValue = CardPool.Card [id].tokenValue;
                 for (int z = 0; z < count; z++) {
                     int abilityType2 = CardPool.Card [z].abilityType;
                     int abilityArea2 = CardPool.Card [z].AreaSize ();
                     int tokenType2 = CardPool.Card [z].tokenType;
-                    int tokenValue2 = CardPool.Card [z].value;
+                    int tokenValue2 = CardPool.Card [z].tokenValue;
                     if (abilityType < abilityType2) {
-                        CardValue [z] *= Normalize (RatingClass.abilityAbilitySynergy [abilityType, abilityArea, abilityType2, abilityArea2], AI.abilityAbilitySynergy);
+                        CardValue [z] *= Normalize (RatingClass.ability_AbilitySynergy [abilityType, abilityArea, abilityType2, abilityArea2], AI.ability_AbilitySynergy);
                     } else {
-                        CardValue [z] *= Normalize (RatingClass.abilityAbilitySynergy [abilityType2, abilityArea2, abilityType, abilityArea], AI.abilityAbilitySynergy);
+                        CardValue [z] *= Normalize (RatingClass.ability_AbilitySynergy [abilityType2, abilityArea2, abilityType, abilityArea], AI.ability_AbilitySynergy);
                     }
-                    CardValue [z] *= Normalize (RatingClass.abilityTokenSynergy [abilityType, abilityArea, tokenType2, tokenValue2], AI.abilityTokenSynergy);
-                    CardValue [z] *= Normalize (RatingClass.abilityTokenSynergy [abilityType2, abilityArea2, tokenType, tokenValue], AI.abilityTokenSynergy);
+                    if (tokenType < tokenType2) {
+                        CardValue [z] *= Normalize (RatingClass.token_TokenSynergy [tokenType, tokenValue, tokenType2, tokenValue2], AI.token_TokenSynergy);
+                    } else {
+                        CardValue [z] *= Normalize (RatingClass.token_TokenSynergy [tokenType2, tokenValue2, tokenType, tokenValue], AI.token_TokenSynergy);
+                    }
+                    CardValue [z] *= Normalize (RatingClass.ability_TokenSynergy [abilityType, abilityArea, tokenType2, tokenValue2], AI.ability_TokenSynergy);
+                    CardValue [z] *= Normalize (RatingClass.ability_TokenSynergy [abilityType2, abilityArea2, tokenType, tokenValue], AI.ability_TokenSynergy);
 
                 }
 
@@ -217,11 +232,12 @@ public class HandClass  {
     public string [] ModeHandToString () {
         List<string> s = new List<string> ();
         for (int x = 0; x < numberOfStacks; x++) {
+            s.Add (stack [x].topCardNumber.ToString());
             string s2 = "";
             for (int y = 0; y < stack [x].card.Count; y++) {
                 CardClass card = GetCard (x, y);
                 if (card != null) {
-                    s2 += card.abilityType + " " + card.abilityArea + " " + card.tokenType + " " + card.value.ToString() + " ";
+                    s2 += card.abilityType + " " + card.abilityArea + " " + card.tokenType + " " + card.tokenValue.ToString() + " ";
                 }
             }
             s.Add (s2);
@@ -230,17 +246,17 @@ public class HandClass  {
     }
 
     public void LoadFromFile (string accountName, int gameModeId, int setId) {
-        LoadFromString (gameModeId, ServerData.GetPlayerModeSet (accountName, gameModeId, setId));
+        LoadFromFileString (gameModeId, ServerData.GetPlayerModeSet (accountName, gameModeId, setId));
     }
 
-    public void LoadFromString (int gameModeId, string [] lines) {
+    public void LoadFromFileString (int gameModeId, string [] lines) {
         CardPoolClass cardPool = new CardPoolClass ();
         cardPool.LoadFromFile (gameModeId);
         int numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameModeId);
-        LoadFromString (cardPool, lines, numberOfStacks);
+        LoadFromFileString (cardPool, lines, numberOfStacks);
     }
 
-    public void LoadFromString (CardPoolClass cardPool, string [] lines, int numberOfStacks) {
+    public void LoadFromFileString (CardPoolClass cardPool, string [] lines, int numberOfStacks) {
         Init (numberOfStacks);
         for (int x = 0; x < numberOfStacks; x++) {
             if (lines.Length <= x) {
@@ -269,7 +285,8 @@ public class HandClass  {
             if (lines.Length <= x) {
                 continue;
             }
-            string [] word = lines [x].Split (new char [] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+            stack [x].topCardNumber = int.Parse (lines [x * 2]);
+            string [] word = lines [x * 2 + 1].Split (new char [] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
             for (int y = 0; y < word.Length / 4; y++) {
                 CardClass card = new CardClass (int.Parse (word [y * 4 + 3]), int.Parse (word [y * 4 + 2]), int.Parse (word [y * 4 + 1]), int.Parse (word [y * 4]));
                 stack [x].card.Add (card);

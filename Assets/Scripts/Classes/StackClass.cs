@@ -6,12 +6,36 @@ public class StackClass {
     
     public List<CardClass> card = new List<CardClass>();
 
+    public int topCardNumber;
+
+    public CardClass getTopCard () {
+        return card [topCardNumber];
+    }
+
+    public void MoveTopCard () {
+
+        int topCard = topCardNumber;
+        int stackSize = GetStackSize ();
+        topCardNumber = (topCard + 1) % stackSize;
+    }
+
+    public void RotateTopAbilityArea () {
+        RotateAbilityArea (topCardNumber);
+    }
+
     public void RotateAbilityArea (int cardNumber) {
         card [cardNumber].RotateArea ();
     }
 
     public StackClass () {
 
+    }
+
+    public StackClass (StackClass stack) {
+        card = new List<CardClass> ();
+        for (int x = 0; x < stack.card.Count; x++) {
+            card.Add (new CardClass (stack.GetCard (x)));
+        }
     }
 
     public int GetStackSize () {

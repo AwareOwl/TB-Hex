@@ -24,7 +24,7 @@ public class VisualCard {
     }
 
     public void SetState (CardClass card) {
-        SetState (card.tokenType, card.value, card.abilityArea, card.abilityType);
+        SetState (card.tokenType, card.tokenValue, card.abilityArea, card.abilityType);
     }
 
     public void SetState (int tokenType, int value, int abilityArea, int abilityType) {

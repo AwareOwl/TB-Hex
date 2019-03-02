@@ -264,12 +264,12 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static public string RatingAbilityAbilitySynergyPath () {
-        return RatingPath () + "AbilityAbilitySynergy.txt";
+    static public string RatingAbility_AbilitySynergyPath () {
+        return RatingPath () + "Ability_AbilitySynergy.txt";
     }
 
-    static public string [] GetRatingAbilityAbilitySynergy () {
-        string path = RatingAbilityAbilitySynergyPath ();
+    static public string [] GetRatingAbility_AbilitySynergy () {
+        string path = RatingAbility_AbilitySynergyPath ();
         if (File.Exists (path)) {
             string [] lines = File.ReadAllLines (path);
             return lines;
@@ -277,18 +277,18 @@ public class ServerData : MonoBehaviour {
         return new string [0];
     }
 
-    static public string SaveRatingAbilityAbilitySynergy (string [] lines) {
-        string path = RatingAbilityAbilitySynergyPath ();
+    static public string SaveRatingAbility_AbilitySynergy (string [] lines) {
+        string path = RatingAbility_AbilitySynergyPath ();
         File.WriteAllLines (path, lines);
         return path;
     }
 
-    static public string RatingAbilityTokenSynergyPath () {
-        return RatingPath () + "AbilityTokenSynergy.txt";
+    static public string RatingAbility_TokenSynergyPath () {
+        return RatingPath () + "Ability_TokenSynergy.txt";
     }
 
-    static public string [] GetRatingAbilityTokenSynergy () {
-        string path = RatingAbilityTokenSynergyPath ();
+    static public string [] GetRatingAbility_TokenSynergy () {
+        string path = RatingAbility_TokenSynergyPath ();
         if (File.Exists (path)) {
             string [] lines = File.ReadAllLines (path);
             return lines;
@@ -296,8 +296,27 @@ public class ServerData : MonoBehaviour {
         return new string [0];
     }
 
-    static public string SaveRatingAbilityTokenSynergy (string [] lines) {
-        string path = RatingAbilityTokenSynergyPath ();
+    static public string SaveRatingAbility_TokenSynergy (string [] lines) {
+        string path = RatingAbility_TokenSynergyPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string RatingToken_TokenSynergyPath () {
+        return RatingPath () + "Token_TokenSynergy.txt";
+    }
+
+    static public string [] GetRatingToken_TokenSynergy () {
+        string path = RatingToken_TokenSynergyPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return new string [0];
+    }
+
+    static public string SaveRatingToken_TokenSynergy (string [] lines) {
+        string path = RatingToken_TokenSynergyPath ();
         File.WriteAllLines (path, lines);
         return path;
     }
@@ -428,6 +447,25 @@ public class ServerData : MonoBehaviour {
 
     static public string [] GetRatingTokenStackSize () {
         string path = RatingTokenStackSizePath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return new string [0];
+    }
+
+    static public string RatingAbilityTokenStackSizePath () {
+        return RatingPath () + "AbilityTokenStackSize.txt";
+    }
+
+    static public string SaveRatingAbilityTokenStackSize (string [] lines) {
+        string path = RatingAbilityTokenStackSizePath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingAbilityTokenStackSize () {
+        string path = RatingAbilityTokenStackSizePath ();
         if (File.Exists (path)) {
             string [] lines = File.ReadAllLines (path);
             return lines;

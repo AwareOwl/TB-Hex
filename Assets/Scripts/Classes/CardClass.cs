@@ -7,7 +7,7 @@ public class CardClass {
     public int cardNumber;
 
     public int tokenType;
-    public int value;
+    public int tokenValue;
     public int abilityType;
     public int abilityArea;
 
@@ -18,7 +18,7 @@ public class CardClass {
     }
 
     public CardClass (CardClass card) {
-        SetState (card.value, card.tokenType, card.abilityArea, card.abilityType);
+        SetState (card.tokenValue, card.tokenType, card.abilityArea, card.abilityType);
         this.cardNumber = card.cardNumber;
     }
 
@@ -48,7 +48,7 @@ public class CardClass {
         if (abilityArea > 0 && abilityArea < 4) {
             abilityArea = (abilityArea % 3 + 1);
         }
-        SetState (value, tokenType, abilityArea, abilityType);
+        SetState (tokenValue, tokenType, abilityArea, abilityType);
         if (visualCard != null) {
             visualCard.SetState (this);
         }
@@ -56,7 +56,7 @@ public class CardClass {
 
     public void SetState (int value, int tokenType, int abilityArea, int abilityType) {
         this.tokenType = tokenType;
-        this.value = value;
+        this.tokenValue = value;
         this.abilityType = abilityType;
         switch (abilityType) {
             case 0:
@@ -70,13 +70,13 @@ public class CardClass {
     }
 
     public string ToString () {
-        return cardNumber + " " + value + " " + tokenType + " " + abilityArea + " " + abilityType;
+        return cardNumber + " " + tokenValue + " " + tokenType + " " + abilityArea + " " + abilityType;
     }
 
     public void ConvertFromString (string line) {
         string [] s = line.Split (' ');
         cardNumber = int.Parse (s [0]);
-        value = int.Parse (s [1]);
+        tokenValue = int.Parse (s [1]);
         tokenType = int.Parse (s [2]);
         abilityArea = int.Parse (s [3]);
         abilityType = int.Parse (s [4]);

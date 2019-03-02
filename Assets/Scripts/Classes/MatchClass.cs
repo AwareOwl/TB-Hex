@@ -364,7 +364,7 @@ public class MatchClass {
         }
         PlayerClass player = Player [playerNumber];
         CardClass card = player.GetTopCard (stackNumber);
-        PlayCard (lastMoveId + 1, x, y, playerNumber, stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.value);
+        PlayCard (lastMoveId + 1, x, y, playerNumber, stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.tokenValue);
     }
 
     public void PlayCard (int moveID, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
@@ -431,9 +431,15 @@ public class MatchClass {
         PlayerClass player = Player [playerNumber];
         TokenClass token = PlayToken (tile, card, playerNumber);
         int abilityType = card.abilityType;
-        SaveThisTurnMove (tile.x, tile.y, playerNumber, stackNumber, card, token);
+        HandClass hand = player.GetHand ();
+        int topCardNumber = 0;
+        if (hand != null) {
+            StackClass stack = player.GetStack (stackNumber);
+            topCardNumber = player.GetTopCardNumber (stackNumber);
+        }
+        SaveThisTurnMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
         UseAbility (tile, playerNumber, card.abilityArea, abilityType);
-        SaveLastMove (tile.x, tile.y, playerNumber, stackNumber, card, token);
+        SaveLastMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
         AILearning (abilityType);
         updateBoard = true;
         UpdateBoard ();
@@ -462,13 +468,25 @@ public class MatchClass {
         }
     }
 
-    public void SaveThisTurnMove (int x, int y, int playerNumber, int stackNumber, CardClass playedCard, TokenClass token) {
-        ThisTurnMove = new MoveHistoryClass (lastMoveId + 1, x, y, playerNumber, stackNumber, playedCard, token, LastMove);
+    public void SaveThisTurnMove (int x, int y, int playerNumber, int stackNumber, int playedCardNumber, CardClass playedCard, TokenClass token) {
+        ThisTurnMove = new MoveHistoryClass (lastMoveId + 1, x, y, playerNumber, stackNumber, playedCardNumber, playedCard, token, LastMove);
     }
 
-    public void SaveLastMove (int x, int y, int playerNumber, int stackNumber, CardClass playedCard, TokenClass token) {
+    public void SaveLastMove (int x, int y, int playerNumber, int stackNumber, int playedCardNumber, CardClass playedCard, TokenClass token) {
         LastMove = ThisTurnMove;
-        Player [playerNumber].LastMove = new MoveHistoryClass (lastMoveId + 1, x, y, playerNumber, stackNumber, playedCard, token, Player [playerNumber].LastMove);
+        Player [playerNumber].LastMove = new MoveHistoryClass (lastMoveId + 1, x, y, playerNumber, stackNumber, playedCardNumber, playedCard, token, Player [playerNumber].LastMove);
+    }
+
+    public CardClass GetLastPlayedCard () {
+        return GetPlayedCard (LastMove);
+    }
+
+    public CardClass GetPlayedCard (MoveHistoryClass move) {
+        if (LastMove == null) {
+            return null;
+        } else {
+            return Player [move.playerNumber].GetCard (move.usedCardStack, move.usedCardNumber);
+        }
     }
 
     public void UpdateBoard () {
@@ -623,12 +641,13 @@ public class MatchClass {
 
         abilityType = newAbilityType;
         if (abilityType == 7) {
-            bool triggered = LastMove != null && LastMove.usedCard.abilityType != abilityType;
+            CardClass lastPlayedCard = GetLastPlayedCard ();
+            bool triggered = LastMove != null && lastPlayedCard.abilityType != abilityType;
             if (visualMatch != null) {
                 VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, triggered);
             }
             if (triggered) {
-                abilityType = LastMove.usedCard.abilityType;
+                abilityType = lastPlayedCard.abilityType;
             }
         }
         return abilityType;
@@ -716,6 +735,7 @@ public class MatchClass {
                     break;
                 case 29:
                 case 30:
+                case 35:
                     SetDestroy (target);
                     break;
                 case 32:
@@ -789,6 +809,36 @@ public class MatchClass {
             case 31:
                 Player [playerNumber].AddScore (-20);
                 break;
+            case 36:
+                if (info.Triggered1.Count == 2) {
+                    SwapToken (info.Triggered1 [0], info.Triggered1 [1]);
+                }
+                break;
+            case 37:
+                if (info.Triggered1.Count != 2) {
+                    break;
+                }
+                TileClass tile1 = info.Triggered1 [0];
+                TileClass tile2 = info.Triggered1 [1];
+                int type1 = tile1.token.type;
+                int type2 = tile2.token.type;
+                ChangeType (tile1, type2);
+                ChangeType (tile2, type1);
+                break;
+            case 38:
+                ModifyTempValue (tile, info.differentTypesCount);
+                break;
+            case 40:
+                if (info.TargetPlayers != null) {
+                    foreach (int pNumber in info.TargetPlayers) {
+                        PlayerClass player = Player [pNumber];
+                        CardClass card = player.GetLastMoveCard ();
+                        if (card != null) {
+                            card.tokenValue--;
+                        }
+                    }
+                }
+                break;
         }
     }
 
@@ -860,7 +910,7 @@ public class MatchClass {
 
     public TokenClass PlayToken (TileClass tile, CardClass card, int playerNumber) {
         if (tile != null) {
-            TokenClass token = CreateToken (tile, card.tokenType, card.value + Board.NumberOfTypes [7] - Board.NumberOfTypes [11], playerNumber);
+            TokenClass token = CreateToken (tile, card.tokenType, card.tokenValue + Board.NumberOfTypes [7] - Board.NumberOfTypes [11], playerNumber);
             //TokenClass token = tile.CreateToken (card, playerNumber);
             if (tile.visualTile != null) {
                 tile.token.visualToken.DelayedAddPlayAnimation ();

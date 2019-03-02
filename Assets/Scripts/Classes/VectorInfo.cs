@@ -6,12 +6,15 @@ public class VectorInfo {
 
     public List <AbilityVector> vectors = new List<AbilityVector> ();
 
+
+    public List<TileClass> targets = new List<TileClass> ();
+
     public int strongestValue = 0;
-    public List<TileClass> StrongestTargets = new List<TileClass> ();
+    public List<TileClass> strongestTargets = new List<TileClass> ();
 
 
     public int weakestValue = 999;
-    public List<TileClass> WeakestTargets = new List<TileClass> ();
+    public List<TileClass> weakestTargets = new List<TileClass> ();
 
     public int strongerCount = 0;
     public int weakerCount = 0;
@@ -22,6 +25,7 @@ public class VectorInfo {
 
     public int allyCount = 0;
     public int enemyCount = 0;
+    public int differentTypesCount = 0;
 
     public List<int> TargetPlayers = new List<int> ();
 
@@ -51,22 +55,24 @@ public class VectorInfo {
             if (vector.target != null) {
                 this.vectors.Add (vector);
                 if (vector.target.IsFilledTile ()) {
+                    targets.Add (vector.target);
                     int value = vector.target.token.value;
+                    int type = vector.target.token.type;
                     int owner = vector.target.token.owner;
                     if (strongestValue < value) {
-                        StrongestTargets = new List<TileClass> ();
+                        strongestTargets = new List<TileClass> ();
                         strongestValue = value;
                     }
                     if (strongestValue == value) {
-                        StrongestTargets.Add (vector.target);
+                        strongestTargets.Add (vector.target);
                     }
 
                     if (weakestValue > value) {
-                        WeakestTargets = new List<TileClass> ();
+                        weakestTargets = new List<TileClass> ();
                         weakestValue = value;
                     }
                     if (weakestValue == value) {
-                        WeakestTargets.Add (vector.target);
+                        weakestTargets.Add (vector.target);
                     }
 
                     if (token.value > value) {
@@ -76,6 +82,9 @@ public class VectorInfo {
                         strongerCount++;
                     }
 
+                    if (token.type != type) {
+                        differentTypesCount++;
+                    }
 
                     if (token.owner == owner) {
                         allyCount++;
@@ -146,13 +155,13 @@ public class VectorInfo {
         }
         switch (tokenType) {
             case 3:
-                if (WeakestTargets.Count == 1) {
-                    Triggered1.Add (WeakestTargets [0]);
+                if (weakestTargets.Count == 1) {
+                    Triggered1.Add (weakestTargets [0]);
                 }
                 break;
             case 4:
-                if (StrongestTargets.Count == 1) {
-                    Triggered1.Add (StrongestTargets [0]);
+                if (strongestTargets.Count == 1) {
+                    Triggered1.Add (strongestTargets [0]);
                 }
                 break;
             case 5:
@@ -218,14 +227,14 @@ public class VectorInfo {
                     }
                     break;
                 case 9:
-                    if (IsFilledTile (vector.target) && WeakestTargets.Count == 1 && vector.target.token.value == weakestValue) {
+                    if (IsFilledTile (vector.target) && weakestTargets.Count == 1 && vector.target.token.value == weakestValue) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
                 case 12:
-                    if (IsFilledTile (vector.target) && StrongestTargets.Count == 1 && vector.target.token.value == strongestValue) {
+                    if (IsFilledTile (vector.target) && strongestTargets.Count == 1 && vector.target.token.value == strongestValue) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
@@ -334,6 +343,28 @@ public class VectorInfo {
                         TriggeredVector.Add (vector);
                     } else {
                         NotTriggeredVector.Add (vector);
+                    }
+                    break;
+                case 35:
+                    if (IsFilledTile (vector.target) && vector.target.token.value < token.value) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 36:
+                case 37:
+                    if (targets.Count == 2 && IsFilledTile (vector.target)) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 38:
+                    if (IsFilledTile (vector.target) && vector.target.token.type != token.type) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
                     }
                     break;
             }

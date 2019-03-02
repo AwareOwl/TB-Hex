@@ -21,14 +21,20 @@ public class RatingClass {
     static float [] AIabilityRow = new float [AICount];
     static float [] AItokenRow = new float [AICount];
     static float [] AIabilityTokenRow = new float [AICount];
+
     static float [] AIabilityStackSize = new float [AICount];
     static float [] AItokenStackSize = new float [AICount];
+    static float [] AIabilityTokenStackSize = new float [AICount];
+
+
     static float [] AIabilityAfterAbility = new float [AICount];
     static float [] AIabilityAfterToken = new float [AICount];
     static float [] AItokenAfterAbility = new float [AICount];
     static float [] AItokenAfterToken = new float [AICount];
-    static float [] AIabilityAbilitySynergy = new float [AICount];
-    static float [] AIabilityTokenSynergy = new float [AICount];
+
+    static float [] AIability_AbilitySynergy = new float [AICount];
+    static float [] AIability_TokenSynergy = new float [AICount];
+    static float [] AItoken_TokenSynergy = new float [AICount];
 
     static int [] winnerScore = new int [1000];
     static int [] loserScore = new int [1000];
@@ -40,13 +46,17 @@ public class RatingClass {
 
     static public float [,,] abilityOnStack; // AbilityType, AbilityArea (0, 2, 6 fields), stackNumber;
     static public float [,,] abilityOnRow;
-    static public float [,,] abilityStackSize;
     static public float [,,] tokenOnRow;
-    static public float [,,] tokenStackSize;
     static public float [,,] abilityTokenOnRow; // AbilityType, TokenType, rowNumber
 
-    static public float [,,,] abilityAbilitySynergy;// AbilityType, AbilityArea (0, 2, 6 fields), AbilityType, AbilityArea (0, 2, 6 fields);
-    static public float [,,,] abilityTokenSynergy;
+    static public float [,,] abilityStackSize;
+    static public float [,,] tokenStackSize;
+    static public float [,,] abilityTokenStackSize;
+
+    static public float [,,,] ability_AbilitySynergy;// AbilityType, AbilityArea (0, 2, 6 fields), AbilityType, AbilityArea (0, 2, 6 fields);
+    static public float [,,,] ability_TokenSynergy;
+    static public float [,,,] token_TokenSynergy;
+
     static public float [,,,] abilityAfterAbility;
     static public float [,,,] abilityAfterToken;
     static public float [,,,] tokenAfterAbility;
@@ -63,13 +73,17 @@ public class RatingClass {
         int availableTokens = AppDefaults.AvailableTokens;
         abilityOnStack = new float [availableAbilities, 3, 10];
         abilityOnRow = new float [availableAbilities, 3, 10];
-        abilityStackSize = new float [availableAbilities, 3, 10];
         tokenOnRow = new float [availableTokens, 9, 10];
-        tokenStackSize = new float [availableTokens, 9, 10];
         abilityTokenOnRow = new float [availableAbilities, availableTokens, 10];
 
-        abilityAbilitySynergy = new float [availableAbilities, 3, availableAbilities, 3];
-        abilityTokenSynergy = new float [availableAbilities, 3, availableTokens, 9];
+        abilityStackSize = new float [availableAbilities, 3, 10];
+        tokenStackSize = new float [availableTokens, 9, 10];
+        abilityTokenStackSize = new float [availableAbilities, availableTokens, 10];
+
+        ability_AbilitySynergy = new float [availableAbilities, 3, availableAbilities, 3];
+        ability_TokenSynergy = new float [availableAbilities, 3, availableTokens, 9];
+        token_TokenSynergy = new float [availableTokens, 9, availableTokens, 9];
+
         abilityAfterAbility = new float [availableAbilities, 3, availableAbilities, 3];
         abilityAfterToken = new float [availableAbilities, 3, availableTokens, 9];
         tokenAfterAbility = new float [availableTokens, 9, availableAbilities, 3];
@@ -88,19 +102,15 @@ public class RatingClass {
                 }
             }
         }
-        for (int x = 0; x < abilityTokenOnRow.GetLength (0); x++) {
-            for (int y = 0; y < abilityTokenOnRow.GetLength (1); y++) {
-                for (int z = 0; z < abilityTokenOnRow.GetLength (2); z++) {
-                    abilityTokenOnRow [x, y, z] = 0.5f;
-                    //AbilityOnRow [x, y, z] = 0.5f;
-                }
-            }
-        }
+
         LoadAbilityOnRow ();
-        LoadAbilityStackSize ();
         LoadTokenOnRow ();
-        LoadTokenStackSize ();
         LoadAbilityTokenOnRow ();
+
+        LoadAbilityStackSize ();
+        LoadTokenStackSize ();
+        LoadAbilityTokenStackSize ();
+
         for (int x = 0; x < cardNumberWinRatio.Length; x++) {
             cardNumberWinRatio [x] = 0.5f;
         }
@@ -115,14 +125,19 @@ public class RatingClass {
             AIabilityRow [x] = 0.5f;
             AItokenRow [x] = 0.5f;
             AIabilityTokenRow [x] = 0.5f;
+
             AIabilityStackSize [x] = 0.5f;
             AItokenStackSize [x] = 0.5f;
+            AIabilityTokenStackSize [x] = 0.5f;
+
             AIabilityAfterAbility [x] = 0.5f;
             AIabilityAfterToken [x] = 0.5f;
             AItokenAfterAbility [x] = 0.5f;
             AItokenAfterToken [x] = 0.5f;
-            AIabilityAbilitySynergy [x] = 0.5f;
-            AIabilityTokenSynergy [x] = 0.5f;
+
+            AIability_AbilitySynergy [x] = 0.5f;
+            AIability_TokenSynergy [x] = 0.5f;
+            AItoken_TokenSynergy [x] = 0.5f;
         }
 
         for (int x = 0; x < mapPlayer.GetLength (0); x++) {
@@ -130,8 +145,11 @@ public class RatingClass {
                 mapPlayer [x, y] = 0.5f;
             }
         }
-        LoadAbilityAbilitySynergy ();
-        LoadAbilityTokenSynergy ();
+
+        LoadAbility_AbilitySynergy ();
+        LoadAbility_TokenSynergy ();
+        LoadToken_TokenSynergy ();
+
         LoadAbilityAfterAbility ();
         LoadAbilityAfterToken ();
         LoadTokenAfterAbility ();
@@ -166,14 +184,14 @@ public class RatingClass {
             int abilityType1 = card [x].abilityType;
             int abilityArea1 = card [x].AreaSize ();
             int tokenType1 = card [x].tokenType;
-            int tokenValue1 = card [x].value;
+            int tokenValue1 = card [x].tokenValue;
 
 
             for (int y = 0; y < count; y++) {
                 int abilityType2 = card [y].abilityType;
                 int abilityArea2 = card [y].AreaSize ();
                 int tokenType2 = card [y].tokenType;
-                int tokenValue2 = card [y].value;
+                int tokenValue2 = card [y].tokenValue;
 
                 float popularity = cardPopularity [y];
                 float rat = rating [y];
@@ -202,7 +220,7 @@ public class RatingClass {
             usedCards [x] = new List<CardClass> ();
             PlayerClass player = match.Player [x];
             int numberOfCards = 0;
-            HandClass hand = player.properties.hand;
+            HandClass hand = player.properties.startingHand;
             for (int y = 0; y < hand.stack.Length; y++) {
                 StackClass stack = hand.stack [y];
                 int cardCount = stack.card.Count;
@@ -212,54 +230,73 @@ public class RatingClass {
                     int abilityArea = card.AreaSize ();
                     int abilityType = card.abilityType;
                     int tokenType = card.tokenType;
-                    int tokenValue = card.value;
+                    int tokenValue = card.tokenValue;
                     foreach (CardClass usedCard in usedCards [x]) {
                         if (abilityType < usedCard.abilityType) {
-                            abilityAbilitySynergy [abilityType, abilityArea, usedCard.abilityType, usedCard.AreaSize ()] *= 0.999f;
+                            ability_AbilitySynergy [abilityType, abilityArea, usedCard.abilityType, usedCard.AreaSize ()] *= 0.999f;
                         } else {
-                            abilityAbilitySynergy [usedCard.abilityType, usedCard.AreaSize (), abilityType, abilityArea] *= 0.999f;
+                            ability_AbilitySynergy [usedCard.abilityType, usedCard.AreaSize (), abilityType, abilityArea] *= 0.999f;
                         }
-                        abilityTokenSynergy [abilityType, abilityArea, usedCard.tokenType, usedCard.value] *= 0.999f;
-                        abilityTokenSynergy [usedCard.abilityType, usedCard.AreaSize (), tokenType, tokenValue] *= 0.999f;
+                        if (tokenType < usedCard.tokenType) {
+                            token_TokenSynergy [tokenType, tokenValue, usedCard.tokenType, usedCard.tokenValue] *= 0.999f;
+                        } else {
+                            token_TokenSynergy [usedCard.tokenType, usedCard.tokenValue, tokenType, tokenValue] *= 0.999f;
+                        }
+                        ability_TokenSynergy [abilityType, abilityArea, usedCard.tokenType, usedCard.tokenValue] *= 0.999f;
+                        ability_TokenSynergy [usedCard.abilityType, usedCard.AreaSize (), tokenType, tokenValue] *= 0.999f;
                         if (winnerNumber == x) {
                             if (abilityType < usedCard.abilityType) {
-                                abilityAbilitySynergy [abilityType, abilityArea, usedCard.abilityType, usedCard.AreaSize ()] += 0.001f;
+                                ability_AbilitySynergy [abilityType, abilityArea, usedCard.abilityType, usedCard.AreaSize ()] += 0.001f;
                             } else {
-                                abilityAbilitySynergy [usedCard.abilityType, usedCard.AreaSize (), abilityType, abilityArea] += 0.001f;
+                                ability_AbilitySynergy [usedCard.abilityType, usedCard.AreaSize (), abilityType, abilityArea] += 0.001f;
                             }
-                            abilityTokenSynergy [abilityType, abilityArea, usedCard.tokenType, usedCard.value] += 0.001f;
-                            abilityTokenSynergy [usedCard.abilityType, usedCard.AreaSize (), tokenType, tokenValue] += 0.001f;
+                            if (tokenType < usedCard.tokenType) {
+                                token_TokenSynergy [tokenType, tokenValue, usedCard.tokenType, usedCard.tokenValue] += 0.001f;
+                            } else {
+                                token_TokenSynergy [usedCard.tokenType, usedCard.tokenValue, tokenType, tokenValue] += 0.001f;
+                            }
+                            ability_TokenSynergy [abilityType, abilityArea, usedCard.tokenType, usedCard.tokenValue] += 0.001f;
+                            ability_TokenSynergy [usedCard.abilityType, usedCard.AreaSize (), tokenType, tokenValue] += 0.001f;
                         }
                     }
                     if (z > 0) {
                         CardClass prevCard = stack.card [z - 1];
                         abilityAfterAbility [abilityType, abilityArea, prevCard.abilityType, prevCard.AreaSize ()] *= 0.999f;
-                        abilityAfterToken [abilityType, abilityArea, prevCard.tokenType, prevCard.value] *= 0.999f;
+                        abilityAfterToken [abilityType, abilityArea, prevCard.tokenType, prevCard.tokenValue] *= 0.999f;
                         tokenAfterAbility [tokenType, tokenValue, prevCard.abilityType, prevCard.AreaSize ()] *= 0.999f;
-                        tokenAfterToken [tokenType, tokenValue, prevCard.tokenType, prevCard.value] *= 0.999f;
+                        tokenAfterToken [tokenType, tokenValue, prevCard.tokenType, prevCard.tokenValue] *= 0.999f;
                         if (winnerNumber == x) {
                             abilityAfterAbility [abilityType, abilityArea, prevCard.abilityType, prevCard.AreaSize ()] += 0.001f;
-                            abilityAfterToken [abilityType, abilityArea, prevCard.tokenType, prevCard.value] += 0.001f;
+                            abilityAfterToken [abilityType, abilityArea, prevCard.tokenType, prevCard.tokenValue] += 0.001f;
                             tokenAfterAbility [tokenType, tokenValue, prevCard.abilityType, prevCard.AreaSize ()] += 0.001f;
-                            tokenAfterToken [tokenType, tokenValue, prevCard.tokenType, prevCard.value] += 0.001f;
+                            tokenAfterToken [tokenType, tokenValue, prevCard.tokenType, prevCard.tokenValue] += 0.001f;
                         }
                     }
                     usedCards [x].Add (card);
                     abilityOnStack [abilityType, abilityArea, y] *= 0.999f;
+
                     abilityOnRow [abilityType, abilityArea, z] *= 0.999f;
-                    abilityStackSize [abilityType, abilityArea, cardCount] *= 0.999f;
                     tokenOnRow [tokenType, tokenValue, z] *= 0.999f;
-                    tokenStackSize [tokenType, tokenValue, cardCount] *= 0.999f;
                     abilityTokenOnRow [abilityType, tokenType, z] *= 0.999f;
+
+                    abilityStackSize [abilityType, abilityArea, cardCount] *= 0.999f;
+                    tokenStackSize [tokenType, tokenValue, cardCount] *= 0.999f;
+                    abilityTokenStackSize [abilityType, tokenType, cardCount] *= 0.999f;
+
                     cardNumberWinRatio [card.cardNumber] *= 0.999f;
                     cardPopularity [card.cardNumber] += 0.005f;
+
                     if (winnerNumber == x) {
                         abilityOnStack [abilityType, abilityArea, y] += 0.001f;
+
                         abilityOnRow [abilityType, abilityArea, z] += 0.001f;
-                        abilityStackSize [abilityType, abilityArea, cardCount] += 0.001f;
                         tokenOnRow [tokenType, tokenValue, z] += 0.001f;
-                        tokenStackSize [tokenType, tokenValue, cardCount] += 0.001f;
                         abilityTokenOnRow [abilityType, tokenType, z] += 0.001f;
+
+                        abilityStackSize [abilityType, abilityArea, cardCount] += 0.001f;
+                        tokenStackSize [tokenType, tokenValue, cardCount] += 0.001f;
+                        abilityTokenStackSize [abilityType, tokenType, cardCount] += 0.001f;
+
                         cardNumberWinRatio [card.cardNumber] += 0.001f;
                     }
                 }
@@ -278,14 +315,19 @@ public class RatingClass {
             AIabilityRow [AI.abilityRow] *= 0.999f;
             AItokenRow [AI.tokenRow] *= 0.999f;
             AIabilityTokenRow [AI.abilityTokenRow] *= 0.999f;
+
             AIabilityStackSize [AI.abilityStackSize] *= 0.999f;
             AItokenStackSize [AI.tokenStackSize] *= 0.999f;
+            AIabilityTokenStackSize [AI.tokenStackSize] *= 0.999f;
+
             AIabilityAfterAbility [AI.abilityAfterAbility] *= 0.999f;
             AIabilityAfterToken [AI.abilityAfterToken] *= 0.999f;
             AItokenAfterAbility [AI.tokenAfterAbility] *= 0.999f;
             AItokenAfterToken [AI.tokenAfterToken] *= 0.999f;
-            AIabilityAbilitySynergy [AI.abilityAbilitySynergy] *= 0.999f;
-            AIabilityTokenSynergy [AI.abilityTokenSynergy] *= 0.999f;
+
+            AIability_AbilitySynergy [AI.ability_AbilitySynergy] *= 0.999f;
+            AIability_TokenSynergy [AI.ability_TokenSynergy] *= 0.999f;
+            AItoken_TokenSynergy [AI.ability_TokenSynergy] *= 0.999f;
 
             if (winnerNumber == x) {
                 mapPlayer [match.Board.boardTemplateId, x] += 0.001f;
@@ -298,14 +340,19 @@ public class RatingClass {
                 AIabilityRow [AI.abilityRow] += 0.001f;
                 AItokenRow [AI.tokenRow] += 0.001f;
                 AIabilityTokenRow [AI.abilityTokenRow] += 0.001f;
+
                 AIabilityStackSize [AI.abilityStackSize] += 0.001f;
                 AItokenStackSize [AI.tokenStackSize] += 0.001f;
+                AIabilityTokenStackSize [AI.tokenStackSize] += 0.001f;
+
                 AIabilityAfterAbility [AI.abilityAfterAbility] += 0.001f;
                 AIabilityAfterToken [AI.abilityAfterToken] += 0.001f;
                 AItokenAfterAbility [AI.tokenAfterAbility] += 0.001f;
                 AItokenAfterToken [AI.tokenAfterToken] += 0.001f;
-                AIabilityAbilitySynergy [AI.abilityAbilitySynergy] += 0.001f;
-                AIabilityTokenSynergy [AI.abilityTokenSynergy] += 0.001f;
+
+                AIability_AbilitySynergy [AI.ability_AbilitySynergy] += 0.001f;
+                AIability_TokenSynergy [AI.ability_TokenSynergy] += 0.001f;
+                AItoken_TokenSynergy [AI.ability_TokenSynergy] += 0.001f;
             } else {
                 loserScore [Mathf.Max (0, player.score)]++;
             }
@@ -323,12 +370,12 @@ public class RatingClass {
                     int abilityType1 = loserCard.abilityType;
                     int abilityArea1 = loserCard.AreaSize ();
                     int tokenType1 = loserCard.tokenType;
-                    int tokenValue1 = loserCard.value;
+                    int tokenValue1 = loserCard.tokenValue;
                     foreach (CardClass winnerCard in usedCards [winnerNumber]) {
                         int abilityType2 = winnerCard.abilityType;
                         int abilityArea2 = winnerCard.AreaSize ();
                         int tokenType2 = winnerCard.tokenType;
-                        int tokenValue2 = winnerCard.value;
+                        int tokenValue2 = winnerCard.tokenValue;
                         abilityAgainstAbility [abilityType2, abilityArea2, abilityType1, abilityArea1] *= 0.999f;
                         abilityAgainstToken [abilityType2, abilityArea2, tokenType1, tokenValue1] *= 0.999f;
                         tokenAgainstAbility [tokenType2, tokenValue2, abilityType1, abilityArea1] *= 0.999f;
@@ -351,10 +398,13 @@ public class RatingClass {
         Debug.Log ("Test");
         SaveAbilityOnStack ();
         SaveAbilityOnRow ();
-        SaveAbilityStackSize ();
         SaveTokenOnRow ();
-        SaveTokenStackSize ();
         SaveAbilityTokenOnRow ();
+
+        SaveAbilityStackSize ();
+        SaveTokenStackSize ();
+        SaveAbilityTokenStackSize ();
+
         SaveWinnerScore ();
         SaveLoserScore ();
         SavePlayerWinRatio ();
@@ -367,8 +417,11 @@ public class RatingClass {
         SaveSurroundDanger ();
         SaveMapPlayer ();
         SaveNumberOfCards ();
-        SaveAbilityAbilitySynergy ();
-        SaveAbilityTokenSynergy ();
+
+        SaveAbility_AbilitySynergy ();
+        SaveAbility_TokenSynergy ();
+        SaveToken_TokenSynergy ();
+
         SaveAbilityAfterAbility ();
         SaveAbilityAfterToken ();
         SaveTokenAfterAbility ();
@@ -547,6 +600,7 @@ public class RatingClass {
             s += " [" + x.ToString () + "] " + AIabilityTokenRow [x].ToString ();
         }
         lines.Add (s);
+
         s = "AIabilityStackSize: ";
         for (int x = 0; x < AICount; x++) {
             s += " [" + x.ToString () + "] " + AIabilityStackSize [x].ToString ();
@@ -557,6 +611,12 @@ public class RatingClass {
             s += " [" + x.ToString () + "] " + AItokenStackSize [x].ToString ();
         }
         lines.Add (s);
+        s = "AIabilityTokenStackSize: ";
+        for (int x = 0; x < AICount; x++) {
+            s += " [" + x.ToString () + "] " + AIabilityTokenStackSize [x].ToString ();
+        }
+        lines.Add (s);
+
         s = "AIabilityAfterAbility: ";
         for (int x = 0; x < AICount; x++) {
             s += " [" + x.ToString () + "] " + AIabilityAfterAbility [x].ToString ();
@@ -577,14 +637,20 @@ public class RatingClass {
             s += " [" + x.ToString () + "] " + AItokenAfterToken [x].ToString ();
         }
         lines.Add (s);
-        s = "AIabilityAbilitySynergy: ";
+
+        s = "AIability_AbilitySynergy: ";
         for (int x = 0; x < AICount; x++) {
-            s += " [" + x.ToString () + "] " + AIabilityAbilitySynergy [x].ToString ();
+            s += " [" + x.ToString () + "] " + AIability_AbilitySynergy [x].ToString ();
         }
         lines.Add (s);
-        s = "AIabilityTokenSynergy: ";
+        s = "AIability_TokenSynergy: ";
         for (int x = 0; x < AICount; x++) {
-            s += " [" + x.ToString () + "] " + AIabilityTokenSynergy [x].ToString ();
+            s += " [" + x.ToString () + "] " + AIability_TokenSynergy [x].ToString ();
+        }
+        lines.Add (s);
+        s = "AItoken_TokenSynergy: ";
+        for (int x = 0; x < AICount; x++) {
+            s += " [" + x.ToString () + "] " + AItoken_TokenSynergy [x].ToString ();
         }
         lines.Add (s);
         ServerData.SaveRatingAISettings (lines.ToArray ());
@@ -618,24 +684,34 @@ public class RatingClass {
         ServerData.SaveRatingNumberOfCards (lines.ToArray ());
     }
 
-    static public void SaveAbilityAbilitySynergy () {
-        ServerData.SaveRatingAbilityAbilitySynergy (Save (abilityAbilitySynergy));
+    static public void SaveAbility_AbilitySynergy () {
+        ServerData.SaveRatingAbility_AbilitySynergy (Save (ability_AbilitySynergy));
     }
 
-    static public void LoadAbilityAbilitySynergy () {
-        string [] lines = ServerData.GetRatingAbilityAbilitySynergy ();
-        Load (lines, abilityAbilitySynergy);
-    }
-
-
-    static public void LoadAbilityTokenSynergy () {
-        string [] lines = ServerData.GetRatingAbilityTokenSynergy ();
-        Load (lines, abilityTokenSynergy);
+    static public void LoadAbility_AbilitySynergy () {
+        string [] lines = ServerData.GetRatingAbility_AbilitySynergy ();
+        Load (lines, ability_AbilitySynergy);
     }
 
 
-    static public void SaveAbilityTokenSynergy () {
-        ServerData.SaveRatingAbilityTokenSynergy (Save (abilityTokenSynergy));
+    static public void LoadAbility_TokenSynergy () {
+        string [] lines = ServerData.GetRatingAbility_TokenSynergy ();
+        Load (lines, ability_TokenSynergy);
+    }
+
+
+    static public void SaveAbility_TokenSynergy () {
+        ServerData.SaveRatingAbility_TokenSynergy (Save (ability_TokenSynergy));
+    }
+
+    static public void LoadToken_TokenSynergy () {
+        string [] lines = ServerData.GetRatingToken_TokenSynergy ();
+        Load (lines, token_TokenSynergy);
+    }
+
+
+    static public void SaveToken_TokenSynergy () {
+        ServerData.SaveRatingToken_TokenSynergy (Save (token_TokenSynergy));
     }
 
     static public void SaveAbilityAfterAbility () {
@@ -695,6 +771,15 @@ public class RatingClass {
         ServerData.SaveRatingTokenStackSize (Save (tokenStackSize));
     }
 
+    static public void LoadAbilityTokenStackSize () {
+        string [] lines = ServerData.GetRatingAbilityTokenStackSize ();
+        Load (lines, abilityTokenStackSize);
+    }
+
+    static public void SaveAbilityTokenStackSize () {
+        ServerData.SaveRatingTokenStackSize (Save (abilityTokenStackSize));
+    }
+
     static public void SaveAbilityAgainstAbility () {
         ServerData.SaveRatingAbilityAgainstAbility (Save (abilityAgainstAbility));
     }
@@ -731,7 +816,7 @@ public class RatingClass {
         Load (lines, tokenAgainstToken);
     }
 
-    static float minValue = 0.42f;
+    static float minValue = 0.45f;
 
     static public void Load (string [] lines, float [] array) {
         for (int x = 0; x < array.GetLength (0); x++) {

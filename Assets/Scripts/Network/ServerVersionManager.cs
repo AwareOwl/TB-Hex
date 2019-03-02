@@ -111,8 +111,8 @@ public class ServerVersionManager : VersionManager {
 
     static public void FinalizeServerVersion () {
         ServerData.SetServerKeyData (ServerData.VersionKey, GetVersion ());
-        RatingClass.LoadAbilityAbilitySynergy ();
-        RatingClass.LoadAbilityTokenSynergy ();
+        RatingClass.LoadAbility_AbilitySynergy ();
+        RatingClass.LoadAbility_TokenSynergy ();
 
         RatingClass.LoadAbilityAfterAbility ();
         RatingClass.LoadAbilityAfterToken ();
@@ -127,8 +127,8 @@ public class ServerVersionManager : VersionManager {
     }
 
     static public void ExportRating () {
-        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
-        ServerData.SaveRatingAbilityTokenSynergy (GetResource ("ExportFolder/Rating/AbilityTokenSynergy"));
+        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbility_TokenSynergy (GetResource ("ExportFolder/Rating/AbilityTokenSynergy"));
 
         ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
         ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
@@ -290,7 +290,7 @@ public class ServerVersionManager : VersionManager {
     }
 
     static public void ConvertTo0_4_0_7 () {
-        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
         ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
         ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
         ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
@@ -369,7 +369,7 @@ public class ServerVersionManager : VersionManager {
     }
 
     static public void ConvertTo0_2_0_11 () {
-        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
         ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
         ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
         ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
@@ -431,7 +431,7 @@ public class ServerVersionManager : VersionManager {
                 ServerData.SetGameModeBoard (x, y);
             }
         }
-        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
         ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
         ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
         ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
@@ -459,7 +459,7 @@ public class ServerVersionManager : VersionManager {
         ServerData.SaveNewBoard (1, "Path0.1.0.0", "Board3", GetResource ("ExportFolder/v0.1/Boards/Board3"));
         ServerData.SaveNewBoard (1, "Path0.1.0.0", "Board4", GetResource ("ExportFolder/v0.1/Boards/Board4"));
         ServerData.SetCardPool (1, GetResource ("ExportFolder/v0.1/CardPools/CardPool"));
-        ServerData.SaveRatingAbilityAbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
         ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
         ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
         GameVersion = 0;
