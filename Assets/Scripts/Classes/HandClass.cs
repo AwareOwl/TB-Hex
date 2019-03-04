@@ -95,7 +95,7 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output = Mathf.Clamp (output, 0.96f, 2f);
+        output = Mathf.Clamp (output, 0.7f, 2.1f);
         return output;
     }
 
@@ -166,6 +166,8 @@ public class HandClass  {
                             card.tokenType, card.tokenValue,
                             prevCard.tokenType, prevCard.tokenValue], AI.tokenAfterToken);
                     }
+                    AIClass.maxCardValue = Mathf.Max (AIClass.maxCardValue, modifier [z]);
+                    modifier [z] = Mathf.Min (modifier [z], 100000);
                     SumOfValues += modifier [z];
                 }
                 if (SumOfValues == 0) {
@@ -202,6 +204,7 @@ public class HandClass  {
                     }
                     CardValue [z] *= Normalize (RatingClass.ability_TokenSynergy [abilityType, abilityArea, tokenType2, tokenValue2], AI.ability_TokenSynergy);
                     CardValue [z] *= Normalize (RatingClass.ability_TokenSynergy [abilityType2, abilityArea2, tokenType, tokenValue], AI.ability_TokenSynergy);
+                    
 
                 }
 

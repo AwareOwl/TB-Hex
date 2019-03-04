@@ -27,7 +27,7 @@ public class PlayerClass {
         if (LastMove == null) {
             return null;
         }
-        return GetCard (LastMove.usedCardStack, LastMove.usedCardNumber);
+        return GetCard (LastMove.stackNumber, LastMove.usedCardNumber);
     }
 
     public string [] PlayerToString () {

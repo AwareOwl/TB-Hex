@@ -203,20 +203,14 @@ public class BoardClass {
             }
             switch (i.Length) {
                 case 4:
-                    if (i [3] == 1) {
-                        Debug.Log ("wat");
-                        tile [px, py].CreateRemains ();
-                    }
+                    tile [px, py].remains = i [3] == 1 ? true : false;
                     break;
                 case 6:
                     tile [px, py].CreateToken (i [3], i [4], i [5]);
                     break;
                 case 7:
                     tile [px, py].CreateToken (i [3], i [4], i [5]);
-                    if (i [6] == 1) {
-                        Debug.Log ("wat");
-                        tile [px, py].CreateRemains ();
-                    }
+                    tile [px, py].remains = i [6] == 1 ? true : false;
                     break;
             }
         }

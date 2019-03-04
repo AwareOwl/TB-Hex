@@ -361,7 +361,7 @@ public class VectorInfo {
                     }
                     break;
                 case 38:
-                    if (IsFilledTile (vector.target) && vector.target.token.type != token.type) {
+                    if (IsFilledTile (vector.target) && IsEnemy (vector.target, token.owner) && vector.target.token.type != token.type) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);

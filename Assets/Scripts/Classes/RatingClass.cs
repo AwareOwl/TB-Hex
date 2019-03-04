@@ -302,7 +302,7 @@ public class RatingClass {
                 }
             }
 
-            usedCards [x] = new List<CardClass> ();
+            //usedCards [x] = new List<CardClass> ();
 
             AIClass AI = player.properties.AI;
             mapPlayer [match.Board.boardTemplateId, x] *= 0.999f;
@@ -380,10 +380,12 @@ public class RatingClass {
                         abilityAgainstToken [abilityType2, abilityArea2, tokenType1, tokenValue1] *= 0.999f;
                         tokenAgainstAbility [tokenType2, tokenValue2, abilityType1, abilityArea1] *= 0.999f;
                         tokenAgainstToken [tokenType2, tokenValue2, tokenType1, tokenValue1] *= 0.999f;
+
                         abilityAgainstAbility [abilityType1, abilityArea1, abilityType2, abilityArea2] *= 0.999f;
                         abilityAgainstToken [abilityType1, abilityArea1, tokenType2, tokenValue2] *= 0.999f;
                         tokenAgainstAbility [tokenType1, tokenValue1, abilityType2, abilityArea2] *= 0.999f;
                         tokenAgainstToken [tokenType1, tokenValue1, tokenType2, tokenValue2] *= 0.999f;
+
                         abilityAgainstAbility [abilityType2, abilityArea2, abilityType1, abilityArea1] += 0.001f;
                         abilityAgainstToken [abilityType2, abilityArea2, tokenType1, tokenValue1] += 0.001f;
                         tokenAgainstAbility [tokenType2, tokenValue2, abilityType1, abilityArea1] += 0.001f;
@@ -445,7 +447,7 @@ public class RatingClass {
             }
             lines.Add (s);
         }
-        ServerData.SaveRatingAbilityOnStack (lines.ToArray ());
+        RatingData.SaveRatingAbilityOnStack (lines.ToArray ());
     }
 
     static public void SaveAbilityOnRow () {
@@ -460,11 +462,11 @@ public class RatingClass {
             }
             lines.Add (s);
         }
-        ServerData.SaveRatingAbilityOnRow (lines.ToArray ());
+        RatingData.SaveRatingAbilityOnRow (lines.ToArray ());
     }
 
     static public void LoadAbilityOnRow () {
-        string [] lines = ServerData.GetRatingAbilityOnRow ();
+        string [] lines = RatingData.GetRatingAbilityOnRow ();
         Load (lines, abilityOnRow);
     }
 
@@ -480,20 +482,20 @@ public class RatingClass {
             }
             lines.Add (s);
         }
-        ServerData.SaveRatingTokenOnRow (lines.ToArray ());
+        RatingData.SaveRatingTokenOnRow (lines.ToArray ());
     }
 
     static public void LoadTokenOnRow () {
-        string [] lines = ServerData.GetRatingTokenOnRow ();
+        string [] lines = RatingData.GetRatingTokenOnRow ();
         Load (lines, tokenOnRow);
     }
 
     static public void SaveAbilityTokenOnRow () {
-        ServerData.SaveRatingAbilityTokenOnRow (Save (abilityTokenOnRow));
+        RatingData.SaveRatingAbilityTokenOnRow (Save (abilityTokenOnRow));
     }
     
     static public void LoadAbilityTokenOnRow () {
-        string [] lines = ServerData.GetRatingAbilityTokenOnRow ();
+        string [] lines = RatingData.GetRatingAbilityTokenOnRow ();
         Load (lines, abilityTokenOnRow);
     }
 
@@ -503,7 +505,7 @@ public class RatingClass {
         for (int x = 0; x < winnerScore.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + winnerScore [x].ToString ());
         }
-        ServerData.SaveRatingWinnerScore (lines.ToArray ());
+        RatingData.SaveRatingWinnerScore (lines.ToArray ());
     }
 
     static public void SaveLoserScore () {
@@ -511,7 +513,7 @@ public class RatingClass {
         for (int x = 0; x < loserScore.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + loserScore [x].ToString ());
         }
-        ServerData.SaveRatingLoserScore (lines.ToArray ());
+        RatingData.SaveRatingLoserScore (lines.ToArray ());
     }
 
     static public void SavePlayerWinRatio () {
@@ -519,7 +521,7 @@ public class RatingClass {
         for (int x = 0; x < winner.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + winner [x].ToString ());
         }
-        ServerData.SaveRatingPlayerWinRatio (lines.ToArray ());
+        RatingData.SaveRatingPlayerWinRatio (lines.ToArray ());
     }
 
     static public void SaveCardNumberWinRatio () {
@@ -527,7 +529,7 @@ public class RatingClass {
         for (int x = 0; x < cardNumberWinRatio.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + cardNumberWinRatio [x].ToString ());
         }
-        ServerData.SaveRatingCardNumberWinRatio (lines.ToArray ());
+        RatingData.SaveRatingCardNumberWinRatio (lines.ToArray ());
     }
 
     static public void SaveCardPopularity () {
@@ -535,11 +537,11 @@ public class RatingClass {
         for (int x = 0; x < cardPopularity.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + cardPopularity [x].ToString ());
         }
-        ServerData.SaveRatingCardPopularity (lines.ToArray ());
+        RatingData.SaveRatingCardPopularity (lines.ToArray ());
     }
 
     static public void LoadCardPopularity () {
-        string [] lines = ServerData.GetRatingPopularity ();
+        string [] lines = RatingData.GetRatingPopularity ();
         Load (lines, cardPopularity);
     }
 
@@ -548,7 +550,7 @@ public class RatingClass {
         for (int x = 0; x < turn.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + turn [x].ToString ());
         }
-        ServerData.SaveRatingTurn (lines.ToArray ());
+        RatingData.SaveRatingTurn (lines.ToArray ());
     }
 
     static public void SaveEdgeDanger () {
@@ -556,7 +558,7 @@ public class RatingClass {
         for (int x = 0; x < turn.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + edgeDanger [x].ToString ());
         }
-        ServerData.SaveRatingEdgeDanger (lines.ToArray ());
+        RatingData.SaveRatingEdgeDanger (lines.ToArray ());
     }
 
     static public void SaveMultiTargetDanger () {
@@ -564,7 +566,7 @@ public class RatingClass {
         for (int x = 0; x < turn.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + multiTargetDanger [x].ToString ());
         }
-        ServerData.SaveRatingMultiTargetDanger (lines.ToArray ());
+        RatingData.SaveRatingMultiTargetDanger (lines.ToArray ());
     }
 
     static public void SaveAISettings () {
@@ -653,7 +655,7 @@ public class RatingClass {
             s += " [" + x.ToString () + "] " + AItoken_TokenSynergy [x].ToString ();
         }
         lines.Add (s);
-        ServerData.SaveRatingAISettings (lines.ToArray ());
+        RatingData.SaveRatingAISettings (lines.ToArray ());
     }
 
     static public void SaveSurroundDanger () {
@@ -661,7 +663,7 @@ public class RatingClass {
         for (int x = 0; x < turn.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + surroundDanger [x].ToString ());
         }
-        ServerData.SaveRatingSurroundDanger (lines.ToArray ());
+        RatingData.SaveRatingSurroundDanger (lines.ToArray ());
     }
 
     static public void SaveMapPlayer () {
@@ -673,7 +675,7 @@ public class RatingClass {
             }
             lines.Add (s);
         }
-        ServerData.SaveRatingMapPlayer (lines.ToArray ());
+        RatingData.SaveRatingMapPlayer (lines.ToArray ());
     }
 
     static public void SaveNumberOfCards () {
@@ -681,142 +683,142 @@ public class RatingClass {
         for (int x = 0; x < numberOfCards.Length; x++) {
             lines.Add ("[" + x.ToString () + "] " + numberOfCards [x].ToString ());
         }
-        ServerData.SaveRatingNumberOfCards (lines.ToArray ());
+        RatingData.SaveRatingNumberOfCards (lines.ToArray ());
     }
 
     static public void SaveAbility_AbilitySynergy () {
-        ServerData.SaveRatingAbility_AbilitySynergy (Save (ability_AbilitySynergy));
+        RatingData.SaveRatingAbility_AbilitySynergy (Save (ability_AbilitySynergy));
     }
 
     static public void LoadAbility_AbilitySynergy () {
-        string [] lines = ServerData.GetRatingAbility_AbilitySynergy ();
+        string [] lines = RatingData.GetRatingAbility_AbilitySynergy ();
         Load (lines, ability_AbilitySynergy);
     }
 
 
     static public void LoadAbility_TokenSynergy () {
-        string [] lines = ServerData.GetRatingAbility_TokenSynergy ();
+        string [] lines = RatingData.GetRatingAbility_TokenSynergy ();
         Load (lines, ability_TokenSynergy);
     }
 
 
     static public void SaveAbility_TokenSynergy () {
-        ServerData.SaveRatingAbility_TokenSynergy (Save (ability_TokenSynergy));
+        RatingData.SaveRatingAbility_TokenSynergy (Save (ability_TokenSynergy));
     }
 
     static public void LoadToken_TokenSynergy () {
-        string [] lines = ServerData.GetRatingToken_TokenSynergy ();
+        string [] lines = RatingData.GetRatingToken_TokenSynergy ();
         Load (lines, token_TokenSynergy);
     }
 
 
     static public void SaveToken_TokenSynergy () {
-        ServerData.SaveRatingToken_TokenSynergy (Save (token_TokenSynergy));
+        RatingData.SaveRatingToken_TokenSynergy (Save (token_TokenSynergy));
     }
 
     static public void SaveAbilityAfterAbility () {
-        ServerData.SaveRatingAbilityAfterAbility (Save (abilityAfterAbility));
+        RatingData.SaveRatingAbilityAfterAbility (Save (abilityAfterAbility));
     }
 
     static public void LoadAbilityAfterAbility () {
-        string [] lines = ServerData.GetRatingAbilityAfterAbility ();
+        string [] lines = RatingData.GetRatingAbilityAfterAbility ();
         Load (lines, abilityAfterAbility);
     }
 
     static public void SaveAbilityAfterToken () {
-        ServerData.SaveRatingAbilityAfterToken (Save (abilityAfterToken));
+        RatingData.SaveRatingAbilityAfterToken (Save (abilityAfterToken));
     }
 
 
     static public void LoadAbilityAfterToken () {
-        string [] lines = ServerData.GetRatingAbilityAfterToken ();
+        string [] lines = RatingData.GetRatingAbilityAfterToken ();
         Load (lines, abilityAfterToken);
     }
 
     static public void SaveTokenAfterAbility () {
-        ServerData.SaveRatingTokenAfterAbility (Save (tokenAfterAbility));
+        RatingData.SaveRatingTokenAfterAbility (Save (tokenAfterAbility));
     }
 
 
     static public void LoadTokenAfterAbility () {
-        string [] lines = ServerData.GetRatingTokenAfterAbility ();
+        string [] lines = RatingData.GetRatingTokenAfterAbility ();
         Load (lines, tokenAfterAbility);
     }
 
     static public void SaveTokenAfterToken () {
-        ServerData.SaveRatingTokenAfterToken (Save (tokenAfterToken));
+        RatingData.SaveRatingTokenAfterToken (Save (tokenAfterToken));
     }
 
 
     static public void LoadTokenAfterToken () {
-        string [] lines = ServerData.GetRatingTokenAfterToken ();
+        string [] lines = RatingData.GetRatingTokenAfterToken ();
         Load (lines, tokenAfterToken);
     }
     
     static public void LoadAbilityStackSize () {
-        string [] lines = ServerData.GetRatingAbilityStackSize ();
+        string [] lines = RatingData.GetRatingAbilityStackSize ();
         Load (lines, abilityStackSize);
     }
 
     static public void SaveAbilityStackSize () {
-        ServerData.SaveRatingAbilityStackSize (Save (abilityStackSize));
+        RatingData.SaveRatingAbilityStackSize (Save (abilityStackSize));
     }
 
     static public void LoadTokenStackSize () {
-        string [] lines = ServerData.GetRatingTokenStackSize ();
+        string [] lines = RatingData.GetRatingTokenStackSize ();
         Load (lines, tokenStackSize);
     }
 
     static public void SaveTokenStackSize () {
-        ServerData.SaveRatingTokenStackSize (Save (tokenStackSize));
+        RatingData.SaveRatingTokenStackSize (Save (tokenStackSize));
     }
 
     static public void LoadAbilityTokenStackSize () {
-        string [] lines = ServerData.GetRatingAbilityTokenStackSize ();
+        string [] lines = RatingData.GetRatingAbilityTokenStackSize ();
         Load (lines, abilityTokenStackSize);
     }
 
     static public void SaveAbilityTokenStackSize () {
-        ServerData.SaveRatingTokenStackSize (Save (abilityTokenStackSize));
+        RatingData.SaveRatingTokenStackSize (Save (abilityTokenStackSize));
     }
 
     static public void SaveAbilityAgainstAbility () {
-        ServerData.SaveRatingAbilityAgainstAbility (Save (abilityAgainstAbility));
+        RatingData.SaveRatingAbilityAgainstAbility (Save (abilityAgainstAbility));
     }
 
     static public void LoadAbilityAgainstAbility () {
-        string [] lines = ServerData.GetRatingAbilityAgainstAbility ();
+        string [] lines = RatingData.GetRatingAbilityAgainstAbility ();
         Load (lines, abilityAgainstAbility);
     }
 
     static public void SaveAbilityAgainstToken () {
-        ServerData.SaveRatingAbilityAgainstToken (Save (abilityAgainstToken));
+        RatingData.SaveRatingAbilityAgainstToken (Save (abilityAgainstToken));
     }
 
     static public void LoadAbilityAgainstToken () {
-        string [] lines = ServerData.GetRatingAbilityAgainstToken ();
+        string [] lines = RatingData.GetRatingAbilityAgainstToken ();
         Load (lines, abilityAgainstToken);
     }
 
     static public void SaveTokenAgainstAbility () {
-        ServerData.SaveRatingTokenAgainstAbility (Save (tokenAgainstAbility));
+        RatingData.SaveRatingTokenAgainstAbility (Save (tokenAgainstAbility));
     }
 
     static public void LoadTokenAgainstAbility () {
-        string [] lines = ServerData.GetRatingTokenAgainstAbility ();
+        string [] lines = RatingData.GetRatingTokenAgainstAbility ();
         Load (lines, tokenAgainstAbility);
     }
 
     static public void SaveTokenAgainstToken () {
-        ServerData.SaveRatingTokenAgainstToken (Save (tokenAgainstToken));
+        RatingData.SaveRatingTokenAgainstToken (Save (tokenAgainstToken));
     }
 
     static public void LoadTokenAgainstToken () {
-        string [] lines = ServerData.GetRatingTokenAgainstToken ();
+        string [] lines = RatingData.GetRatingTokenAgainstToken ();
         Load (lines, tokenAgainstToken);
     }
 
-    static float minValue = 0.45f;
+    static float minValue = 0.44f;
 
     static public void Load (string [] lines, float [] array) {
         for (int x = 0; x < array.GetLength (0); x++) {
@@ -830,7 +832,7 @@ public class RatingClass {
                 array [x] = 0.5f;
             }
             if (array != cardPopularity) {
-                array [x] = Mathf.Min (array [x], minValue);
+                array [x] = Mathf.Max (array [x], minValue);
             }
         }
     }
@@ -851,7 +853,7 @@ public class RatingClass {
                     } else {
                         array [x, y, y2] = 0.5f;
                     }
-                    array [x, y, y2] = Mathf.Min (array [x, y, y2], minValue);
+                    array [x, y, y2] = Mathf.Max (array [x, y, y2], minValue);
                 }
             }
         }
@@ -891,7 +893,7 @@ public class RatingClass {
                         } else {
                             array [x, x2, y, y2] = 0.5f;
                         }
-                        array [x, x2, y, y2] = Mathf.Min (array [x, x2, y, y2], minValue);
+                        array [x, x2, y, y2] = Mathf.Max (array [x, x2, y, y2], minValue);
                     }
                 }
             }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AIClass {
 
+    static public float maxCardValue = 0;
+
     int difficulty = 100;
 
     public int edgeDanger = 8;
@@ -39,22 +41,22 @@ public class AIClass {
         surroundDanger = Random.Range (3, 8);
         multiTargetDanger = Random.Range (0, 8);
 
-        abilityRow = Random.Range (7, 13);
-        tokenRow = Random.Range (8, 14);
-        abilityTokenRow = Random.Range (12, 27);
+        abilityRow = Random.Range (7, 14);
+        tokenRow = Random.Range (8, 16);
+        abilityTokenRow = Random.Range (12, 28);
 
-        abilityStackSize = Random.Range (3, 8);
-        tokenStackSize = Random.Range (2, 6);
-        abilityTokenStackSize = Random.Range (5, 8);
+        abilityStackSize = Random.Range (3, 7);
+        tokenStackSize = Random.Range (0, 6);
+        abilityTokenStackSize = Random.Range (3, 8);
 
-        abilityAfterAbility = Random.Range (5, 9);
-        abilityAfterToken = Random.Range (2, 11);
-        tokenAfterAbility = Random.Range (3, 12);
-        tokenAfterToken = Random.Range (1, 11);
+        abilityAfterAbility = Random.Range (4, 9);
+        abilityAfterToken = Random.Range (1, 14);
+        tokenAfterAbility = Random.Range (1, 14);
+        tokenAfterToken = Random.Range (0, 12);
 
-        ability_AbilitySynergy = Random.Range (4, 8);
-        ability_TokenSynergy = Random.Range (5, 17);
-        token_TokenSynergy = Random.Range (4, 7);
+        ability_AbilitySynergy = Random.Range (4, 10);
+        ability_TokenSynergy = Random.Range (6, 19);
+        token_TokenSynergy = Random.Range (6, 9);
 
         abilityAgainstAbility = Random.Range (4, 7);
         abilityAgainstToken = Random.Range (4, 7);

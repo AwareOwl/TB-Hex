@@ -34,6 +34,8 @@ public class InputController : MonoBehaviour {
             if (timer > 5) {
                 timer -= 30;
                 RatingClass.SaveEverything ();
+                Debug.Log (AIClass.maxCardValue);
+                AIClass.maxCardValue = 0;
                 AIRatingMenu.RefreshPage ();
             }
         }

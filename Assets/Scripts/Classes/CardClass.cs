@@ -61,6 +61,8 @@ public class CardClass {
         switch (abilityType) {
             case 0:
             case 11:
+            case 22:
+            case 39:
                 this.abilityArea = 0;
                 break;
             default:

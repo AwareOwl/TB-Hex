@@ -127,19 +127,19 @@ public class ServerVersionManager : VersionManager {
     }
 
     static public void ExportRating () {
-        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
-        ServerData.SaveRatingAbility_TokenSynergy (GetResource ("ExportFolder/Rating/AbilityTokenSynergy"));
+        RatingData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
+        RatingData.SaveRatingAbility_TokenSynergy (GetResource ("ExportFolder/Rating/AbilityTokenSynergy"));
 
-        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
-        ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
-        ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
-        ServerData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
+        RatingData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
+        RatingData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
+        RatingData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
+        RatingData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
 
-        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
-        ServerData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
-        ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
-        ServerData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
-        ServerData.SaveRatingAbilityTokenOnRow (GetResource ("ExportFolder/Rating/AbilityTokenOnRow"));
+        RatingData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
+        RatingData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
+        RatingData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
+        RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
+        RatingData.SaveRatingAbilityTokenOnRow (GetResource ("ExportFolder/Rating/AbilityTokenOnRow"));
     }
 
     static public void ConvertTo0_6_0_11 () {
@@ -290,13 +290,6 @@ public class ServerVersionManager : VersionManager {
     }
 
     static public void ConvertTo0_4_0_7 () {
-        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
-        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
-        ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
-        ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
-        ServerData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
-        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
-        ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
 
         int [] boardIds = ServerData.GetAllBoards ();
         foreach (int boardId in boardIds) {
@@ -369,13 +362,6 @@ public class ServerVersionManager : VersionManager {
     }
 
     static public void ConvertTo0_2_0_11 () {
-        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
-        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
-        ServerData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
-        ServerData.SaveRatingTokenAfterAbility (GetResource ("ExportFolder/Rating/TokenAfterAbility"));
-        ServerData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
-        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
-        ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
         ServerData.SetGameModeIsOfficial (1, true);
         ServerData.SetGameModeIsOfficial (2, true);
         ServerData.SetCardPool (3, GetResource ("ExportFolder/v0.3/CardPools/CardPool"));
@@ -431,10 +417,6 @@ public class ServerVersionManager : VersionManager {
                 ServerData.SetGameModeBoard (x, y);
             }
         }
-        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
-        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
-        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
-        ServerData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
         GameVersion = 0;
         PathVersion = 1;
         HotfixVersion = 1;
@@ -459,9 +441,6 @@ public class ServerVersionManager : VersionManager {
         ServerData.SaveNewBoard (1, "Path0.1.0.0", "Board3", GetResource ("ExportFolder/v0.1/Boards/Board3"));
         ServerData.SaveNewBoard (1, "Path0.1.0.0", "Board4", GetResource ("ExportFolder/v0.1/Boards/Board4"));
         ServerData.SetCardPool (1, GetResource ("ExportFolder/v0.1/CardPools/CardPool"));
-        ServerData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
-        ServerData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
-        ServerData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
         GameVersion = 0;
         PathVersion = 0;
         HotfixVersion = 0;

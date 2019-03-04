@@ -37,4 +37,4 @@
 [36] Podmiana
 [37] Odwrócenie ról
 [38] Przygotowanie
-[39] Nieopłacalna powtarzalność
+[39] Ryzykowny start

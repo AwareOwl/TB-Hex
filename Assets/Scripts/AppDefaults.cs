@@ -192,6 +192,7 @@ public class AppDefaults {
             // Blue
             case 20:
             case 39:
+            case 40:
                 return new Color (0.2f, 0.2f, 1);
         }
         return Color.white;

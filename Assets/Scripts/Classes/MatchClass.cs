@@ -438,7 +438,7 @@ public class MatchClass {
             topCardNumber = player.GetTopCardNumber (stackNumber);
         }
         SaveThisTurnMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
-        UseAbility (tile, playerNumber, card.abilityArea, abilityType);
+        UseAbility (tile, playerNumber, stackNumber, card.abilityArea, abilityType);
         SaveLastMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
         AILearning (abilityType);
         updateBoard = true;
@@ -485,7 +485,7 @@ public class MatchClass {
         if (LastMove == null) {
             return null;
         } else {
-            return Player [move.playerNumber].GetCard (move.usedCardStack, move.usedCardNumber);
+            return Player [move.playerNumber].GetCard (move.stackNumber, move.usedCardNumber);
         }
     }
 
@@ -568,7 +568,7 @@ public class MatchClass {
         return info;
     }
 
-    public void UseAbility (TileClass tile, int playerNumber, int abilityArea, int abilityType) {
+    public void UseAbility (TileClass tile, int playerNumber, int stackNumber, int abilityArea, int abilityType) {
         abilityType = VerifyAbilityType (tile, abilityType);
         VectorInfo info = GetVectorInfo (tile, abilityArea, abilityType, tile.token);
         if (visualMatch != null) {
@@ -582,7 +582,7 @@ public class MatchClass {
         UseAbilityTrigger1 (info, tile, playerNumber, abilityType, tokenType);
         UseAbilityTrigger2 (info, tile, playerNumber, abilityType, tokenType);
         UseAbilityVector (info, tile, playerNumber, abilityType, tokenType);
-        UseAbilityConstant (info, tile, playerNumber, abilityType, tokenType);
+        UseAbilityConstant (info, tile, playerNumber, stackNumber, abilityType, tokenType);
     }
 
     public void AILearning (int abilityType) {
@@ -790,12 +790,18 @@ public class MatchClass {
         }
     }
 
-    public void UseAbilityConstant (VectorInfo info, TileClass tile, int playerNumber, int abilityType, int tokenType) {
+    public void UseAbilityConstant (VectorInfo info, TileClass tile, int playerNumber, int stackNumber, int abilityType, int tokenType) {
         switch (abilityType) {
             case 20:
                 if (info.TargetPlayers != null) {
                     foreach (int pNumber in info.TargetPlayers) {
+                        if (Player.Length <= pNumber) {
+                            continue;
+                        }
                         PlayerClass player = Player [pNumber];
+                        if (player == null) {
+                            continue;
+                        }
                         HandClass hand = player.GetHand ();
                         if (hand != null) {
                             for (int y = 0; y < hand.stack.Length; y++) {
@@ -828,10 +834,23 @@ public class MatchClass {
             case 38:
                 ModifyTempValue (tile, info.differentTypesCount);
                 break;
+            case 39: 
+                {
+                    PlayerClass player = Player [playerNumber];
+                    CardClass card = player.GetTopCard (stackNumber);
+                    card.tokenValue -= 1;
+                }
+                break;
             case 40:
                 if (info.TargetPlayers != null) {
                     foreach (int pNumber in info.TargetPlayers) {
+                        if (Player.Length <= pNumber) {
+                            continue;
+                        }
                         PlayerClass player = Player [pNumber];
+                        if (player == null) {
+                            continue;
+                        }
                         CardClass card = player.GetLastMoveCard ();
                         if (card != null) {
                             card.tokenValue--;

@@ -20,6 +20,9 @@ public class VisualTile {
         this.tile = tile;
         CreateTile (tile.x, tile.y);
         EnableTile (tile.enabled);
+        if (tile.remains) {
+            CreateRemains ();
+        }
     }
 
     public void DelayedCreateRemains () {
@@ -47,7 +50,6 @@ public class VisualTile {
     }
 
     void CreateTile (int x, int y) {
-        Debug.Log ("Wat");
         Anchor = EnvironmentScript.CreateTile (x, -0.5f, y);
         Tile = Anchor.transform.Find ("Tile").gameObject;
         //Tile.AddComponent<UIController> ();
