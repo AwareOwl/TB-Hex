@@ -17,7 +17,7 @@
 [16] Gracz %s wygrał ten mecz.
 [17] Próg %d punktów został osiągnięty.
 [18] Upłynęło %d tur.
-[19] Plansza została zapełniona.
+[19] Brak możliwych ruchów.
 [20] Gra zakończyła się remisem.
 [21] Wersja gry na serwerze jest inna. Jeśli chcesz połączyć się z serwerem, musisz uruchomić wersję %s.
 [22] Dostępna pula kart
@@ -137,3 +137,13 @@
 [136] Modyfikuj ustawienia tego trybu gry
 [137] Przejrzyj ustawienia tego trybu gry
 [138] Dostępne wersje potyczek
+[139] Pokaż filtry wartości żetonów
+[140] Pokaż filtry typów żetonów
+[141] Pokaż filtry typów umiejętności
+[142] Pokaż filtry obszarów umiejętności
+[143] Puzzle
+[144] Puzzle są łamigłówkami w których musisz wykorzystać do 4 dostępnych kart w taki sposób by wygrać mecz. Przeciwnik nie wykonuje tam ruchów, ale zaczyna z dużą przewagą. Liczba tur jest ograniczona.
+[145] Nieukończone
+[146] Ukończone
+[147] Lista puzzli
+[148] Użyte karty są umieszczane na spodzie stosu

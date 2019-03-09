@@ -22,7 +22,7 @@ public class AvailableMatchTypesEditor : GOUI {
 
     private void Awake () {
         CreateAvailableMatchTypeEditor ();
-        CurrentSubGUI = this;
+        CurrentSubGOUI = this;
     }
 
     static public void ShowAvailableMatchTypesEditor () {

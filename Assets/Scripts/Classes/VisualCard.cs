@@ -23,6 +23,16 @@ public class VisualCard {
         SetState (card);
     }
 
+    public void DestroyCardVisual () {
+        VisualEffectScript VES = Anchor.AddComponent<VisualEffectScript> ();
+        VES.destroyOnEnd = true;
+        VES.SetLastScale (Anchor.transform.localScale);
+        VES.AddPhase ();
+        VES.SetLastScale (Vector3.zero);
+        VES.SetLastPhaseTimer (0.25f);
+    }
+
+
     public void SetState (CardClass card) {
         SetState (card.tokenType, card.tokenValue, card.abilityArea, card.abilityType);
     }
@@ -43,7 +53,7 @@ public class VisualCard {
             case 0:
             case 11:
             case 22:
-            case 39:
+            case 38:
                 Area.DisableAbilityArea ();
                 break;
         }

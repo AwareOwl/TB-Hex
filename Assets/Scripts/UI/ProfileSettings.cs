@@ -12,7 +12,7 @@ public class ProfileSettings : GOUI {
     // Use this for initialization
     void Awake () {
         CreateProfileSettings ();
-        CurrentGUI = this;
+        CurrentGOUI = this;
     }
 
     static public void ApplySettings () {

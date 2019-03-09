@@ -407,11 +407,15 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static public Color TileColor (bool enabled) {
+        return TileColor (enabled, Theme);
+    }
+
+    static public Color TileColor (bool enabled, int theme) {
         int disabledMultiplier = 0;
         if (!enabled) {
             disabledMultiplier += 1;
         }
-        switch (Theme) {
+        switch (theme) {
             case 1:
                 if (Random.Range (0, 2) == 0) {
                     return new Color (0.5f, Random.Range (0.51f, 0.56f), 0.47f);
@@ -436,8 +440,9 @@ public class EnvironmentScript : MonoBehaviour {
                 } else {
                     return new Color (Random.Range (0.21f, 0.29f), 0.54f - disabledMultiplier * 0.2f, Random.Range (0.20f, 0.26f) - disabledMultiplier * 0.1f);
                 }
+            default:
+                return new Color (1, 1, 1);
         }
-        return new Color (1, 1, 1);
     }
 
     static public GameObject CreateTile () {

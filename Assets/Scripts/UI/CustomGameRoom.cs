@@ -18,7 +18,7 @@ public class CustomGameRoom : GOUI {
 
     // Use this for initialization
     void Awake () {
-        CurrentGUI = this;
+        CurrentGOUI = this;
         CreateCustomGameRoom ();
     }
 
@@ -35,7 +35,7 @@ public class CustomGameRoom : GOUI {
         if (row == null) {
             row = new RowClass [CustomGameClass.GetNumberOfSlots (matchType)];
             for (int x = 0; x < row.Length; x++) {
-                row [x] = CurrentGUI.gameObject.AddComponent<RowClass> ();
+                row [x] = CurrentGOUI.gameObject.AddComponent<RowClass> ();
                 row [x].Init (x, RowClass.RoomUsers);
             }
         }

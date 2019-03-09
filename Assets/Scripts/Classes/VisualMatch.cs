@@ -230,6 +230,15 @@ public class VisualMatch : MonoBehaviour {
         client.ShuffleCardVisual (card);
     }
 
+    public void DestroyCardVisual (VisualCard vCard) {
+        StartCoroutine (IEDestroyCardVisual (vCard));
+    }
+
+    public IEnumerator IEDestroyCardVisual (VisualCard vCard) {
+        yield return new WaitForSeconds (GlobalTimer);
+        vCard.DestroyCardVisual ();
+    }
+
     public void UpdateCardVisuals (PlayerClass player, int stackNumber, int stackSize, int cardNumber, int position) {
         StartCoroutine (IEUpdateCardVisuals (player, stackNumber, stackSize, cardNumber, position));
     }
@@ -237,6 +246,15 @@ public class VisualMatch : MonoBehaviour {
     public IEnumerator IEUpdateCardVisuals (PlayerClass client, int stackNumber, int stackSize, int cardNumber, int position) {
         yield return new WaitForSeconds (GlobalTimer);
         client.UpdateCardVisuals (stackNumber, stackSize, cardNumber, position);
+    }
+
+    public void UpdateTurnsLeft (int turnsLeft) {
+        StartCoroutine (IEUpdateTurnsLeft (turnsLeft));
+    }
+
+    public IEnumerator IEUpdateTurnsLeft (int turnsLeft) {
+        yield return new WaitForSeconds (GlobalTimer);
+        InGameUI.SetTurn (turnsLeft);
     }
 
 

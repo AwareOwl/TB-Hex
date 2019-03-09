@@ -7,6 +7,8 @@ public class HandClass  {
     int numberOfStacks;
     public StackClass [] stack;
 
+    public bool atLeast1Enabled = true;
+
     public HandClass () {
         Init (4);
     }
@@ -16,11 +18,15 @@ public class HandClass  {
     }
 
     public HandClass (HandClass hand) {
+        if (hand == null) {
+            return;
+        }
         this.numberOfStacks = hand.numberOfStacks;
         this.stack = new StackClass [numberOfStacks];
         for (int x = 0; x < numberOfStacks; x++) {
             stack [x] = new StackClass (hand.stack [x]);
         }
+        this.atLeast1Enabled = hand.atLeast1Enabled;
     }
 
     public HandClass (ClientInterface client) {
@@ -74,6 +80,21 @@ public class HandClass  {
         }
     }
 
+    public void DisableCard (int stackNumber, int cardNumber) {
+        stack [stackNumber].DisableCard (cardNumber);
+        CheckIfAtLeast1Enabled ();
+    }
+
+    public void CheckIfAtLeast1Enabled () {
+        atLeast1Enabled = false;
+        int count = stack.Length;
+        for (int x = 0; x < count; x++) {
+            if (stack [x].atLeast1Enabled) {
+                atLeast1Enabled = true;
+            }
+        }
+    }
+
     public void RemoveCard (int stackNumber, int cardNumber) {
         stack [stackNumber].RemoveCard (cardNumber);
     }
@@ -95,7 +116,8 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output = Mathf.Clamp (output, 0.7f, 2.1f);
+        output *= 0.8f;
+        output = Mathf.Clamp (output, 0.7f, 1.2f);
         return output;
     }
 
@@ -125,10 +147,20 @@ public class HandClass  {
         int [] stackSize = new int [numberOfStacks];
         float SumOfValues = -1;
 
-        for (int x = 0; x < numberOfStacks; x++) {
-            stackSize [x] = minimumNumberOfCardsOnStack;
-            while (stackSize [x] < 5 && Random.Range (0, 2) == 0) {
-                stackSize [x]++;
+        int usedCount = 0;
+        for (int y = 0; y < 5; y++) {
+            for (int x = 0; x < numberOfStacks; x++) {
+                stackSize [x] = minimumNumberOfCardsOnStack;
+                if (stackSize [x] == y && Random.Range (0, 2) == 0) {
+                    stackSize [x]++;
+                    usedCount++;
+                }
+                if (usedCount == count) {
+                    break;
+                }
+            }
+            if (usedCount == count) {
+                break;
             }
         }
 
@@ -167,7 +199,7 @@ public class HandClass  {
                             prevCard.tokenType, prevCard.tokenValue], AI.tokenAfterToken);
                     }
                     AIClass.maxCardValue = Mathf.Max (AIClass.maxCardValue, modifier [z]);
-                    modifier [z] = Mathf.Min (modifier [z], 100000);
+                    modifier [z] = Mathf.Min (modifier [z], 10000);
                     SumOfValues += modifier [z];
                 }
                 if (SumOfValues == 0) {
@@ -204,7 +236,10 @@ public class HandClass  {
                     }
                     CardValue [z] *= Normalize (RatingClass.ability_TokenSynergy [abilityType, abilityArea, tokenType2, tokenValue2], AI.ability_TokenSynergy);
                     CardValue [z] *= Normalize (RatingClass.ability_TokenSynergy [abilityType2, abilityArea2, tokenType, tokenValue], AI.ability_TokenSynergy);
-                    
+
+                    if (CardValue [z] != 0) {
+                        CardValue [z] = Mathf.Max (0.01f, CardValue [z]);
+                    }
 
                 }
 
@@ -272,9 +307,11 @@ public class HandClass  {
                 if (cardPool.Card.Count <= cardNumber) {
                     continue;
                 }
-                stack [x].card.Add (cardPool.Card [cardNumber]);
+                stack [x].Add (cardPool.Card [cardNumber]);
                 int abilityArea = int.Parse (word [y * 2 + 1]);
-                if (stack [x].card [row].abilityArea < 3 && abilityArea < 3) {
+                if (stack [x].card [row].abilityArea == 0) {
+
+                } else if (stack [x].card [row].abilityArea < 3 && abilityArea < 3) {
                     stack [x].card [row].abilityArea = abilityArea;
                 }
                 row ++;
@@ -292,7 +329,7 @@ public class HandClass  {
             string [] word = lines [x * 2 + 1].Split (new char [] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
             for (int y = 0; y < word.Length / 4; y++) {
                 CardClass card = new CardClass (int.Parse (word [y * 4 + 3]), int.Parse (word [y * 4 + 2]), int.Parse (word [y * 4 + 1]), int.Parse (word [y * 4]));
-                stack [x].card.Add (card);
+                stack [x].Add (card);
             }
         }
     }

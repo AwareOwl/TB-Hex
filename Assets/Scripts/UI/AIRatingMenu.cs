@@ -12,7 +12,7 @@ public class AIRatingMenu : GOUI {
 
     void Awake () {
         CreateAIRatingMenu ();
-        CurrentGUI = this;
+        CurrentGOUI = this;
     }
 
     private void Update () {

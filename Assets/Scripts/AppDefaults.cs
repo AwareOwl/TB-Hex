@@ -9,7 +9,7 @@ public class AppDefaults {
     static public Color Yellow = new Color (1, 1, 0);
 
     static public int AvailableTokens = 13; // Always + 1, to include null
-    static public int AvailableAbilities = 40; // Always + 1, to include null
+    static public int AvailableAbilities = 39; // Always + 1, to include null
     static public int AvailableAvatars = 8; // Always + 1, to include null
 
     static public Sprite [] Avatar;
@@ -178,7 +178,6 @@ public class AppDefaults {
             case 27:
             case 28:
             case 32:
-            case 38:
                 return Yellow;
             // Purple
             case 7:
@@ -191,7 +190,7 @@ public class AppDefaults {
                 return new Color (0.8f, 0, 1);
             // Blue
             case 20:
-            case 39:
+            case 38:
             case 40:
                 return new Color (0.2f, 0.2f, 1);
         }

@@ -137,3 +137,13 @@
 [136] Edit settings of this game mode
 [137] View settings of this game mode
 [138] Available match types
+[139] Show token value filters
+[140] Show token type filters
+[141] Show ability type filters
+[142] Show ability area filters
+[143] Puzzles
+[144] In puzzles you need to use up to 4 available cards in order to win match. Opponent doesn't make any moves, but he starts with huge advantage. Number of turns is limited.
+[145] Unfinished
+[146] Finished
+[147] List of puzzles
+[148] Used cards are placed on the bottom of stack.

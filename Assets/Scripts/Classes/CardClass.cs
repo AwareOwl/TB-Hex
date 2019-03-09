@@ -54,21 +54,23 @@ public class CardClass {
         }
     }
 
-    public void SetState (int value, int tokenType, int abilityArea, int abilityType) {
-        this.tokenType = tokenType;
-        this.tokenValue = value;
-        this.abilityType = abilityType;
+    public int GetAbilityArea (int abilityType, int abilityArea) {
         switch (abilityType) {
             case 0:
             case 11:
             case 22:
-            case 39:
-                this.abilityArea = 0;
-                break;
+            case 38:
+                return 0;
             default:
-                this.abilityArea = abilityArea;
-                break;
+                return abilityArea;
         }
+    }
+
+    public void SetState (int value, int tokenType, int abilityArea, int abilityType) {
+        this.tokenType = tokenType;
+        this.tokenValue = value;
+        this.abilityType = abilityType;
+        this.abilityArea = GetAbilityArea (abilityType, abilityArea);
     }
 
     public string ToString () {
@@ -80,8 +82,9 @@ public class CardClass {
         cardNumber = int.Parse (s [0]);
         tokenValue = int.Parse (s [1]);
         tokenType = int.Parse (s [2]);
-        abilityArea = int.Parse (s [3]);
         abilityType = int.Parse (s [4]);
+        abilityArea = int.Parse (s [3]);
+        abilityArea = GetAbilityArea (abilityType, abilityArea);
     }
 
     public void EnableVisual () {

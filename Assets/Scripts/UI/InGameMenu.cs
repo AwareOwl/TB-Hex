@@ -18,7 +18,7 @@ public class InGameMenu : GOUI {
     public void Start () {
 
         CreateInGameMenu ();
-        CurrentSubGUI = this;
+        CurrentSubGOUI = this;
     }
 
     static public void ShowInGameMenu () {

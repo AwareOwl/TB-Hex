@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.6.0.11");
+            CmdCompareServerVersion ("0.7.0.3");
         }
     }
 
@@ -294,20 +294,20 @@ public class ClientInterface : NetworkBehaviour {
     public void TargetDownloadGameModeSettingsToEditor (NetworkConnection target, 
         bool isClientOwner,
         bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
-        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack) {
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack) {
         GameModeSettingsEditor.ShowGameModeSettingsEditor (
             isClientOwner, 
             hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue, 
-            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack);
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack);
     }
 
     [Command]
     public void CmdSaveGameModeSettings (int id,
         bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
-        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack) {
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack) {
         ServerLogic.SaveGameModeSettings (this, id,
             hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue,
-            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack);
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack);
     }
 
     [Command]

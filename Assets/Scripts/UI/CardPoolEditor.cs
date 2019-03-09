@@ -43,7 +43,7 @@ public class CardPoolEditor : GOUI {
         NumberOfButtons [4] = AppDefaults.AvailableAbilities;
         editMode = GameModeEditor.editMode;
         CreateCardPoolEditorMenu ();
-        CurrentGUI = this;
+        CurrentGOUI = this;
 
         DestroyTemplateButtons ();
         ClientLogic.MyInterface.CmdDownloadCardPoolToEditor (currentId);

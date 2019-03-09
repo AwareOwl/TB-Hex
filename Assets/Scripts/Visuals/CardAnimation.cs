@@ -46,7 +46,7 @@ public class CardAnimation : MonoBehaviour {
             Vector3 dest = Vector3.Lerp (transform.localPosition, new Vector3 ((x + 0.5f - numberOfStacks / 2f) * 1.3f, 2 - 0.2f * y + 0.2f * stackSize, -5.55f - 1.3f * y + 1.3f * (stackSize - 1)), Time.deltaTime * 6);
             transform.localPosition = dest + new Vector3 (0, 0, -Mathf.Sin (shuffleTimer / shuffleTime * Mathf.PI) * shuffleLength);
         }
-        if (stack == InGameUI.SelectedStack && position == 0) {
+        if (stack == InGameUI.selectedStack && position == 0) {
             visual.EnableHighlight ();
         } else {
             visual.DisableHighlight ();

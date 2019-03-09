@@ -54,7 +54,7 @@ public class PlayerClass {
         this.score = player.score;
         this.scoreIncome = player.scoreIncome;
         this.properties = player.properties;
-        this.hand = player.hand;
+        this.hand = new HandClass (player.hand);
         this.LastMove = player.LastMove;
     }
 
@@ -70,6 +70,9 @@ public class PlayerClass {
     }
 
     public StackClass GetStack (int stackNumber) {
+        if (GetHand () == null) {
+            return null;
+        }
         return GetHand ().GetStack (stackNumber);
     }
 
@@ -89,19 +92,26 @@ public class PlayerClass {
         return GetHand ().stack [stackNumber].topCardNumber;
     }
 
-    public void MoveTopCard (int stackNumber) {
+    public void MoveTopCard (int stackNumber, bool disable) {
         if (GetHand () == null) {
             return;
         }
         StackClass stack = GetStack (stackNumber);
-        stack.MoveTopCard ();
         int topCard = GetTopCardNumber (stackNumber);
+        stack.MoveTopCard ();
         int stackSize = GetStackSize (stackNumber);
         if (visualPlayer != null) {
             for (int x = 0; x < stackSize; x++) {
                 DelayedUpdateCardVisuals (stackNumber, x);
             }
-            DelayedShuffleCardVisual (stackNumber, topCard);
+            if (!disable) {
+                DelayedShuffleCardVisual (stackNumber, topCard);
+            } else {
+                DelayedDestroyCardVisual (stackNumber, topCard);
+            }
+        }
+        if (disable) {
+            hand.DisableCard (stackNumber, topCard);
         }
     }
 
@@ -143,6 +153,14 @@ public class PlayerClass {
         anchor.GetComponent<CardAnimation> ().shuffleTimer = CardAnimation.shuffleTime;
     }
 
+    public void DelayedDestroyCardVisual (int stackNumber, int cardNumber) {
+        CardClass card = GetCard (stackNumber, cardNumber);
+        VisualCard vCard = card.visualCard;
+        if (vCard != null) {
+            VisualMatch.instance.DestroyCardVisual (vCard);
+            card.visualCard = null;
+        }
+    }
     public void SetScoreIncome (int scoreIncome) {
         this.scoreIncome = scoreIncome;
     }
@@ -161,7 +179,7 @@ public class PlayerClass {
         if (visualPlayer == null) {
             visualPlayer = new VisualPlayer ();
 
-            if (properties.playerNumber == InGameUI.MyPlayerNumber) {
+            if (properties.playerNumber == InGameUI.myPlayerNumber) {
                 for (int x = 0; x < GetNumberOfStacks (); x++) {
                     for (int y = 0; y < GetStackSize (x); y++) {
                         CardClass card = GetCard (x, y);

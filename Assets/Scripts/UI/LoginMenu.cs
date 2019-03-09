@@ -24,7 +24,7 @@ public class LoginMenu : GOUI {
         instance = this;
         CreateLoginMenu ();
         CameraScript.SetStandardCamera ();
-        CurrentGUI = this;
+        CurrentGOUI = this;
     }
 
     static public void ShowLoginMenu () {

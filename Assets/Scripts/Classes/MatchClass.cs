@@ -198,18 +198,34 @@ public class MatchClass {
         NewTurn ();
     }
 
+    public int TurnsLeft () {
+        return Properties.turnLimit - turn + 1;
+    }
+
     public void NewTurn () {
         ThisTurnMove = null;
         IncrementTurnOfPlayer ();
         turn++;
+        if (visualMatch != null && Properties.turnWinCondition) {
+            visualMatch.UpdateTurnsLeft (TurnsLeft ());
+        }
     }
 
     public void IncrementTurnOfPlayer () {
         int newTurnOfPlayer = turnOfPlayer;
         do {
             newTurnOfPlayer = Mathf.Max (1, (newTurnOfPlayer + 1) % (numberOfPlayers + 1));
-        } while (Player [newTurnOfPlayer] == null);
+        } while (!AbleToExecuteTurn (newTurnOfPlayer) && newTurnOfPlayer != turnOfPlayer);
         SetTurnOfPlayer (newTurnOfPlayer);
+    }
+
+    public bool AbleToExecuteTurn (int playerNumber) {
+        PlayerClass player = Player [playerNumber];
+        if (player == null) {
+            return false;
+        }
+        HandClass hand = player.GetHand ();
+        return !player.properties.conceded && (hand == null || player.hand.atLeast1Enabled);
     }
 
     public void SetTurnOfPlayer (int turnOfPlayer) {
@@ -266,7 +282,7 @@ public class MatchClass {
                 return;
             }
         }
-        if (Board.GetEmptyTiles ().Count == 0) {
+        if (Board.GetEmptyTiles ().Count == 0 || !AbleToExecuteTurn (turnOfPlayer)) {
             FinishGame (3, 0);
             return;
         }
@@ -337,10 +353,6 @@ public class MatchClass {
         Player [playerNumber].RotateTopCard (stackNumber);
     }
 
-    public void MoveTopCard (int playerNumber, int stackNumber) {
-        Player [playerNumber].MoveTopCard (stackNumber);
-    }
-
     public void MakeRandomMove () {
         List<TileClass> tiles = Board.GetEmptyTiles ();
         if (tiles.Count == 0) {
@@ -364,6 +376,20 @@ public class MatchClass {
         }
         PlayerClass player = Player [playerNumber];
         CardClass card = player.GetTopCard (stackNumber);
+        StackClass stack = Player [playerNumber].GetStack (stackNumber);
+        if (real) {
+            for (int p = 1; p < 3; p++) {
+                //Debug.Log (turn + " " + p + " " + Player [p].hand.atLeast1Enabled);
+                for (int s = 0; s < 4; s++) {
+                    if (InputController.debuggingEnabled) {
+                        Debug.Log (turn + " " + p + " " + Player [p].hand.atLeast1Enabled + " " + s + " " + Player [p].GetStack (s).atLeast1Enabled);
+                    }
+                }
+            }
+        }
+        if (!Properties.usedCardsArePutOnBottomOfStack && stack != null && !stack.atLeast1Enabled) {
+            return;
+        }
         PlayCard (lastMoveId + 1, x, y, playerNumber, stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.tokenValue);
     }
 
@@ -444,7 +470,7 @@ public class MatchClass {
         updateBoard = true;
         UpdateBoard ();
         UpdateVisuals ();
-        player.MoveTopCard (stackNumber);
+        player.MoveTopCard (stackNumber, !Properties.usedCardsArePutOnBottomOfStack);
         EndTurn ();
     }
 
@@ -805,7 +831,7 @@ public class MatchClass {
                         HandClass hand = player.GetHand ();
                         if (hand != null) {
                             for (int y = 0; y < hand.stack.Length; y++) {
-                                player.MoveTopCard (y);
+                                player.MoveTopCard (y, false);
                             }
                         }
                     }
@@ -831,10 +857,7 @@ public class MatchClass {
                 ChangeType (tile1, type2);
                 ChangeType (tile2, type1);
                 break;
-            case 38:
-                ModifyTempValue (tile, info.differentTypesCount);
-                break;
-            case 39: 
+            case 38: 
                 {
                     PlayerClass player = Player [playerNumber];
                     CardClass card = player.GetTopCard (stackNumber);

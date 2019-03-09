@@ -26,7 +26,7 @@ public class PropertiesMenu : GOUI {
 
     public void Start () {
         CreateSetPropertiesMenu ();
-        CurrentSubGUI = this;
+        CurrentSubGOUI = this;
     }
 
     override public void DestroyThis () {

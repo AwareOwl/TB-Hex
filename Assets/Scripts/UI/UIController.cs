@@ -195,7 +195,23 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.SetEditorChangeSetProperties:
                 Tooltip.NewTooltip (transform, Language.ChangeSetNameOrIcon);
                 break;
-                
+            case UIString.SetEditorFilterMenu:
+                switch (number) {
+                    case 0:
+                        Tooltip.NewTooltip (transform, Language.ShowTokenValueFilters);
+                        break;
+                    case 1:
+                        Tooltip.NewTooltip (transform, Language.ShowTokenTypeFilters);
+                        break;
+                    case 2:
+                        Tooltip.NewTooltip (transform, Language.ShowAbilityTypeFilters);
+                        break;
+                    case 3:
+                        Tooltip.NewTooltip (transform, Language.ShowAbilityAreaFilters);
+                        break;
+                }
+                break;
+
             case UIString.ShowSetEditor:
                 Tooltip.NewTooltip (transform, Language.EditSet);
                 break;
@@ -429,6 +445,12 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.SetEditorAbout:
                 GOUI.ShowMessage (Language.GetSetEditorDescription ());
                 break;
+            case UIString.SetEditorFilterMenu:
+                SetEditor.ShowFilterMenu (number);
+                break;
+            case UIString.SetEditorFilterButton:
+                SetEditor.SelectFilterButton (number);
+                break;
 
             case UIString.ShowSetList:
                 SetList.ShowSetList ();
@@ -465,7 +487,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.SetEditorChangeSetProperties:
             case UIString.GameModeEditorChangeName:
             case UIString.ChangeBoardName:
-                GOUI.CurrentGUI.ShowPropertiesMenu ();
+                GOUI.CurrentGOUI.ShowPropertiesMenu ();
                 break;
             case UIString.BoardEditorSettings:
                 AvailableMatchTypesEditor.ShowAvailableMatchTypesEditor ();
@@ -595,6 +617,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.GameModeEditorSelectBoard:
                 GameModeEditor.ClickOnRow (id);
+                break;
+
+
+            case UIString.ShowPuzzleMenu:
+                PuzzleMenu.LoadPuzzleMenu ();
                 break;
 
             case UIString.ShowProfileMenu:

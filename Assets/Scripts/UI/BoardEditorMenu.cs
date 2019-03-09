@@ -33,7 +33,7 @@ public class BoardEditorMenu : GOUI {
 
     private void Awake () {
         instance = this;
-        CurrentGUI = this;
+        CurrentGOUI = this;
     }
 
     static public void LoadDataToEditor (int id, bool isClientOwner, string boardName, string [] board, int [] matchTypes) {

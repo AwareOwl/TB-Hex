@@ -31,6 +31,7 @@ public class ServerData : MonoBehaviour {
     static public string IsAllowedToRotateCardsDuringMatchKey = "IsAllowedToRotateCardsDuringMatch";
     static public string NumberOfStacksKey = "NumberOfStacks";
     static public string MinimumNumberOfCardsInStackKey = "MinimumNumberOfCardsInStack";
+    static public string UsedCardsArePutOnBottomOfStackKey = "UsedCardsArePutOnBottomOfStack";
 
     static public string IsCardPoolLegalKey = "IsCardPoolLegalKey";
     static public string OfficialKey = "Official";
@@ -240,6 +241,22 @@ public class ServerData : MonoBehaviour {
     static public int SetGameModeMinimumNumberOfCardsInStack (int id, int value) {
         string path = GameModeContentPath (id);
         string s = SetKeyData (KeyDataPath (path), MinimumNumberOfCardsInStackKey, value.ToString ());
+        return value;
+    }
+
+    static public bool GetGameModeUsedCardsArePutOnBottomOfStack (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), UsedCardsArePutOnBottomOfStackKey);
+        if (s != null && s != "") {
+            return Convert.ToBoolean (s);
+        }
+        SetGameModeUsedCardsArePutOnBottomOfStack (id, true);
+        return true;
+    }
+
+    static public bool SetGameModeUsedCardsArePutOnBottomOfStack (int id, bool value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), UsedCardsArePutOnBottomOfStackKey, value.ToString ());
         return value;
     }
 

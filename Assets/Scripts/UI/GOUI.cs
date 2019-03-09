@@ -8,8 +8,8 @@ public class GOUI : MonoBehaviour {
 
     static public GameObject CurrentCanvas;
     static public GameObject UICanvas;
-    static public GOUI CurrentGUI;
-    static public GOUI CurrentSubGUI;
+    static public GOUI CurrentGOUI;
+    static public GOUI CurrentSubGOUI;
     static public GameObject CurrentTooltip;
 
     static public GameObject ExitButton;
@@ -20,8 +20,8 @@ public class GOUI : MonoBehaviour {
 
     static public void DestroyMenu () {
         DestroySubMenu ();
-        if (CurrentGUI != null) {
-            CurrentGUI.DestroyThis ();
+        if (CurrentGOUI != null) {
+            CurrentGOUI.DestroyThis ();
             CreateNewCanvas ();
         }
         Transform trans = UICanvas.transform;
@@ -36,15 +36,15 @@ public class GOUI : MonoBehaviour {
     }
 
     static public void DestroySubMenu () {
-        if (CurrentSubGUI != null) {
-            CurrentSubGUI.DestroyThis ();
+        if (CurrentSubGOUI != null) {
+            CurrentSubGOUI.DestroyThis ();
         }
     }
 
     virtual public void DestroyThis () {
     }
 
-    public void DestroyTemplateButtons () {
+    static public void DestroyTemplateButtons () {
         DestroyImmediate (ExitButton);
         DestroyImmediate (ChatButton);
     }

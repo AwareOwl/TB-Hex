@@ -31,7 +31,7 @@ public class RegisterMenu : GOUI {
     private void Start () {
         instance = this;
         CreateRegisterMenu ();
-        CurrentGUI = this;
+        CurrentGOUI = this;
     }
 
     static public void ShowRegisterMenu () {

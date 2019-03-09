@@ -14,7 +14,7 @@ public class CustomGameEditor : GOUI {
 
     // Use this for initialization
     void Start () {
-        CurrentGUI = this;
+        CurrentGOUI = this;
         CreateCustomGameEditor ();
         ClientLogic.MyInterface.CmdDownloadCustomGameEditorData ();
     }

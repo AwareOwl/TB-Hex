@@ -11,6 +11,7 @@ public class MatchPropertiesClass {
     public bool turnWinCondition = true;
     public int turnLimit = 40;
     public bool allowToRotateAbilityAreas;
+    public bool usedCardsArePutOnBottomOfStack;
 
     public MatchPropertiesClass () {
 
@@ -23,6 +24,7 @@ public class MatchPropertiesClass {
         turnWinCondition = ServerData.GetGameModeHasTurnWinCondition (gameMode);
         turnLimit = ServerData.GetGameModeTurnWinConditionValue (gameMode);
         allowToRotateAbilityAreas = ServerData.GetGameModeIsAllowedToRotateCardsDuringMatch (gameMode);
+        usedCardsArePutOnBottomOfStack = ServerData.GetGameModeUsedCardsArePutOnBottomOfStack (gameMode);
     }
 
     public string [] MatchPropertiesToString () {
@@ -31,7 +33,8 @@ public class MatchPropertiesClass {
         s.Add (scoreLimit.ToString ());
         s.Add (turnWinCondition.ToString ());
         s.Add (turnLimit.ToString ());
-        s.Add (allowToRotateAbilityAreas.ToString());
+        s.Add (allowToRotateAbilityAreas.ToString ());
+        s.Add (usedCardsArePutOnBottomOfStack.ToString ());
         return s.ToArray ();
     }
 
@@ -41,5 +44,6 @@ public class MatchPropertiesClass {
         turnWinCondition = Convert.ToBoolean (lines [2]);
         turnLimit = int.Parse (lines [3]);
         allowToRotateAbilityAreas = Convert.ToBoolean (lines [4]);
+        usedCardsArePutOnBottomOfStack = Convert.ToBoolean (lines [5]);
     }
 }

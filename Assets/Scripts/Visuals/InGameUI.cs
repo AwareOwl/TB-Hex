@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InGameUI : GOUI {
 
@@ -11,14 +9,14 @@ public class InGameUI : GOUI {
 
     static public MatchClass PlayedMatch;
 
-    static public int MyPlayerNumber = 1;
+    static public int myPlayerNumber = 1;
 
-    static public int SelectedStack;
+    static public int selectedStack;
 
-    static public int NumberOfPlayers = 2;
+    static public int numberOfPlayers = 2;
 
-    static public int CurrentlyOverX = -1;
-    static public int CurrentlyOverY = -1;
+    static public int currentlyOverX = -1;
+    static public int currentlyOverY = -1;
 
     override public void DestroyThis () {
         DestroyVisuals ();
@@ -48,13 +46,14 @@ public class InGameUI : GOUI {
 
     private void Start () {
         instance = this;
-        CurrentGUI = this;
+        CurrentGOUI = this;
         RemoveAllZooms ();
 
-        MyPlayerNumber = ClientLogic.MyInterface.playerNumber;
-        NumberOfPlayers = PlayedMatch.numberOfPlayers;
+        myPlayerNumber = ClientLogic.MyInterface.playerNumber;
+        numberOfPlayers = PlayedMatch.numberOfPlayers;
         EnvironmentScript.CreateNewBackground ();
         CreatePlayersUI ();
+        CreateTurnUI ();
         GetPlayer (PlayedMatch.turnOfPlayer).visualPlayer.SetPlayerActive (true);
         PlayedMatch.EnableVisuals ();
         SelectStack (0);
@@ -78,7 +77,7 @@ public class InGameUI : GOUI {
         foreach (CardClass card in stack.card) {
             card.visualCard.DisableHighlight ();
         }*/
-        SelectedStack = x;
+        selectedStack = x;
         //GetSelectedCard ().visualCard.EnableHighlight ();
         RefreshHovers ();
     }
@@ -158,7 +157,7 @@ public class InGameUI : GOUI {
         if (InputController.debuggingEnabled) {
             Debug.Log ("Tile action performed");
         }
-        ClientLogic.MyInterface.CmdCurrentGameMakeAMove (x, y, SelectedStack);
+        ClientLogic.MyInterface.CmdCurrentGameMakeAMove (x, y, selectedStack);
         //PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
         RefreshHovers ();
     }
@@ -176,26 +175,26 @@ public class InGameUI : GOUI {
     }
 
     static public PlayerClass GetPlayer () {
-        return PlayedMatch.Player [MyPlayerNumber];
+        return PlayedMatch.Player [myPlayerNumber];
     }
 
     static public CardClass GetSelectedCard () {
-        return GetPlayer ().GetTopCard (SelectedStack);
+        return GetPlayer ().GetTopCard (selectedStack);
     }
     
     static public void CreatePlayersUI () {
         int numberOfPlayers = 0;
         int playerPosition = 0;
-        for (int x = 1; x <= NumberOfPlayers; x++) {
+        for (int x = 1; x <= InGameUI.numberOfPlayers; x++) {
             PlayerClass player = GetPlayer (x);
             if (player != null) {
                 numberOfPlayers++;
             }
         }
-        for (int x = 1; x <= NumberOfPlayers; x++) {
+        for (int x = 1; x <= InGameUI.numberOfPlayers; x++) {
             PlayerClass player = GetPlayer (x);
             if (player != null) {
-                bool ally = player.properties.team == GetPlayer (MyPlayerNumber).properties.team;
+                bool ally = player.properties.team == GetPlayer (myPlayerNumber).properties.team;
                 player.EnableVisuals ();
                 player.visualPlayer.CreatePlayerUI (player, ally, numberOfPlayers, playerPosition);
                 player.visualPlayer.SetPlayerHealthBar (PlayedMatch, player);
@@ -217,6 +216,29 @@ public class InGameUI : GOUI {
         }
     }
 
+    static TextMesh TurnText;
+
+    static public void CreateTurnUI () {
+        GameObject Clone;
+        Clone = CreateSprite ("UI/White", 75, 45, 10, 120, 70, true);
+        //Clone = CreateSprite ("UI/Panel_PopUp_01_Sliced", 75, 45, 10, 120, 75, true);
+        Clone.GetComponent<Renderer> ().material.color = Color.black;
+        Clone = CreateSprite ("Textures/Other/Turn", 45, 45, 11, 45, 45, true);
+        if (PlayedMatch.Properties.turnWinCondition) {
+            Clone = CreateText (PlayedMatch.TurnsLeft ().ToString (), 100, 45, 11, 0.025f);
+        } else {
+            Clone = CreateText ("-", 100, 45, 11, 0.025f);
+        }
+        Clone.GetComponent<Renderer> ().material.color = Color.white;
+        TurnText = Clone.GetComponent<TextMesh> ();
+        //Clone.GetComponent<Text> ().material.color = Color.white;
+
+    }
+
+    static public void SetTurn (int turnsLeft) {
+        TurnText.text = turnsLeft.ToString();
+    }
+
     static public GameObject GetAnchor (int x, int y) {
         return VisualEffectAnchor [x + 1, y + 1];
     }
@@ -226,7 +248,7 @@ public class InGameUI : GOUI {
     }
 
     static public void HideAreaHovers () {
-        CurrentlyOverX = -1;
+        currentlyOverX = -1;
         foreach (GameObject anchor in VisualEffectAnchor) {
             Transform [] childs = new Transform [anchor.transform.childCount];
             for (int c = 0; c < childs.Length; c++) {
@@ -239,7 +261,7 @@ public class InGameUI : GOUI {
     }
 
     static public void RefreshHovers () {
-        SetAreaHovers (CurrentlyOverX, CurrentlyOverY);
+        SetAreaHovers (currentlyOverX, currentlyOverY);
     }
 
 
@@ -248,10 +270,12 @@ public class InGameUI : GOUI {
             return;
         }
         HideAreaHovers ();
-        CurrentlyOverX = x;
-        CurrentlyOverY = y;
+        currentlyOverX = x;
+        currentlyOverY = y;
 
-        if (PlayedMatch.Board.tile [x, y].IsEmptyTile ()) {
+        StackClass stack = GetPlayer ().GetStack (selectedStack);
+
+        if (PlayedMatch.Board.tile [x, y].IsEmptyTile () && stack.atLeast1Enabled) {
             CardClass card = GetSelectedCard ();
             int abilityType = card.abilityType;
             int abilityArea = card.abilityArea;
@@ -267,10 +291,10 @@ public class InGameUI : GOUI {
                 token.Text.GetComponent<Renderer> ().material.color = new Color (0.5f, 0, 0);
             }
             token.AddCreateAnimation ();
-            token.SetState (MyPlayerNumber, tokenType, tokenValue);
+            token.SetState (myPlayerNumber, tokenType, tokenValue);
             token.SetParent (GetAnchor (x, y));
             TileClass tokenTile = PlayedMatch.Board.GetTile (x, y);
-            VectorInfo tokenInfo = PlayedMatch.GetTokenVectorInfo (tokenTile, new TokenClass (null, tokenType, tokenValue, MyPlayerNumber));
+            VectorInfo tokenInfo = PlayedMatch.GetTokenVectorInfo (tokenTile, new TokenClass (null, tokenType, tokenValue, myPlayerNumber));
             switch (tokenType) {
                 case 3:
                 case 4:
@@ -291,7 +315,7 @@ public class InGameUI : GOUI {
                     }
                     break;
             }
-            VectorInfo info = PlayedMatch.GetVectorInfo (x, y, MyPlayerNumber, abilityArea, abilityType, new TokenClass (null, tokenType, tokenValue, MyPlayerNumber));
+            VectorInfo info = PlayedMatch.GetVectorInfo (x, y, myPlayerNumber, abilityArea, abilityType, new TokenClass (null, tokenType, tokenValue, myPlayerNumber));
             foreach (AbilityVector vector in info.TriggeredVector) {
                 VisualEffectInterface.CreateEffectPointingAt (
                     GetAnchor (vector.x, vector.y), GetAnchor (vector.pushX, vector.pushY).transform.position, abilityType, true, false);

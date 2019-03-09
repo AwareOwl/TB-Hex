@@ -36,5 +36,4 @@
 [35] Potężniejsze zmiażdżenie
 [36] Podmiana
 [37] Odwrócenie ról
-[38] Przygotowanie
-[39] Ryzykowny start
+[38] Ryzykowny start

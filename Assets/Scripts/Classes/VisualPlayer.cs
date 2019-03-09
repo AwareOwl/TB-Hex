@@ -33,18 +33,20 @@ public class VisualPlayer {
         this.ally = ally;
         this.numberOfPlayers = numberOfPlayers;
 
-        margin = 120;
+        margin = 150;
         avatarSize = 70;
-        shiftLength = (1440 - margin * 2) / numberOfPlayers;
-        barLength = shiftLength - avatarSize - 30;
-        avatarPosition = margin + avatarSize / 2 + shiftLength * playerPosition;
-        barPosition = margin + barLength / 2 + shiftLength * playerPosition;
+        shiftLength = (1440 - margin * 2 - (numberOfPlayers - 1) * 30) / numberOfPlayers;
+        barLength = shiftLength - avatarSize;
+        avatarPosition = margin + avatarSize / 2 + shiftLength * playerPosition + 30 * playerNumber;
+        barPosition = margin + barLength / 2 + shiftLength * playerPosition + 30 * playerNumber;
+
 
         if (ally) {
             barPosition += avatarSize;
         } else {
             avatarPosition += barLength;
         }
+        
 
         int avatarNumber = player.properties.avatar;
 

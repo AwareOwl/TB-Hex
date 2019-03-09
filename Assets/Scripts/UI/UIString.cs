@@ -32,6 +32,8 @@ public class UIString {
     public const string SetEditorSaveSet = "SetEditorSaveSet";
     public const string SetEditorAbout = "SetEditorAbout";
     public const string SetEditorSelectIcon = "SetEditorSelectIcon";
+    public const string SetEditorFilterMenu = "SetEditorFilterMenu";
+    public const string SetEditorFilterButton = "SetEditorFilterButton";
 
     public const string ShowMainMenu = "ShowMenu";
 
@@ -88,6 +90,8 @@ public class UIString {
     public const string GameModeEditorSettings = "GameModeEditorSettings";
     public const string GameModeEditorChangeName = "GameModeEditorChangeName";
     public const string SaveGameModeSettings = "SaveGameModeSettings";
+
+    public const string ShowPuzzleMenu = "ShowPuzzleMenu";
 
     public const string ShowProfileMenu = "ShowProfileMenu";
     public const string ShowProfileSettings = "ShowProfileSettings";

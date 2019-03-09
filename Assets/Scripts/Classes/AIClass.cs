@@ -41,22 +41,22 @@ public class AIClass {
         surroundDanger = Random.Range (3, 8);
         multiTargetDanger = Random.Range (0, 8);
 
-        abilityRow = Random.Range (7, 14);
+        abilityRow = Random.Range (7, 16);
         tokenRow = Random.Range (8, 16);
-        abilityTokenRow = Random.Range (12, 28);
+        abilityTokenRow = Random.Range (12, 29);
 
         abilityStackSize = Random.Range (3, 7);
-        tokenStackSize = Random.Range (0, 6);
-        abilityTokenStackSize = Random.Range (3, 8);
+        tokenStackSize = Random.Range (1, 7);
+        abilityTokenStackSize = Random.Range (3, 9);
 
-        abilityAfterAbility = Random.Range (4, 9);
-        abilityAfterToken = Random.Range (1, 14);
-        tokenAfterAbility = Random.Range (1, 14);
-        tokenAfterToken = Random.Range (0, 12);
+        abilityAfterAbility = Random.Range (4, 11);
+        abilityAfterToken = Random.Range (1, 15);
+        tokenAfterAbility = Random.Range (2, 15);
+        tokenAfterToken = Random.Range (1, 14);
 
         ability_AbilitySynergy = Random.Range (4, 10);
-        ability_TokenSynergy = Random.Range (6, 19);
-        token_TokenSynergy = Random.Range (6, 9);
+        ability_TokenSynergy = Random.Range (8, 20);
+        token_TokenSynergy = Random.Range (8, 10);
 
         abilityAgainstAbility = Random.Range (4, 7);
         abilityAgainstToken = Random.Range (4, 7);

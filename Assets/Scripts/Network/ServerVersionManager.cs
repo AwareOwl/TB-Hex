@@ -104,9 +104,18 @@ public class ServerVersionManager : VersionManager {
                         ConvertTo0_6_0_11 ();
                     }
                 }
+                PathVersion = 7;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
+            }
+            if (PathVersion <= 7) {
+                if (HotfixVersion <= 0) {
+                    if (DevelopVersion < 3) {
+                        ConvertTo0_7_0_3 ();
+                    }
+                }
             }
         }
-
     }
 
     static public void FinalizeServerVersion () {
@@ -140,6 +149,20 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
         RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
         RatingData.SaveRatingAbilityTokenOnRow (GetResource ("ExportFolder/Rating/AbilityTokenOnRow"));
+    }
+    static public void ConvertTo0_7_0_3 () {
+        /*int [] gameModeIds = ServerData.GetAllGameModes ();
+        int count = gameModeIds.Length;
+        for (int x = 0; x < count; x++) {
+            string [] lines = ServerData.GetCardPool (gameModeIds [x]);
+            CardPoo
+        }*/
+
+        ExportRating ();
+        GameVersion = 0;
+        PathVersion = 7;
+        HotfixVersion = 0;
+        DevelopVersion = 3;
     }
 
     static public void ConvertTo0_6_0_11 () {

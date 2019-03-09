@@ -818,7 +818,7 @@ public class RatingClass {
         Load (lines, tokenAgainstToken);
     }
 
-    static float minValue = 0.44f;
+    static float minValue = 0.4f;
 
     static public void Load (string [] lines, float [] array) {
         for (int x = 0; x < array.GetLength (0); x++) {

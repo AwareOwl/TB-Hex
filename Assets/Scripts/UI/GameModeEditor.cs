@@ -23,7 +23,7 @@ public class GameModeEditor : GOUI {
 
     // Use this for initialization
     void Awake () {
-        CurrentGUI = this;
+        CurrentGOUI = this;
     }
 
     static public void ShowGameModeEditor () {
@@ -127,7 +127,7 @@ public class GameModeEditor : GOUI {
 
         row = new RowClass [5];
         for (int x = 0; x < 5; x++) {
-            row [x] = CurrentGUI.gameObject.AddComponent<RowClass> ();
+            row [x] = CurrentGOUI.gameObject.AddComponent<RowClass> ();
             row [x].Init (x, RowClass.BoardList);
         }
 

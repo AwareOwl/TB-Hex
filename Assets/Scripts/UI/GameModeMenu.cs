@@ -26,7 +26,7 @@ public class GameModeMenu : GOUI {
 
     // Use this for initialization
     void Start () {
-        CurrentGUI = this;
+        CurrentGOUI = this;
         CreateGameModeMenu ();
         ClientLogic.MyInterface.CmdDownloadGameModeLists ();
     }
@@ -182,7 +182,7 @@ public class GameModeMenu : GOUI {
         //SelectGroup (0);
         row = new RowClass [5];
         for (int x = 0; x < 5; x++) {
-            row [x] = CurrentGUI.gameObject.AddComponent <RowClass>();
+            row [x] = CurrentGOUI.gameObject.AddComponent <RowClass>();
             row [x].Init (x, RowClass.GameModeList);
         }
     }

@@ -137,6 +137,7 @@ public class Language {
     static public string AllowToRotateAbilityAreaDuringMatch;
     static public string NumberOfStacks;
     static public string MinimumNumberOfCardsInStack;
+    static public string UsedCardsArePlacedOnBottomOfStack;
 
     static public string Profile;
     static public string ThisGameVersion;
@@ -169,6 +170,17 @@ public class Language {
     static public string ViewGameModeSettings;
 
     static public string AvailableMatchTypes;
+
+    static public string Puzzles;
+    static public string PuzzleAbout;
+    static public string Unfinished;
+    static public string Finished;
+    static public string ListOfPuzzles;
+
+    static public string ShowTokenValueFilters;
+    static public string ShowTokenTypeFilters;
+    static public string ShowAbilityTypeFilters;
+    static public string ShowAbilityAreaFilters;
 
     static public string WaitingInQueue;
     static public string Cancel;
@@ -353,6 +365,16 @@ public class Language {
         EditGameModeSettings = UI [136];
         ViewGameModeSettings = UI [137];
         AvailableMatchTypes = UI [138];
+        ShowTokenValueFilters = UI [139];
+        ShowTokenTypeFilters = UI [140];
+        ShowAbilityTypeFilters = UI [141];
+        ShowAbilityAreaFilters = UI [142];
+        Puzzles = UI [143];
+        PuzzleAbout = UI [144];
+        Unfinished = UI [145];
+        Finished = UI [146];
+        ListOfPuzzles = UI [147];
+        UsedCardsArePlacedOnBottomOfStack = UI [148];
 
 
         path = "Languages/" + FileName [language] + UITooltipKey;

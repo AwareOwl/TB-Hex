@@ -5,7 +5,7 @@ using UnityEngine;
 public class QueueMenu : GOUI {
     
     void Start () {
-        CurrentGUI = this;
+        CurrentGOUI = this;
         CreateQueueMenu ();
     }
 

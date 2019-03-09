@@ -10,7 +10,7 @@ public class ClientLogic : MonoBehaviour {
         MyInterface.AccountName = accountName;
         MyInterface.UserName = userName;
 
-        InputController.autoRunAI = true;
+        InputController.autoRunAI = false;
 
         if (!InputController.autoRunAI) {
             //BoardEditorMenu.ShowBoardEditorMenu ();
@@ -68,7 +68,7 @@ public class ClientLogic : MonoBehaviour {
     }
 
     static public void LoadCustomGameRoom (bool isHost, string gameName, int matchType, int [] avatars, string [] names, bool [] AIs) {
-        if (GOUI.CurrentGUI.GetType () != typeof (CustomGameRoom)) {
+        if (GOUI.CurrentGOUI.GetType () != typeof (CustomGameRoom)) {
             CustomGameRoom.ShowCustomGameRoom ();
         }
         CustomGameRoom.LoadData (isHost, gameName, matchType, avatars, names, AIs);

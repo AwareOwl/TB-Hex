@@ -367,16 +367,18 @@ public class ServerLogic : MonoBehaviour {
         bool isAllowedToRotateCardsDuringMatch = ServerData.GetGameModeIsAllowedToRotateCardsDuringMatch (id);
         int numberOfStacks = ServerData.GetGameModeNumberOfStacks (id);
         int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (id);
-        
+        bool usedCardsArePutOnBottomOfStack = ServerData.GetGameModeUsedCardsArePutOnBottomOfStack (id);
+
+
         client.TargetDownloadGameModeSettingsToEditor (client.connectionToClient, 
             isClientOwner,
             hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue,
-            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack);
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack);
     }
 
     static public void SaveGameModeSettings (ClientInterface client, int id,
         bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
-        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack) {
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack) {
         if (!ServerData.IsGameModeOwner (id, client.AccountName)) {
             return;
         }
@@ -387,6 +389,7 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SetGameModeIsAllowedToRotateCardsDuringMatch (id, isAllowedToRotateCardsDuringMatch);
         ServerData.SetGameModeNumberOfStacks (id, numberOfStacks);
         ServerData.SetGameModeMinimumNumberOfCardsInStack (id, minimumNumberOfCardsInStack);
+        ServerData.SetGameModeUsedCardsArePutOnBottomOfStack (id, usedCardsArePutOnBottomOfStack);
     }
 
     static public void DownloadProfileData (ClientInterface client) {

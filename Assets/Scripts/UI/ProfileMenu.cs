@@ -19,7 +19,7 @@ public class ProfileMenu : GOUI {
     // Use this for initialization
     void Awake () {
         CreateProfileMenu ();
-        CurrentGUI = this;
+        CurrentGOUI = this;
     }
 
     static public void ShowProfileMenu () {
