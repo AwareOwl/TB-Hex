@@ -898,6 +898,7 @@ public class MatchClass {
 
     public void ModifyCardValue (CardClass card, int value) {
         card.tokenValue += value;
+        card.DelayedSetState ();
     }
 
     public void ChangeType (TileClass tile, int newType) {
