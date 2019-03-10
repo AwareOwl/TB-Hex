@@ -125,10 +125,12 @@ public class HandClass  {
         CardPoolClass CardPool = new CardPoolClass ();
         CardPool.LoadFromFile (gameModeId);
         int minimumNumberOfCardsOnStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameModeId);
-        GenerateRandomHand (CardPool, /*RatingClass.PopularityRating (gameModeId)*/ null, AI, minimumNumberOfCardsOnStack);
+        numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameModeId);
+        bool usedCardsArePutOnBottomOfStack = ServerData.GetGameModeUsedCardsArePutOnBottomOfStack (gameModeId);
+        GenerateRandomHand (CardPool, /*RatingClass.PopularityRating (gameModeId)*/ null, AI, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack);
     }
 
-    public void GenerateRandomHand (CardPoolClass CardPool, float [] CardValue, AIClass AI, int minimumNumberOfCardsOnStack) {
+    public void GenerateRandomHand (CardPoolClass CardPool, float [] CardValue, AIClass AI, bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimumNumberOfCardsOnStack) {
         int count = CardPool.Card.Count;
 
         if (AI == null) {
@@ -148,10 +150,14 @@ public class HandClass  {
         float SumOfValues = -1;
 
         int usedCount = 0;
+        for (int x = 0; x < numberOfStacks; x++) {
+            stackSize [x] = minimumNumberOfCardsOnStack;
+        }
+        usedCount = numberOfStacks * minimumNumberOfCardsOnStack;
+
         for (int y = 0; y < 5; y++) {
             for (int x = 0; x < numberOfStacks; x++) {
-                stackSize [x] = minimumNumberOfCardsOnStack;
-                if (stackSize [x] == y && Random.Range (0, 2) == 0) {
+                if (stackSize [x] == y && (Random.Range (0, 2) == 0 || !usedCardsArePutOnBottomOfStack)) {
                     stackSize [x]++;
                     usedCount++;
                 }

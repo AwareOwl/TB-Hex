@@ -110,8 +110,9 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadDataToSetEditor (NetworkConnection target, string [] cardPool, string [] set, string name, int icon, int numberOfStacks, int minimumNumberOfCardsPerStack) {
-        SetEditor.LoadData (cardPool, set, name, icon, numberOfStacks, minimumNumberOfCardsPerStack);
+    public void TargetDownloadDataToSetEditor (NetworkConnection target, string [] cardPool, string [] set, string name, int icon, 
+        bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimumNumberOfCardsPerStack) {
+        SetEditor.LoadData (cardPool, set, name, icon, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsPerStack);
     }
     
     [Command]

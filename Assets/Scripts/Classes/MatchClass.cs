@@ -282,7 +282,17 @@ public class MatchClass {
                 return;
             }
         }
-        if (Board.GetEmptyTiles ().Count == 0 || !AbleToExecuteTurn (turnOfPlayer)) {
+        if (Board.GetEmptyTiles ().Count == 0) {
+            FinishGame (3, 0);
+            return;
+        }
+        bool atLeast1PlayerAbleToExecuteTurn = false;
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            if (AbleToExecuteTurn (x)) {
+                atLeast1PlayerAbleToExecuteTurn = true;
+            }
+        }
+        if (!atLeast1PlayerAbleToExecuteTurn) {
             FinishGame (3, 0);
             return;
         }
@@ -464,13 +474,14 @@ public class MatchClass {
             topCardNumber = player.GetTopCardNumber (stackNumber);
         }
         SaveThisTurnMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
-        UseAbility (tile, playerNumber, stackNumber, card.abilityArea, abilityType);
+        player.MoveTopCard (stackNumber, topCardNumber, !Properties.usedCardsArePutOnBottomOfStack);
+        UseAbility (tile, playerNumber, stackNumber, topCardNumber, card.abilityArea, abilityType);
         SaveLastMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
         AILearning (abilityType);
         updateBoard = true;
         UpdateBoard ();
         UpdateVisuals ();
-        player.MoveTopCard (stackNumber, !Properties.usedCardsArePutOnBottomOfStack);
+        player.VisualMoveTopCard (stackNumber, topCardNumber, !Properties.usedCardsArePutOnBottomOfStack);
         EndTurn ();
     }
 
@@ -594,7 +605,7 @@ public class MatchClass {
         return info;
     }
 
-    public void UseAbility (TileClass tile, int playerNumber, int stackNumber, int abilityArea, int abilityType) {
+    public void UseAbility (TileClass tile, int playerNumber, int stackNumber, int cardNumber, int abilityArea, int abilityType) {
         abilityType = VerifyAbilityType (tile, abilityType);
         VectorInfo info = GetVectorInfo (tile, abilityArea, abilityType, tile.token);
         if (visualMatch != null) {
@@ -608,7 +619,7 @@ public class MatchClass {
         UseAbilityTrigger1 (info, tile, playerNumber, abilityType, tokenType);
         UseAbilityTrigger2 (info, tile, playerNumber, abilityType, tokenType);
         UseAbilityVector (info, tile, playerNumber, abilityType, tokenType);
-        UseAbilityConstant (info, tile, playerNumber, stackNumber, abilityType, tokenType);
+        UseAbilityConstant (info, tile, playerNumber, stackNumber, cardNumber, abilityType, tokenType);
     }
 
     public void AILearning (int abilityType) {
@@ -816,7 +827,7 @@ public class MatchClass {
         }
     }
 
-    public void UseAbilityConstant (VectorInfo info, TileClass tile, int playerNumber, int stackNumber, int abilityType, int tokenType) {
+    public void UseAbilityConstant (VectorInfo info, TileClass tile, int playerNumber, int stackNumber, int cardNumber, int abilityType, int tokenType) {
         switch (abilityType) {
             case 20:
                 if (info.TargetPlayers != null) {
@@ -831,7 +842,7 @@ public class MatchClass {
                         HandClass hand = player.GetHand ();
                         if (hand != null) {
                             for (int y = 0; y < hand.stack.Length; y++) {
-                                player.MoveTopCard (y, false);
+                                player.MoveTopCard (y);
                             }
                         }
                     }
@@ -860,7 +871,8 @@ public class MatchClass {
             case 38: 
                 {
                     PlayerClass player = Player [playerNumber];
-                    CardClass card = player.GetTopCard (stackNumber);
+                    CardClass card = player.GetCard (stackNumber, cardNumber);
+                ModifyCardValue (card, -1);
                     card.tokenValue -= 1;
                 }
                 break;
@@ -882,6 +894,10 @@ public class MatchClass {
                 }
                 break;
         }
+    }
+
+    public void ModifyCardValue (CardClass card, int value) {
+        card.tokenValue += value;
     }
 
     public void ChangeType (TileClass tile, int newType) {

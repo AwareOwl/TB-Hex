@@ -66,9 +66,13 @@ public class CardClass {
         }
     }
 
-    public void SetState (int value, int tokenType, int abilityArea, int abilityType) {
+    public void DelayedSetState () {
+        visualCard.DelayedSetState (tokenValue, tokenType, abilityArea, abilityType);
+    }
+
+    public void SetState (int tokenValue, int tokenType, int abilityArea, int abilityType) {
         this.tokenType = tokenType;
-        this.tokenValue = value;
+        this.tokenValue = tokenValue;
         this.abilityType = abilityType;
         this.abilityArea = GetAbilityArea (abilityType, abilityArea);
     }

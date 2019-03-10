@@ -92,7 +92,11 @@ public class PlayerClass {
         return GetHand ().stack [stackNumber].topCardNumber;
     }
 
-    public void MoveTopCard (int stackNumber, bool disable) {
+    public void MoveTopCard (int stackNumber) {
+        MoveTopCard (stackNumber, GetTopCardNumber (stackNumber), false);
+    }
+
+    public void MoveTopCard (int stackNumber, int cardNumber, bool disable) {
         if (GetHand () == null) {
             return;
         }
@@ -100,18 +104,27 @@ public class PlayerClass {
         int topCard = GetTopCardNumber (stackNumber);
         stack.MoveTopCard ();
         int stackSize = GetStackSize (stackNumber);
+        if (disable) {
+            hand.DisableCard (stackNumber, cardNumber);
+        }
+    }
+
+    public void VisualMoveTopCard (int stackNumber, int cardNumber, bool disable) {
+        if (GetHand () == null) {
+            return;
+        }
+        StackClass stack = GetStack (stackNumber);
+        int topCard = GetTopCardNumber (stackNumber);
+        int stackSize = GetStackSize (stackNumber);
         if (visualPlayer != null) {
             for (int x = 0; x < stackSize; x++) {
                 DelayedUpdateCardVisuals (stackNumber, x);
             }
             if (!disable) {
-                DelayedShuffleCardVisual (stackNumber, topCard);
+                DelayedShuffleCardVisual (stackNumber, cardNumber);
             } else {
-                DelayedDestroyCardVisual (stackNumber, topCard);
+                DelayedDestroyCardVisual (stackNumber, cardNumber);
             }
-        }
-        if (disable) {
-            hand.DisableCard (stackNumber, topCard);
         }
     }
 

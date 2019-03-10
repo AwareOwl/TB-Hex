@@ -32,6 +32,10 @@ public class VisualCard {
         VES.SetLastPhaseTimer (0.25f);
     }
 
+    public void DelayedSetState (int tokenValue, int tokenType, int abilityArea, int abilityType) {
+        VisualMatch.instance.SetState (this, tokenValue, tokenType, abilityArea, abilityType);
+    }
+
 
     public void SetState (CardClass card) {
         SetState (card.tokenType, card.tokenValue, card.abilityArea, card.abilityType);

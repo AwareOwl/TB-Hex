@@ -33,6 +33,7 @@ public class SetEditor : GOUI {
     static public string setName;
     static public int iconNumber;
 
+    static public bool usedCardsArePutOnBottomOfStack;
     static public int numberOfStacks;
     static public int minimumNumberOfCardsOnStack;
 
@@ -54,7 +55,7 @@ public class SetEditor : GOUI {
         CurrentCanvas.AddComponent<SetEditor> ();
     }
 
-    static public void LoadData (string [] cardPool, string [] set, string name, int iconNumber, int numberOfStacks, int minimalNumberOfCardsOnStack) {
+    static public void LoadData (string [] cardPool, string [] set, string name, int iconNumber, bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimalNumberOfCardsOnStack) {
 
 
         for (int x = 0; x < 4; x++) {
@@ -79,6 +80,7 @@ public class SetEditor : GOUI {
 
         SetEditor.numberOfStacks = numberOfStacks;
         SetEditor.minimumNumberOfCardsOnStack = minimalNumberOfCardsOnStack;
+        SetEditor.usedCardsArePutOnBottomOfStack = usedCardsArePutOnBottomOfStack;
         LoadCardPool (cardPool);
         CreateCardPoolEditorMenu ();
         FilterCards ();
@@ -172,7 +174,7 @@ public class SetEditor : GOUI {
 
     static public void LoadRandomSet () {
         hand = new HandClass ();
-        hand.GenerateRandomHand (cardPool, null, null, minimumNumberOfCardsOnStack);
+        hand.GenerateRandomHand (cardPool, null, null, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack);
         LoadSet (hand);
         LoadPage (currentPage);
     }
@@ -588,7 +590,7 @@ public class SetEditor : GOUI {
             if (x < numberOfStacks) {
                 Clone = CreateSprite ("UI/Panel_Slot_01_SetRow", 960 + 120 * x, 535, 11, 122, 780, false);
 
-                Clone = CreateText (x.ToString (), 960 + 120 * x, 990, 11, 0.03f);
+                Clone = CreateText ((x + 1).ToString (), 960 + 120 * x, 990, 11, 0.03f);
             }
 
             for (int y = 0; y < 5; y++) {

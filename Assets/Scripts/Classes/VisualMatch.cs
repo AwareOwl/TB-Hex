@@ -239,6 +239,15 @@ public class VisualMatch : MonoBehaviour {
         vCard.DestroyCardVisual ();
     }
 
+    public void SetState (VisualCard vCard, int tokenValue, int tokenType, int abilityArea, int abilityType) {
+        StartCoroutine (IESetState (vCard, tokenValue, tokenType, abilityArea, abilityType));
+    }
+
+    public IEnumerator IESetState (VisualCard vCard, int tokenValue, int tokenType, int abilityArea, int abilityType) {
+        yield return new WaitForSeconds (GlobalTimer);
+        vCard.SetState (tokenValue, tokenType, abilityArea, abilityType);
+    }
+
     public void UpdateCardVisuals (PlayerClass player, int stackNumber, int stackSize, int cardNumber, int position) {
         StartCoroutine (IEUpdateCardVisuals (player, stackNumber, stackSize, cardNumber, position));
     }

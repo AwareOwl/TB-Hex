@@ -222,9 +222,10 @@ public class ServerLogic : MonoBehaviour {
         string [] set = ServerData.GetPlayerModeSet (accountName, gameMode, setId);
         string name = ServerData.GetPlayerModeSetName (accountName, gameMode, setId);
         int iconNumber = ServerData.GetPlayerModeSetIconNumber (accountName, gameMode, setId);
+        bool usedCardsArePutOnBottomOfStack = ServerData.GetGameModeUsedCardsArePutOnBottomOfStack (gameMode);
         int numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameMode);
         int minimumNumberOfCardsOnStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameMode);
-        client.TargetDownloadDataToSetEditor (client.connectionToClient, cardPool, set, name, iconNumber, numberOfStacks, minimumNumberOfCardsOnStack);
+        client.TargetDownloadDataToSetEditor (client.connectionToClient, cardPool, set, name, iconNumber, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack);
     }
 
 
