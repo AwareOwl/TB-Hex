@@ -36,6 +36,7 @@ public class ServerData : MonoBehaviour {
     static public string IsCardPoolLegalKey = "IsCardPoolLegalKey";
     static public string OfficialKey = "Official";
     static public string GameModeOfficialKey = "GameModeOfficialKey";
+    static public string GameModePuzzleKey = "GameModePuzzleKey";
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
     static public string SetNameKey = "SetName";
     static public string SetIconNumberKey = "SetIconNumber";
@@ -495,6 +496,19 @@ public class ServerData : MonoBehaviour {
         return isOfficialString;
     }
 
+    static public bool GetGameModeIsPuzzle (int gameModeId) {
+        string path = GameModeContentPath (gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GameModePuzzleKey);
+        return Convert.ToBoolean (s);
+    }
+
+    static public string SetGameModeIsPuzzle (int gameModeId, bool isPuzzle) {
+        string path = GameModeContentPath (gameModeId);
+        string isPuzzleString = isPuzzle.ToString ();
+        SetKeyData (KeyDataPath (path), GameModePuzzleKey, isPuzzleString);
+        return isPuzzleString;
+    }
+
     static public string GameModeBoardsPath (int gameModeId) {
         string path = GameModeContentPath (gameModeId) + "Boards.txt";
         return path;
@@ -943,6 +957,18 @@ public class ServerData : MonoBehaviour {
         return s;
     }
 
+    static public void CreateNewPuzzle (string patchName, string puzzleName, string [] board, string [] cardPool) {
+        int newId;
+        int newBoardId;
+        newId = CreateNewGameMode ("");
+        SetCardPool (newId, cardPool);
+        SetGameModeName (newId, puzzleName);
+        SetGameModeIsOfficial (newId, true);
+        SetGameModeIsPuzzle (newId, true);
+        newBoardId = SaveNewBoard (newId, patchName, "Board", board);
+        SetBoardIsOfficial (newBoardId, true);
+    }
+
 
     static public int [] GetAllGameModes () {
         string [] s = Directory.GetDirectories (GameModeContentPath ());
@@ -1105,6 +1131,52 @@ public class ServerData : MonoBehaviour {
             return path;
         }
         return null;
+    }
+
+    static public string UserPuzzlesPath (string userName) {
+        if (UserExists (userName)) {
+            string path = UserPath (userName) + "Puzzles.txt";
+            if (!Directory.Exists (path)) {
+                Directory.CreateDirectory (path);
+            }
+            return path;
+        }
+        return null;
+    }
+
+    static public int [] GetUserPuzzles (string userName) {
+        if (UserExists (userName)) {
+            string path = UserPuzzlesPath (userName);
+            if (File.Exists (path)) {
+                string [] lines = File.ReadAllLines (path);
+                int count = lines.Length;
+                List<int> ids = new List<int> ();
+                for (int x = 0; x < count; x++) {
+                    ids.Add (int.Parse (lines [x]));
+                }
+                ids.Sort ((a, b) => (a.CompareTo (b)));
+                return ids.ToArray ();
+            }
+        }
+        return new int [0];
+    }
+
+    static public void SetUserPuzzle (string userName, int puzzleId) {
+        string path = UserPuzzlesPath (userName);
+        int [] ids = GetUserPuzzles (userName);
+        int count = ids.Length;
+        List<string> idString = new List<string> ();
+        bool alreadyExists = false;
+        for (int x = 0; x < count; x++) {
+            if (ids [x] == puzzleId) {
+                alreadyExists = true;
+            }
+            idString.Add (ids [x].ToString ());
+        }
+        if (!alreadyExists) {
+            idString.Add (puzzleId.ToString ());
+            File.WriteAllLines (path, idString.ToArray ());
+        }
     }
 
     static public string UserPropertiesPath (string userName) {

@@ -10,7 +10,7 @@ public class AppDefaults {
 
     static public int AvailableTokens = 13; // Always + 1, to include null
     static public int AvailableAbilities = 39; // Always + 1, to include null
-    static public int AvailableAvatars = 8; // Always + 1, to include null
+    static public int AvailableAvatars = 10; // Always + 1, to include null
 
     static public Sprite [] Avatar;
     static public Texture [] Cloud = new Texture [5];

@@ -139,9 +139,6 @@ public class CardPoolEditor : GOUI {
 
     static public int AbilityButtonToAbilityNumber (int buttonNumber) {
         int output = buttonNumber + abilityPage * 32;
-        if (abilityPage > 0) {
-            //output;
-        }
         return output;
     }
 
@@ -342,6 +339,8 @@ public class CardPoolEditor : GOUI {
         if (type == 4) {
             if (number != 0 && number != 33) {
                 Selected [type] = AbilityButtonToAbilityNumber (number);
+            } else if (number == 0 && abilityPage == 0) {
+                Selected [type] = 0;
             }
             RefreshAbilityPage ();
             /*int count = Buttons [type].Length;

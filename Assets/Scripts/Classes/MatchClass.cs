@@ -871,9 +871,11 @@ public class MatchClass {
             case 38: 
                 {
                     PlayerClass player = Player [playerNumber];
+                    if (player.hand == null) {
+                        break;
+                    }
                     CardClass card = player.GetCard (stackNumber, cardNumber);
-                ModifyCardValue (card, -1);
-                    card.tokenValue -= 1;
+                    ModifyCardValue (card, -1);
                 }
                 break;
             case 40:

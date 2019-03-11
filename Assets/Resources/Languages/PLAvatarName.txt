@@ -6,3 +6,5 @@
 [5] Błyskawica
 [6] Podejrzana roślina
 [7] Pająk
+[8] Kamienna sowa
+[9] Chciwe oko

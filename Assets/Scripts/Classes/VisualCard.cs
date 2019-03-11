@@ -38,10 +38,10 @@ public class VisualCard {
 
 
     public void SetState (CardClass card) {
-        SetState (card.tokenType, card.tokenValue, card.abilityArea, card.abilityType);
+        SetState (card.tokenValue, card.tokenType, card.abilityArea, card.abilityType);
     }
 
-    public void SetState (int tokenType, int value, int abilityArea, int abilityType) {
+    public void SetState (int value, int tokenType, int abilityArea, int abilityType) {
         Token.SetType (tokenType);
         Token.SetValue (value);
         Area.SetAbilityArea (abilityArea);

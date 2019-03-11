@@ -6,3 +6,5 @@
 [5] Thunder
 [6] Suspicious plant
 [7] Spider
+[8] Stone owl
+[9] Greedy eye
