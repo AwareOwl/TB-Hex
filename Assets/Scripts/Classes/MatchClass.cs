@@ -341,7 +341,7 @@ public class MatchClass {
             }
             if (Player.Length == 3) {
                 AIClass AI = Player [2].properties.AI;
-                if (AI != null && AI.puzzle) {
+                if (AI != null && AI.puzzle && winner == Player [1]) {
                     ClientLogic.MyInterface.SavePuzzleResult (Properties.gameMode);
                 }
             }

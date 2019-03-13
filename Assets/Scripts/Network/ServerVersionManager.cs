@@ -113,6 +113,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 6) {
                         ConvertTo0_7_0_6 ();
                     }
+                    if (DevelopVersion < 9) {
+                        ConvertTo0_7_0_9 ();
+                    }
                 }
             }
         }
@@ -150,6 +153,17 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
         RatingData.SaveRatingAbilityTokenOnRow (GetResource ("ExportFolder/Rating/AbilityTokenOnRow"));
     }
+
+
+    static public void ConvertTo0_7_0_9 () {
+        ExportRating ();
+
+        GameVersion = 0;
+        PathVersion = 7;
+        HotfixVersion = 0;
+        DevelopVersion = 9;
+    }
+
     static public void ConvertTo0_7_0_6 () {
         for (int x = 1; x <= 6; x++) {
             int numberOfTurns = 3;

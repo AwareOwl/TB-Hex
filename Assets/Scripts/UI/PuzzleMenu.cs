@@ -14,11 +14,13 @@ public class PuzzleMenu : GOUI {
     static List<int> unfinishedIndex;
 
     static GameObject [] puzzleRow;
+    static GameObject [] puzzleRowText;
     static VisualCard [] VC = new VisualCard [4];
     static GameObject [,] visualTile = new GameObject [8, 8];
     static VisualToken [,] visualToken = new VisualToken [8, 8];
 
     static int selectedRow = -1;
+    static int selectedId = -1;
     static int pageType = 0;
     static int currentPage;
 
@@ -48,10 +50,10 @@ public class PuzzleMenu : GOUI {
     }
 
     static public void ApplySelection () {
-        if (selectedRow == -1) {
+        if (selectedId == -1) {
             return;
         }
-        ClientLogic.MyInterface.CmdStartPuzzle (RowNumberToId (selectedRow));
+        ClientLogic.MyInterface.CmdStartPuzzle (selectedId);
     }
 
     static public void SortFinished () {
@@ -84,13 +86,18 @@ public class PuzzleMenu : GOUI {
         int puzzleCount = list.Count;
         for (int x = 0; x < count; x++) {
             GameObject Clone = puzzleRow [x];
-            GameObject Text = Clone.GetComponent<UIController> ().Text;
+            UIController UIC = Clone.GetComponent<UIController> ();
+            UIC.FreeAndUnlcok ();
+            Debug.Log (Clone.GetComponent<SpriteRenderer> ().sprite);
+            GameObject Text = puzzleRowText [x];
             int number = x + currentPage * count;
 
-
-            Clone.GetComponent<SpriteRenderer> ().color = new Color (1f, 1f, 1f);
+           
             if (number < puzzleCount) {
                 SetSprite (Clone, "UI/Panel_Slot_01_Sliced", true);
+                if (RowNumberToId (number) == selectedId) {
+                    UIC.PressAndLock ();
+                }
                 
                 Text.GetComponent<TextMesh> ().text = name [list [number]];
             } else {
@@ -100,10 +107,13 @@ public class PuzzleMenu : GOUI {
         }
     }
 
-    static public int RowNumberToId (int rowNumber) {
+    static public int RowNumberToNumber (int rowNumber) {
         int count = puzzleRow.GetLength (0);
-        int number = rowNumber + currentPage * count;
-        return id [SelectedList ()[number]];
+        return rowNumber + currentPage * count;
+    }
+
+    static public int RowNumberToId (int rowNumber) {
+        return id [SelectedList ()[RowNumberToNumber (rowNumber)]];
     }
 
     static public List<int> SelectedList () {
@@ -119,7 +129,12 @@ public class PuzzleMenu : GOUI {
 
     static public void SelectRow (int rowNumber) {
         selectedRow = rowNumber;
-        ClientLogic.MyInterface.CmdDownloadPreviewToPuzzleMenu (RowNumberToId (rowNumber));
+        if (SelectedList ().Count > RowNumberToNumber (rowNumber)) {
+            int id = RowNumberToId (rowNumber);
+            selectedId = id;
+            ClientLogic.MyInterface.CmdDownloadPreviewToPuzzleMenu (id);
+            RefreshPage ();
+        }
     }
 
     static UIController [] typeButton = new UIController [2];
@@ -155,15 +170,20 @@ public class PuzzleMenu : GOUI {
 
 
         puzzleRow = new GameObject [9];
+        puzzleRowText = new GameObject [9];
+
         for (int x = 0; x < 9; x++) {
             Clone = CreateSpriteWithText ("UI/Panel_Slot_01_Sliced", "", 360, 300 + 60 * x, 11, 600, 60);
+            UIC = Clone.GetComponent<UIController> ();
             GameObject Text;
-            Text = Clone.transform.Find ("Text").gameObject;
+            Text = UIC.Text;
             Text.transform.parent = CurrentCanvas.transform;
             Text.GetComponent<TextMesh> ().anchor = TextAnchor.MiddleLeft;
+            puzzleRowText [x] = Text;
             SetInPixPosition (Text, 90, 300 + 60 * x, 12);
             Clone.name = UIString.PuzzleMenuRow;
-            Clone.GetComponent<UIController> ().number = x;
+            UIC.number = x;
+            UIC.Text = null;
             puzzleRow [x] = Clone;
 
             /*
