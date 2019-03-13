@@ -957,7 +957,7 @@ public class ServerData : MonoBehaviour {
         return s;
     }
 
-    static public void CreateNewPuzzle (string patchName, string puzzleName, string [] board, string [] cardPool) {
+    static public void CreateNewPuzzle (string patchName, string puzzleName, string [] board, string [] cardPool, int numberOfTurns) {
         int newId;
         int newBoardId;
         newId = CreateNewGameMode ("");
@@ -965,6 +965,8 @@ public class ServerData : MonoBehaviour {
         SetGameModeName (newId, puzzleName);
         SetGameModeIsOfficial (newId, true);
         SetGameModeIsPuzzle (newId, true);
+        SetGameModeTurnWinConditionValue (newId, numberOfTurns);
+        SetGameModeUsedCardsArePutOnBottomOfStack (newId, false);
         newBoardId = SaveNewBoard (newId, patchName, "Board", board);
         SetBoardIsOfficial (newBoardId, true);
     }
@@ -1133,20 +1135,17 @@ public class ServerData : MonoBehaviour {
         return null;
     }
 
-    static public string UserPuzzlesPath (string userName) {
+    static public string UserFinishedPuzzlesPath (string userName) {
         if (UserExists (userName)) {
-            string path = UserPath (userName) + "Puzzles.txt";
-            if (!Directory.Exists (path)) {
-                Directory.CreateDirectory (path);
-            }
+            string path = UserPath (userName) + "FinishedPuzzles.txt";
             return path;
         }
         return null;
     }
 
-    static public int [] GetUserPuzzles (string userName) {
+    static public int [] GetUserFinishedPuzzles (string userName) {
         if (UserExists (userName)) {
-            string path = UserPuzzlesPath (userName);
+            string path = UserFinishedPuzzlesPath (userName);
             if (File.Exists (path)) {
                 string [] lines = File.ReadAllLines (path);
                 int count = lines.Length;
@@ -1161,9 +1160,9 @@ public class ServerData : MonoBehaviour {
         return new int [0];
     }
 
-    static public void SetUserPuzzle (string userName, int puzzleId) {
-        string path = UserPuzzlesPath (userName);
-        int [] ids = GetUserPuzzles (userName);
+    static public void SetUserFinishedPuzzle (string userName, int puzzleId) {
+        string path = UserFinishedPuzzlesPath (userName);
+        int [] ids = GetUserFinishedPuzzles (userName);
         int count = ids.Length;
         List<string> idString = new List<string> ();
         bool alreadyExists = false;

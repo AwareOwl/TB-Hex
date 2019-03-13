@@ -67,6 +67,12 @@ public class VisualToken {
         }
     }
 
+    public void SetState (TokenClass token) {
+        SetOwner (token.owner);
+        SetValue (token.value);
+        SetType (token.type);
+    }
+
     public void SetState (int owner, int type, int value) {
         SetOwner (owner);
         SetValue (value);

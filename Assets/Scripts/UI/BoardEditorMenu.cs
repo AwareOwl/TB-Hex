@@ -91,6 +91,7 @@ public class BoardEditorMenu : GOUI {
             EditedBoard.SetToken (x, y, Selected [4], Selected [3] + 1, Selected [2]);
         } else {
             EditedBoard.DestroyToken (x, y);
+            EditedBoard.DestroyRemains (x, y);
         }
     }
 

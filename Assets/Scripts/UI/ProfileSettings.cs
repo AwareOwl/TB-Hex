@@ -67,8 +67,7 @@ public class ProfileSettings : GOUI {
 
         Clone = CreateSprite ("UI/White", bx, by, 11, 150, 150, false);
         Selection = Clone;
-
-        Debug.Log (AppDefaults.AvailableAvatars);
+        
         for (int y = 0; y < 2; y++) {
             for (int x = 0; x < 6; x++) {
                 int number = x + y * 6 + 1;

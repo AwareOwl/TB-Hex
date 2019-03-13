@@ -92,6 +92,10 @@ public class UIString {
     public const string SaveGameModeSettings = "SaveGameModeSettings";
 
     public const string ShowPuzzleMenu = "ShowPuzzleMenu";
+    public const string PuzzleMenuRow = "PuzzleMenuRow";
+    public const string PuzzleMenuApply = "PuzzleMenuApply";
+    public const string PuzzleMenuAbout = "PuzzleMenuAbout";
+    public const string PuzzleMenuType = "PuzzleMenuType";
 
     public const string ShowProfileMenu = "ShowProfileMenu";
     public const string ShowProfileSettings = "ShowProfileSettings";

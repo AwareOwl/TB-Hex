@@ -225,7 +225,7 @@ public class MatchClass {
             return false;
         }
         HandClass hand = player.GetHand ();
-        return !player.properties.conceded && (hand == null || player.hand.atLeast1Enabled);
+        return !player.properties.conceded && (hand == null || player.hand.atLeast1Enabled) && player.properties.enabled;
     }
 
     public void SetTurnOfPlayer (int turnOfPlayer) {
@@ -338,6 +338,12 @@ public class MatchClass {
                     winnerName = winner.properties.displayName;
                 }
                 visualMatch.ShowMatchResult (winnerName, winCondition, limit);
+            }
+            if (Player.Length == 3) {
+                AIClass AI = Player [2].properties.AI;
+                if (AI != null && AI.puzzle) {
+                    ClientLogic.MyInterface.SavePuzzleResult (Properties.gameMode);
+                }
             }
             /*for (int x = 1; x <= numberOfPlayers; x++) {
                 ClientInterface client = Player [x].properties.client;

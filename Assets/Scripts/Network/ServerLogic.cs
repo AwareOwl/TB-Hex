@@ -214,6 +214,64 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SetPlayerModeSelectedSet (client.AccountName, client.GameMode, selectedSetId);
     }
 
+    static public void DownloadDataToPuzzleMenu (ClientInterface client) {
+        string accountName = client.AccountName;
+        int [] list = ServerData.GetAllGameModes ();
+        List<int> officialIds = new List<int> ();
+        List<string> officialNames = new List<string> ();
+        List<bool> officialFinished = new List<bool> ();
+
+        int [] finished = ServerData.GetUserFinishedPuzzles (accountName);
+
+        foreach (int id in list) {
+            string [] owners = ServerData.GetGameModeOwners (id);
+            if (ServerData.GetGameModeIsOfficial (id) && ServerData.GetGameModeIsPuzzle (id)) {
+                officialIds.Add (id);
+            }
+        }
+        officialIds.Sort ((a, b) => (a.CompareTo (b)));
+
+        foreach (int id in officialIds) {
+            officialNames.Add (ServerData.GetGameModeName (id));
+            officialFinished.Add (System.Array.IndexOf (finished, id) != -1);
+        }
+
+        client.TargetDownloadPuzzleList (client.connectionToClient,
+            officialNames.ToArray (), officialIds.ToArray (), officialFinished.ToArray ());
+    }
+
+    static public void DownloadPreviewToPuzzleMenu (ClientInterface client, int id) {
+        string name = ServerData.GetGameModeName (id);
+        int [] ids = ServerData.GetAllGameModeBoards (id);
+        string [] board = ServerData.GetBoard (ids [0]);
+        string [] cardPool = ServerData.GetCardPool (id);
+        client.TargetDownloadPreviewToPuzzleMenu (client.connectionToClient,
+            name, board, cardPool);
+    }
+
+    static public MatchClass StartPuzzle (ClientInterface client, int id) {
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromString (ServerData.GetCardPool (id));
+
+        HandClass hand1 = new HandClass ();
+        for (int x = 0; x < 4; x++) {
+            hand1.stack [x].Add (cardPool.Card [x]);
+        }
+        string accountName = client.AccountName;
+        int gameMode = id;
+        HandClass hand2 = new HandClass ();
+        AIClass AI2 = new AIClass ();
+        hand2.GenerateRandomHand (gameMode, AI2);
+        MatchClass match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
+            new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
+            new PlayerPropertiesClass (2, AI2, "AI opponent", ServerData.GetGameModeName (id), hand2, null) });
+        PlayerPropertiesClass properties = match.Player [2].properties;
+        properties.enabled = false;
+        properties.AI.puzzle = true;
+        StartMatch (match);
+        return match;
+    }
+
 
     static public void DownloadDataToSetEditor (ClientInterface client, int setId) {
         string accountName = client.AccountName;
@@ -323,7 +381,9 @@ public class ServerLogic : MonoBehaviour {
         foreach (int id in list) {
             string [] owners = ServerData.GetGameModeOwners (id);
             if (ServerData.GetGameModeIsOfficial (id)) {
-                officialIds.Add (id);
+                if (!ServerData.GetGameModeIsPuzzle (id)) {
+                    officialIds.Add (id);
+                }
             } else {
                 if (ServerData.GetIsGameModeLegal (id) && !ServerData.GetGameModeDeleted (id)) {
                     publicIds.Add (id);

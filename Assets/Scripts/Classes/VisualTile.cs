@@ -49,6 +49,12 @@ public class VisualTile {
         }
     }
 
+    public void DestroyRemains () {
+        if (Remains != null) {
+            GameObject.DestroyImmediate (Remains);
+        }
+    }
+
     void CreateTile (int x, int y) {
         Anchor = EnvironmentScript.CreateTile (x, -0.5f, y);
         Tile = Anchor.transform.Find ("Tile").gameObject;

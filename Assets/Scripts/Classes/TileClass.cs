@@ -101,6 +101,13 @@ public class TileClass {
         return token;
     }
 
+    public void DestroyRemains () {
+        remains = false;
+        if (visualTile != null) {
+            visualTile.DestroyRemains ();
+        }
+    }
+
     public TokenClass CreateToken (int type, int value, int owner) {
         if (enabled && token == null) {
             token = new TokenClass (this, type, value, owner);

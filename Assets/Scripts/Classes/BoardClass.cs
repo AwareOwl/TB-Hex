@@ -144,6 +144,10 @@ public class BoardClass {
         return tile [x, y].DestroyToken ();
     }
 
+    public void DestroyRemains (int x, int y) {
+        tile [x, y].DestroyRemains ();
+    }
+
     public void SaveBoard (int gameModeId, string userName, string boardName) {
         ServerData.SaveNewBoard (gameModeId, userName, boardName, BoardToString ());
     }

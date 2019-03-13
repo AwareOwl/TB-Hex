@@ -8,6 +8,8 @@ public class AIClass {
 
     int difficulty = 100;
 
+    public bool puzzle = false;
+
     public int edgeDanger = 8;
     public int surroundDanger = 5;
     public int multiTargetDanger = 5;

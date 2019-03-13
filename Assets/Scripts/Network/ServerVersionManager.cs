@@ -110,8 +110,8 @@ public class ServerVersionManager : VersionManager {
             }
             if (PathVersion <= 7) {
                 if (HotfixVersion <= 0) {
-                    if (DevelopVersion < 3) {
-                        ConvertTo0_7_0_3 ();
+                    if (DevelopVersion < 6) {
+                        ConvertTo0_7_0_6 ();
                     }
                 }
             }
@@ -150,19 +150,28 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
         RatingData.SaveRatingAbilityTokenOnRow (GetResource ("ExportFolder/Rating/AbilityTokenOnRow"));
     }
-    static public void ConvertTo0_7_0_3 () {
-        /*int [] gameModeIds = ServerData.GetAllGameModes ();
-        int count = gameModeIds.Length;
-        for (int x = 0; x < count; x++) {
-            string [] lines = ServerData.GetCardPool (gameModeIds [x]);
-            CardPoo
-        }*/
-
-        ExportRating ();
+    static public void ConvertTo0_7_0_6 () {
+        for (int x = 1; x <= 6; x++) {
+            int numberOfTurns = 3;
+            switch (x) {
+                case 1:
+                case 6:
+                    numberOfTurns = 2;
+                    break;
+                case 4:
+                    numberOfTurns = 4;
+                    break;
+            }
+            ServerData.CreateNewPuzzle ("Path0.6.0", "Puzzle #" + x.ToString (),
+                GetResource ("ExportFolder/Puzzles/Boards/Board" + x.ToString ()),
+                GetResource ("ExportFolder/Puzzles/CardPools/CardPool" + x.ToString ()),
+                numberOfTurns);
+        }
+        
         GameVersion = 0;
         PathVersion = 7;
         HotfixVersion = 0;
-        DevelopVersion = 3;
+        DevelopVersion = 6;
     }
 
     static public void ConvertTo0_6_0_11 () {

@@ -512,7 +512,7 @@ public class Language {
                 s += UI [17].Replace ("%d", limit.ToString());
                 break;
             case 2:
-                s += UI [18].Replace ("%d", limit.ToString ());
+                s += UI [18];
                 break;
             case 3:
                 s += UI [19];

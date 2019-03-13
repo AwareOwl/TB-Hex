@@ -621,7 +621,19 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 
             case UIString.ShowPuzzleMenu:
-                PuzzleMenu.LoadPuzzleMenu ();
+                PuzzleMenu.ShowPuzzleMenu ();
+                break;
+            case UIString.PuzzleMenuRow:
+                PuzzleMenu.SelectRow (number);
+                break;
+            case UIString.PuzzleMenuApply:
+                PuzzleMenu.ApplySelection ();
+                break;
+            case UIString.PuzzleMenuType:
+                PuzzleMenu.SelectType (number);
+                break;
+            case UIString.PuzzleMenuAbout:
+                GOUI.ShowMessage (Language.PuzzleAbout);
                 break;
 
             case UIString.ShowProfileMenu:

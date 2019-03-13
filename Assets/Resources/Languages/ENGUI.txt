@@ -16,7 +16,7 @@
 [15] User name
 [16] Player %s has won the match.
 [17] %d score have been reached.
-[18] %d turns have passed.
+[18] Turn limit has ben reached.
 [19] Board is full.
 [20] Game has ended with draw.
 [21] Game version on server is different. You need to run version %s if you want to connect to this server.

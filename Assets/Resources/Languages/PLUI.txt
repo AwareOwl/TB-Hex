@@ -16,7 +16,7 @@
 [15] Nazwa użytkownika
 [16] Gracz %s wygrał ten mecz.
 [17] Próg %d punktów został osiągnięty.
-[18] Upłynęło %d tur.
+[18] Limit tur został osiągnięty.
 [19] Brak możliwych ruchów.
 [20] Gra zakończyła się remisem.
 [21] Wersja gry na serwerze jest inna. Jeśli chcesz połączyć się z serwerem, musisz uruchomić wersję %s.

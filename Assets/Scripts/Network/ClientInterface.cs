@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.7.0.3");
+            CmdCompareServerVersion ("0.7.0.6");
         }
     }
 
@@ -54,9 +54,20 @@ public class ClientInterface : NetworkBehaviour {
         ClientLogic.LogIn (accountName, userName);
     }
 
+    public void SavePuzzleResult (int id) {
+        if (isServer) {
+            ServerData.SetUserFinishedPuzzle (AccountName, id);
+        }
+    }
+
     [Command]
     public void CmdJoinGameAgainstAI () {
         ServerLogic.JoinGameAgainstAI (this);
+    }
+
+    [Command]
+    public void CmdStartPuzzle (int id) {
+        ServerLogic.StartPuzzle (this, id);
     }
 
     [Command]
@@ -102,6 +113,26 @@ public class ClientInterface : NetworkBehaviour {
     [TargetRpc]
     public void TargetInvalidVersionMessage (NetworkConnection target, string serverVersion) {
         GOUI.ShowMessage (Language.GetInvalidGameVersionMessage (serverVersion), "ExitGame");
+    }
+
+    [Command]
+    public void CmdDownloadDataToPuzzleMenu () {
+        ServerLogic.DownloadDataToPuzzleMenu (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadPuzzleList (NetworkConnection target, string [] officialNames, int [] officialIds, bool [] officialFinished) {
+        PuzzleMenu.LoadPuzzleMenu (officialNames, officialIds, officialFinished);
+    }
+
+    [Command]
+    public void CmdDownloadPreviewToPuzzleMenu (int id) {
+        ServerLogic.DownloadPreviewToPuzzleMenu (this, id);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadPreviewToPuzzleMenu (NetworkConnection target, string puzzleName, string [] puzzleBoard, string [] puzzleCardPool) {
+        PuzzleMenu.LoadPuzzlePreview (puzzleName, puzzleBoard, puzzleCardPool);
     }
 
     [Command]
