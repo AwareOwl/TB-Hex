@@ -326,6 +326,9 @@ public class SetEditor : GOUI {
             FilterMenuButton [x].FreeAndUnlcok ();
         }
         if (currentFilterMenu == number) {
+            if (FilterMenuBackground != null) {
+                DestroyImmediate (FilterMenuBackground);
+            }
             currentFilterMenu = -1;
         } else {
             FilterMenuButton [number].PressAndLock ();

@@ -191,6 +191,7 @@ public class ServerLogic : MonoBehaviour {
                 }
             }
         }
+        client.TargetDownloadCurrentGamePlayedMove (client.connectionToClient, (match.LastMove != null) ? match.LastMove.PlayedToString () : null);
         client.TargetFinishDownloadCurrentGame (client.connectionToClient, client.playerNumber);
     }
     /*

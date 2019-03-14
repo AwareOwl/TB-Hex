@@ -139,6 +139,9 @@ public class Language {
     static public string MinimumNumberOfCardsInStack;
     static public string UsedCardsArePlacedOnBottomOfStack;
 
+    static public string NumberOfTurnsLeftToTheEndOfGame;
+    static public string ShowMenu;
+
     static public string Profile;
     static public string ThisGameVersion;
     static public string AllGameVersions;
@@ -375,6 +378,8 @@ public class Language {
         Finished = UI [146];
         ListOfPuzzles = UI [147];
         UsedCardsArePlacedOnBottomOfStack = UI [148];
+        NumberOfTurnsLeftToTheEndOfGame = UI [149];
+        ShowMenu = UI [150];
 
 
         path = "Languages/" + FileName [language] + UITooltipKey;

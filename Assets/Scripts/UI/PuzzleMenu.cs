@@ -19,6 +19,8 @@ public class PuzzleMenu : GOUI {
     static GameObject [,] visualTile = new GameObject [8, 8];
     static VisualToken [,] visualToken = new VisualToken [8, 8];
 
+    static Text PuzzleNameText;
+
     static int selectedRow = -1;
     static int selectedId = -1;
     static int pageType = 0;
@@ -88,7 +90,6 @@ public class PuzzleMenu : GOUI {
             GameObject Clone = puzzleRow [x];
             UIController UIC = Clone.GetComponent<UIController> ();
             UIC.FreeAndUnlcok ();
-            Debug.Log (Clone.GetComponent<SpriteRenderer> ().sprite);
             GameObject Text = puzzleRowText [x];
             int number = x + currentPage * count;
 
@@ -159,8 +160,10 @@ public class PuzzleMenu : GOUI {
         Clone = CreateUIText (Language.ListOfPuzzles, 325, 120, 500, 36);
         Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
 
-        Clone = CreateUIText ("Puzzle #9", 1015, 120, 500, 36);
-        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
+        Clone = CreateUIText ("", 1015, 120, 500, 36);
+        Text text = Clone.GetComponent<Text> ();
+        text.alignment = TextAnchor.MiddleLeft;
+        PuzzleNameText = text;
 
         /*Clone = CreateUIText (Language.PuzzleAbout, 360, 210, 600, 24);
         Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;*/
@@ -225,6 +228,8 @@ public class PuzzleMenu : GOUI {
     }
     static public void CreatePuzzlePreview (string puzzleName, string [] puzzleBoard, string [] puzzleCardPool) {
         GameObject Clone;
+
+        PuzzleNameText.text = puzzleName;
 
         BoardClass board = new BoardClass ();
         board.LoadFromString (puzzleBoard);

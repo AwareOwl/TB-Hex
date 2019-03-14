@@ -116,6 +116,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 9) {
                         ConvertTo0_7_0_9 ();
                     }
+                    if (DevelopVersion < 10) {
+                        ConvertTo0_7_0_10 ();
+                    }
                 }
             }
         }
@@ -123,8 +126,10 @@ public class ServerVersionManager : VersionManager {
 
     static public void FinalizeServerVersion () {
         ServerData.SetServerKeyData (ServerData.VersionKey, GetVersion ());
+
         RatingClass.LoadAbility_AbilitySynergy ();
         RatingClass.LoadAbility_TokenSynergy ();
+        RatingClass.LoadToken_TokenSynergy ();
 
         RatingClass.LoadAbilityAfterAbility ();
         RatingClass.LoadAbilityAfterToken ();
@@ -132,15 +137,18 @@ public class ServerVersionManager : VersionManager {
         RatingClass.LoadTokenAfterToken ();
 
         RatingClass.LoadAbilityOnRow ();
-        RatingClass.LoadAbilityStackSize ();
         RatingClass.LoadTokenOnRow ();
-        RatingClass.LoadTokenStackSize ();
         RatingClass.LoadAbilityTokenOnRow ();
+
+        RatingClass.LoadAbilityStackSize ();
+        RatingClass.LoadTokenStackSize ();
+        //RatingClass.LoadAbilityTokenStackSize ();
     }
 
     static public void ExportRating () {
-        RatingData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/AbilityAbilitySynergy"));
-        RatingData.SaveRatingAbility_TokenSynergy (GetResource ("ExportFolder/Rating/AbilityTokenSynergy"));
+        RatingData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/Ability_AbilitySynergy"));
+        RatingData.SaveRatingAbility_TokenSynergy (GetResource ("ExportFolder/Rating/Ability_TokenSynergy"));
+        RatingData.SaveRatingToken_TokenSynergy (GetResource ("ExportFolder/Rating/Token_TokenSynergy"));
 
         RatingData.SaveRatingAbilityAfterAbility (GetResource ("ExportFolder/Rating/AbilityAfterAbility"));
         RatingData.SaveRatingAbilityAfterToken (GetResource ("ExportFolder/Rating/AbilityAfterToken"));
@@ -148,10 +156,43 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingTokenAfterToken (GetResource ("ExportFolder/Rating/TokenAfterToken"));
 
         RatingData.SaveRatingAbilityOnRow (GetResource ("ExportFolder/Rating/AbilityOnRow"));
-        RatingData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
         RatingData.SaveRatingTokenOnRow (GetResource ("ExportFolder/Rating/TokenOnRow"));
-        RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
         RatingData.SaveRatingAbilityTokenOnRow (GetResource ("ExportFolder/Rating/AbilityTokenOnRow"));
+
+        RatingData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
+        RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
+        //RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
+    }
+
+    static public void ConvertTo0_7_0_10 () {
+
+        int newId;
+        newId = ServerData.CreateNewGameMode ("");
+        ServerData.SetCardPool (newId, GetResource ("ExportFolder/v0.7/CardPools/CardPool"));
+        ServerData.SetGameModeName (newId, "Version 0.7.0");
+        ServerData.SetGameModeIsOfficial (newId, true);
+
+        int newBoardId;
+        newBoardId = ServerData.SaveNewBoard (newId, "Path0.7.0.0", "Board 11",
+        GetResource ("ExportFolder/v0.7/Boards/Board11"));
+        ServerData.SetBoardIsOfficial (newBoardId, true);
+
+        int [] officialBoards = ServerData.GetAllOfficialNonPuzzleBoards ();
+        foreach (int offId in officialBoards) {
+            string name = ServerData.GetBoardName (offId);
+            if (name != "Board 6") {
+                Debug.Log (offId);
+                ServerData.SetGameModeBoard (newId, offId);
+            }
+        }
+
+        CopyPlayerGameModeSets ("Version 0.6.0", newId);
+
+
+        GameVersion = 0;
+        PathVersion = 7;
+        HotfixVersion = 0;
+        DevelopVersion = 10;
     }
 
 
@@ -224,7 +265,7 @@ public class ServerVersionManager : VersionManager {
             ServerData.RemoveGameModeBoard (gM1, gmb);
         }
 
-        int [] officialBoards = ServerData.GetAllOfficialBoards ();
+        int [] officialBoards = ServerData.GetAllOfficialNonPuzzleBoards ();
         foreach (int offId in officialBoards) {
             string name = ServerData.GetBoardName (offId);
             switch (name) {
@@ -268,7 +309,7 @@ public class ServerVersionManager : VersionManager {
         ServerData.SetGameModeName (newId, "Version 0.5.0");
         ServerData.SetGameModeIsOfficial (newId, true);
 
-        int [] officialBoards = ServerData.GetAllOfficialBoards ();
+        int [] officialBoards = ServerData.GetAllOfficialNonPuzzleBoards ();
         foreach (int offId in officialBoards) {
             ServerData.SetGameModeBoard (newId, offId);
         }
@@ -337,7 +378,7 @@ public class ServerVersionManager : VersionManager {
 
     static public void ConvertTo0_4_0_7 () {
 
-        int [] boardIds = ServerData.GetAllBoards ();
+        int [] boardIds = ServerData.GetAllNonPuzzleBoards ();
         foreach (int boardId in boardIds) {
             ServerData.SetBoardMatchTypes (boardId, new int [] { 0, 1 });
         }
@@ -353,7 +394,7 @@ public class ServerVersionManager : VersionManager {
         ServerData.SetGameModeName (newId, "Version 0.4.0");
         ServerData.SetGameModeIsOfficial (newId, true);
 
-        int [] officialBoards = ServerData.GetAllOfficialBoards ();
+        int [] officialBoards = ServerData.GetAllOfficialNonPuzzleBoards ();
         foreach (int offId in officialBoards) {
             ServerData.SetGameModeBoard (newId, offId);
         }

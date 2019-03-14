@@ -222,6 +222,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 Tooltip.NewTooltip (transform, Language.CreateNewSet);
                 break;
 
+
+            case UIString.TurnCounter:
+                Tooltip.NewTooltip (transform, Language.NumberOfTurnsLeftToTheEndOfGame);
+                break;
+
             case UIString.ShowGameModeEditor:
                 if (GameModeMenu.currentGroup < 2) {
                     Tooltip.NewTooltip (transform, Language.ViewGameModeEditor);

@@ -683,15 +683,22 @@ public class MatchClass {
         //Debug.Log ("2");
 
         abilityType = newAbilityType;
-        if (abilityType == 7) {
-            CardClass lastPlayedCard = GetLastPlayedCard ();
-            bool triggered = LastMove != null && lastPlayedCard.abilityType != abilityType;
-            if (visualMatch != null) {
-                VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, triggered);
-            }
-            if (triggered) {
-                abilityType = lastPlayedCard.abilityType;
-            }
+        switch (abilityType) {
+            case 7:
+                CardClass lastPlayedCard = GetLastPlayedCard ();
+                bool triggered = LastMove != null && lastPlayedCard.abilityType != abilityType;
+                if (visualMatch != null) {
+                    VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, triggered);
+                }
+                if (triggered) {
+                    abilityType = lastPlayedCard.abilityType;
+                }
+                break;
+            case 38:
+                if (visualMatch != null) {
+                    VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, true);
+                }
+                break;
         }
         return abilityType;
     }

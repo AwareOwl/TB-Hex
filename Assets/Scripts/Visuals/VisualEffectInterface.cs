@@ -33,6 +33,15 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.SetLastPosition (new Vector3 (0, 2, 0));
                 VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
                 break;
+            case 38:
+                VES = CreateSimpleEffect (GetRealAnchor (x, y), "Textures/Ability/Ability38", col, triggered, true);
+                VES.rotateToCamera = true;
+                VES.SetLastPosition (new Vector3 (0, 1f, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 2, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPhaseTimer (2f);
+                break;
         }
     }
 
@@ -393,6 +402,67 @@ public class VisualEffectInterface : MonoBehaviour {
                 VES.rotateToCamera = true;
                 VES.SetLastScale (new Vector3 (1.1f, 1.1f, 1.1f));
                 VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                break;
+
+            case 35:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Dot", col, triggered, autoDestroy);
+                VES.SetLastPosition (new Vector3 (0, 1, 0));
+                VES.SetScale (new Vector3 (0, 0, 0));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 0f, 0));
+                VES.SetLastScale (new Vector3 (0.75f, 0.75f, 0.75f));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetPhaseTimer (0.75f);
+                VES.rotateToCamera = true;
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Dot", col, triggered, autoDestroy);
+                VES.gameObject.transform.localEulerAngles = new Vector3 (90, 0, 0);
+                VES.SetLastScale (new Vector3 (0, 0, 0));
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.AddPhase ();
+                VES.AddPhase ();
+                VES.SetLastScale (new Vector3 (1.5f, 1.5f, 1.5f));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetPhaseTimer (0.75f);
+
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Spike", col, triggered, autoDestroy);
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1));
+                VES.SetLastPosition (new Vector3 (0, 1, 0));
+                VES.SetScale (new Vector3 (0.4f, 0, 1));
+                VES.AddPhase ();
+                VES.SetLastPosition (new Vector3 (0, 1, 0));
+                VES.SetLastScale (new Vector3 (0, 2, 1));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.rotateToCameraVertical = true;
+                break;
+
+            case 36:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Ring", col, triggered, autoDestroy);
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.SetScale (new Vector3 (1, 1, 1));
+                VES.AddPhase ();
+                VES.SetPhaseTimer (0.5f);
+                VES.SetLastScale (new Vector3 (1.2f, 1.2f, 1.2f));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1));
+                VES.AddPhase ();
+                VES.SetPhaseTimer (1.25f);
+                VES.SetLastScale (new Vector3 (1f, 1f, 1));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.gameObject.transform.localEulerAngles = new Vector3 (90, 0, 0);
+                break;
+            case 37:
+                VES = CreateSimpleEffect (anchor, "Textures/Effects/Snake", col, triggered, autoDestroy);
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 1));
+                VES.SetLastPosition (new Vector3 (0, 0, 0));
+                VES.SetScale (new Vector3 (1, 1, 1));
+                VES.AddPhase ();
+                VES.SetPhaseTimer (2f);
+                VES.SetLastScale (new Vector3 (1.2f, 1.2f, 1.2f));
+                VES.SetLastColor (new Color (col.r, col.g, col.b, 0));
+                VES.SetRotateVector (new Vector3 (0, 0, 320));
+                VES.gameObject.transform.localEulerAngles = new Vector3 (90, 0, 0);
                 break;
         }
     }

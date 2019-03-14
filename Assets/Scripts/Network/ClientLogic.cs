@@ -67,6 +67,15 @@ public class ClientLogic : MonoBehaviour {
         player.hand.LoadFromModeString (lines);
     }
 
+    static public void LoadCurrentGamePlayedMove (string [] lines) {
+        if (lines == null || lines.Length == 0) {
+            return;
+        }
+        MatchClass match = InGameUI.PlayedMatch;
+        match.LastMove = new MoveHistoryClass ();
+        match.LastMove.PlayedLoadFromString (match, lines);
+    }
+
     static public void LoadCustomGameRoom (bool isHost, string gameName, int matchType, int [] avatars, string [] names, bool [] AIs) {
         if (GOUI.CurrentGOUI.GetType () != typeof (CustomGameRoom)) {
             CustomGameRoom.ShowCustomGameRoom ();

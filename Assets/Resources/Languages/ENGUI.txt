@@ -147,3 +147,5 @@
 [146] Finished
 [147] List of puzzles
 [148] Used cards are placed on the bottom of stack.
+[149] Number of turns left to the end of match
+[150] Show menu

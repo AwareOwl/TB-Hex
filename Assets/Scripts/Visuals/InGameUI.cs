@@ -221,9 +221,11 @@ public class InGameUI : GOUI {
     static public void CreateTurnUI () {
         GameObject Clone;
         Clone = CreateSprite ("UI/White", 75, 45, 10, 120, 70, true);
+        Clone.name = UIString.TurnCounter;
         //Clone = CreateSprite ("UI/Panel_PopUp_01_Sliced", 75, 45, 10, 120, 75, true);
         Clone.GetComponent<Renderer> ().material.color = Color.black;
         Clone = CreateSprite ("Textures/Other/Turn", 45, 45, 11, 45, 45, true);
+        Clone.GetComponent<Collider> ().enabled = false;
         if (PlayedMatch.Properties.turnWinCondition) {
             Clone = CreateText (PlayedMatch.TurnsLeft ().ToString (), 100, 45, 11, 0.025f);
         } else {
@@ -308,11 +310,15 @@ public class InGameUI : GOUI {
 
             switch (abilityType) {
                 case 7:
-                    GameObject Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, false, false);
+                    GameObject Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, true, false);
                     Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
                     if (PlayedMatch.LastMove != null) {
                         abilityType = PlayedMatch.GetLastPlayedCard ().abilityType;
                     }
+                    break;
+                case 38:
+                    Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, true, false);
+                    Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
                     break;
             }
             VectorInfo info = PlayedMatch.GetVectorInfo (x, y, myPlayerNumber, abilityArea, abilityType, new TokenClass (null, tokenType, tokenValue, myPlayerNumber));

@@ -33,3 +33,7 @@
 [32] Essence of bodies
 [33] Viral greed
 [34] Fear
+[35] Greater crush
+[36] Travel
+[37] Role swap
+[38] Risky start

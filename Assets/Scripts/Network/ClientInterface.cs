@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.7.0.6");
+            CmdCompareServerVersion ("0.7.0.10");
         }
     }
 
@@ -255,6 +255,11 @@ public class ClientInterface : NetworkBehaviour {
     [TargetRpc]
     public void TargetDownloadCurrentGameHand (NetworkConnection target, int playerNumber, string [] lines) {
         ClientLogic.LoadCurrentGameHand (playerNumber, lines);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadCurrentGamePlayedMove (NetworkConnection target, string [] lines) {
+        ClientLogic.LoadCurrentGamePlayedMove (lines);
     }
 
 

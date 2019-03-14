@@ -34,6 +34,6 @@
 [33] Poświęć 20 zdobytych punktów aby zmienić typy żetonów będących celem na typ zagranego żetonu.
 [34] Odpycha żetony będące celem od zagrywanego żetonu, o ile mogą być odepchnięte na puste pola.
 [35] Niszczy słabsze żetony będące celem.
-[36] Zamienia miejscami 2 żetony będące celem.
+[36] Zamienia pozycje 2 żetonów będące celem.
 [37] Zamienia typy 2 żetonów będących celem.
-[38] Zmienia wartość żetonu na tej karcie na 1.
+[38] Zmniejsza wartość żetonu na tej karcie o 1.

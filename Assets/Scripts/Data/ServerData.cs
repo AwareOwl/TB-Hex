@@ -37,6 +37,7 @@ public class ServerData : MonoBehaviour {
     static public string OfficialKey = "Official";
     static public string GameModeOfficialKey = "GameModeOfficialKey";
     static public string GameModePuzzleKey = "GameModePuzzleKey";
+    static public string BoardPuzzleKey = "BoardPuzzleKey";
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
     static public string SetNameKey = "SetName";
     static public string SetIconNumberKey = "SetIconNumber";
@@ -483,6 +484,19 @@ public class ServerData : MonoBehaviour {
         return isOfficialString;
     }
 
+    static public bool GetBoardIsPuzzle (int boardId) {
+        string path = BoardContentPath (boardId);
+        string s = GetKeyData (KeyDataPath (path), BoardPuzzleKey);
+        return Convert.ToBoolean (s);
+    }
+
+    static public string SetBoardIsPuzzle (int boardId, bool isPuzzle) {
+        string path = BoardContentPath (boardId);
+        string isPuzzleString = isPuzzle.ToString ();
+        SetKeyData (KeyDataPath (path), BoardPuzzleKey, isPuzzleString);
+        return isPuzzleString;
+    }
+
     static public bool GetGameModeIsOfficial (int gameModeId) {
         string path = GameModeContentPath (gameModeId);
         string s = GetKeyData (KeyDataPath (path), GameModeOfficialKey);
@@ -576,19 +590,21 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
-    static public int [] GetAllBoards () {
+    static public int [] GetAllNonPuzzleBoards () {
         string [] s = Directory.GetDirectories (BoardContentPath ());
         List<int> ids = new List<int> ();
         for (int x = 0; x < s.Length; x++) {
             s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
             int id = int.Parse (s [x]);
-            ids.Add (id);
+            if (!GetBoardIsPuzzle (id)) {
+                ids.Add (id);
+            }
         }
         return ids.ToArray();
     }
 
-    static public int [] GetAllOfficialBoards () {
-        int [] ids = GetAllBoards ();
+    static public int [] GetAllOfficialNonPuzzleBoards () {
+        int [] ids = GetAllNonPuzzleBoards ();
         List<int> officialIds = new List<int> ();
         foreach (int id in ids) {
             if (GetBoardIsOfficial (id)) {
@@ -969,6 +985,7 @@ public class ServerData : MonoBehaviour {
         SetGameModeUsedCardsArePutOnBottomOfStack (newId, false);
         newBoardId = SaveNewBoard (newId, patchName, "Board", board);
         SetBoardIsOfficial (newBoardId, true);
+        SetBoardIsPuzzle (newBoardId, true);
     }
 
 

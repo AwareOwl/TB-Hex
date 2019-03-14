@@ -33,3 +33,7 @@
 [32] Increases value of played token by 1 for every target remains of destroyed tokens.
 [33] Sacrifice 20 earned points to change types of target tokens to type of played token.
 [34] Pushes target tokens away from played token, if it's possible to push them on empty tiles.
+[35] Destroys weaker target tokens.
+[36] Swaps positions of 2 target tokens.
+[37] Swaps types of 2 target tokens.
+[38] Reduces value of token on this card by 1.
