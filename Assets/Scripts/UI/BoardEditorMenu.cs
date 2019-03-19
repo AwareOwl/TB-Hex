@@ -36,6 +36,45 @@ public class BoardEditorMenu : GOUI {
         CurrentGOUI = this;
     }
 
+    public void Update () {
+        if (Input.GetKey ("p")) {
+            for (int x = 1; x <= 4; x++) {
+                if (Input.GetKeyDown (x.ToString ())) {
+                    TestPuzzle (x);
+                }
+            }
+        }
+        
+    }
+
+    static public void TestPuzzle (int numberOfTurns) {
+        ClientInterface client = ClientLogic.MyInterface;
+        int id = GameModeEditor.gameModeId;
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromString (ServerData.GetCardPool (id));
+
+        HandClass hand1 = new HandClass ();
+        for (int x = 0; x < 4; x++) {
+            hand1.stack [x].Add (cardPool.Card [x]);
+        }
+        string accountName = client.AccountName;
+        int gameMode = id;
+        HandClass hand2 = new HandClass ();
+        AIClass AI2 = new AIClass ();
+        hand2.GenerateRandomHand (gameMode, AI2);
+        MatchClass match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
+            new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
+            new PlayerPropertiesClass (2, AI2, "AI opponent", ServerData.GetGameModeName (id), hand2, null) });
+        PlayerPropertiesClass properties = match.Player [2].properties;
+        match.Properties.turnLimit = numberOfTurns;
+
+        match.Board = new BoardClass (match);
+        match.Board.LoadFromFile (currentId);
+        properties.enabled = false;
+        properties.AI.puzzle = true;
+        ServerLogic.StartMatch (match);
+    }
+
     static public void LoadDataToEditor (int id, bool isClientOwner, string boardName, string [] board, int [] matchTypes) {
         DestroyMenu ();
         currentId = id;
@@ -62,6 +101,10 @@ public class BoardEditorMenu : GOUI {
     static public void SaveMatchTypes (int [] newMatchTypes) {
         matchTypes = newMatchTypes;
         ClientLogic.MyInterface.CmdSaveBoardMatchTypes (currentId, matchTypes);
+    }
+
+    static public void ShowBoardEditorMenu () {
+        ShowBoardEditorMenu (currentId);
     }
 
     static public void ShowBoardEditorMenu (int id) {

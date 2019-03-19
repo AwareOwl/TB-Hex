@@ -164,6 +164,13 @@ public class ServerVersionManager : VersionManager {
         //RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
     }
 
+    static public void ConvertTo0_8_0_2 () {
+        GameVersion = 0;
+        PathVersion = 8;
+        HotfixVersion = 0;
+        DevelopVersion = 2;
+    }
+
     static public void ConvertTo0_7_0_10 () {
 
         int newId;

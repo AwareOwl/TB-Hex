@@ -43,5 +43,8 @@ public class InputController : MonoBehaviour {
             Debug.Log ("Debugging enabled");
             debuggingEnabled = true;
         }
+        if (Input.GetKey ("b") && Input.GetKeyDown ("e")) {
+            BoardEditorMenu.ShowBoardEditorMenu ();
+        }
 	}
 }
