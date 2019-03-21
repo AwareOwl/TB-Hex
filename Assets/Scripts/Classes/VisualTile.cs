@@ -84,9 +84,15 @@ public class VisualTile {
     }
 
     public void EnableTile (bool enable) {
-        Tile.GetComponent<VisualEffectScript> ().SetColor (EnvironmentScript.TileColor (enable));
+        Tile.GetComponent<VisualEffectScript> ().SetColor (EnvironmentScript.TileColorMain (enable));
         if (enable) {
             Anchor.GetComponent<VisualEffectScript> ().PushToHeight (0);
+            GameObject ThemeTile = EnvironmentScript.BackgroundThemeTiles [tile.x + 1, tile.y + 1];
+            if (ThemeTile != null) {
+                Vector3 pos = ThemeTile.transform.localPosition;
+                ThemeTile.transform.localPosition = new Vector3 (pos.x, EnvironmentScript.themeEnabledHeight, pos.z);
+                ThemeTile.GetComponent<VisualEffectScript> ().SetColor (EnvironmentScript.TileColorTheme (true));
+            }
             Border.GetComponent<Renderer> ().enabled = false;
         } else {
             Anchor.GetComponent<VisualEffectScript> ().PushToHeight (EnvironmentScript.disabledHeight);

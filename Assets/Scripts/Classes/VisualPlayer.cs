@@ -65,7 +65,9 @@ public class VisualPlayer {
         Clone = GOUI.CreateSprite ("UI/White");
         GOUI.SetInPixScale (Clone, barLength, 30);
         GOUI.SetInPixPosition (Clone, barPosition, 25, 11);
-        GOUI.SetSpriteColor (Clone, AppDefaults.PlayerColor [playerNumber + 1] * 0.5f);
+        Color col = AppDefaults.PlayerColor [playerNumber + 1] * 0.5f;
+        col.a = 1;
+        GOUI.SetSpriteColor (Clone, col);
 
         Clone = GOUI.CreateSprite ("UI/White");
         GOUI.SetSpriteColor (Clone, AppDefaults.PlayerColor [playerNumber + 1]);

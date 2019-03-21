@@ -120,6 +120,16 @@ public class ServerVersionManager : VersionManager {
                         ConvertTo0_7_0_10 ();
                     }
                 }
+                PathVersion = 8;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
+            }
+            if (PathVersion <= 8) {
+                if (HotfixVersion <= 0) {
+                    if (DevelopVersion < 2) {
+                        ConvertTo0_8_0_2 ();
+                    }
+                }
             }
         }
     }
@@ -165,6 +175,19 @@ public class ServerVersionManager : VersionManager {
     }
 
     static public void ConvertTo0_8_0_2 () {
+        for (int x = 7; x <= 17; x++) {
+            int numberOfTurns = 4;
+            switch (x) {
+                case 8:
+                    numberOfTurns = 3;
+                    break;
+            }
+            ServerData.CreateNewPuzzle ("Path0.8.0", "Puzzle #" + x.ToString (),
+                GetResource ("ExportFolder/Puzzles/Boards/Board" + x.ToString ()),
+                GetResource ("ExportFolder/Puzzles/CardPools/CardPool" + x.ToString ()),
+                numberOfTurns);
+        }
+
         GameVersion = 0;
         PathVersion = 8;
         HotfixVersion = 0;

@@ -20,6 +20,8 @@ public class AppDefaults {
     static public Object ChalliceTile;
     static public Object LilyLeaf;
     static public Object LilyFlower;
+    static public Object Honeycomb;
+    static public Object SmoothTile;
 
     static public float TokenSpawnHeight = 10f;
 
@@ -33,6 +35,9 @@ public class AppDefaults {
         ChalliceTile = Resources.Load ("Prefabs/ChalliceTile");
         LilyLeaf = Resources.Load ("Prefabs/PreLilyLeaf");
         LilyFlower = Resources.Load ("Prefabs/PreLilyFlower");
+        Honeycomb = Resources.Load ("Prefabs/PreHoneycomb");
+        SmoothTile = Resources.Load ("Prefabs/PreSmoothTile");
+
         sprite = Shader.Find ("Sprites/Default");
     }
 

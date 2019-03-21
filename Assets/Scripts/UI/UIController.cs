@@ -640,6 +640,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.PuzzleMenuAbout:
                 GOUI.ShowMessage (Language.PuzzleAbout);
                 break;
+            case UIString.PuzzleMenuPageButton:
+                PuzzleMenu.SelectPage (number);
+                break;
 
             case UIString.ShowProfileMenu:
                 ProfileMenu.ShowProfileMenu ();

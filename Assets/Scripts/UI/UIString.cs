@@ -96,6 +96,7 @@ public class UIString {
     public const string PuzzleMenuApply = "PuzzleMenuApply";
     public const string PuzzleMenuAbout = "PuzzleMenuAbout";
     public const string PuzzleMenuType = "PuzzleMenuType";
+    public const string PuzzleMenuPageButton = "PuzzleMenuPageButton";
 
     public const string TurnCounter = "TurnCounter";
 

@@ -71,19 +71,13 @@ public class PuzzleMenu : GOUI {
         }
     }
 
+    static public void SelectPage (int number) {
+        currentPage = number;
+        RefreshPage ();
+    }
+
     static public void RefreshPage () {
-        List<int> list;
-        switch (pageType) {
-            case 0:
-                list = unfinishedIndex;
-                break;
-            case 1:
-                list = finishedIndex;
-                break;
-            default:
-                list = null;
-                break;
-        }
+        List<int> list = SelectedList ();
         int count = puzzleRow.GetLength (0);
         int puzzleCount = list.Count;
         for (int x = 0; x < count; x++) {
@@ -96,7 +90,7 @@ public class PuzzleMenu : GOUI {
            
             if (number < puzzleCount) {
                 SetSprite (Clone, "UI/Panel_Slot_01_Sliced", true);
-                if (RowNumberToId (number) == selectedId) {
+                if (RowNumberToId (x) == selectedId) {
                     UIC.PressAndLock ();
                 }
                 
@@ -139,6 +133,9 @@ public class PuzzleMenu : GOUI {
     }
 
     static UIController [] typeButton = new UIController [2];
+    static public void SelectType () {
+        SelectType (pageType);
+    }
 
     static public void SelectType (int type) {
         pageType = type;
@@ -146,6 +143,13 @@ public class PuzzleMenu : GOUI {
             typeButton [x].FreeAndUnlcok ();
         }
         typeButton [type].PressAndLock ();
+
+        List<int> list = SelectedList ();
+        int count = puzzleRow.GetLength (0);
+        int puzzleCount = list.Count;
+        int pageCount = Mathf.Max (1, (puzzleCount - 1) / count + 1);
+        pageUI.Init (10, pageCount, new Vector2Int (90, 870), UIString.PuzzleMenuPageButton);
+
         RefreshPage ();
     }
 
@@ -171,6 +175,9 @@ public class PuzzleMenu : GOUI {
         Clone = CreateSprite ("UI/Butt_S_Help", 1320, 90, 11, 64, 64, true);
         Clone.name = UIString.PuzzleMenuAbout;
 
+
+        GameObject pageUIObject = new GameObject ();
+        pageUI = pageUIObject.AddComponent<PageUI> ();
 
         puzzleRow = new GameObject [9];
         puzzleRowText = new GameObject [9];
@@ -214,10 +221,6 @@ public class PuzzleMenu : GOUI {
 
         SelectType (0);
 
-        /*
-        GameObject pageUIObject = new GameObject ();
-        pageUI = pageUIObject.AddComponent<PageUI> ();
-        pageUI.Init (10, 16, new Vector2Int (90, 870), "");*/
 
         Clone = CreateSprite ("UI/Butt_M_Apply", 105, 975, 11, 90, 90, true);
         Clone.name = UIString.PuzzleMenuApply;
@@ -254,7 +257,7 @@ public class PuzzleMenu : GOUI {
                 tileAnchor.transform.parent = CurrentCanvas.transform;
                 tileAnchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
                 VisualEffectScript TEffect = Tile.gameObject.AddComponent<VisualEffectScript> ();
-                TEffect.SetColor (EnvironmentScript.TileColor (true, 1) * 0.75f);
+                TEffect.SetColor (EnvironmentScript.TileColorMain (true, 1) * 0.75f);
                 visualTile [x, y] = tileAnchor;
 
                 Vector3 V3 = VisualTile.TilePosition (x, 0, 8 - y);
@@ -287,5 +290,7 @@ public class PuzzleMenu : GOUI {
 
             SetInPixPosition (VC [x].Anchor, 915 + 120 * x, 925, 12);
         }
+
+        SelectType ();
     }
 }

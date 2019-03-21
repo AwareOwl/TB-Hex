@@ -27,6 +27,9 @@ public class GameModeEditor : GOUI {
     }
 
     static public void ShowGameModeEditor () {
+        if (InputController.debuggingEnabled) {
+            Debug.Log (gameModeId);
+        }
         ClientLogic.MyInterface.CmdDownloadGameModeToEditor (gameModeId);
     }
 
