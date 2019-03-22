@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.8.0.5");
+            CmdCompareServerVersion ("0.8.0.6");
         }
     }
 
@@ -45,10 +45,10 @@ public class ClientInterface : NetworkBehaviour {
 
     
     [TargetRpc]
-    public void TargetShowMatchResult (NetworkConnection target, string winnerName, int winCondition, int limit, 
+    public void TargetShowMatchResult (NetworkConnection target, int matchType, string winnerName, int winCondition, int limit, 
         int level, int currentExperience, int maxExperience, int experienceGain) {
         Debug.Log ("Wat");
-        InGameUI.PlayedMatch.visualMatch.ShowMatchResult (winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
+        InGameUI.PlayedMatch.visualMatch.ShowMatchResult (matchType, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
     }
 
     [TargetRpc]
@@ -58,7 +58,7 @@ public class ClientInterface : NetworkBehaviour {
 
     public void SavePuzzleResult (int id) {
         if (isServer) {
-            ServerData.SetUserFinishedPuzzle (AccountName, id);
+            ServerLogic.SavePuzzleResult (AccountName, id);
         }
     }
 
@@ -123,8 +123,8 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadPuzzleList (NetworkConnection target, string [] officialNames, int [] officialIds, bool [] officialFinished) {
-        PuzzleMenu.LoadPuzzleMenu (officialNames, officialIds, officialFinished);
+    public void TargetDownloadPuzzleList (NetworkConnection target, string [] officialNames, int [] officialIds, bool [] officialFinished, int toUnlockCount) {
+        PuzzleMenu.LoadPuzzleMenu (officialNames, officialIds, officialFinished, toUnlockCount);
     }
 
     [Command]

@@ -132,6 +132,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 5) {
                         ConvertTo0_8_0_5 ();
                     }
+                    if (DevelopVersion < 6) {
+                        ConvertTo0_8_0_6 ();
+                    }
                 }
             }
         }
@@ -191,6 +194,23 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
         RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
         //RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
+    }
+
+    static public void ConvertTo0_8_0_6 () {
+
+        string [] users = ServerData.GetAllUsers ();
+        foreach (string user in users) {
+            int [] puzzleId = ServerData.GetUserFinishedPuzzles (user);
+            int count = puzzleId.Length;
+            for (int x = 0; x < count; x++) {
+                ServerLogic.SavePuzzleResult (user, puzzleId [x]);
+            }
+        }
+
+        GameVersion = 0;
+        PathVersion = 8;
+        HotfixVersion = 0;
+        DevelopVersion = 6;
     }
 
     static public void ConvertTo0_8_0_5 () {

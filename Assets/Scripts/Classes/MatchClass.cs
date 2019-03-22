@@ -71,7 +71,11 @@ public class MatchClass {
         if (finished) {
             return;
         }
-        Player [playerNumber].properties.conceded = true;
+        PlayerPropertiesClass concededPlayer = Player [playerNumber].properties;
+        concededPlayer.conceded = true;
+        if (concededPlayer.client != null) {
+            ServerLogic.AddExperience (concededPlayer.accountName, turn);
+        }
         PlayerPropertiesClass winner = null;
         foreach (PlayerClass player in Player) {
             PlayerPropertiesClass properties = player.properties;
@@ -355,13 +359,14 @@ public class MatchClass {
                 ClientInterface client = properties.client;
                 if (client != null) {
                     string accountName = client.AccountName;
-                    
+                    int matchType = 0;
                     // Puzzle
                     if (Player.Length == 3) {
                         AIClass AI = Player [2].properties.AI;
                         if (AI != null && AI.puzzle && winner == Player [1]) {
                             if (!ServerData.GetUserFinishedPuzzle (accountName, Properties.gameMode)) {
                                 client.SavePuzzleResult (Properties.gameMode);
+                                matchType = 0;
                                 experienceGain += 40;
                             }
                         }
@@ -369,9 +374,7 @@ public class MatchClass {
 
                     if (winner == player) {
                         experienceGain += turn * 2;
-                    } else if (winner != null) {
-                        experienceGain += turn;
-                    } else {
+                    } else if (!properties.conceded) {
                         experienceGain += turn;
                     }
 
@@ -385,7 +388,7 @@ public class MatchClass {
                     int level = ServerData.GetUserLevel (accountName);
                     int currentExperience = ServerData.GetUserExperience (accountName);
                     int maxExperience = ServerLogic.ExperienceNeededToLevelUp (level);
-                    client.TargetShowMatchResult (client.connectionToClient, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
+                    client.TargetShowMatchResult (client.connectionToClient, matchType, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
                 }
             }
         }

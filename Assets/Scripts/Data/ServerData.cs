@@ -1521,7 +1521,7 @@ public class ServerData : MonoBehaviour {
         File.WriteAllLines (UserDataPath (accountName), Lines.ToArray ());
         HandClass hand = new HandClass ();
         hand.GenerateRandomHand (1, null);
-        ServerData.SavePlayerModeSet (accountName, 1, 1, hand.HandToString ());
+        SavePlayerModeSet (accountName, DefaultGameMode, 1, hand.HandToString ());
     }
 
     static public string SetUserName (string accountName, string newUserName) {

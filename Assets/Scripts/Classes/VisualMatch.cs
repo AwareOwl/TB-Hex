@@ -209,13 +209,22 @@ public class VisualMatch : MonoBehaviour {
 
 
 
-    public void ShowMatchResult (string winnerName, int winCondition, int limit, int level, int currentExperience, int maxExperience, int experienceGain) {
-        StartCoroutine (IEShowMatchResult (winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain));
+    public void ShowMatchResult (int matchType, string winnerName, int winCondition, int limit, int level, int currentExperience, int maxExperience, int experienceGain) {
+        StartCoroutine (IEShowMatchResult (matchType, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain));
     }
 
-    public IEnumerator IEShowMatchResult (string winnerName, int winCondition, int limit, int level, int currentExperience, int maxExperience, int experienceGain) {
+    public IEnumerator IEShowMatchResult (int matchType, string winnerName, int winCondition, int limit, int level, int currentExperience, int maxExperience, int experienceGain) {
         yield return new WaitForSeconds (GlobalTimer);
-        GOUI.ShowMessageWithProgressionBar (Language.GetMatchResult (winnerName, winCondition, limit), "MatchResults", level, currentExperience, maxExperience, experienceGain);
+        string type;
+        switch (matchType) {
+            case 1:
+                type = "PuzzleResults";
+                break;
+            default:
+                type = "MatchResults";
+                break;
+        }
+        GOUI.ShowMessageWithProgressionBar (Language.GetMatchResult (winnerName, winCondition, limit), type, level, currentExperience, maxExperience, experienceGain);
     }
 
 

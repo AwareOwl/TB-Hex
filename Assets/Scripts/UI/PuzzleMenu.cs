@@ -10,6 +10,8 @@ public class PuzzleMenu : GOUI {
     static string [] name;
     static int [] id;
     static bool [] finished;
+    static int toUnlockCount;
+
     static List <int> finishedIndex;
     static List<int> unfinishedIndex;
 
@@ -24,7 +26,7 @@ public class PuzzleMenu : GOUI {
     static int selectedRow = -1;
     static int selectedId = -1;
     static int pageType = 0;
-    static int currentPage;
+    static int [] currentPage = new int [2];
 
 
 	// Use this for initialization
@@ -38,11 +40,12 @@ public class PuzzleMenu : GOUI {
         ClientLogic.MyInterface.CmdDownloadDataToPuzzleMenu ();
     }
 
-    static public void LoadPuzzleMenu (string [] name, int [] id, bool [] finished) {
+    static public void LoadPuzzleMenu (string [] name, int [] id, bool [] finished, int toUnlockCount) {
         DestroyMenu ();
         PuzzleMenu.name = name;
         PuzzleMenu.id = id;
         PuzzleMenu.finished = finished;
+        PuzzleMenu.toUnlockCount = toUnlockCount;
         SortFinished ();
         CurrentCanvas.AddComponent<PuzzleMenu> ();
     }
@@ -72,7 +75,7 @@ public class PuzzleMenu : GOUI {
     }
 
     static public void SelectPage (int number) {
-        currentPage = number;
+        currentPage [pageType] = number;
         RefreshPage ();
     }
 
@@ -85,16 +88,21 @@ public class PuzzleMenu : GOUI {
             UIController UIC = Clone.GetComponent<UIController> ();
             UIC.FreeAndUnlcok ();
             GameObject Text = puzzleRowText [x];
-            int number = x + currentPage * count;
+            int number = x + currentPage [pageType] * count;
 
-           
+
+            Text.GetComponent<Renderer> ().material.color = Color.black;
             if (number < puzzleCount) {
                 SetSprite (Clone, "UI/Panel_Slot_01_Sliced", true);
                 if (RowNumberToId (x) == selectedId) {
                     UIC.PressAndLock ();
                 }
-                
+
                 Text.GetComponent<TextMesh> ().text = name [list [number]];
+            } else if (number == puzzleCount && toUnlockCount > 0 && pageType == 0) {
+                SetSprite (Clone, "UI/Panel_Slot_01_Sliced_D", true);
+                Text.GetComponent<TextMesh> ().text = toUnlockCount + " " + Language.MoreToUnlock;
+                Text.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 0.4f); 
             } else {
                 SetSprite (Clone, "UI/Panel_Slot_01_Sliced_D", true);
                 Text.GetComponent<TextMesh> ().text = "";
@@ -104,7 +112,7 @@ public class PuzzleMenu : GOUI {
 
     static public int RowNumberToNumber (int rowNumber) {
         int count = puzzleRow.GetLength (0);
-        return rowNumber + currentPage * count;
+        return rowNumber + currentPage [pageType] * count;
     }
 
     static public int RowNumberToId (int rowNumber) {
@@ -147,8 +155,18 @@ public class PuzzleMenu : GOUI {
         List<int> list = SelectedList ();
         int count = puzzleRow.GetLength (0);
         int puzzleCount = list.Count;
-        int pageCount = Mathf.Max (1, (puzzleCount - 1) / count + 1);
+        int pageCount;
+        switch (type){
+            case 0:
+                pageCount = Mathf.Max (1, (puzzleCount) / count + 1);
+                break;
+            default:
+                pageCount = Mathf.Max (1, (puzzleCount - 1) / count + 1);
+                break;
+        }
         pageUI.Init (10, pageCount, new Vector2Int (90, 870), UIString.PuzzleMenuPageButton);
+        Mathf.Min (currentPage [pageType], pageCount - 1);
+        pageUI.SelectPage (currentPage [pageType]);
 
         RefreshPage ();
     }

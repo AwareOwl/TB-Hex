@@ -215,6 +215,29 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SetPlayerModeSelectedSet (client.AccountName, client.GameMode, selectedSetId);
     }
 
+    static public void SavePuzzleResult (string accountName, int id) {
+        ServerData.SetUserFinishedPuzzle (accountName, id);
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromString (ServerData.GetCardPool (id));
+        List<CardClass> cards = cardPool.Card;
+        int count = cards.Count;
+        List<int> abilities = new List<int> ();
+        List<int> tokens = new List<int> ();
+        for (int x = 0; x < count; x++) {
+            CardClass card = cards [x];
+            int aType = card.abilityType;
+            int tType = card.tokenType;
+            if (!abilities.Contains (aType)) {
+                abilities.Add (aType);
+            }
+            if (!tokens.Contains (tType)) {
+                tokens.Add (tType);
+            }
+        }
+        ServerData.SetUserUnlockedAbilities (accountName, abilities.ToArray());
+        ServerData.SetUserUnlockedTokens (accountName, abilities.ToArray ());
+    }
+
     static public void DownloadDataToPuzzleMenu (ClientInterface client) {
         string accountName = client.AccountName;
         int [] list = ServerData.GetAllGameModes ();
@@ -223,14 +246,17 @@ public class ServerLogic : MonoBehaviour {
         List<bool> officialFinished = new List<bool> ();
 
         int [] finished = ServerData.GetUserFinishedPuzzles (accountName);
+        int toUnlockCount = 0;
 
         foreach (int id in list) {
             string [] owners = ServerData.GetGameModeOwners (id);
             if (ServerData.GetGameModeIsOfficial (id) && ServerData.GetGameModeIsPuzzle (id)) {
                 if (CheckIfUserShouldBeAllowedToDoPuzzle (accountName, id)) {
-                    //officialIds.Add (id);
+                    officialIds.Add (id);
+                } else {
+                    toUnlockCount++;
                 }
-                officialIds.Add (id);
+                //officialIds.Add (id);
             }
         }
         officialIds.Sort ((a, b) => (a.CompareTo (b)));
@@ -241,24 +267,27 @@ public class ServerLogic : MonoBehaviour {
         }
 
         client.TargetDownloadPuzzleList (client.connectionToClient,
-            officialNames.ToArray (), officialIds.ToArray (), officialFinished.ToArray ());
+            officialNames.ToArray (), officialIds.ToArray (), officialFinished.ToArray (), toUnlockCount);
     }
 
     static public bool CheckIfUserShouldBeAllowedToDoPuzzle (string accountName, int id) {
         int differencesCount = 0;
-        int [] availableAbilities = ServerData.GetUserUnlockedAbilities (accountName);
-        int [] availableTokens = ServerData.GetUserUnlockedTokens (accountName);
+        List<int> availableAbilities = new List<int> (ServerData.GetUserUnlockedAbilities (accountName));
+        List<int> availableTokens = new List<int> (ServerData.GetUserUnlockedTokens (accountName));
         CardPoolClass cardPool = new CardPoolClass ();
         cardPool.LoadFromString (ServerData.GetCardPool (id));
         foreach (CardClass card in cardPool.Card) {
-            if (!System.Array.Exists (availableAbilities, x => x == card.abilityType)) {
+            int aType = card.abilityType;
+            if (!availableAbilities.Contains (aType)){
                 differencesCount++;
+                availableAbilities.Add (aType);
             }
-            if (!System.Array.Exists (availableTokens, x => x == card.tokenType)) {
+            int tType = card.tokenType;
+            if (!availableTokens.Contains (tType)) {
                 differencesCount++;
+                availableTokens.Add (tType);
             }
         }
-        Debug.Log (id + " " + differencesCount);
         if (differencesCount <= 1) {
             return true;
         }

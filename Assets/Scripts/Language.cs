@@ -180,6 +180,7 @@ public class Language {
     static public string Unfinished;
     static public string Finished;
     static public string ListOfPuzzles;
+    static public string MoreToUnlock;
 
     static public string ShowTokenValueFilters;
     static public string ShowTokenTypeFilters;
@@ -382,6 +383,7 @@ public class Language {
         NumberOfTurnsLeftToTheEndOfGame = UI [149];
         ShowMenu = UI [150];
         Level = UI [151];
+        MoreToUnlock = UI [152];
 
 
         path = "Languages/" + FileName [language] + UITooltipKey;

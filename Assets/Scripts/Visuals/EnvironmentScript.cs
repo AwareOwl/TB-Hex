@@ -52,8 +52,8 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static public void CreateNewBackground () {
-        CreateNewBackground (5);
-        //CreateNewBackground (Random.Range (1, 6));
+        //CreateNewBackground (5);
+        CreateNewBackground (Random.Range (1, 6));
     }
 
     static public void CreateNewBackground (int theme) {
@@ -300,6 +300,7 @@ public class EnvironmentScript : MonoBehaviour {
         material = water.transform.GetComponent<Renderer> ().material;
         //material.shader = Shader.Find ("Sprites/Default");
         material.color = new Color (0.22f, 0.22f, 0.14f, 1f);
+        material.color = new Color (0.12f, 0.09f, 0.06f, 1f);
         water.transform.localPosition = new Vector3 (0, -1f, 0);
         water.transform.parent = Background.transform;
 
@@ -478,7 +479,7 @@ public class EnvironmentScript : MonoBehaviour {
         }
         switch (theme) {
             case 5:
-                return new Color (Random.Range (0.59f, 0.61f) - disabledMultiplier * 0.30f, Random.Range (0.52f, 0.53f) - disabledMultiplier * 0.23f, 0.275f - disabledMultiplier * 0.12f);
+                return new Color (Random.Range (0.59f, 0.61f) - disabledMultiplier * 0.28f, Random.Range (0.51f, 0.52f) - disabledMultiplier * 0.24f, 0.275f - disabledMultiplier * 0.11f);
             default:
                 return new Color (1, 1, 1);
         }
@@ -524,9 +525,9 @@ public class EnvironmentScript : MonoBehaviour {
                 }
             case 5:
                 if (Random.Range (0, 2) == 0) {
-                    return new Color (Random.Range (0.61f, 0.63f) * (1 - disabledMultiplier * 0.36f), Random.Range (0.34f, 0.45f) * (1 - disabledMultiplier * 0.24f), 0.13f - -disabledMultiplier * 0.04f);
+                    return new Color (Random.Range (0.61f, 0.63f) * (1 - disabledMultiplier * 0.39f), Random.Range (0.35f, 0.45f) * (1 - disabledMultiplier * 0.31f), 0.13f - disabledMultiplier * 0.06f);
                 } else {
-                    return new Color (Random.Range (0.59f, 0.63f) * (1 - disabledMultiplier * 0.36f), Random.Range (0.39f, 0.47f) * (1 - disabledMultiplier * 0.24f), 0.13f - disabledMultiplier * 0.04f);
+                    return new Color (Random.Range (0.57f, 0.60f) * (1 - disabledMultiplier * 0.39f), Random.Range (0.43f, 0.49f) * (1 - disabledMultiplier * 0.33f), 0.14f - disabledMultiplier * 0.07f);
                 }
             default:
                 return new Color (1, 1, 1);
@@ -555,7 +556,7 @@ public class EnvironmentScript : MonoBehaviour {
                 tile.transform.localEulerAngles = new Vector3 (0, Random.Range (0f, 360f), 0);
                 break;
             case 5:
-                tile = Instantiate (AppDefaults.SmoothTile) as GameObject;
+                tile = Instantiate (AppDefaults.Tile) as GameObject;
                 tile.transform.localScale = new Vector3 (1, 1, 1);
                 tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.55f, 0.55f, 0.15f);
                 break; 

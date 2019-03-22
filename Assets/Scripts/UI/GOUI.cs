@@ -436,6 +436,7 @@ public class GOUI : MonoBehaviour {
         GameObject Button;
         GameObject Text;
         GameObject Clone;
+        Debug.Log (optionName);
 
         Text = CreateUIText (s, 720, 540 - 115);
         int textWidth = (int) Mathf.Min (Mathf.Max (Text.GetComponent<Text> ().preferredWidth, 125), 430);
@@ -485,6 +486,12 @@ public class GOUI : MonoBehaviour {
             case "MatchResults":
                 Button.GetComponent<Button> ().onClick.AddListener (delegate {
                     MainMenu.ShowMainMenu ();
+                    DestroyImmediate (Background);
+                });
+                break;
+            case "PuzzleResults":
+                Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    PuzzleMenu.ShowPuzzleMenu ();
                     DestroyImmediate (Background);
                 });
                 break;
