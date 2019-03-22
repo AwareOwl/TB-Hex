@@ -86,10 +86,7 @@ public class MatchClass {
                 }
             }
         }
-        winCondition = 4;
-        if (visualMatch != null) {
-            visualMatch.ShowMatchResult (winner.displayName, winCondition, 0);
-        }
+        FinishGame (4, 0);
     }
 
     public void EndTurn () {
@@ -320,40 +317,77 @@ public class MatchClass {
                     if (properties != null) {
                         ClientInterface client = properties.client;
                         if (client != null) {
+                            string accountName = client.AccountName;
                             if (winner == player) {
-                                ServerData.IncrementThisGameModeWon (client.AccountName, Properties.gameMode);
+                                ServerData.IncrementThisGameModeWon (accountName, Properties.gameMode);
                             } else if (winner != null) {
-                                ServerData.IncrementThisGameModeLost (client.AccountName, Properties.gameMode);
+                                ServerData.IncrementThisGameModeLost (accountName, Properties.gameMode);
                             } else {
-                                ServerData.IncrementThisGameModeDrawn (client.AccountName, Properties.gameMode);
+                                ServerData.IncrementThisGameModeDrawn (accountName, Properties.gameMode);
                             }
-                            ServerData.DecrementThisGameModeUnfinished (client.AccountName, Properties.gameMode);
+                            ServerData.DecrementThisGameModeUnfinished (accountName, Properties.gameMode);
                         }
                     }
                 }
             }
-            if (visualMatch != null) {
-                string winnerName = "";
-                if (winner != null) {
-                    winnerName = winner.properties.displayName;
-                }
-                visualMatch.ShowMatchResult (winnerName, winCondition, limit);
-            }
-            if (Player.Length == 3) {
-                AIClass AI = Player [2].properties.AI;
-                if (AI != null && AI.puzzle && winner == Player [1]) {
-                    ClientLogic.MyInterface.SavePuzzleResult (Properties.gameMode);
-                }
-            }
-            /*for (int x = 1; x <= numberOfPlayers; x++) {
-                ClientInterface client = Player [x].properties.client;
-                if (client != null) {
-                }
-            }*/
+            //Debug.Log ("GameFinished: " + winner.playerNumber + " " + Player [1].score + " " + Player [2].score + " " + turn);
+        }
+    }
+
+    public void ShowMatchResults (PlayerClass player) {
+        int limit = 0;
+        switch (winCondition) {
+            case 1:
+                limit = Properties.scoreLimit;
+                break;
+            case 2:
+                limit = Properties.turnLimit;
+                break;
+        }
+        int experienceGain = 0;
+        if (player != null) {
+            PlayerPropertiesClass properties = player.properties;
             if (InputController.autoRunAI) {
                 RatingClass.AnalyzeStatistics (this);
             }
-            //Debug.Log ("GameFinished: " + winner.playerNumber + " " + Player [1].score + " " + Player [2].score + " " + turn);
+            if (properties != null) {
+
+                ClientInterface client = properties.client;
+                if (client != null) {
+                    string accountName = client.AccountName;
+                    
+                    // Puzzle
+                    if (Player.Length == 3) {
+                        AIClass AI = Player [2].properties.AI;
+                        if (AI != null && AI.puzzle && winner == Player [1]) {
+                            if (!ServerData.GetUserFinishedPuzzle (accountName, Properties.gameMode)) {
+                                client.SavePuzzleResult (Properties.gameMode);
+                                experienceGain += 40;
+                            }
+                        }
+                    }
+
+                    if (winner == player) {
+                        experienceGain += turn * 2;
+                    } else if (winner != null) {
+                        experienceGain += turn;
+                    } else {
+                        experienceGain += turn;
+                    }
+
+                    //
+
+                    ServerLogic.AddExperience (accountName, experienceGain);
+                    string winnerName = "";
+                    if (winner != null) {
+                        winnerName = winner.properties.displayName;
+                    }
+                    int level = ServerData.GetUserLevel (accountName);
+                    int currentExperience = ServerData.GetUserExperience (accountName);
+                    int maxExperience = ServerLogic.ExperienceNeededToLevelUp (level);
+                    client.TargetShowMatchResult (client.connectionToClient, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
+                }
+            }
         }
     }
 
@@ -452,6 +486,9 @@ public class MatchClass {
                 ClientInterface client = player2.properties.client;
                 if (client != null) {
                     ServerLogic.TargetCurrentGameMakeAMove (client, lastMoveId, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
+                    if (finished) {
+                        ShowMatchResults (player2);
+                    }
                     //Debug.Log ("Test " + x + " " + y + " " + playerNumber + " " + stackNumber);
                 }
             }

@@ -149,3 +149,4 @@
 [148] Użyte karty są umieszczane na spodzie stosu
 [149] Liczba tur pozostałych do ukończenia meczu
 [150] Pokaż menu
+[151] Poziom

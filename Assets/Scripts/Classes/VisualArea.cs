@@ -13,6 +13,7 @@ public class VisualArea {
         for (int x = 0; x < 6; x++) {
             Tile [x] = GameObject.Instantiate (AppDefaults.Tile) as GameObject;
             Tile [x].transform.localScale = new Vector3 (0.35f, 0.05f, 0.35f);
+            Tile [x].transform.Find ("Tile").GetComponent<Renderer> ().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             //Tiles [x].transform.parent = Background.transform;
         }
 

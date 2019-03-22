@@ -46,6 +46,10 @@ public class VisualCard {
         Token.SetValue (value);
         Area.SetAbilityArea (abilityArea);
         SetAbilityIcon (abilityType);
+        Renderer [] renderes = Anchor.GetComponentsInChildren<Renderer> ();
+        foreach (Renderer renderer in renderes) {
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        }
     }
 
     public void DestroyVisual () {
@@ -169,6 +173,11 @@ public class VisualCard {
         Token.Anchor.transform.localPosition = new Vector3 (0, 0.05f, -0.3f);
         Token.Anchor.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
         Token.Anchor.transform.parent = Anchor.transform;
+
+        Renderer [] renderes = Anchor.GetComponentsInChildren<Renderer> ();
+        foreach (Renderer renderer in renderes) {
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        }
 
         Anchor.transform.localScale *= 0.8f;
 

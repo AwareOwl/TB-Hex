@@ -430,6 +430,69 @@ public class GOUI : MonoBehaviour {
         }
     }
 
+    static public GameObject ShowMessageWithProgressionBar (string s, string optionName, int level, int currentBarLevel, int maxBarLevel, int gainedBarLevel) {
+        GameObject Background;
+        GameObject Collider;
+        GameObject Button;
+        GameObject Text;
+        GameObject Clone;
+
+        Text = CreateUIText (s, 720, 540 - 115);
+        int textWidth = (int) Mathf.Min (Mathf.Max (Text.GetComponent<Text> ().preferredWidth, 125), 430);
+        int textHeight = (int) Text.GetComponent<Text> ().preferredHeight;
+
+        Background = CreateUIButton ("UI/Panel_Window_01_Sliced", 720, 540, textWidth + 150, textHeight + 390, false);
+        Text.transform.SetParent (Background.transform);
+
+        Collider = CreateUIImage ("UI/Transparent", 720, 540, 10000, 10000, false);
+        Collider.transform.SetParent (Background.transform);
+
+        //
+        Clone = CreateUIText ("Level " + level, 720, 465 + textHeight / 2 + 15);
+        Clone.GetComponent<Text> ().fontSize = 24;
+        Collider.transform.SetParent (Background.transform);
+
+        float percentage = 1f * currentBarLevel / maxBarLevel;
+
+        Clone = CreateUIImage ("UI/White", 720, 510 + textHeight / 2 + 15, 400, 30, true);
+        Clone.transform.SetParent (Background.transform);
+
+        Clone = CreateUIImage ("UI/White", 720 - 200 + (int) (200 * percentage), 510 + textHeight / 2 + 15, (int) (400 * percentage), 30, true);
+        Clone.GetComponent<Image> ().color = new Color (0.5f, 0.5f, 1f);
+        Clone.transform.SetParent (Background.transform);
+
+        Clone = CreateUIText (currentBarLevel + "/" + maxBarLevel + " (+" + gainedBarLevel + ")", 720, 510 + textHeight / 2 + 15);
+        Clone.GetComponent<Text> ().fontSize = 24;
+        Clone.transform.SetParent (Background.transform);
+
+        if (level > 1 && currentBarLevel < gainedBarLevel) {
+            Clone = CreateUIText ("Level up!", 720, 540 + textHeight / 2 + 15);
+            Clone.GetComponent<Text> ().fontSize = 21;
+            Clone.GetComponent<Text> ().color = new Color (0, 0.5f, 0);
+            Clone.transform.SetParent (Background.transform);
+        }
+        //
+
+        Button = CreateUIButton ("UI/Butt_M_EmptySquare", 720, 630 + textHeight / 2 + 15, 90, 60, true);
+        Button.transform.SetParent (Background.transform);
+        
+
+        Text = CreateUIText ("Ok", 720, 630 + textHeight / 2 + 15);
+        Text.transform.SetParent (Background.transform);
+        AddTextToGameObject (Button, Text);
+
+        switch (optionName) {
+            case "MatchResults":
+                Button.GetComponent<Button> ().onClick.AddListener (delegate {
+                    MainMenu.ShowMainMenu ();
+                    DestroyImmediate (Background);
+                });
+                break;
+        }
+
+        return Background;
+    }
+
     static public GameObject ShowMessage (string s, string optionName) {
         GameObject Background;
         GameObject Collider;

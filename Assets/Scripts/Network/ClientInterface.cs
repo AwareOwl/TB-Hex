@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.8.0.2");
+            CmdCompareServerVersion ("0.8.0.5");
         }
     }
 
@@ -43,11 +43,13 @@ public class ClientInterface : NetworkBehaviour {
         ServerLogic.ChangeGameMode (this, gameModeId);
     }
 
-    /*
+    
     [TargetRpc]
-    public void TargetShowMatchResult (NetworkConnection target, string winnerName, int winCondition, int limit) {
-        GOUI.ShowMessage (Language.GetMatchResult (winnerName, winCondition, limit), "MainMenu");
-    }*/
+    public void TargetShowMatchResult (NetworkConnection target, string winnerName, int winCondition, int limit, 
+        int level, int currentExperience, int maxExperience, int experienceGain) {
+        Debug.Log ("Wat");
+        InGameUI.PlayedMatch.visualMatch.ShowMatchResult (winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
+    }
 
     [TargetRpc]
     public void TargetLogIn (NetworkConnection target, string accountName, string userName) {
@@ -354,8 +356,10 @@ public class ClientInterface : NetworkBehaviour {
 
     [TargetRpc]
     public void TargetDownloadProfileDataToMenu (NetworkConnection target,
-        string userName, int avatar, int thisModeWon, int thisModeLost, int thisModeDrawn, int thisModeUnfinished, int totalWon, int totalLost, int totalDrawn, int totalUnfinished) {
-        ProfileMenu.ShowProfileMenu (userName, avatar, thisModeWon, thisModeLost, thisModeDrawn, thisModeUnfinished, totalWon, totalLost, totalDrawn, totalUnfinished);
+        string userName, int avatar, int thisModeWon, int thisModeLost, int thisModeDrawn, int thisModeUnfinished, int totalWon, int totalLost, int totalDrawn, int totalUnfinished,
+        int level, int currentExperience, int neededExperience) {
+        ProfileMenu.ShowProfileMenu (userName, avatar, thisModeWon, thisModeLost, thisModeDrawn, thisModeUnfinished, totalWon, totalLost, totalDrawn, totalUnfinished,
+            level, currentExperience, neededExperience);
     }
 
     [Command]

@@ -129,6 +129,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 2) {
                         ConvertTo0_8_0_2 ();
                     }
+                    if (DevelopVersion < 5) {
+                        ConvertTo0_8_0_5 ();
+                    }
                 }
             }
         }
@@ -136,6 +139,8 @@ public class ServerVersionManager : VersionManager {
 
     static public void FinalizeServerVersion () {
         ServerData.SetServerKeyData (ServerData.VersionKey, GetVersion ());
+
+
 
         RatingClass.LoadAbility_AbilitySynergy ();
         RatingClass.LoadAbility_TokenSynergy ();
@@ -153,7 +158,21 @@ public class ServerVersionManager : VersionManager {
         RatingClass.LoadAbilityStackSize ();
         RatingClass.LoadTokenStackSize ();
         //RatingClass.LoadAbilityTokenStackSize ();
+
+        UpdateDefaultServerVersion ();
     }
+
+    static void UpdateDefaultServerVersion () {
+        int prevMode = 4;
+        int [] officialGameModeIds = ServerData.GetAllOfficialGameModes ();
+        foreach (int id in officialGameModeIds) {
+            if (ServerData.GetGameModeName (id) == "Version 0.7.0") {
+                prevMode = id;
+            }
+        }
+        ServerData.DefaultGameMode = prevMode;
+    }
+
 
     static public void ExportRating () {
         RatingData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/Ability_AbilitySynergy"));
@@ -172,6 +191,21 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
         RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
         //RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
+    }
+
+    static public void ConvertTo0_8_0_5 () {
+        for (int x = 18; x <= 30; x++) {
+            int numberOfTurns = 4;
+            ServerData.CreateNewPuzzle ("Path0.8.0", "Puzzle #" + x.ToString (),
+                GetResource ("ExportFolder/Puzzles/Boards/Board" + x.ToString ()),
+                GetResource ("ExportFolder/Puzzles/CardPools/CardPool" + x.ToString ()),
+                numberOfTurns);
+        }
+
+        GameVersion = 0;
+        PathVersion = 8;
+        HotfixVersion = 0;
+        DevelopVersion = 5;
     }
 
     static public void ConvertTo0_8_0_2 () {

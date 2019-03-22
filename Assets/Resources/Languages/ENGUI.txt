@@ -149,3 +149,4 @@
 [148] Used cards are placed on the bottom of stack.
 [149] Number of turns left to the end of match
 [150] Show menu
+[151] Level

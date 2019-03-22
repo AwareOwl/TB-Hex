@@ -16,6 +16,10 @@ public class ProfileMenu : GOUI {
     static int totalDrawn;
     static int totalUnfinished;
 
+    static int level;
+    static int currentExperience;
+    static int neededExperience;
+
     // Use this for initialization
     void Awake () {
         CreateProfileMenu ();
@@ -40,7 +44,8 @@ public class ProfileMenu : GOUI {
     }
 
     static public void ShowProfileMenu (
-        string userName, int avatar, int thisModeWon, int thisModeLost, int thisModeDrawn, int thisModeUnfinished, int totalWon, int totalLost, int totalDrawn, int totalUnfinished) {
+        string userName, int avatar, int thisModeWon, int thisModeLost, int thisModeDrawn, int thisModeUnfinished, int totalWon, int totalLost, int totalDrawn, int totalUnfinished,
+        int level, int currentExperience, int neededExperience) {
         //ClientLogic.MyInterface.CmdDownloadGameModeSettings (GameModeEditor.gameModeId);
 
         ProfileMenu.userName = userName;
@@ -53,6 +58,10 @@ public class ProfileMenu : GOUI {
         ProfileMenu.totalLost = totalLost;
         ProfileMenu.totalDrawn = totalDrawn;
         ProfileMenu.totalUnfinished = totalUnfinished;
+
+        ProfileMenu.level = level;
+        ProfileMenu.currentExperience = currentExperience;
+        ProfileMenu.neededExperience = neededExperience;
 
         DestroyMenu ();
         CurrentCanvas.AddComponent<ProfileMenu> ();
@@ -72,6 +81,9 @@ public class ProfileMenu : GOUI {
 
         Clone = CreateSprite ("UI/Butt_S_Name", 480, 315, 11, 60, 60, false);
         Clone.name = UIString.ShowProfileSettings;
+
+        Clone = CreateUIText (Language.Level + " " + level.ToString() + " (" + currentExperience + "/" + neededExperience + ")", 330, 715, 240, 24);
+        Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
 
         int firstRowY = 390;
         int firstColumnX = 690;

@@ -63,8 +63,12 @@ public class VisualToken {
         if (VisualMatch.instance != null) {
             VisualMatch.instance.DestroyToken (this, Anchor);
         } else {
-            DestroyToken (Anchor);
+            DestroyToken ();
         }
+    }
+
+    public void DestroyToken () {
+        DestroyToken (Anchor);
     }
 
     public void SetState (TokenClass token) {

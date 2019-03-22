@@ -22,6 +22,7 @@ public class AppDefaults {
     static public Object LilyFlower;
     static public Object Honeycomb;
     static public Object SmoothTile;
+    static public Object Grass;
 
     static public float TokenSpawnHeight = 10f;
 
@@ -37,6 +38,7 @@ public class AppDefaults {
         LilyFlower = Resources.Load ("Prefabs/PreLilyFlower");
         Honeycomb = Resources.Load ("Prefabs/PreHoneycomb");
         SmoothTile = Resources.Load ("Prefabs/PreSmoothTile");
+        Grass = Resources.Load ("Prefabs/PreGrass");
 
         sprite = Shader.Find ("Sprites/Default");
     }

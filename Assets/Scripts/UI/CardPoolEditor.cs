@@ -118,6 +118,7 @@ public class CardPoolEditor : GOUI {
                     button.name = UIString.CardPoolEditorPrevAbilityPage;
                     SetText (buttonText, "<");
                 } else {
+                    button.name = UIString.CardPoolEditorAbilityType;
                     BackgroundObject.name = UIString.CardPoolEditorAbilityType;
                     if (number < AppDefaults.AvailableAbilities) {
                         SetSprite (buttonImage, VisualCard.GetIconPath (number));

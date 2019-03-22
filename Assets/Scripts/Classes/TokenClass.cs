@@ -52,9 +52,16 @@ public class TokenClass {
         }
     }
 
-    public void DestroyVisual () {
+    public void DelayedDestroyVisual () {
         if (visualToken != null) {
             visualToken.DelayedDestroyToken ();
+            visualToken = null;
+        }
+    }
+
+    public void DestroyVisual () {
+        if (visualToken != null) {
+            visualToken.DestroyToken ();
             visualToken = null;
         }
     }
@@ -148,6 +155,6 @@ public class TokenClass {
             board.NumberOfTypes [type]--;
         }
         tile.token = null;
-        DestroyVisual ();
+        DelayedDestroyVisual ();
     }
 }

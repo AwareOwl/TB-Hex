@@ -149,6 +149,7 @@ public class Language {
     static public string LostGames;
     static public string DrawnGames;
     static public string UnfinishedGames;
+    static public string Level;
 
     static public string EnterNewUserName;
     static public string ChoseNewAvatar;
@@ -380,6 +381,7 @@ public class Language {
         UsedCardsArePlacedOnBottomOfStack = UI [148];
         NumberOfTurnsLeftToTheEndOfGame = UI [149];
         ShowMenu = UI [150];
+        Level = UI [151];
 
 
         path = "Languages/" + FileName [language] + UITooltipKey;

@@ -73,13 +73,14 @@ public class VisualTile {
         Hover.AddComponent<VisualEffectScript> ();
         Border = Collider.transform.Find ("Quad").gameObject;
         Border.GetComponent<Renderer> ().enabled = false;
-        GameObject.DestroyImmediate (EnvironmentScript.BackgroundTiles [x + 1, y + 1]);
+        //GameObject.DestroyImmediate (EnvironmentScript.BackgroundTiles [x + 1, y + 1]);
 
     }
 
     public void DestroyVisual () {
-        GameObject.DestroyImmediate (Anchor);
-        GameObject.DestroyImmediate (Tile);
+        //GameObject.DestroyImmediate (Anchor);
+        //GameObject.DestroyImmediate (Tile);
+        DestroyRemains ();
         GameObject.DestroyImmediate (Collider);
     }
 
@@ -96,7 +97,7 @@ public class VisualTile {
             Border.GetComponent<Renderer> ().enabled = false;
         } else {
             Anchor.GetComponent<VisualEffectScript> ().PushToHeight (EnvironmentScript.disabledHeight);
-            EnvironmentScript.BackgroundTiles [tile.x + 1, tile.y + 1] = Anchor;
+            //EnvironmentScript.BackgroundTiles [tile.x + 1, tile.y + 1] = Anchor;
             Border.GetComponent<Renderer> ().enabled = true;
         }
     }

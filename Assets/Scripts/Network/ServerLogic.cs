@@ -227,6 +227,9 @@ public class ServerLogic : MonoBehaviour {
         foreach (int id in list) {
             string [] owners = ServerData.GetGameModeOwners (id);
             if (ServerData.GetGameModeIsOfficial (id) && ServerData.GetGameModeIsPuzzle (id)) {
+                if (CheckIfUserShouldBeAllowedToDoPuzzle (accountName, id)) {
+                    //officialIds.Add (id);
+                }
                 officialIds.Add (id);
             }
         }
@@ -239,6 +242,27 @@ public class ServerLogic : MonoBehaviour {
 
         client.TargetDownloadPuzzleList (client.connectionToClient,
             officialNames.ToArray (), officialIds.ToArray (), officialFinished.ToArray ());
+    }
+
+    static public bool CheckIfUserShouldBeAllowedToDoPuzzle (string accountName, int id) {
+        int differencesCount = 0;
+        int [] availableAbilities = ServerData.GetUserUnlockedAbilities (accountName);
+        int [] availableTokens = ServerData.GetUserUnlockedTokens (accountName);
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromString (ServerData.GetCardPool (id));
+        foreach (CardClass card in cardPool.Card) {
+            if (!System.Array.Exists (availableAbilities, x => x == card.abilityType)) {
+                differencesCount++;
+            }
+            if (!System.Array.Exists (availableTokens, x => x == card.tokenType)) {
+                differencesCount++;
+            }
+        }
+        Debug.Log (id + " " + differencesCount);
+        if (differencesCount <= 1) {
+            return true;
+        }
+        return false;
     }
 
     static public void DownloadPreviewToPuzzleMenu (ClientInterface client, int id) {
@@ -467,9 +491,36 @@ public class ServerLogic : MonoBehaviour {
         int totalLost = ServerData.GetTotalLost (accountName);
         int totalDrawn = ServerData.GetTotalDrawn (accountName);
         int totalUnfinished = ServerData.GetTotalUnfinished (accountName);
+        int level = ServerData.GetUserLevel (accountName);
+        int currentExperience = ServerData.GetUserExperience (accountName);
+        int neededExperience = ExperienceNeededToLevelUp (level);
         client.TargetDownloadProfileDataToMenu (client.connectionToClient,
-            displayName, avatarNumber, thisGameModeWon, thisGameModeLost, thisGameModeDrawn, thisGameModeUnfinished, totalWon, totalLost, totalDrawn, totalUnfinished);
+            displayName, avatarNumber, thisGameModeWon, thisGameModeLost, thisGameModeDrawn, thisGameModeUnfinished, totalWon, totalLost, totalDrawn, totalUnfinished, 
+            level, currentExperience, neededExperience);
 
+    }
+
+
+
+    static public int ExperienceNeededToLevelUp (int level) {
+        return 160 + 40 * level;
+    }
+
+    static public void AddExperience (string accountName, int experienceToAdd) {
+        int currentLevel = ServerData.GetUserLevel (accountName);
+        int currentExperience = ServerData.GetUserExperience (accountName);
+        currentExperience += experienceToAdd;
+        while (true) {
+            int experienceNeeded = ExperienceNeededToLevelUp (currentLevel);
+            if (currentExperience >= experienceNeeded) {
+                currentExperience -= experienceNeeded;
+                currentLevel++;
+            } else {
+                break;
+            }
+        }
+        ServerData.SetUserLevel (accountName, currentLevel);
+        ServerData.SetUserExperience (accountName, currentExperience);
     }
 
     static public void SaveProfileSettings (ClientInterface client, string userName, int avatar) {
