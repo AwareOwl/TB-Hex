@@ -37,3 +37,8 @@
 [36] Podróż
 [37] Odwrócenie ról
 [38] Ryzykowny start
+[39] Klonowanie
+[40] Adaptacja
+[41] Porażenie
+[42] Bardzo ryzykowny start
+[43] Przewrót

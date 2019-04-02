@@ -156,6 +156,13 @@ public class RatingData : MonoBehaviour {
         return path;
     }
 
+    static public string SaveRatingMapTurn (string [] lines) {
+        string path = RatingPath () + "MapTurn.txt";
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+
     static public string SaveRatingNumberOfCards (string [] lines) {
         string path = RatingPath () + "NumberOfCards.txt";
         File.WriteAllLines (path, lines);

@@ -12,3 +12,4 @@
 [11] Wszystkie zagrywane żetony (każdego z graczy) będą miały wartość mniejszą o 1.
 [12] Generuje podwójny przyrost punktacji. Gdy zostanie zniszczony, właściciel traci 20 punktów.
 [13] Po turze właściciela zostaje przemiony w Normalny Żeton, a gracz może wykonać dodatkową turę.
+[14] Zwiększa swoją wartość o 1 za każdym razem gdy przeciwnik zagra silniejszy żeton.

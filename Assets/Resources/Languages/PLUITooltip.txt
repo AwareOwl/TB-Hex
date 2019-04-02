@@ -1,2 +1,0 @@
-﻿[0] Utwórz własny serwer dzięki któremu będziesz mógł grać w Token Battle Hex. Gracze z Twojej sieci lokalnej będą mogli się podłączyć do tego serwera.
-[1] Dołącz się do serwera w Twojej sieci lokalnej. Jedna osoba z sieci musi założyć serwer abyś mógł skorzystać z tej opcji.

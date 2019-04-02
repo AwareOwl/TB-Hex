@@ -46,5 +46,8 @@ public class InputController : MonoBehaviour {
         if (Input.GetKey ("b") && Input.GetKeyDown ("e")) {
             BoardEditorMenu.ShowBoardEditorMenu ();
         }
-	}
+        if (Input.GetKey ("p") && Input.GetKeyDown ("m")) {
+            ClientLogic.MyInterface.CmdJoinGameAgainstAI ();
+        }
+    }
 }

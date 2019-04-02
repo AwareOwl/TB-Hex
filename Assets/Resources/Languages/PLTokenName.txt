@@ -12,3 +12,4 @@
 [11] Żeton Deflacji
 [12] Żeton Ryzyka
 [13] Żeton Czasu
+[14] Żeton Adaptacji

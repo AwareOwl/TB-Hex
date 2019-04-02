@@ -118,14 +118,35 @@ public class AIClass {
         float value = 0;
         float playerValue = 4f;
         float myTurnsToWin = TurnToWinPredict (match, playerNumber);
+        float turnsToWin = myTurnsToWin;
         for (int x = 1; x <= match.numberOfPlayers; x++) {
             if (x != playerNumber) {
-                playerValue *= TurnToWinPredict (match, x)/ myTurnsToWin;
+                float hisTurnToWin = TurnToWinPredict (match, x);
+                playerValue *= hisTurnToWin / myTurnsToWin;
+                turnsToWin = Mathf.Min (turnsToWin, hisTurnToWin);
                 //value += myScoreIncome - match.Player [x].scoreIncome;
             }
         }
         //value += playerValue;
-        value += CalculateBoardValue (match, playerNumber, myTurnsToWin);
+        value += CalculateBoardValue (match, playerNumber, turnsToWin);
+        value += CalculateTurnValue (match, playerNumber, turnsToWin);
+        return value;
+    }
+
+    public float CalculateTurnValue (MatchClass match, int playerNumber, float turnsLeft) {
+        float value = 0;
+        float prefix = 0;
+        for (int x = 0; x < turnsLeft; x++) {
+            if (match.turnOfPlayer == playerNumber) {
+                prefix += 4;
+                match.IncrementTurnOfPlayer ();
+            } else {
+                prefix -= 4 / Mathf.Max (1, match.numberOfPlayers - 1);
+            }
+            value += prefix;
+        }
+        value /= turnsLeft;
+        //Debug.Log (value)
         return value;
     }
 
@@ -229,7 +250,10 @@ public class AIClass {
                         tokenValue = valueOverTime (tokenValue + oVE.emptyTileCount, - oVE.emptyTileCount, oVE.emptyTileCount, turnsLeft);
                         break;
                     case 13:
-                        tokenValue += 0.3f / tokenValue;
+                        tokenValue += 3f;
+                        break;
+                    case 14:
+                        tokenValue = valueOverTime (tokenValue, Mathf.Max (4f - tokenValue, tokenValue), 4, turnsLeft);
                         break;
                 }
                 switch (tokenType) {

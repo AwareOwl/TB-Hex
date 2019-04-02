@@ -115,6 +115,9 @@ public class TileClass {
                 case 9:
                     board.BeforeAbilityTriggers.Add (token.tile);
                     break;
+                case 14:
+                    board.BeforeTokenPlayedTriggers.Add (token.tile);
+                    break;
             }
             if (visualTile != null) {
                 token.EnableVisual ();

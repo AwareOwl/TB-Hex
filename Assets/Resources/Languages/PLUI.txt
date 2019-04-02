@@ -151,3 +151,10 @@
 [150] Pokaż menu
 [151] Poziom
 [152] więcej do odblokowania
+[153] Utwórz własny serwer dzięki któremu będziesz mógł grać w Token Battle Hex. Gracze z Twojej sieci lokalnej będą mogli się podłączyć do tego serwera.
+[154] Dołącz się do serwera w Twojej sieci lokalnej. Jedna osoba z sieci musi założyć serwer abyś mógł skorzystać z tej opcji.
+[155] Wybierz kartę by móc ją zagrać
+[156] Kliknij na puste pole by zagrać tą kartę
+[157] Po wykonaniu ruchu twoje żetony generują punkty. Zapełnij swój pasek punktacji aby wygrać mecz.
+[158] Aby wygrać, pod koniec meczu musisz mieć więcej punktów niż przeciwnik.
+[159] 

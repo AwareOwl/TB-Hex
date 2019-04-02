@@ -13,6 +13,7 @@ public class BoardClass {
     public List<TileClass> tileList = new List<TileClass> ();
 
     public List<TileClass> BeforeAbilityTriggers = new List<TileClass> ();
+    public List<TileClass> BeforeTokenPlayedTriggers = new List<TileClass> ();
 
     public int [] NumberOfTypes;
 

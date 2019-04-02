@@ -195,6 +195,7 @@ public class VisualToken {
                 }
                 break;
             case 9:
+            case 14:
                 Clone = GameObject.Instantiate (Resources.Load ("Prefabs/HalfBorder")) as GameObject;
                 VES = Clone.AddComponent<VisualEffectScript> ();
                 VES.SetRotateVector (new Vector3 (0, 30, 0));

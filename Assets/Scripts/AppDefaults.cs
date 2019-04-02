@@ -8,8 +8,8 @@ public class AppDefaults {
     static public Color Red = Color.red;
     static public Color Yellow = new Color (1, 1, 0);
 
-    static public int AvailableTokens = 13; // Always + 1, to include null
-    static public int AvailableAbilities = 39; // Always + 1, to include null
+    static public int AvailableTokens = 15; // Always + 1, to include null
+    static public int AvailableAbilities = 44; // Always + 1, to include null
     static public int AvailableAvatars = 10; // Always + 1, to include null
 
     static public Sprite [] Avatar;
@@ -23,6 +23,7 @@ public class AppDefaults {
     static public Object Honeycomb;
     static public Object SmoothTile;
     static public Object Grass;
+    static public Object Moutain;
 
     static public float TokenSpawnHeight = 10f;
 
@@ -39,6 +40,7 @@ public class AppDefaults {
         Honeycomb = Resources.Load ("Prefabs/PreHoneycomb");
         SmoothTile = Resources.Load ("Prefabs/PreSmoothTile");
         Grass = Resources.Load ("Prefabs/PreGrass");
+        Moutain = Resources.Load ("Prefabs/PreMoutain");
 
         sprite = Shader.Find ("Sprites/Default");
     }
@@ -82,6 +84,7 @@ public class AppDefaults {
             // Dark yellow
             case 2:
             case 8:
+            case 14:
                 return new Color (0.1f, 0.1f, 0.0f);
             // Bright blue
             case 13:
@@ -116,7 +119,7 @@ public class AppDefaults {
             case 4:
             case 5:
             case 11:
-            case 13:
+            case 14:
                 return new Color (0.9f, 0, 0);
             case 6:
                 return new Color (0.7f, 0.7f, 0.7f);
@@ -128,6 +131,7 @@ public class AppDefaults {
             case 12:
                 return new Color (0.8f, 0.45f, 0.125f);
             case 9:
+            case 13:
                 return new Color (0.1f, 0.1f, 0.9f);
             default:
                 return Color.black;
@@ -159,12 +163,14 @@ public class AppDefaults {
             case 29:
             case 30:
             case 35:
+            case 41:
                 return Red;
             // Green
             case 2:
             case 18:
             case 25:
             case 31:
+            case 39:
                 return Green;
             // Orange
             case 3:
@@ -185,6 +191,7 @@ public class AppDefaults {
             case 27:
             case 28:
             case 32:
+            case 43:
                 return Yellow;
             // Purple
             case 7:
@@ -194,11 +201,12 @@ public class AppDefaults {
             case 22:
             case 33:
             case 37:
+            case 40:
                 return new Color (0.8f, 0, 1);
             // Blue
             case 20:
             case 38:
-            case 40:
+            case 42:
                 return new Color (0.2f, 0.2f, 1);
         }
         return Color.white;

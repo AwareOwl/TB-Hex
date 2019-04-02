@@ -151,3 +151,5 @@
 [150] Show menu
 [151] Level
 [152] more to unlock
+[153] Create your own Token Battle Hex server. Other players from your local area network will be able to join this server.
+[154] Join to server from your local area network. Server in this network is required to use this option.

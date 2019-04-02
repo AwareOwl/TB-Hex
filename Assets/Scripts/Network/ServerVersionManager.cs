@@ -160,7 +160,7 @@ public class ServerVersionManager : VersionManager {
 
         RatingClass.LoadAbilityStackSize ();
         RatingClass.LoadTokenStackSize ();
-        //RatingClass.LoadAbilityTokenStackSize ();
+        RatingClass.LoadAbilityTokenStackSize ();
 
         UpdateDefaultServerVersion ();
     }

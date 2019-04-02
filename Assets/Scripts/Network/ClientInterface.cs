@@ -47,8 +47,13 @@ public class ClientInterface : NetworkBehaviour {
     [TargetRpc]
     public void TargetShowMatchResult (NetworkConnection target, int matchType, string winnerName, int winCondition, int limit, 
         int level, int currentExperience, int maxExperience, int experienceGain) {
-        Debug.Log ("Wat");
-        InGameUI.PlayedMatch.visualMatch.ShowMatchResult (matchType, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
+        MatchClass pm = InGameUI.PlayedMatch;
+        if (pm != null) {
+            VisualMatch vm = pm.visualMatch;
+            if (vm != null) {
+                vm.ShowMatchResult (matchType, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
+            }
+        }
     }
 
     [TargetRpc]

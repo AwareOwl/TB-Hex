@@ -346,6 +346,7 @@ GameObject:
   - component: {fileID: 969857094}
   - component: {fileID: 969857093}
   - component: {fileID: 969857096}
+  - component: {fileID: 969857097}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -424,6 +425,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41ee053e1a566c440815d13cbe234f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &969857097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 969857092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89654dcf6db746d2a57aeaaa14f5e83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings:
+    intensity: 1
+    radius: 0.3
+    sampleCount: 2
+    sampleCountValue: 24
+    downsampling: 0
+    ambientOnly: 0
+    occlusionSource: 1
+    debug: 0
+  _aoShader: {fileID: 4800000, guid: 65e203e5acda447acbf9dc1ef78c4a39, type: 3}
+  _quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1587876301
 GameObject:
   m_ObjectHideFlags: 0

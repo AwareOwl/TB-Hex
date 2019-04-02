@@ -26,6 +26,7 @@ public class VectorInfo {
     public int allyCount = 0;
     public int enemyCount = 0;
     public int differentTypesCount = 0;
+    public int remainsCount = 0;
 
     public List<int> TargetPlayers = new List<int> ();
 
@@ -98,6 +99,9 @@ public class VectorInfo {
                 }
                 if (vector.target.IsEmptyTile ()) {
                     emptyTileCount++;
+                    if (vector.target.HasRemains ()) {
+                        remainsCount++;
+                    }
                 }
             }
 
@@ -105,7 +109,7 @@ public class VectorInfo {
     }
 
     public bool IsFilledTile (TileClass tile) {
-        return tile != null && tile.IsFilledTile ();
+        return RelationLogic.IsFilledTile (tile);
     }
 
     public bool HasRemains (TileClass tile) {
@@ -113,7 +117,8 @@ public class VectorInfo {
     }
 
     public bool IsEnemy (TileClass tile, int playerNumber) {
-        return IsFilledTile (tile) && tile.token.owner != playerNumber && tile.token.owner != 0;
+        return RelationLogic.IsEnemy (tile, playerNumber);
+
     }
 
     public bool IsAlly (TileClass tile, int playerNumber) {
@@ -292,6 +297,7 @@ public class VectorInfo {
                     }
                     break;
                 case 26:
+                case 43:
                     if (IsFilledTile (vector.target) && strongestValue == vector.target.token.value && weakestValue != vector.target.token.value) {
                         Triggered1.Add (vector.target);
                     } else if (IsFilledTile (vector.target) && weakestValue == vector.target.token.value && strongestValue != vector.target.token.value) {
@@ -355,6 +361,24 @@ public class VectorInfo {
                 case 36:
                 case 37:
                     if (targets.Count == 2 && IsFilledTile (vector.target)) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 39:
+                    if (emptyTileCount >= 1 && enemyCount == 1) {
+                        if (IsEmptyTile (vector.target)) {
+                            Triggered1.Add (vector.target);
+                        } else if (IsEnemy (vector.target, token.owner)) {
+                            Triggered2.Add (vector.target);
+                        }
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case 41:
+                    if (IsFilledTile (vector.target) && strongerCount == 1 && vector.target.token.value > token.value) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);

@@ -8,9 +8,11 @@ public class RatingClass {
     static bool CreateBackUp = true;
 
     static int [] winner = new int [5];
-    static int [] turn = new int [42];
+    static int [,] turn = new int [42,10];
 
     static float [,] mapPlayer = new float [400, 5];
+
+    static int [,] mapTurn = new int [400, 50];
 
     const int AICount = 100;
 
@@ -145,6 +147,7 @@ public class RatingClass {
                 mapPlayer [x, y] = 0.5f;
             }
         }
+        
 
         LoadAbility_AbilitySynergy ();
         LoadAbility_TokenSynergy ();
@@ -358,7 +361,8 @@ public class RatingClass {
             }
 
         }
-        turn [match.turn]++;
+        turn [match.turn, match.winCondition]++;
+        mapTurn [match.Board.boardTemplateId, match.turn] ++;
         int loserNumber = 0;
         for (int x = 1; x <= match.numberOfPlayers; x++) {
             for (int y = 1; y <= match.numberOfPlayers; y++) {
@@ -414,10 +418,8 @@ public class RatingClass {
         SaveCardPopularity ();
         SaveTurn ();
         SaveAISettings ();
-        SaveEdgeDanger ();
-        SaveMultiTargetDanger ();
-        SaveSurroundDanger ();
         SaveMapPlayer ();
+        SaveMapTurn ();
         SaveNumberOfCards ();
 
         SaveAbility_AbilitySynergy ();
@@ -547,26 +549,14 @@ public class RatingClass {
 
     static public void SaveTurn () {
         List<string> lines = new List<string> ();
-        for (int x = 0; x < turn.Length; x++) {
-            lines.Add ("[" + x.ToString () + "] " + turn [x].ToString ());
+        for (int x = 0; x < turn.GetLength (0); x++) {
+            string s = "[" + x.ToString () + "] ";
+            for (int y = 0; y < turn.GetLength (1); y++) {
+                s += "[" + y.ToString () + "] " + turn [x, y].ToString () + " ";
+            }
+            lines.Add (s);
         }
         RatingData.SaveRatingTurn (lines.ToArray ());
-    }
-
-    static public void SaveEdgeDanger () {
-        List<string> lines = new List<string> ();
-        for (int x = 0; x < turn.Length; x++) {
-            lines.Add ("[" + x.ToString () + "] " + edgeDanger [x].ToString ());
-        }
-        RatingData.SaveRatingEdgeDanger (lines.ToArray ());
-    }
-
-    static public void SaveMultiTargetDanger () {
-        List<string> lines = new List<string> ();
-        for (int x = 0; x < turn.Length; x++) {
-            lines.Add ("[" + x.ToString () + "] " + multiTargetDanger [x].ToString ());
-        }
-        RatingData.SaveRatingMultiTargetDanger (lines.ToArray ());
     }
 
     static public void SaveAISettings () {
@@ -658,14 +648,6 @@ public class RatingClass {
         RatingData.SaveRatingAISettings (lines.ToArray ());
     }
 
-    static public void SaveSurroundDanger () {
-        List<string> lines = new List<string> ();
-        for (int x = 0; x < turn.Length; x++) {
-            lines.Add ("[" + x.ToString () + "] " + surroundDanger [x].ToString ());
-        }
-        RatingData.SaveRatingSurroundDanger (lines.ToArray ());
-    }
-
     static public void SaveMapPlayer () {
         List<string> lines = new List<string> ();
         for (int x = 0; x < mapPlayer.GetLength (0); x++) {
@@ -676,6 +658,18 @@ public class RatingClass {
             lines.Add (s);
         }
         RatingData.SaveRatingMapPlayer (lines.ToArray ());
+    }
+
+    static public void SaveMapTurn () {
+        List<string> lines = new List<string> ();
+        for (int x = 0; x < mapTurn.GetLength (0); x++) {
+            string s = "[" + x.ToString () + "] ";
+            for (int y = 0; y < mapTurn.GetLength (1); y++) {
+                s += mapTurn [x, y].ToString () + " ";
+            }
+            lines.Add (s);
+        }
+        RatingData.SaveRatingMapTurn (lines.ToArray ());
     }
 
     static public void SaveNumberOfCards () {
@@ -779,7 +773,7 @@ public class RatingClass {
     }
 
     static public void SaveAbilityTokenStackSize () {
-        RatingData.SaveRatingTokenStackSize (Save (abilityTokenStackSize));
+        RatingData.SaveRatingAbilityTokenStackSize (Save (abilityTokenStackSize));
     }
 
     static public void SaveAbilityAgainstAbility () {
@@ -818,7 +812,7 @@ public class RatingClass {
         Load (lines, tokenAgainstToken);
     }
 
-    static float minValue = 0.4f;
+    static float minValue = 0.47f;
 
     static public void Load (string [] lines, float [] array) {
         for (int x = 0; x < array.GetLength (0); x++) {

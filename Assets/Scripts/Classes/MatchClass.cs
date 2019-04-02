@@ -158,6 +158,7 @@ public class MatchClass {
 
     public void AfterTurn () {
         bool actionMade = false;
+        bool nextPlayerTurn = true;
         foreach (TileClass tile in Board.tileList) {
             if (!tile.IsFilledTile ()) {
                 continue;
@@ -168,6 +169,10 @@ public class MatchClass {
             switch (tokenType) {
                 case 5:
                     ModifyTempValue (tile, -1);
+                    break;
+                case 13:
+                    nextPlayerTurn = false;
+                    ChangeType (tile, 0);
                     break;
             }
             foreach (TileClass target in info.Triggered1) {
@@ -196,16 +201,18 @@ public class MatchClass {
 
         UpdateBoard ();
         UpdateVisuals ();
-        NewTurn ();
+        NewTurn (nextPlayerTurn);
     }
 
     public int TurnsLeft () {
         return Properties.turnLimit - turn + 1;
     }
 
-    public void NewTurn () {
+    public void NewTurn (bool nextPlayerTurn) {
         ThisTurnMove = null;
-        IncrementTurnOfPlayer ();
+        if (nextPlayerTurn) {
+            IncrementTurnOfPlayer ();
+        }
         turn++;
         if (visualMatch != null && Properties.turnWinCondition) {
             visualMatch.UpdateTurnsLeft (TurnsLeft ());
@@ -625,6 +632,9 @@ public class MatchClass {
             case 9:
                 Board.BeforeAbilityTriggers.Remove (tile);
                 break;
+            case 14:
+                Board.BeforeTokenPlayedTriggers.Remove (tile);
+                break;
             case 12:
                 if (visualMatch != null) {
                     visualMatch.CreateRealTokenEffect (tile, tokenType);
@@ -831,6 +841,15 @@ public class MatchClass {
                 case 32:
                     ModifyTempValue (tile, 1);
                     break;
+                case 39:
+                    CreateToken (target, info.Triggered2 [0].token.type, 1, playerNumber);
+                    break;
+                case 41:
+                    ModifyTempValue (target, -3);
+                    break;
+                case 43:
+                    ModifyTempValue (target, -1);
+                    break;
             }
         }
     }
@@ -858,6 +877,9 @@ public class MatchClass {
                     break;
                 case 28:
                     ModifyTempValue (target, LastPlayedToken ().value);
+                    break;
+                case 43:
+                    ModifyTempValue (target, 1);
                     break;
             }
         }
@@ -903,7 +925,9 @@ public class MatchClass {
                 break;
             case 30:
             case 31:
-                Player [playerNumber].AddScore (-20);
+                if (Player [playerNumber].score >= 20) {
+                    Player [playerNumber].AddScore (-20);
+                }
                 break;
             case 36:
                 if (info.Triggered1.Count == 2) {
@@ -931,6 +955,22 @@ public class MatchClass {
                     ModifyCardValue (card, -1);
                 }
                 break;
+            case 40: {
+                if (info.remainsCount < 2) {
+                    ChangeType (tile, 0);
+                }
+            }
+            break;
+            case 42: {
+                PlayerClass player = Player [playerNumber];
+                if (player.hand == null) {
+                    break;
+                }
+                CardClass card = player.GetCard (stackNumber, cardNumber);
+                SetCardValue (card, 1);
+            }
+            break;
+            /*
             case 40:
                 if (info.TargetPlayers != null) {
                     foreach (int pNumber in info.TargetPlayers) {
@@ -947,12 +987,17 @@ public class MatchClass {
                         }
                     }
                 }
-                break;
+                break;*/
         }
     }
 
     public void ModifyCardValue (CardClass card, int value) {
         card.tokenValue += value;
+        card.DelayedSetState ();
+    }
+
+    public void SetCardValue (CardClass card, int value) {
+        card.tokenValue = value;
         card.DelayedSetState ();
     }
 
@@ -1028,6 +1073,22 @@ public class MatchClass {
             //TokenClass token = tile.CreateToken (card, playerNumber);
             if (tile.visualTile != null) {
                 tile.token.visualToken.DelayedAddPlayAnimation ();
+            }
+            foreach (TileClass triggeredTile in Board.BeforeTokenPlayedTriggers) {
+                if (triggeredTile != null) {
+                    TokenClass triggeredToken = triggeredTile.token;
+                    if (triggeredToken != null) {
+                        int triggeredType = triggeredToken.type;
+                        switch (triggeredType) {
+                            case 14:
+                                if (triggeredToken.value < token.value && RelationLogic.IsEnemy (triggeredTile, token.owner)) {
+                                    ModifyTempValue (triggeredTile, 1);
+                                }
+                                break;
+
+                        }
+                    }
+                }
             }
             return token;
         }

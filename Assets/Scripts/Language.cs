@@ -22,7 +22,6 @@ public class Language {
     static public string [] FileName = new string [2] { "ENG", "PL" };
 
     static public string [] UI;
-    static public string [] UITooltip;
     static public string [] AvatarName;
     static public string [] AbilityName;
     static public string [] AbilityDescription;
@@ -384,24 +383,9 @@ public class Language {
         ShowMenu = UI [150];
         Level = UI [151];
         MoreToUnlock = UI [152];
+        CreateLocalNetworkTooltip = UI [153];
+        JoinLocalNetworkTooltip = UI [154];
 
-
-        path = "Languages/" + FileName [language] + UITooltipKey;
-        asset = Resources.Load (path) as TextAsset;
-        allLines = asset.text;
-        lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
-        UITooltip = new string [lines.Length];
-        for (int x = 0; x < lines.Length; x++) {
-            int index = lines [x].IndexOf (']');
-            if (lines [x].Length > index + 2) {
-                UITooltip [x] = lines [x].Substring (index + 2);
-            } else {
-                UITooltip [x] = "";
-            }
-        }
-
-        CreateLocalNetworkTooltip = UITooltip [0];
-        JoinLocalNetworkTooltip = UITooltip [1];
 
         LoadNamesAndDescriptions (language);
         LoadAvatarNames (language);

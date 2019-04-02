@@ -116,8 +116,8 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output *= 0.8f;
-        output = Mathf.Clamp (output, 0.7f, 1.2f);
+        output *= 0.6f;
+        output = Mathf.Clamp (output, 0.575f, 1.8f);
         return output;
     }
 
@@ -205,8 +205,10 @@ public class HandClass  {
                             prevCard.tokenType, prevCard.tokenValue], AI.tokenAfterToken);
                     }
                     AIClass.maxCardValue = Mathf.Max (AIClass.maxCardValue, modifier [z]);
-                    modifier [z] = Mathf.Min (modifier [z], 10000);
+                    modifier [z] = Mathf.Min (modifier [z], 100000);
+                    modifier [z] = Mathf.Sqrt (modifier [z]);
                     SumOfValues += modifier [z];
+                    //SumOfValues += Mathf.Sqrt (modifier [z]);
                 }
                 if (SumOfValues == 0) {
                     break;
@@ -215,6 +217,7 @@ public class HandClass  {
                 int id = -1;
                 for (int z = 0; z < count; z++) {
                     rng -= modifier [z];
+                    //rng -= Mathf.Sqrt (modifier [z]);
                     if (rng <= 0) {
                         id = z;
                         break;
@@ -244,7 +247,8 @@ public class HandClass  {
                     CardValue [z] *= Normalize (RatingClass.ability_TokenSynergy [abilityType2, abilityArea2, tokenType, tokenValue], AI.ability_TokenSynergy);
 
                     if (CardValue [z] != 0) {
-                        CardValue [z] = Mathf.Max (0.01f, CardValue [z]);
+                        CardValue [z] = Mathf.Sqrt (CardValue [z]);
+                        CardValue [z] = Mathf.Max (0.5f, CardValue [z]);
                     }
 
                 }
