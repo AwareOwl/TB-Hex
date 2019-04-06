@@ -152,6 +152,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 4) {
                         ConvertTo0_9_0_4 ();
                     }
+                    if (DevelopVersion < 5) {
+                        ConvertTo0_9_0_5 ();
+                    }
                 }
             }
         }
@@ -211,6 +214,44 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
         RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
         //RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
+    }
+
+    static public void ConvertTo0_9_0_5 () {
+        int [] gameModes = ServerData.GetAllGameModes ();
+        foreach (int gameMode in gameModes) {
+            if (ServerData.GetGameModeIsOfficial (gameMode)) {
+                ServerData.SaveGameModeOwners (gameMode, new string [0]);
+            }
+        }
+        int [] boards = ServerData.GetAllBoards ();
+        foreach (int board in boards) {
+            if (ServerData.GetBoardIsOfficial (board)) {
+                ServerData.SaveBoardOwners (board, new string [0]);
+            }
+        }
+        string [] users = ServerData.GetAllUsers ();
+        foreach (string user in users) {
+            int [] boardProperties = ServerData.GetUserBoardProperties (user);
+            List<int> gameModeIds = new List<int> ();
+            List<int> boardIds = new List<int> ();
+            int count = boardProperties.Length;
+            for (int x = 0; x < count; x++) {
+                int id = boardProperties [x];
+                if (ServerData.BoardContentExists (id) && !ServerData.GetBoardIsOfficial (id)) {
+                    boardIds.Add (id);
+                }
+                if (ServerData.GameModeContentExists (id) && !ServerData.GetGameModeIsOfficial (id)) {
+                    gameModeIds.Add (id);
+                }
+            }
+            ServerData.SaveUserBoardProperties (user, boardIds.ToArray());
+            ServerData.SaveUserGameModeProperties (user, gameModeIds.ToArray ());
+        }
+
+        GameVersion = 0;
+        PathVersion = 9;
+        HotfixVersion = 0;
+        DevelopVersion = 5;
     }
 
     static public void ConvertTo0_9_0_4 () {

@@ -128,6 +128,11 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public bool GameModeContentExists (int id) {
+        string path = GameModeContentPath () + id.ToString () + "/";
+        return Directory.Exists (path);
+    }
+
     static public string GameModeContentPath (int id) {
         string path = GameModeContentPath () + id.ToString () + "/";
         if (!Directory.Exists (path)) {
@@ -396,10 +401,7 @@ public class ServerData : MonoBehaviour {
     static public int CreateNewGameMode (string userName) {
         int id = IncrementGameModeNextId ();
         SetGameModeName (id, "New game mode");
-        Debug.Log (GetGameModeOwners (id).Length);
-        Debug.Log (userName);
         AddGameModeOwner (id, userName);
-        Debug.Log (GetGameModeOwners (id) [0]);
         return id;
     }
 
@@ -851,6 +853,11 @@ public class ServerData : MonoBehaviour {
         return CurrentId;
     }
 
+    static public bool BoardContentExists (int id) {
+        string path = BoardContentPath () + id.ToString () + "/";
+        return Directory.Exists (path);
+    }
+
     static public string BoardContentPath (int id) {
         string path = BoardContentPath () + id.ToString () + "/";
         if (!Directory.Exists (path)) {
@@ -982,7 +989,6 @@ public class ServerData : MonoBehaviour {
         int newId;
         int newBoardId;
         newId = CreateNewGameMode ("");
-        Debug.Log (ServerData.GetGameModeOwners (newId) [0]);
         SetCardPool (newId, cardPool);
         SetGameModeName (newId, puzzleName);
         SetGameModeIsOfficial (newId, true);
@@ -992,7 +998,17 @@ public class ServerData : MonoBehaviour {
         newBoardId = SaveNewBoard (newId, patchName, "Board", board);
         SetBoardIsOfficial (newBoardId, true);
         SetBoardIsPuzzle (newBoardId, true);
-        Debug.Log (ServerData.GetGameModeOwners (newId) [0]);
+    }
+
+
+    static public int [] GetAllBoards () {
+        string [] s = Directory.GetDirectories (BoardContentPath ());
+        List<int> ids = new List<int> ();
+        for (int x = 0; x < s.Length; x++) {
+            s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+            ids.Add (int.Parse (s [x]));
+        }
+        return ids.ToArray ();
     }
 
 
@@ -1406,6 +1422,16 @@ public class ServerData : MonoBehaviour {
         return null;
     }
 
+    static public int [] GetUserBoardProperties (string userName) {
+        string [] strings = GetUserProperties (userName, BoardProperty);
+        int count = strings.Length;
+        int [] ints = new int [count];
+        for (int x = 0; x < count; x++) {
+            ints [x] = int.Parse (strings [x]);
+        }
+        return ints;
+    }
+
     static public string [] GetUserProperties (string userName, string propertyType) {
         if (UserExists (userName)) {
             string path = UserPropertiesPath (userName, propertyType);
@@ -1417,12 +1443,29 @@ public class ServerData : MonoBehaviour {
         return new string [0];
     }
 
-    static public string [] SaveUserProperties (string userName, string propertyType, string [] boards) {
+    static public string [] SaveUserGameModeProperties (string userName, int [] gameModes) {
+        return SaveUserProperties (userName, GameModeProperty, gameModes);
+    }
+
+    static public string [] SaveUserBoardProperties (string userName, int [] boards) {
+        return SaveUserProperties (userName, BoardProperty, boards);
+    }
+
+    static public string [] SaveUserProperties (string userName, string propertyType, int [] properties) {
+        int count = properties.Length;
+        string [] strings = new string [count];
+        for (int x = 0; x < count; x++) {
+            strings [x] = properties [x].ToString ();
+        }
+        return SaveUserProperties (userName, propertyType, strings);
+    }
+
+    static public string [] SaveUserProperties (string userName, string propertyType, string [] properties) {
         if (UserExists (userName)) {
             string path = UserPropertiesPath (userName, propertyType);
-            File.WriteAllLines (path, boards);
+            File.WriteAllLines (path, properties);
         }
-        return boards;
+        return properties;
     }
 
     static public bool AddUserProperty (string userName, string propertyType, int boardId) {

@@ -477,7 +477,6 @@ public class ServerLogic : MonoBehaviour {
                 }
             }
             foreach (string owner in owners) {
-                Debug.Log (id + " " +owner);
                 if (accountName == owner && !ServerData.GetGameModeDeleted (id)) {
                     yourIds.Add (id);
                     if (ServerData.GetIsGameModeLegal (id)) {
