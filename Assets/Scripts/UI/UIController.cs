@@ -661,6 +661,11 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
 
 
+            case UIString.ShowUnlockedContent:
+                UnlockedContent.ShowUnlockedContent ();
+                break;
+
+
             // BoardEditor
             case UIString.SaveBoard:
                 BoardEditorMenu.SaveBoard ();

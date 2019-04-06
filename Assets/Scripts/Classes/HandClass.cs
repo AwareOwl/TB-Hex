@@ -116,8 +116,8 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output *= 0.6f;
-        output = Mathf.Clamp (output, 0.575f, 1.8f);
+        output *= 0.65f;
+        output = Mathf.Clamp (output, 0.5f, 2.2f);
         return output;
     }
 
@@ -248,7 +248,7 @@ public class HandClass  {
 
                     if (CardValue [z] != 0) {
                         CardValue [z] = Mathf.Sqrt (CardValue [z]);
-                        CardValue [z] = Mathf.Max (0.5f, CardValue [z]);
+                        CardValue [z] = Mathf.Max (0.1f, CardValue [z]);
                     }
 
                 }

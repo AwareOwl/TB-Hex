@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.8.0.6");
+            CmdCompareServerVersion ("0.9.0.4");
         }
     }
 
@@ -120,6 +120,16 @@ public class ClientInterface : NetworkBehaviour {
     [TargetRpc]
     public void TargetInvalidVersionMessage (NetworkConnection target, string serverVersion) {
         GOUI.ShowMessage (Language.GetInvalidGameVersionMessage (serverVersion), "ExitGame");
+    }
+
+    [Command]
+    public void CmdDownloadDataToUnlockedContentMenu () {
+        ServerLogic.DownloadDataToUnlockedContentMenu (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadUnlockedContentData (NetworkConnection target, bool [] abilities, bool [] tokens) {
+        UnlockedContent.LoadUnlockedContentMenu (abilities, tokens);
     }
 
     [Command]

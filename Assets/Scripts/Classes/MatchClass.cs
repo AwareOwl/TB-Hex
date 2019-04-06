@@ -924,7 +924,7 @@ public class MatchClass {
                 }
                 break;
             case 30:
-            case 31:
+            case 33:
                 if (Player [playerNumber].score >= 20) {
                     Player [playerNumber].AddScore (-20);
                 }

@@ -85,6 +85,9 @@ public class ProfileMenu : GOUI {
         Clone = CreateUIText (Language.Level + " " + level.ToString() + " (" + currentExperience + "/" + neededExperience + ")", 330, 715, 240, 24);
         Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
 
+        Clone = CreateSprite ("UI/Butt_S_Ability", 480, 715, 11, 60, 60, false);
+        Clone.name = UIString.ShowUnlockedContent;
+
         int firstRowY = 390;
         int firstColumnX = 690;
         int secondColumnX = 885;

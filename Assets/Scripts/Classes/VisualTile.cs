@@ -89,7 +89,7 @@ public class VisualTile {
         Tile.GetComponent<VisualEffectScript> ().SetColor (col);
         Transform add = Anchor.transform.Find ("Add");
         if (add != null) {
-            add.transform.Find ("Tile").GetComponent<VisualEffectScript> ().SetColor (col);
+            add.transform.Find ("Tile").GetComponent<VisualEffectScript> ().SetColor (EnvironmentScript.ConvertToTileColorTheme (col));
         }
         if (enable) {
             Anchor.GetComponent<VisualEffectScript> ().PushToHeight (0);

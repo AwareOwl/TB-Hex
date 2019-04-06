@@ -52,7 +52,10 @@ public class MoveHistoryClass  {
         playerNumber = int.Parse (s [3]);
         stackNumber = int.Parse (s [4]);
         usedCardNumber = int.Parse (s [5]);
-        usedCard = match.Player [playerNumber].GetCard (stackNumber, usedCardNumber);
+        PlayerClass player = match.Player [playerNumber];
+        if (player.hand != null) {
+            usedCard = player.GetCard (stackNumber, usedCardNumber);
+        }
     }
 
 }

@@ -396,7 +396,10 @@ public class ServerData : MonoBehaviour {
     static public int CreateNewGameMode (string userName) {
         int id = IncrementGameModeNextId ();
         SetGameModeName (id, "New game mode");
+        Debug.Log (GetGameModeOwners (id).Length);
+        Debug.Log (userName);
         AddGameModeOwner (id, userName);
+        Debug.Log (GetGameModeOwners (id) [0]);
         return id;
     }
 
@@ -771,13 +774,13 @@ public class ServerData : MonoBehaviour {
     }
 
     static public bool AddGameModeOwner (int id, string owner) {
-        List<string> lines = new List<string> (GetBoardOwners (id));
+        List<string> lines = new List<string> (GetGameModeOwners (id));
         if (lines.Exists (x => x == owner)) {
             return false;
         }
         lines.Add (owner);
         SaveGameModeOwners (id, lines.ToArray ());
-        AddUserProperty (owner, BoardProperty, id);
+        AddUserProperty (owner, GameModeProperty, id);
         return true;
     }
 
@@ -979,6 +982,7 @@ public class ServerData : MonoBehaviour {
         int newId;
         int newBoardId;
         newId = CreateNewGameMode ("");
+        Debug.Log (ServerData.GetGameModeOwners (newId) [0]);
         SetCardPool (newId, cardPool);
         SetGameModeName (newId, puzzleName);
         SetGameModeIsOfficial (newId, true);
@@ -988,6 +992,7 @@ public class ServerData : MonoBehaviour {
         newBoardId = SaveNewBoard (newId, patchName, "Board", board);
         SetBoardIsOfficial (newBoardId, true);
         SetBoardIsPuzzle (newBoardId, true);
+        Debug.Log (ServerData.GetGameModeOwners (newId) [0]);
     }
 
 
@@ -1158,23 +1163,27 @@ public class ServerData : MonoBehaviour {
         return UserUnlocksPath (accountName) + "Tokens.txt";
     }
 
-    static public int [] GetUserUnlockedTokens (string accountName) {
+    static public bool [] GetUserUnlockedTokens (string accountName) {
         if (UserExists (accountName)) {
             string path = UserUnlockedTokensPath (accountName);
             if (File.Exists (path)) {
                 string [] lines = File.ReadAllLines (path);
-                int count = lines.Length;
-                List<int> ids = new List<int> ();
+                int linesCount = lines.Length;
+                int count = AppDefaults.AvailableTokens;
+                bool [] values = new bool [count];
                 for (int x = 0; x < count; x++) {
-                    ids.Add (int.Parse (lines [x]));
+                    if (x < linesCount && lines [x] == "1") {
+                        values [x] = true;
+                    } else {
+                        values [x] = false;
+                    }
                 }
-                ids.Sort ((a, b) => (a.CompareTo (b)));
-                return ids.ToArray ();
+                return values;
             }
         }
         int [] newArray = new int [4] { 0, 1, 2, 6 };
         SetUserUnlockedTokens (accountName, newArray, true);
-        return newArray;
+        return GetUserUnlockedTokens (accountName);
     }
 
     static public void SetUserUnlockedToken (string accountName, int token) {
@@ -1186,60 +1195,65 @@ public class ServerData : MonoBehaviour {
     }
 
     static public void SetUserUnlockedTokens (string accountName, int [] tokens, bool replace) {
-        if (UserExists (accountName)) {
-            string path = UserUnlockedTokensPath (accountName);
-            List<string> lines = new List<string> ();
+        if (!UserExists (accountName)) {
+            return;
+        }
+        string path = UserUnlockedTokensPath (accountName);
+        int count = AppDefaults.AvailableTokens;
+        int newCount = tokens.Length;
+        string [] lines = new string [count];
 
-            if (replace) {
-                for (int x = 0; x < tokens.Length; x++) {
-                    lines.Add (tokens [x].ToString ());
-                }
-                File.WriteAllLines (path, lines.ToArray ());
-                return;
-            }
-
-            int [] unlockedTokens = GetUserUnlockedTokens (accountName);
-            for (int x = 0; x < unlockedTokens.Length; x++) {
-                lines.Add (unlockedTokens [x].ToString ());
+        if (replace) {
+            for (int x = 0; x < count; x++) {
+                lines [x] = "0";
             }
             for (int x = 0; x < tokens.Length; x++) {
-                bool wasThere = false;
-                for (int y = 0; y < unlockedTokens.Length; y++) {
-                    if (tokens [x] == unlockedTokens [y]) {
-                        wasThere = true;
-                        break;
-                    }
-                }
-                if (!wasThere) {
-                    lines.Add (tokens [x].ToString ());
-                }
-
+                lines [tokens [x]] = "1";
             }
-            File.WriteAllLines (path, lines.ToArray ());
+            File.WriteAllLines (path, lines);
+            return;
         }
+
+        bool [] unlockedTokens = GetUserUnlockedTokens (accountName);
+        for (int x = 0; x < count; x++) {
+            if (unlockedTokens [x]) {
+                lines [x] = "1";
+            } else {
+                lines [x] = "0";
+            }
+        }
+        for (int x = 0; x < newCount; x++) {
+            lines [tokens [x]] = "1";
+
+        }
+        File.WriteAllLines (path, lines);
     }
 
     static public string UserUnlockedAbilitiesPath (string accountName) {
         return UserUnlocksPath (accountName) + "Abilities.txt";
     }
 
-    static public int [] GetUserUnlockedAbilities (string accountName) {
+    static public bool [] GetUserUnlockedAbilities (string accountName) {
         if (UserExists (accountName)) {
             string path = UserUnlockedAbilitiesPath (accountName);
             if (File.Exists (path)) {
                 string [] lines = File.ReadAllLines (path);
-                int count = lines.Length;
-                List<int> ids = new List<int> ();
+                int linesCount = lines.Length;
+                int count = AppDefaults.AvailableAbilities;
+                bool [] values = new bool [count];
                 for (int x = 0; x < count; x++) {
-                    ids.Add (int.Parse (lines [x]));
+                    if (x < linesCount && lines [x] == "1") {
+                        values [x] = true;
+                    } else {
+                        values [x] = false;
+                    }
                 }
-                ids.Sort ((a, b) => (a.CompareTo (b)));
-                return ids.ToArray ();
+                return values;
             }
         }
         int [] newArray = new int [6] { 0, 1, 2, 5, 9, 12 };
         SetUserUnlockedAbilities (accountName, newArray, true);
-        return newArray;
+        return GetUserUnlockedAbilities (accountName);
     }
 
     static public void SetUserUnlockedAbility (string accountName, int ability) {
@@ -1252,37 +1266,38 @@ public class ServerData : MonoBehaviour {
 
 
     static public void SetUserUnlockedAbilities (string accountName, int [] abilities, bool replace) {
-        if (UserExists (accountName)) {
-            string path = UserUnlockedAbilitiesPath (accountName);
-            List<string> lines = new List<string> ();
+        if (!UserExists (accountName)) {
+            return;
+        }
+        string path = UserUnlockedAbilitiesPath (accountName);
+        int count = AppDefaults.AvailableAbilities;
+        int newCount = abilities.Length;
+        string [] lines = new string [count];
 
-            if (replace) {
-                for (int x = 0; x < abilities.Length; x++) {
-                        lines.Add (abilities [x].ToString ());
-                }
-                File.WriteAllLines (path, lines.ToArray ());
-                return;
-            }
-
-            int [] unlockedAbilities = GetUserUnlockedAbilities (accountName);
-            for (int x = 0; x < unlockedAbilities.Length; x++) {
-                lines.Add (unlockedAbilities [x].ToString ());
+        if (replace) {
+            for (int x = 0; x < count; x++) {
+                lines [x] = "0";
             }
             for (int x = 0; x < abilities.Length; x++) {
-                bool wasThere = false;
-                for (int y = 0; y < unlockedAbilities.Length; y++) {
-                    if (abilities [x] == unlockedAbilities [y]) {
-                        wasThere = true;
-                        break;
-                    }
-                }
-                if (!wasThere) {
-                    lines.Add (abilities [x].ToString());
-                }
-
+                lines [abilities [x]] = "1";
             }
-            File.WriteAllLines (path, lines.ToArray ());
+            File.WriteAllLines (path, lines);
+            return;
         }
+
+        bool [] unlockedAbilities = GetUserUnlockedAbilities (accountName);
+        for (int x = 0; x < count; x++) {
+            if (unlockedAbilities [x]) {
+                lines [x] = "1";
+            } else {
+                lines [x] = "0";
+            }
+        }
+        for (int x = 0; x < newCount; x++) {
+            lines [abilities [x]] = "1";
+
+        }
+        File.WriteAllLines (path, lines);
     }
 
     static public string UserDataPath (string userName) {

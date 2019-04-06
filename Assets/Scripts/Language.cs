@@ -191,6 +191,9 @@ public class Language {
 
     static public string AIOpponent;
 
+    static public string UnlockedAbilities;
+    static public string UnlockedTokens;
+
     static public int PasswordIsIncorrectKey;
     static public int AccountDoesntExistKey;
     static public int PleaseEnterAccountNameKey;
@@ -385,6 +388,8 @@ public class Language {
         MoreToUnlock = UI [152];
         CreateLocalNetworkTooltip = UI [153];
         JoinLocalNetworkTooltip = UI [154];
+        UnlockedAbilities = UI [159];
+        UnlockedTokens = UI [160];
 
 
         LoadNamesAndDescriptions (language);

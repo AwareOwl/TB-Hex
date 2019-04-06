@@ -10,7 +10,7 @@ public class ClientLogic : MonoBehaviour {
         MyInterface.AccountName = accountName;
         MyInterface.UserName = userName;
 
-        InputController.autoRunAI = true;
+        InputController.autoRunAI = false;
 
         if (!InputController.autoRunAI) {
             //BoardEditorMenu.ShowBoardEditorMenu ();

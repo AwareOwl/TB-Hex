@@ -436,7 +436,6 @@ public class GOUI : MonoBehaviour {
         GameObject Button;
         GameObject Text;
         GameObject Clone;
-        Debug.Log (optionName);
 
         Text = CreateUIText (s, 720, 540 - 115);
         int textWidth = (int) Mathf.Min (Mathf.Max (Text.GetComponent<Text> ().preferredWidth, 125), 430);

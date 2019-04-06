@@ -215,6 +215,31 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SetPlayerModeSelectedSet (client.AccountName, client.GameMode, selectedSetId);
     }
 
+    static public void LevelUpReward (string accountName, int reachedLevel) {
+        List<int> abilityNumber = new List<int> ();
+        List<int> tokenNumber = new List<int> ();
+        if (reachedLevel >= 2) {
+            abilityNumber.Add (20);
+        }
+        if (reachedLevel >= 3) {
+            abilityNumber.Add (28);
+        }
+        if (reachedLevel >= 4) {
+            abilityNumber.Add (38);
+        }
+        if (reachedLevel >= 5) {
+            abilityNumber.Add (42);
+        }
+        if (reachedLevel >= 6) {
+            tokenNumber.Add (13);
+        }
+        if (reachedLevel >= 7) {
+            tokenNumber.Add (14);
+        }
+        ServerData.SetUserUnlockedAbilities (accountName, abilityNumber.ToArray ());
+        ServerData.SetUserUnlockedTokens (accountName, tokenNumber.ToArray ());
+    }
+
     static public void SavePuzzleResult (string accountName, int id) {
         ServerData.SetUserFinishedPuzzle (accountName, id);
         CardPoolClass cardPool = new CardPoolClass ();
@@ -235,7 +260,15 @@ public class ServerLogic : MonoBehaviour {
             }
         }
         ServerData.SetUserUnlockedAbilities (accountName, abilities.ToArray());
-        ServerData.SetUserUnlockedTokens (accountName, abilities.ToArray ());
+        ServerData.SetUserUnlockedTokens (accountName, tokens.ToArray ());
+    }
+
+    static public void DownloadDataToUnlockedContentMenu (ClientInterface client) {
+        string accountName = client.AccountName;
+        bool [] abilities = ServerData.GetUserUnlockedAbilities (accountName);
+        bool [] tokens = ServerData.GetUserUnlockedTokens (accountName);
+        client.TargetDownloadUnlockedContentData (client.connectionToClient, abilities, tokens);
+
     }
 
     static public void DownloadDataToPuzzleMenu (ClientInterface client) {
@@ -272,20 +305,20 @@ public class ServerLogic : MonoBehaviour {
 
     static public bool CheckIfUserShouldBeAllowedToDoPuzzle (string accountName, int id) {
         int differencesCount = 0;
-        List<int> availableAbilities = new List<int> (ServerData.GetUserUnlockedAbilities (accountName));
-        List<int> availableTokens = new List<int> (ServerData.GetUserUnlockedTokens (accountName));
+        bool [] availableAbilities = ServerData.GetUserUnlockedAbilities (accountName);
+        bool [] availableTokens = ServerData.GetUserUnlockedTokens (accountName);
         CardPoolClass cardPool = new CardPoolClass ();
         cardPool.LoadFromString (ServerData.GetCardPool (id));
         foreach (CardClass card in cardPool.Card) {
             int aType = card.abilityType;
-            if (!availableAbilities.Contains (aType)){
+            if (!availableAbilities [aType]){
                 differencesCount++;
-                availableAbilities.Add (aType);
+                availableAbilities [aType] = true;
             }
             int tType = card.tokenType;
-            if (!availableTokens.Contains (tType)) {
+            if (!availableTokens [tType]) {
                 differencesCount++;
-                availableTokens.Add (tType);
+                availableTokens [tType] = true;
             }
         }
         if (differencesCount <= 1) {
@@ -444,6 +477,7 @@ public class ServerLogic : MonoBehaviour {
                 }
             }
             foreach (string owner in owners) {
+                Debug.Log (id + " " +owner);
                 if (accountName == owner && !ServerData.GetGameModeDeleted (id)) {
                     yourIds.Add (id);
                     if (ServerData.GetIsGameModeLegal (id)) {

@@ -313,10 +313,12 @@ public class CardPoolEditor : GOUI {
             AddButtons (px, py, maxX, maxY);
 
         }
-
+        int tempAbilityPage = abilityPage;
+        abilityPage = 0;
         for (int x = 1; x < 5; x++) {
             SelectButton (x, Selected [x]);
         }
+        abilityPage = tempAbilityPage;
 
         CreateCardSlots ();
 

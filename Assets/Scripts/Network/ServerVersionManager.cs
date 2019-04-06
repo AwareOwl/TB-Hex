@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class ServerVersionManager : VersionManager {
 
@@ -136,6 +137,22 @@ public class ServerVersionManager : VersionManager {
                         ConvertTo0_8_0_6 ();
                     }
                 }
+                PathVersion = 9;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
+            }
+            if (PathVersion <= 9) {
+                if (HotfixVersion <= 0) {
+                    if (DevelopVersion < 2) {
+                        ConvertTo0_9_0_2 ();
+                    }
+                    if (DevelopVersion < 3) {
+                        ConvertTo0_9_0_3 ();
+                    }
+                    if (DevelopVersion < 4) {
+                        ConvertTo0_9_0_4 ();
+                    }
+                }
             }
         }
     }
@@ -194,6 +211,56 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
         RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
         //RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
+    }
+
+    static public void ConvertTo0_9_0_4 () {
+        string [] users = ServerData.GetAllUsers ();
+        for (int x = 31; x <= 43; x++) {
+            int numberOfTurns = 4;
+            ServerData.CreateNewPuzzle ("Path0.9.0", "Puzzle #" + x.ToString (),
+                GetResource ("ExportFolder/Puzzles/Boards/Board" + x.ToString ()),
+                GetResource ("ExportFolder/Puzzles/CardPools/CardPool" + x.ToString ()),
+                numberOfTurns);
+        }
+
+        GameVersion = 0;
+        PathVersion = 9;
+        HotfixVersion = 0;
+        DevelopVersion = 4;
+    }
+
+    static public void ConvertTo0_9_0_3 () {
+        string [] users = ServerData.GetAllUsers ();
+        foreach (string user in users) {
+            ServerLogic.LevelUpReward (user, ServerData.GetUserLevel (user));
+        }
+
+        GameVersion = 0;
+        PathVersion = 9;
+        HotfixVersion = 0;
+        DevelopVersion = 3;
+    }
+
+    static public void ConvertTo0_9_0_2 () {
+        string [] users = ServerData.GetAllUsers ();
+        foreach (string user in users) {
+            string path;
+            int count;
+            path = ServerData.UserUnlockedAbilitiesPath (user);
+            File.Delete (path);
+            path = ServerData.UserUnlockedTokensPath (user);
+            File.Delete (path);
+            int [] puzzleId = ServerData.GetUserFinishedPuzzles (user);
+            count = puzzleId.Length;
+            for (int x = 0; x < count; x++) {
+                ServerLogic.SavePuzzleResult (user, puzzleId [x]);
+            }
+        }
+
+        GameVersion = 0;
+        PathVersion = 9;
+        HotfixVersion = 0;
+        DevelopVersion = 2;
     }
 
     static public void ConvertTo0_8_0_6 () {

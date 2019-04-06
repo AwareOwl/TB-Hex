@@ -157,4 +157,5 @@
 [156] Kliknij na puste pole by zagrać tą kartę
 [157] Po wykonaniu ruchu twoje żetony generują punkty. Zapełnij swój pasek punktacji aby wygrać mecz.
 [158] Aby wygrać, pod koniec meczu musisz mieć więcej punktów niż przeciwnik.
-[159] 
+[159] Odblokowane umiejętności
+[160] Odblokowane żetony

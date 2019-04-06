@@ -106,6 +106,9 @@ public class UIString {
     public const string ProfileSettingsApply = "ProfileSettingsApply";
     public const string ProfileSettingsAvatar = "ProfileSettingsAvatar";
 
+
+    public const string ShowUnlockedContent = "ShowUnlockedContent";
+
     public const string BoardEditorAbout = "BoardEditorAbout";
     public const string GoBackToGameModeEditor = "GoBackToGameModeEditor";
     public const string SaveBoard = "SaveBoard";
