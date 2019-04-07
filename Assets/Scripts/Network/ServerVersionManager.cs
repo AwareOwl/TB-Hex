@@ -155,6 +155,9 @@ public class ServerVersionManager : VersionManager {
                     if (DevelopVersion < 5) {
                         ConvertTo0_9_0_5 ();
                     }
+                    if (DevelopVersion < 6) {
+                        ConvertTo0_9_0_6 ();
+                    }
                 }
             }
         }
@@ -196,8 +199,12 @@ public class ServerVersionManager : VersionManager {
         ServerData.DefaultGameMode = prevMode;
     }
 
+    static bool ratingExported;
 
     static public void ExportRating () {
+        if (ratingExported) {
+            return;
+        }
         RatingData.SaveRatingAbility_AbilitySynergy (GetResource ("ExportFolder/Rating/Ability_AbilitySynergy"));
         RatingData.SaveRatingAbility_TokenSynergy (GetResource ("ExportFolder/Rating/Ability_TokenSynergy"));
         RatingData.SaveRatingToken_TokenSynergy (GetResource ("ExportFolder/Rating/Token_TokenSynergy"));
@@ -213,7 +220,16 @@ public class ServerVersionManager : VersionManager {
 
         RatingData.SaveRatingAbilityStackSize (GetResource ("ExportFolder/Rating/AbilityStackSize"));
         RatingData.SaveRatingTokenStackSize (GetResource ("ExportFolder/Rating/TokenStackSize"));
-        //RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
+        RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
+        ratingExported = true;
+    }
+    static public void ConvertTo0_9_0_6 () {
+        ExportRating ();
+
+        GameVersion = 0;
+        PathVersion = 9;
+        HotfixVersion = 0;
+        DevelopVersion = 6;
     }
 
     static public void ConvertTo0_9_0_5 () {
@@ -273,7 +289,7 @@ public class ServerVersionManager : VersionManager {
     static public void ConvertTo0_9_0_3 () {
         string [] users = ServerData.GetAllUsers ();
         foreach (string user in users) {
-            ServerLogic.LevelUpReward (user, ServerData.GetUserLevel (user));
+            ServerLogic.LevelUpReward (null, user, ServerData.GetUserLevel (user));
         }
 
         GameVersion = 0;
@@ -294,7 +310,7 @@ public class ServerVersionManager : VersionManager {
             int [] puzzleId = ServerData.GetUserFinishedPuzzles (user);
             count = puzzleId.Length;
             for (int x = 0; x < count; x++) {
-                ServerLogic.SavePuzzleResult (user, puzzleId [x]);
+                ServerLogic.SavePuzzleResult (null, user, puzzleId [x]);
             }
         }
 
@@ -311,7 +327,7 @@ public class ServerVersionManager : VersionManager {
             int [] puzzleId = ServerData.GetUserFinishedPuzzles (user);
             int count = puzzleId.Length;
             for (int x = 0; x < count; x++) {
-                ServerLogic.SavePuzzleResult (user, puzzleId [x]);
+                ServerLogic.SavePuzzleResult (null, user, puzzleId [x]);
             }
         }
 

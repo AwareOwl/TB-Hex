@@ -10,6 +10,9 @@ public class SetEditor : GOUI {
     static CardPoolClass cardPool;
     static bool [] available;
 
+    static bool [] unlockedAbilities;
+    static bool [] unlockedTokens;
+
     static public List<int> filteredCard = new List<int> ();
 
     static VisualCard [,] Collection;
@@ -55,7 +58,7 @@ public class SetEditor : GOUI {
         CurrentCanvas.AddComponent<SetEditor> ();
     }
 
-    static public void LoadData (string [] cardPool, string [] set, string name, int iconNumber, bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimalNumberOfCardsOnStack) {
+    static public void LoadData (string [] cardPool, bool [] unlockedAbilities, bool [] unlockedTokens, string [] set, string name, int iconNumber, bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimalNumberOfCardsOnStack) {
 
 
         for (int x = 0; x < 4; x++) {
@@ -77,6 +80,9 @@ public class SetEditor : GOUI {
             filter [x] = new bool [MaxNumber];
             filter [x] [0] = true;
         }
+
+        SetEditor.unlockedAbilities = unlockedAbilities;
+        SetEditor.unlockedTokens = unlockedTokens;
 
         SetEditor.numberOfStacks = numberOfStacks;
         SetEditor.minimumNumberOfCardsOnStack = minimalNumberOfCardsOnStack;
@@ -304,10 +310,16 @@ public class SetEditor : GOUI {
 
     static public VisualCard LoadCard (CardClass card) {
         VisualCard vCard = new VisualCard (card);
-        vCard.Anchor.transform.SetParent (CurrentCanvas.transform);
-        vCard.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-        vCard.Anchor.transform.localScale = Vector3.one * 0.14f;
+        Transform transform = vCard.Anchor.transform;
+        transform.SetParent (CurrentCanvas.transform);
+        transform.localEulerAngles = new Vector3 (-90, 0, 0);
+        transform.localScale = Vector3.one * 0.14f;
         DestroyImmediate (vCard.Background.GetComponent<Collider> ());
+        /*
+        GameObject Clone = CreateSprite ("Textures/Other/Lock", 0, 0, 12, 40, 40, false);
+        Clone.transform.SetParent (transform);
+        Clone.transform.localPosition = new Vector3 (0, 0, -1);
+        Destroy (Clone.GetComponent<Collider> ());*/
         return vCard;
     }
     
@@ -377,21 +389,33 @@ public class SetEditor : GOUI {
                 switch (currentFilterMenu) {
                     case 1:
                         UIC.tokenType = alteredNumber;
-                        VisualToken VT = new VisualToken ();
-                        Clone = VT.Anchor;
-                        Clone.transform.SetParent (Background.transform);
-                        Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-                        Clone.transform.localPosition = Vector3.zero;
-                        Clone.transform.localScale = new Vector3 (0.4f, 0.4f, 0.4f);
-                        VT.SetType (alteredNumber);
-                        DestroyImmediate (VT.Text);
+                        if (unlockedTokens [alteredNumber]) {
+                            VisualToken VT = new VisualToken ();
+                            Clone = VT.Anchor;
+                            Clone.transform.SetParent (Background.transform);
+                            Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+                            Clone.transform.localPosition = Vector3.zero;
+                            Clone.transform.localScale = new Vector3 (0.4f, 0.4f, 0.4f);
+                            VT.SetType (alteredNumber);
+                            DestroyImmediate (VT.Text);
+                        } else {
+                            Clone = CreateSprite ("Textures/Other/Lock", px, py, 12, 40, 40, false);
+                            Clone.transform.SetParent (Background.transform);
+                            Destroy (Clone.GetComponent<Collider> ());
+                        }
                         break;
                     case 2:
                         UIC.abilityType = alteredNumber;
-                        Clone = CreateSprite (VisualCard.GetIconPath (alteredNumber), px, py, 12, 40, 40, false);
-                        Clone.GetComponent<Renderer> ().material.color = AppDefaults.GetAbilityColor (alteredNumber);
-                        Clone.transform.SetParent (Background.transform);
-                        Destroy (Clone.GetComponent<Collider> ());
+                        if (unlockedAbilities [alteredNumber]) {
+                            Clone = CreateSprite (VisualCard.GetIconPath (alteredNumber), px, py, 12, 40, 40, false);
+                            Clone.GetComponent<Renderer> ().material.color = AppDefaults.GetAbilityColor (alteredNumber);
+                            Clone.transform.SetParent (Background.transform);
+                            Destroy (Clone.GetComponent<Collider> ());
+                        } else {
+                            Clone = CreateSprite ("Textures/Other/Lock", px, py, 12, 40, 40, false);
+                            Clone.transform.SetParent (Background.transform);
+                            Destroy (Clone.GetComponent<Collider> ());
+                        }
                         break;
                     case 3:
                         VisualArea area = new VisualArea ();
@@ -477,8 +501,8 @@ public class SetEditor : GOUI {
         for (int x = 0; x < count; x++) {
             CardClass card = cards [x];
             if ((filter [0] [0] || filter [0] [card.tokenValue]) &&
-                (filter [1] [0] || filter [1] [card.tokenType + 1]) &&
-                (filter [2] [0] || filter [2] [card.abilityType + 1]) &&
+                (filter [1] [0] || filter [1] [card.tokenType + 1]) && unlockedTokens [card.tokenType] &&
+                (filter [2] [0] || filter [2] [card.abilityType + 1]) && unlockedAbilities [card.abilityType] &&
                 (filter [3] [0] || filter [3] [card.AreaSize () + 1])) {
                 filteredCard.Add (x);
             }

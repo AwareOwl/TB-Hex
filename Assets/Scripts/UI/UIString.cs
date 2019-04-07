@@ -99,6 +99,7 @@ public class UIString {
     public const string PuzzleMenuPageButton = "PuzzleMenuPageButton";
 
     public const string TurnCounter = "TurnCounter";
+    public const string RestartPuzzle = "RestartPuzzle";
 
     public const string ShowProfileMenu = "ShowProfileMenu";
     public const string ShowProfileSettings = "ShowProfileSettings";

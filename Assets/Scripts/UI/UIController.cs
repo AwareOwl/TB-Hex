@@ -563,6 +563,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 InGameUI.SelectStack (x);
                 break;
 
+            case UIString.RestartPuzzle:
+                InGameUI.RestartPuzzle ();
+                break;
+
             case UIString.ShowGameModeMenu:
             case UIString.GoBackToGameModeSelection:
                 GameModeMenu.ShowGameModeMenu ();

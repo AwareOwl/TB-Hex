@@ -66,7 +66,7 @@ public class BoardEditorMenu : GOUI {
             new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, AI2, "AI opponent", ServerData.GetGameModeName (id), hand2, null) });
         PlayerPropertiesClass properties = match.Player [2].properties;
-        match.Properties.turnLimit = numberOfTurns;
+        match.properties.turnLimit = numberOfTurns;
 
         match.Board = new BoardClass (match);
         match.Board.LoadFromFile (currentId);

@@ -484,13 +484,21 @@ public class GOUI : MonoBehaviour {
         switch (optionName) {
             case "MatchResults":
                 Button.GetComponent<Button> ().onClick.AddListener (delegate {
-                    MainMenu.ShowMainMenu ();
+                    if (UnlockedContent.cashed) {
+                        UnlockedContent.LoadUnlockedContentMenu (0);
+                    } else {
+                        MainMenu.ShowMainMenu ();
+                    }
                     DestroyImmediate (Background);
                 });
                 break;
             case "PuzzleResults":
                 Button.GetComponent<Button> ().onClick.AddListener (delegate {
-                    PuzzleMenu.ShowPuzzleMenu ();
+                    if (UnlockedContent.cashed) {
+                        UnlockedContent.LoadUnlockedContentMenu (1);
+                    } else {
+                        PuzzleMenu.ShowPuzzleMenu ();
+                    }
                     DestroyImmediate (Background);
                 });
                 break;

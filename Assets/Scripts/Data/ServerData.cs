@@ -1578,7 +1578,8 @@ public class ServerData : MonoBehaviour {
         }
         File.WriteAllLines (UserDataPath (accountName), Lines.ToArray ());
         HandClass hand = new HandClass ();
-        hand.GenerateRandomHand (1, null);
+        hand.GenerateStartingSet (DefaultGameMode);
+        //hand.GenerateRandomHand (1, null);
         SavePlayerModeSet (accountName, DefaultGameMode, 1, hand.HandToString ());
     }
 

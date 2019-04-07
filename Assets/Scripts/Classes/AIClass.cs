@@ -290,7 +290,7 @@ public class AIClass {
         if (player == null) {
             return 10000;
         }
-        MatchPropertiesClass properties = match.Properties;
+        MatchPropertiesClass properties = match.properties;
         float value = properties.turnLimit - match.turn + 1;
         BoardClass board = match.Board;
         int emptyTiles = board.GetEmptyTilesCount ();

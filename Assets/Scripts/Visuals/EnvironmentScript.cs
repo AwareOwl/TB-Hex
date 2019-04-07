@@ -52,8 +52,8 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static public void CreateNewBackground () {
-        CreateNewBackground (5);
-        //CreateNewBackground (Random.Range (1, 7));
+        //CreateNewBackground (5);
+        CreateNewBackground (Random.Range (1, 7));
     }
 
     static public void CreateNewBackground (int theme) {

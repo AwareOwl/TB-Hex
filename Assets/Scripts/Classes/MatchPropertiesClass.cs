@@ -6,6 +6,7 @@ using UnityEngine;
 public class MatchPropertiesClass {
 
     public int gameMode;
+    public bool special;
     public bool scoreWinCondition = true;
     public int scoreLimit = 500;
     public bool turnWinCondition = true;
@@ -29,6 +30,8 @@ public class MatchPropertiesClass {
 
     public string [] MatchPropertiesToString () {
         List<string> s = new List<string> ();
+        s.Add (gameMode.ToString ());
+        s.Add (special.ToString ());
         s.Add (scoreWinCondition.ToString ());
         s.Add (scoreLimit.ToString ());
         s.Add (turnWinCondition.ToString ());
@@ -39,11 +42,13 @@ public class MatchPropertiesClass {
     }
 
     public void LoadFromString (string [] lines) {
-        scoreWinCondition = Convert.ToBoolean (lines [0]);
-        scoreLimit = int.Parse (lines [1]);
-        turnWinCondition = Convert.ToBoolean (lines [2]);
-        turnLimit = int.Parse (lines [3]);
-        allowToRotateAbilityAreas = Convert.ToBoolean (lines [4]);
-        usedCardsArePutOnBottomOfStack = Convert.ToBoolean (lines [5]);
+        gameMode = int.Parse (lines [0]);
+        special = Convert.ToBoolean (lines [1]);
+        scoreWinCondition = Convert.ToBoolean (lines [2]);
+        scoreLimit = int.Parse (lines [3]);
+        turnWinCondition = Convert.ToBoolean (lines [4]);
+        turnLimit = int.Parse (lines [5]);
+        allowToRotateAbilityAreas = Convert.ToBoolean (lines [6]);
+        usedCardsArePutOnBottomOfStack = Convert.ToBoolean (lines [7]);
     }
 }

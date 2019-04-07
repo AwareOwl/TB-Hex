@@ -54,6 +54,7 @@ public class InGameUI : GOUI {
         EnvironmentScript.CreateNewBackground ();
         CreatePlayersUI ();
         CreateTurnUI ();
+        CreateSpecialUI ();
         GetPlayer (PlayedMatch.turnOfPlayer).visualPlayer.SetPlayerActive (true);
         PlayedMatch.EnableVisuals ();
         SelectStack (0);
@@ -226,7 +227,7 @@ public class InGameUI : GOUI {
         Clone.GetComponent<Renderer> ().material.color = Color.black;
         Clone = CreateSprite ("Textures/Other/Turn", 45, 45, 11, 45, 45, true);
         Clone.GetComponent<Collider> ().enabled = false;
-        if (PlayedMatch.Properties.turnWinCondition) {
+        if (PlayedMatch.properties.turnWinCondition) {
             Clone = CreateText (PlayedMatch.TurnsLeft ().ToString (), 100, 45, 11, 0.025f);
         } else {
             Clone = CreateText ("-", 100, 45, 11, 0.025f);
@@ -234,7 +235,21 @@ public class InGameUI : GOUI {
         Clone.GetComponent<Renderer> ().material.color = Color.white;
         TurnText = Clone.GetComponent<TextMesh> ();
         //Clone.GetComponent<Text> ().material.color = Color.white;
+    }
 
+    static public void CreateSpecialUI () {
+        if (!PlayedMatch.properties.special) {
+            return;
+        }
+        GameObject Clone;
+        Clone = CreateSprite ("UI/Butt_S_Revert", 1380, 1020, 11, 90, 90, true);
+        Clone.name = UIString.RestartPuzzle;
+    }
+
+    static public void RestartPuzzle () {
+        ClientInterface client = ClientLogic.MyInterface;
+        client.CmdCurrentGameConcede ();
+        client.CmdStartPuzzle (PlayedMatch.properties.gameMode);
     }
 
     static public void SetTurn (int turnsLeft) {

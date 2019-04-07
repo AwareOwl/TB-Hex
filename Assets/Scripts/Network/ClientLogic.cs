@@ -37,8 +37,8 @@ public class ClientLogic : MonoBehaviour {
 
     static public void LoadCurrentGameMatchProperties (string [] lines) {
         MatchClass match = InGameUI.PlayedMatch;
-        match.Properties = new MatchPropertiesClass ();
-        match.Properties.LoadFromString (lines);
+        match.properties = new MatchPropertiesClass ();
+        match.properties.LoadFromString (lines);
     }
 
     static public void LoadCurrentGameBoard (string [] lines) {

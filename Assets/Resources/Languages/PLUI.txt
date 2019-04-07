@@ -159,3 +159,5 @@
 [158] Aby wygrać, pod koniec meczu musisz mieć więcej punktów niż przeciwnik.
 [159] Odblokowane umiejętności
 [160] Odblokowane żetony
+[161] Odblokowana umiejętność
+[162] Odblokowany żeton

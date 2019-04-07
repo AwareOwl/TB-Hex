@@ -96,11 +96,11 @@ public class VisualPlayer {
     }
 
     public void SetPlayerHealthBar (MatchClass match, PlayerClass player) {
-        SetPlayerHealthBar (player.score, player.scoreIncome, match.Properties.scoreLimit);
+        SetPlayerHealthBar (player.score, player.scoreIncome, match.properties.scoreLimit);
     }
 
     public void DelayedSetPlayerHealthBar (MatchClass match, PlayerClass player) {
-        DelayedSetPlayerHealthBar (player.score, player.scoreIncome, match.Properties.scoreLimit);
+        DelayedSetPlayerHealthBar (player.score, player.scoreIncome, match.properties.scoreLimit);
     }
 
     public void SetPlayerHealthBar (int score, int scoreIncome, int scoreLimit) {

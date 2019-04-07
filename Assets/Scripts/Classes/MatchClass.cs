@@ -22,7 +22,7 @@ public class MatchClass {
     public MoveHistoryClass LastMove;
     public int lastMoveId = 0;
 
-    public MatchPropertiesClass Properties;
+    public MatchPropertiesClass properties;
 
     public MatchClass prevMatch;
 
@@ -63,7 +63,7 @@ public class MatchClass {
             }
         }
         this.LastMove = match.LastMove;
-        this.Properties = match.Properties;
+        this.properties = match.properties;
         this.prevMatch = match.prevMatch;
     }
 
@@ -74,7 +74,7 @@ public class MatchClass {
         PlayerPropertiesClass concededPlayer = Player [playerNumber].properties;
         concededPlayer.conceded = true;
         if (concededPlayer.client != null) {
-            ServerLogic.AddExperience (concededPlayer.accountName, turn);
+            ServerLogic.AddExperience (concededPlayer.client, concededPlayer.accountName, turn);
         }
         PlayerPropertiesClass winner = null;
         foreach (PlayerClass player in Player) {
@@ -205,7 +205,7 @@ public class MatchClass {
     }
 
     public int TurnsLeft () {
-        return Properties.turnLimit - turn + 1;
+        return properties.turnLimit - turn + 1;
     }
 
     public void NewTurn (bool nextPlayerTurn) {
@@ -214,7 +214,7 @@ public class MatchClass {
             IncrementTurnOfPlayer ();
         }
         turn++;
-        if (visualMatch != null && Properties.turnWinCondition) {
+        if (visualMatch != null && properties.turnWinCondition) {
             visualMatch.UpdateTurnsLeft (TurnsLeft ());
         }
     }
@@ -276,17 +276,17 @@ public class MatchClass {
     }
 
     public void CheckFinishCondition () {
-        if (Properties.scoreWinCondition) {
+        if (properties.scoreWinCondition) {
             for (int x = 1; x <= numberOfPlayers; x++) {
-                if (Player [x] != null && Player [x].score >= Properties.scoreLimit) {
-                    FinishGame (1, Properties.scoreLimit);
+                if (Player [x] != null && Player [x].score >= properties.scoreLimit) {
+                    FinishGame (1, properties.scoreLimit);
                     return;
                 }
             }
         }
-        if (Properties.turnWinCondition) {
-            if (turn >= Properties.turnLimit) {
-                FinishGame (2, Properties.turnLimit);
+        if (properties.turnWinCondition) {
+            if (turn >= properties.turnLimit) {
+                FinishGame (2, properties.turnLimit);
                 return;
             }
         }
@@ -330,13 +330,13 @@ public class MatchClass {
                         if (client != null) {
                             string accountName = client.AccountName;
                             if (winner == player) {
-                                ServerData.IncrementThisGameModeWon (accountName, Properties.gameMode);
+                                ServerData.IncrementThisGameModeWon (accountName, this.properties.gameMode);
                             } else if (winner != null) {
-                                ServerData.IncrementThisGameModeLost (accountName, Properties.gameMode);
+                                ServerData.IncrementThisGameModeLost (accountName, this.properties.gameMode);
                             } else {
-                                ServerData.IncrementThisGameModeDrawn (accountName, Properties.gameMode);
+                                ServerData.IncrementThisGameModeDrawn (accountName, this.properties.gameMode);
                             }
-                            ServerData.DecrementThisGameModeUnfinished (accountName, Properties.gameMode);
+                            ServerData.DecrementThisGameModeUnfinished (accountName, this.properties.gameMode);
                         }
                     }
                 }
@@ -349,10 +349,10 @@ public class MatchClass {
         int limit = 0;
         switch (winCondition) {
             case 1:
-                limit = Properties.scoreLimit;
+                limit = properties.scoreLimit;
                 break;
             case 2:
-                limit = Properties.turnLimit;
+                limit = properties.turnLimit;
                 break;
         }
         int experienceGain = 0;
@@ -370,11 +370,13 @@ public class MatchClass {
                     // Puzzle
                     if (Player.Length == 3) {
                         AIClass AI = Player [2].properties.AI;
-                        if (AI != null && AI.puzzle && winner == Player [1]) {
-                            if (!ServerData.GetUserFinishedPuzzle (accountName, Properties.gameMode)) {
-                                client.SavePuzzleResult (Properties.gameMode);
-                                matchType = 0;
-                                experienceGain += 40;
+                        if (AI != null && AI.puzzle){
+                            if (winner == Player [1]) {
+                                if (!ServerData.GetUserFinishedPuzzle (accountName, this.properties.gameMode)) {
+                                    client.SavePuzzleResult (this.properties.gameMode);
+                                    experienceGain += 40;
+                                }
+                                matchType = 1;
                             }
                         }
                     }
@@ -386,8 +388,8 @@ public class MatchClass {
                     }
 
                     //
-
-                    ServerLogic.AddExperience (accountName, experienceGain);
+                    
+                    ServerLogic.AddExperience (client, accountName, experienceGain);
                     string winnerName = "";
                     if (winner != null) {
                         winnerName = winner.properties.displayName;
@@ -403,7 +405,7 @@ public class MatchClass {
 
     public void NewMatch (int gameMode, int matchType, int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
-        Properties = new MatchPropertiesClass (gameMode);
+        properties = new MatchPropertiesClass (gameMode);
         SetPlayers ();
 
         Board = new BoardClass (this);
@@ -447,7 +449,7 @@ public class MatchClass {
                 }
             }
         }
-        if (!Properties.usedCardsArePutOnBottomOfStack && stack != null && !stack.atLeast1Enabled) {
+        if (!properties.usedCardsArePutOnBottomOfStack && stack != null && !stack.atLeast1Enabled) {
             return;
         }
         PlayCard (lastMoveId + 1, x, y, playerNumber, stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.tokenValue);
@@ -527,14 +529,14 @@ public class MatchClass {
             topCardNumber = player.GetTopCardNumber (stackNumber);
         }
         SaveThisTurnMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
-        player.MoveTopCard (stackNumber, topCardNumber, !Properties.usedCardsArePutOnBottomOfStack);
+        player.MoveTopCard (stackNumber, topCardNumber, !properties.usedCardsArePutOnBottomOfStack);
         UseAbility (tile, playerNumber, stackNumber, topCardNumber, card.abilityArea, abilityType);
         SaveLastMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
         AILearning (abilityType);
         updateBoard = true;
         UpdateBoard ();
         UpdateVisuals ();
-        player.VisualMoveTopCard (stackNumber, topCardNumber, !Properties.usedCardsArePutOnBottomOfStack);
+        player.VisualMoveTopCard (stackNumber, topCardNumber, !properties.usedCardsArePutOnBottomOfStack);
         EndTurn ();
     }
 

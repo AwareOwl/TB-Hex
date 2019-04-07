@@ -170,7 +170,7 @@ public class ServerLogic : MonoBehaviour {
     static public void DownloadGame (ClientInterface client, MatchClass match) {
         client.TargetDownloadCurrentGameMatch (client.connectionToClient, match.MatchToString ());
         client.TargetDownloadCurrentGameMatchProperties (client.connectionToClient, 
-            match.Properties.MatchPropertiesToString ());
+            match.properties.MatchPropertiesToString ());
         client.TargetDownloadCurrentGameBoard (client.connectionToClient,
             match.Board.BoardToString ());
         for (int x = 0; x <= match.numberOfPlayers; x++) {
@@ -215,52 +215,82 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SetPlayerModeSelectedSet (client.AccountName, client.GameMode, selectedSetId);
     }
 
-    static public void LevelUpReward (string accountName, int reachedLevel) {
+    static public void LevelUpReward (ClientInterface client, string accountName, int reachedLevel) {
+        bool [] previouslyUnlockedAbilities = ServerData.GetUserUnlockedAbilities (accountName);
+        bool [] previouslyUnlockedTokens = ServerData.GetUserUnlockedTokens (accountName);
         List<int> abilityNumber = new List<int> ();
         List<int> tokenNumber = new List<int> ();
         if (reachedLevel >= 2) {
-            abilityNumber.Add (20);
+            if (!previouslyUnlockedAbilities [20]) {
+                abilityNumber.Add (20);
+            }
         }
         if (reachedLevel >= 3) {
-            abilityNumber.Add (28);
+            if (!previouslyUnlockedAbilities [28]) {
+                abilityNumber.Add (28);
+            }
         }
         if (reachedLevel >= 4) {
-            abilityNumber.Add (38);
+            if (!previouslyUnlockedAbilities [38]) {
+                abilityNumber.Add (38);
+            }
         }
         if (reachedLevel >= 5) {
-            abilityNumber.Add (42);
+            if (!previouslyUnlockedAbilities [42]) {
+                abilityNumber.Add (42);
+            }
         }
         if (reachedLevel >= 6) {
-            tokenNumber.Add (13);
+            if (!previouslyUnlockedTokens [13]) {
+                tokenNumber.Add (13);
+            }
         }
         if (reachedLevel >= 7) {
-            tokenNumber.Add (14);
+            if (!previouslyUnlockedTokens [14]) {
+                tokenNumber.Add (14);
+            }
         }
-        ServerData.SetUserUnlockedAbilities (accountName, abilityNumber.ToArray ());
-        ServerData.SetUserUnlockedTokens (accountName, tokenNumber.ToArray ());
+        if (abilityNumber.Count > 0) {
+            ServerData.SetUserUnlockedAbilities (accountName, abilityNumber.ToArray ());
+        }
+        if (tokenNumber.Count > 0) {
+            ServerData.SetUserUnlockedTokens (accountName, tokenNumber.ToArray ());
+        }
+        if (client != null) {
+            if (abilityNumber.Count > 0 && tokenNumber.Count > 0) {
+                client.TargetDownloadUnlockedContentData2 (client.connectionToClient, abilityNumber.ToArray (), tokenNumber.ToArray ());
+            }
+        }
     }
 
-    static public void SavePuzzleResult (string accountName, int id) {
+    static public void SavePuzzleResult (ClientInterface client, string accountName, int id) {
         ServerData.SetUserFinishedPuzzle (accountName, id);
         CardPoolClass cardPool = new CardPoolClass ();
         cardPool.LoadFromString (ServerData.GetCardPool (id));
         List<CardClass> cards = cardPool.Card;
         int count = cards.Count;
+        bool [] previouslyUnlockedAbilities = ServerData.GetUserUnlockedAbilities (accountName);
+        bool [] previouslyUnlockedTokens = ServerData.GetUserUnlockedTokens (accountName);
         List<int> abilities = new List<int> ();
         List<int> tokens = new List<int> ();
         for (int x = 0; x < count; x++) {
             CardClass card = cards [x];
             int aType = card.abilityType;
             int tType = card.tokenType;
-            if (!abilities.Contains (aType)) {
+            if (!abilities.Contains (aType) && !previouslyUnlockedAbilities [aType]) {
                 abilities.Add (aType);
             }
-            if (!tokens.Contains (tType)) {
+            if (!tokens.Contains (tType) && !previouslyUnlockedTokens [tType]) {
                 tokens.Add (tType);
             }
         }
-        ServerData.SetUserUnlockedAbilities (accountName, abilities.ToArray());
-        ServerData.SetUserUnlockedTokens (accountName, tokens.ToArray ());
+        int [] abilityArray = abilities.ToArray ();
+        int [] tokenArray = tokens.ToArray ();
+        ServerData.SetUserUnlockedAbilities (accountName, abilityArray);
+        ServerData.SetUserUnlockedTokens (accountName, tokenArray);
+        if (client != null) {
+            client.TargetDownloadUnlockedContentData2 (client.connectionToClient, abilityArray, tokenArray);
+        }
     }
 
     static public void DownloadDataToUnlockedContentMenu (ClientInterface client) {
@@ -355,6 +385,7 @@ public class ServerLogic : MonoBehaviour {
         PlayerPropertiesClass properties = match.Player [2].properties;
         properties.enabled = false;
         properties.AI.puzzle = true;
+        match.properties.special = true;
         StartMatch (match);
         return match;
     }
@@ -364,13 +395,17 @@ public class ServerLogic : MonoBehaviour {
         string accountName = client.AccountName;
         int gameMode = client.GameMode;
         string [] cardPool = ServerData.GetCardPool (gameMode);
-        string [] set = ServerData.GetPlayerModeSet (accountName, gameMode, setId);
+        bool [] unlockedAbilities = ServerData.GetUserUnlockedAbilities (accountName);
+        bool [] unlockedTokens = ServerData.GetUserUnlockedTokens (accountName);
+        HandClass hand = new HandClass ();
+        hand.LoadFromFile (accountName, gameMode, setId);
+        string [] set = hand.HandToString ();
         string name = ServerData.GetPlayerModeSetName (accountName, gameMode, setId);
         int iconNumber = ServerData.GetPlayerModeSetIconNumber (accountName, gameMode, setId);
         bool usedCardsArePutOnBottomOfStack = ServerData.GetGameModeUsedCardsArePutOnBottomOfStack (gameMode);
         int numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameMode);
         int minimumNumberOfCardsOnStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameMode);
-        client.TargetDownloadDataToSetEditor (client.connectionToClient, cardPool, set, name, iconNumber, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack);
+        client.TargetDownloadDataToSetEditor (client.connectionToClient, cardPool, unlockedAbilities, unlockedTokens, set, name, iconNumber, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack);
     }
 
 
@@ -568,8 +603,9 @@ public class ServerLogic : MonoBehaviour {
         return 160 + 40 * level;
     }
 
-    static public void AddExperience (string accountName, int experienceToAdd) {
+    static public void AddExperience (ClientInterface client, string accountName, int experienceToAdd) {
         int currentLevel = ServerData.GetUserLevel (accountName);
+        int previousLevel = currentLevel;
         int currentExperience = ServerData.GetUserExperience (accountName);
         currentExperience += experienceToAdd;
         while (true) {
@@ -582,6 +618,9 @@ public class ServerLogic : MonoBehaviour {
             }
         }
         ServerData.SetUserLevel (accountName, currentLevel);
+        if (currentLevel > previousLevel) {
+            LevelUpReward (client, accountName, currentLevel);
+        }
         ServerData.SetUserExperience (accountName, currentExperience);
     }
 
@@ -776,7 +815,7 @@ public class ServerLogic : MonoBehaviour {
 
     static public void CurrentGameRotateAbilityArea (ClientInterface client, int playerNumber, int stackNumber) {
         MatchClass match = client.currentMatch;
-        if (!match.Properties.allowToRotateAbilityAreas) {
+        if (!match.properties.allowToRotateAbilityAreas) {
             return;
         }
         match.Player [playerNumber].RotateTopCard (stackNumber);

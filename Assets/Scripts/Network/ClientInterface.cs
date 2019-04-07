@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.9.0.5");
+            CmdCompareServerVersion ("0.9.0.6");
         }
     }
 
@@ -63,7 +63,7 @@ public class ClientInterface : NetworkBehaviour {
 
     public void SavePuzzleResult (int id) {
         if (isServer) {
-            ServerLogic.SavePuzzleResult (AccountName, id);
+            ServerLogic.SavePuzzleResult (this, AccountName, id);
         }
     }
 
@@ -132,6 +132,11 @@ public class ClientInterface : NetworkBehaviour {
         UnlockedContent.LoadUnlockedContentMenu (abilities, tokens);
     }
 
+    [TargetRpc]
+    public void TargetDownloadUnlockedContentData2 (NetworkConnection target, int [] abilities, int [] tokens) {
+        UnlockedContent.LoadUnlockedContentData (abilities, tokens);
+    }
+
     [Command]
     public void CmdDownloadDataToPuzzleMenu () {
         ServerLogic.DownloadDataToPuzzleMenu (this);
@@ -158,9 +163,9 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadDataToSetEditor (NetworkConnection target, string [] cardPool, string [] set, string name, int icon, 
+    public void TargetDownloadDataToSetEditor (NetworkConnection target, string [] cardPool, bool [] unlockedAbilities, bool [] unlockedTokens, string [] set, string name, int icon, 
         bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimumNumberOfCardsPerStack) {
-        SetEditor.LoadData (cardPool, set, name, icon, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsPerStack);
+        SetEditor.LoadData (cardPool, unlockedAbilities, unlockedTokens, set, name, icon, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsPerStack);
     }
     
     [Command]

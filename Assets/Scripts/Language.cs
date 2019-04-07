@@ -193,6 +193,8 @@ public class Language {
 
     static public string UnlockedAbilities;
     static public string UnlockedTokens;
+    static public string UnlockedAbility;
+    static public string UnlockedToken;
 
     static public int PasswordIsIncorrectKey;
     static public int AccountDoesntExistKey;
@@ -390,6 +392,8 @@ public class Language {
         JoinLocalNetworkTooltip = UI [154];
         UnlockedAbilities = UI [159];
         UnlockedTokens = UI [160];
+        UnlockedAbility = UI [161];
+        UnlockedToken = UI [162];
 
 
         LoadNamesAndDescriptions (language);

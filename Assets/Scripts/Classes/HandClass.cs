@@ -277,6 +277,19 @@ public class HandClass  {
         return s.ToArray();
     }
 
+    public void GenerateStartingSet (int gameMode) {
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromFile (gameMode);
+        stack [0].Add (cardPool.Card [0]);
+        stack [1].Add (cardPool.Card [1]);
+        stack [2].Add (cardPool.Card [32]);
+        stack [3].Add (cardPool.Card [2]);
+        stack [4].Add (cardPool.Card [15]);
+        stack [5].Add (cardPool.Card [12]);
+        stack [6].Add (cardPool.Card [6]);
+        stack [7].Add (cardPool.Card [5]);
+    }
+
     public string [] ModeHandToString () {
         List<string> s = new List<string> ();
         for (int x = 0; x < numberOfStacks; x++) {
@@ -295,6 +308,20 @@ public class HandClass  {
 
     public void LoadFromFile (string accountName, int gameModeId, int setId) {
         LoadFromFileString (gameModeId, ServerData.GetPlayerModeSet (accountName, gameModeId, setId));
+        bool [] unlockedAbilities = ServerData.GetUserUnlockedAbilities (accountName);
+        bool [] unlockedTokens = ServerData.GetUserUnlockedTokens (accountName);
+        for (int x = 0; x < numberOfStacks; x++) {
+            StackClass tStack = stack [x];
+            StackClass newStack = new StackClass ();
+            for (int y = 0; y < tStack.card.Count; y++) {
+                CardClass card = tStack.card [y];
+                if (!unlockedAbilities [card.abilityType] || !unlockedTokens [card.tokenType]) {
+                } else {
+                    newStack.Add (card);
+                }
+            }
+            stack [x] = newStack;
+        }
     }
 
     public void LoadFromFileString (int gameModeId, string [] lines) {
