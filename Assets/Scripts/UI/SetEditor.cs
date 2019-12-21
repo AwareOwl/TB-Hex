@@ -15,8 +15,8 @@ public class SetEditor : GOUI {
 
     static public List<int> filteredCard = new List<int> ();
 
-    static VisualCard [,] Collection;
-    static VisualCard [,] Set;
+    static public VisualCard [,] Collection;
+    static public VisualCard [,] Set;
 
     static GameObject [,] CollectionCollider;
     static GameObject [,] SetCollider;
@@ -31,14 +31,19 @@ public class SetEditor : GOUI {
     static public int currentPage;
     static public int PageCount = 20;
 
+    static public string [] set;
     static public int setId;
 
+    static public int editorMode;
     static public string setName;
     static public int iconNumber;
+
+    static public GameObject moreToUnlockObject;
 
     static public bool usedCardsArePutOnBottomOfStack;
     static public int numberOfStacks;
     static public int minimumNumberOfCardsOnStack;
+    static public bool everyCardCanBeAddedToSetAnyNumberOfTimes;
 
     static public void ApplySetProperties (string setName, int iconNumber) {
         SetEditor.setName = setName;
@@ -48,18 +53,29 @@ public class SetEditor : GOUI {
 
     private void Start () {
         CurrentGOUI = this;
-        ClientLogic.MyInterface.CmdDownloadDataToSetEditor (setId);
         DestroyTemplateButtons ();
+        CreateCardPoolEditorMenu ();
+        FilterCards ();
+        LoadSet ();
+    }
+
+    private void Update () {
+        if (Input.GetKeyDown ("1")) {
+            SelectFilterPage (0);
+        }
+        if (Input.GetKeyDown ("2")) {
+            SelectFilterPage (1);
+        }
     }
 
     static public void ShowSetEditorMenu (int setId) {
-        SetEditor.setId = setId;
-        DestroyMenu ();
-        CurrentCanvas.AddComponent<SetEditor> ();
+        ClientLogic.MyInterface.CmdDownloadDataToSetEditor (setId);
     }
 
-    static public void LoadData (string [] cardPool, bool [] unlockedAbilities, bool [] unlockedTokens, string [] set, string name, int iconNumber, bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimalNumberOfCardsOnStack) {
-
+    static public void LoadData (int setId, int editorMode, string [] cardPool, bool [] unlockedAbilities, bool [] unlockedTokens, string [] set, 
+        string name, int iconNumber, bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimalNumberOfCardsOnStack, bool everyCardCanBeAddedToSetAnyNumberOfTimes) {
+        SetEditor.editorMode = editorMode;
+        SetEditor.setId = setId;
 
         for (int x = 0; x < 4; x++) {
             int MaxNumber = 0;
@@ -68,10 +84,10 @@ public class SetEditor : GOUI {
                     MaxNumber = 9;
                     break;
                 case 1:
-                    MaxNumber = AppDefaults.AvailableTokens + 1;
+                    MaxNumber = AppDefaults.availableTokens + 1;
                     break;
                 case 2:
-                    MaxNumber = AppDefaults.AvailableAbilities + 1;
+                    MaxNumber = AppDefaults.availableAbilities + 1;
                     break;
                 case 3:
                     MaxNumber = 4;
@@ -81,17 +97,28 @@ public class SetEditor : GOUI {
             filter [x] [0] = true;
         }
 
+        LoadCardPool (cardPool);
+
+        SetEditor.set = set;
+
+        SetEditor.setName = name;
+        SetEditor.iconNumber = iconNumber;
         SetEditor.unlockedAbilities = unlockedAbilities;
         SetEditor.unlockedTokens = unlockedTokens;
 
         SetEditor.numberOfStacks = numberOfStacks;
         SetEditor.minimumNumberOfCardsOnStack = minimalNumberOfCardsOnStack;
         SetEditor.usedCardsArePutOnBottomOfStack = usedCardsArePutOnBottomOfStack;
-        LoadCardPool (cardPool);
-        CreateCardPoolEditorMenu ();
-        FilterCards ();
-        LoadSet (set, name, iconNumber);
+        SetEditor.everyCardCanBeAddedToSetAnyNumberOfTimes = everyCardCanBeAddedToSetAnyNumberOfTimes;
 
+        DestroyMenu ();
+        CurrentCanvas.AddComponent<SetEditor> ();
+
+    }
+
+    static public void StartBossFight () {
+        ClientLogic.MyInterface.CmdSavePlayerModeSet2 (BossMenu.selectedId, hand.HandToString (), setId);
+        BossMenu.StartFight ();
     }
 
     static public void LoadCardPool (string [] s) {
@@ -114,6 +141,7 @@ public class SetEditor : GOUI {
         SelectedCollectionX = -1;
         currentPage = pageUI.SelectPage (page);
         int MaxX = 4;
+        moreToUnlockObject.SetActive (false);
         for (int x = 0; x < MaxX; x++) {
             for (int y = 0; y < 5; y++) {
                 if (Collection [x, y] != null) {
@@ -127,6 +155,12 @@ public class SetEditor : GOUI {
                     if (available [cardNumber]) {
                         LoadCardInCollection (x, y, cardNumber);
                     }
+                } else if (number == filteredCard.Count && moreToUnlock > 0) {
+                    moreToUnlockObject.SetActive (true);
+                    SetText (moreToUnlockObject, moreToUnlock + " " + Language.MoreToUnlock);
+                    SetInPixPosition (moreToUnlockObject, 120 + 120 * x, 230 + 156 * y, 12);
+                    CollectionCollider [x, y].GetComponent<Collider> ().enabled = true;
+                    CollectionCollider [x, y].name = UIString.MoreToUnlock;
                 }
             }
         }
@@ -180,18 +214,16 @@ public class SetEditor : GOUI {
 
     static public void LoadRandomSet () {
         hand = new HandClass ();
-        hand.GenerateRandomHand (cardPool, null, null, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack);
+        hand.GenerateRandomHand (cardPool.ExcludeLockedContent (unlockedAbilities, unlockedTokens), null, null, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack);
         LoadSet (hand);
         LoadPage (currentPage);
     }
 
-    static public void LoadSet (string [] lines, string name, int iconNumber) {
+    static public void LoadSet () {
         hand = new HandClass ();
-        hand.LoadFromFileString (cardPool, lines, numberOfStacks);
+        hand.LoadFromFileString (cardPool, set, numberOfStacks);
         LoadSet (hand);
         LoadPage (currentPage);
-        SetEditor.setName = name;
-        SetEditor.iconNumber = iconNumber;
     }
 
     override public void ShowPropertiesMenu () {
@@ -199,6 +231,9 @@ public class SetEditor : GOUI {
     }
 
     static public void RemoveCardFromCollection (int number) {
+        if (everyCardCanBeAddedToSetAnyNumberOfTimes) {
+            return;
+        }
         bool cardExists = false;
         int filteredPosition = 0;
         for (int x = 0; x < filteredCard.Count; x++) {
@@ -237,7 +272,6 @@ public class SetEditor : GOUI {
     static public void RotateCardInSet (int x, int y) {
         CardClass card = hand.GetCard (x, y);
         CardClass card2 = cardPool.Card [card.cardNumber];
-        card.RotateArea ();
         card2.RotateArea ();
         Set [x, y].SetState (card);
     }
@@ -246,6 +280,7 @@ public class SetEditor : GOUI {
     static public void RemoveCardFromSet (int x, int y) {
         if (Set [x, y] != null) {
             Set [x, y].DestroyVisual ();
+            Set [x, y] = null;
         }
         CardClass card = hand.GetCard (x, y);
         if (card == null) {
@@ -290,7 +325,9 @@ public class SetEditor : GOUI {
         RemoveCardFromSet (x, y);
         if (selected != null) {
             LoadCardInSet (x, y, GetSelectedCard ());
-            SelectedCollectionX = -1;
+            if (!everyCardCanBeAddedToSetAnyNumberOfTimes) {
+                SelectedCollectionX = -1;
+            }
         } else {
             //RemoveCardFromSet (x, y);
         }
@@ -330,21 +367,23 @@ public class SetEditor : GOUI {
     static GameObject FilterMenuBackground;
     static UIController [] FilterMenuButton = new UIController [4];
     static int currentFilterMenu = -1;
+    static int [] filterPage = new int [4];
     static FilterButtonClass [] FilterButton;
     static bool [] [] filter = new bool [4] [];
 
-    static public void ShowFilterMenu (int number) {
+
+    static public void ShowFilterMenu (int menuNumber) {
         for (int x = 0; x < 4; x++) {
             FilterMenuButton [x].FreeAndUnlcok ();
         }
-        if (currentFilterMenu == number) {
+        if (currentFilterMenu == menuNumber) {
             if (FilterMenuBackground != null) {
                 DestroyImmediate (FilterMenuBackground);
             }
             currentFilterMenu = -1;
         } else {
-            FilterMenuButton [number].PressAndLock ();
-            currentFilterMenu = number;
+            FilterMenuButton [menuNumber].PressAndLock ();
+            currentFilterMenu = menuNumber;
             ShowFilterMenu ();
         }
     }
@@ -354,13 +393,13 @@ public class SetEditor : GOUI {
         GameObject Background;
         GameObject Text;
         GameObject Icon;
-        int number;
+        public int number;
 
         public FilterButtonClass () {
 
         }
 
-        public FilterButtonClass (Transform parent, int px, int py, int number, bool selected, float scale) {
+        public FilterButtonClass (Transform parent, int px, int py, int number, float scale) {
             GameObject Clone;
             GameObject Text;
             UIController UIC;
@@ -380,11 +419,18 @@ public class SetEditor : GOUI {
                 Text.GetComponent<TextMesh> ().text = number.ToString ();
                 Text.GetComponent<Renderer> ().material.color = Color.black;
             }
-            SelectFilter (selected);
             Clone.GetComponent<Renderer> ().material.shader = Shader.Find ("Sprites/Default");
             Background.name = UIString.SetEditorFilterButton;
             UIC = Background.GetComponent<UIController> ();
             UIC.number = number;
+            if (number == -2) {
+                Text.GetComponent<TextMesh> ().text = "<";
+                return;
+            } else if (number == -1) {
+                Text.GetComponent<TextMesh> ().text = ">";
+                return;
+            }
+            SelectFilter (filter [currentFilterMenu] [number]);
             if (number > 0 && currentFilterMenu != 0) {
                 switch (currentFilterMenu) {
                     case 1:
@@ -436,7 +482,10 @@ public class SetEditor : GOUI {
                         }
                         break;
                 }
-            } else {
+            } else if (number == -1) {
+
+            } else if (number == -2) {
+
             }
             Icon = Clone;
         }
@@ -447,24 +496,30 @@ public class SetEditor : GOUI {
             } else {
                 Background.GetComponent<UIController> ().FreeAndUnlcok ();
             }
-            /*
-            if (selected) {
-                Background.GetComponent<UIController> ().PressAndLock ();
-                Background.GetComponent<Renderer> ().material.color = Color.white;
-                if (Text != null) {
-                    Text.GetComponent<Renderer> ().material.color = Color.black;
-                }
-            } else {
-                Background.GetComponent<Renderer> ().material.color = new Color (0.3f, 0.3f, 0.3f);
-                if (Text != null) {
-                    Text.GetComponent<Renderer> ().material.color = Color.white;
-                }
-            }*/
-            //Background.GetComponent<Renderer> ().enabled = selected;
         }
     }
 
+    static public int GetMaxFilterPageCount () {
+        return filter [currentFilterMenu].Length / (maxY * 4 - 2);
+    }
+
+
+    static void SelectFilterPage (int pageNumber) {
+        pageNumber = Mathf.Clamp (pageNumber, 0, GetMaxFilterPageCount ());
+        filterPage [currentFilterMenu] = pageNumber;
+
+        ShowFilterMenu ();
+    }
+
     static public void SelectFilterButton (int number) {
+        if (number == -2) {
+            SelectFilterPage (filterPage [currentFilterMenu] - 1);
+            return;
+        }
+        if (number == -1) {
+            SelectFilterPage (filterPage [currentFilterMenu] + 1);
+            return;
+        }
         bool value = !filter [currentFilterMenu] [number];
         int count = filter [currentFilterMenu].Length;
         if (number == 0) {
@@ -487,29 +542,44 @@ public class SetEditor : GOUI {
             }
             if (!anySelected) {
                 filter [currentFilterMenu] [0] = true;
-                FilterButton [0].SelectFilter (true);
+                if (filterPage [currentFilterMenu] == 0) {
+                    FilterButton [0].SelectFilter (true);
+                }
             }
         }
-        FilterButton [number].SelectFilter (value);
+        for (int x = 1; x < FilterButton.Length && FilterButton [x] != null; x++) {
+            if (FilterButton [x].number == number) {
+                FilterButton [x].SelectFilter (value);
+            }
+        }
         FilterCards ();
     }
+
+    static int moreToUnlock;
 
     static public void FilterCards () {
         filteredCard = new List<int> ();
         List<CardClass> cards = cardPool.Card;
+        moreToUnlock = 0;
         int count = cards.Count;
         for (int x = 0; x < count; x++) {
             CardClass card = cards [x];
             if ((filter [0] [0] || filter [0] [card.tokenValue]) &&
-                (filter [1] [0] || filter [1] [card.tokenType + 1]) && unlockedTokens [card.tokenType] &&
-                (filter [2] [0] || filter [2] [card.abilityType + 1]) && unlockedAbilities [card.abilityType] &&
+                (filter [1] [0] || filter [1] [card.tokenType + 1]) &&
+                (filter [2] [0] || filter [2] [card.abilityType + 1]) &&
                 (filter [3] [0] || filter [3] [card.AreaSize () + 1])) {
-                filteredCard.Add (x);
+                if (unlockedTokens [card.tokenType] && unlockedAbilities [card.abilityType]) {
+                    filteredCard.Add (x);
+                } else {
+                    moreToUnlock++;
+                }
             }
         }
         LoadPageUI ();
         LoadPage ();
     }
+
+    const int maxY = 17;
 
     static public void ShowFilterMenu () {
         GameObject Clone;
@@ -525,24 +595,35 @@ public class SetEditor : GOUI {
 
         int MaxNumber = filter [currentFilterMenu].Length;
 
-        float XCount = 4 / scale;
-        float YCount = (int) ((MaxNumber - 1) / XCount + 1);
+        int XCount = 4 / scale;
+        int YCount = ((MaxNumber - 1) / XCount + 1);
+        int pageStart = filterPage [currentFilterMenu] * (4 * maxY - 2);
+        YCount -= filterPage [currentFilterMenu] * maxY;
+        YCount = Mathf.Min (maxY, YCount);
 
-        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 60 + (int) (22.5f * YCount * scale), 10, 300, 120 + (int) (45 * YCount * scale), false);
+        Clone = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", 720, 60 + (int) (22.5f * YCount * scale), 10, 300, 120 + 45 * YCount * scale);
+        DestroyImmediate (Clone.GetComponent<UIController> ());
 
         GameObject BG = Clone;
         FilterMenuBackground = BG;
-
-        FilterButton = new FilterButtonClass [(int) (YCount * XCount)];
+        
+        FilterButton = new FilterButtonClass [YCount * XCount];
         for (int y = 0; y < YCount; y++) {
             for (int x = 0; x < XCount; x++) {
-                int number = y * (int) XCount + x;
+                int buttonNumber = y * XCount + x;
+                int number = buttonNumber + pageStart;
                 if (number < MaxNumber) {
-                    FilterButton [number] = new FilterButtonClass (BG.transform,
+                    bool selected = filter [currentFilterMenu] [number];
+                    if (filterPage [currentFilterMenu] > 0 && buttonNumber == 0) {
+                        number = -2;
+                    }
+                    if (GetMaxFilterPageCount () > filterPage [currentFilterMenu] && buttonNumber == maxY * 4 - 1) {
+                        number = -1;
+                    }
+                    FilterButton [buttonNumber] = new FilterButtonClass (BG.transform,
                         (int) (630 + (x + 0.5f) * 45 * scale),
                         (int) (60 + (y + 0.5f) * 45 * scale),
                         number,
-                        filter [currentFilterMenu] [number],
                         scale);
                 }
             }
@@ -559,19 +640,22 @@ public class SetEditor : GOUI {
         Set = new VisualCard [numberOfStacks, 5];
         SetCollider = new GameObject [numberOfStacks, 5];
 
-        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 300, 540, 10, 600, 1080, false);
+        Clone = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", 300, 540, 10, 600, 1080);
 
         Clone = CreateUIText (Language.AvailableCardPool, 165, 100);
         Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
         Clone.GetComponent<Text> ().fontSize = 36;
         Clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (200, 200);
 
-        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 1140, 540, 10, 600, 1080, false);
+        Clone = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", 1140, 540, 10, 600, 1080);
 
         Clone = CreateUIText (Language.YourCardSet, 1005, 100);
         Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
         Clone.GetComponent<Text> ().fontSize = 36;
         Clone.GetComponent<RectTransform> ().sizeDelta = new Vector2 (200, 200);
+
+        Clone = CreateUIText (Language.MoreToUnlock, 1005, 100, 140, 14);
+        moreToUnlockObject = Clone;
 
         Clone = CreateSprite ("UI/Butt_S_Value", 90 + 60 * 4, 90, 11, 64, 64, true);
         Clone.name = UIString.SetEditorFilterMenu;
@@ -597,8 +681,10 @@ public class SetEditor : GOUI {
 
         Clone = CreateSprite ("UI/Butt_S_Help", 990 + 60 * 4, 90, 11, 64, 64, true);
         Clone.name = UIString.SetEditorAbout;
-        Clone = CreateSprite ("UI/Butt_S_Name", 990 + 60 * 5, 90, 11, 64, 64, true);
-        Clone.name = UIString.SetEditorChangeSetProperties;
+        if (editorMode == 0) {
+            Clone = CreateSprite ("UI/Butt_S_Name", 990 + 60 * 5, 90, 11, 64, 64, true);
+            Clone.name = UIString.SetEditorChangeSetProperties;
+        }
         Clone = CreateSprite ("UI/Butt_S_SetRandomize", 990 + 60 * 6, 90, 11, 64, 64, true);
         Clone.name = UIString.SetEditorGenerateRandomSet;
         /*Clone = CreateSprite ("UI/Butt_S_SetList", 990 + 60 * 6, 90, 11, 64, 64, true);
@@ -608,24 +694,31 @@ public class SetEditor : GOUI {
         Clone = CreateSprite ("UI/Shadow_Butt_M_Rectangle_Sliced", 660 + 120, 960, 10, 120, 120, false);
 
         Clone = CreateSprite ("UI/Butt_M_Apply", 660, 960, 11, 90, 90, true);
-        Clone.name = UIString.SetEditorSaveSet;
+        if (editorMode == 0) {
+            Clone.name = UIString.SetEditorSaveSet;
+        } else {
+            Clone.name = UIString.SetEditorStartBossFight;
+        }
         Clone = CreateSprite ("UI/Butt_M_Discard", 660 + 120, 960, 11, 90, 90, true);
-        Clone.name = UIString.ShowMainMenu;
+        if (editorMode == 0) {
+            Clone.name = UIString.ShowMainMenu;
+        } else {
+            Clone.name = UIString.ShowBossMenu;
+        }
 
         for (int x = 0; x < 4; x++) {
 
             if (x < numberOfStacks) {
-                Clone = CreateSprite ("UI/Panel_Slot_01_SetRow", 960 + 120 * x, 535, 11, 122, 780, false);
+                Clone = CreateBackgroundSprite ("UI/Panel_Slot_01_SetRow", 960 + 120 * x, 535, 11, 122, 780);
 
                 Clone = CreateText ((x + 1).ToString (), 960 + 120 * x, 990, 11, 0.03f);
             }
 
             for (int y = 0; y < 5; y++) {
-                Clone = CreateSprite ("UI/Panel_Slot_01_CollectionCard", 120 + 120 * x, 225 + 156 * y, 11, 120, 150, false);
+                //Clone = CreateSprite ("UI/Panel_Slot_01_CollectionCard", 120 + 120 * x, 225 + 156 * y, 11, 120, 150, false);
 
-                Clone =
-                    CreateSprite ("UI/Panel_Slot_01_CollectionCard", 120 + 120 * x, 225 + 156 * y, 12, 120, 150, false);
-                DestroyImmediate (Clone.GetComponent<SpriteRenderer> ());
+                Clone = CreateSprite ("UI/Panel_Slot_01_CollectionCard", 120 + 120 * x, 225 + 156 * y, 12, 120, 150, false);
+                //DestroyImmediate (Clone.GetComponent<SpriteRenderer> ());
                 Clone.name = UIString.SetEditorCollectionCard;
                 UIC = Clone.GetComponent<UIController> ();
                 UIC.x = x;

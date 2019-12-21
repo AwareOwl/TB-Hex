@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class MatchClass {
@@ -12,11 +13,21 @@ public class MatchClass {
     public int numberOfPlayers;
     public PlayerClass [] Player;
 
-    public PlayerClass winner;
+    public List<PlayerClass> winner = new List<PlayerClass> (0);
     public bool finished;
     public int winCondition;
     public bool real = true;
-    public bool updateBoard = false;
+    bool _updateBoard = false;
+
+    public bool updateBoard {
+        get {
+            //Debug.Log ("Test");
+            return _updateBoard;
+        }
+        set {
+            _updateBoard = value;
+        }
+    }
 
     public MoveHistoryClass ThisTurnMove;
     public MoveHistoryClass LastMove;
@@ -55,8 +66,8 @@ public class MatchClass {
         this.turn = match.turn;
         this.turnOfPlayer = match.turnOfPlayer;
         this.numberOfPlayers = match.numberOfPlayers;
-        this.Player = new PlayerClass [this.numberOfPlayers + 1];
-        for (int x = 0; x <= this.numberOfPlayers; x++) {
+        this.Player = new PlayerClass [match.Player.Length];
+        for (int x = 0; x < this.Player.Length; x++) {
             PlayerClass player = match.Player [x];
             if (player != null) {
                 this.Player [x] = new PlayerClass (match.Player [x]);
@@ -65,6 +76,14 @@ public class MatchClass {
         this.LastMove = match.LastMove;
         this.properties = match.properties;
         this.prevMatch = match.prevMatch;
+    }
+
+    public void Concede (string accountName) {
+        for (int x = 1; x < Player.Length; x++) {
+            if (Player [x] != null && Player [x].properties != null && Player [x].properties.accountName == accountName) {
+                Concede (x);
+            }
+        }
     }
 
     public void Concede (int playerNumber) {
@@ -78,6 +97,9 @@ public class MatchClass {
         }
         PlayerPropertiesClass winner = null;
         foreach (PlayerClass player in Player) {
+            if (player == null) {
+                continue;
+            }
             PlayerPropertiesClass properties = player.properties;
             if (properties != null && !properties.conceded) {
                 if (winner != null) {
@@ -96,6 +118,22 @@ public class MatchClass {
     public void EndTurn () {
         int [] playerIncome = new int [Player.Length];
 
+        bool [] cantGetIncomeFromClosedTokens = new bool [Player.Length];
+        for (int x = 1; x < Player.Length; x++) {
+            PlayerPropertiesClass properties = GetPlayerProperties (x);
+            if (properties == null) {
+                continue;
+            }
+            if (properties.specialStatus == 8) {
+                for (int y = 1; y < Player.Length; y++) {
+                    PlayerPropertiesClass properties2 = GetPlayerProperties (y);
+                    if (properties.team != properties2.team) {
+                        cantGetIncomeFromClosedTokens [y] = true;
+                    }
+                }
+            }
+        }
+
         foreach (TileClass tile in Board.tileList) {
             TokenClass token = tile.token;
             if (token != null) {
@@ -105,19 +143,11 @@ public class MatchClass {
                 int tokenValue = token.value;
                 int value = tokenValue;
                 VectorInfo info = GetTokenVectorInfo (tile, token);
+                if (cantGetIncomeFromClosedTokens [token.owner] && info.emptyTileCount == 0) {
+                    continue;
+                }
+                // Additive values
                 switch (token.type) {
-                    case 1:
-                    case 12:
-                        value *= 2;
-                        break;
-                    case 2:
-                        value *= -1;
-                        break;
-                    case 6:
-                        if (token.owner != turnOfPlayer) {
-                            value = 0;
-                        }
-                        break;
                     case 10:
                         value += info.emptyTileCount;
                         break;
@@ -133,10 +163,46 @@ public class MatchClass {
                                     value = 0;
                                 }
                                 break;
+                            case 19:
+                                value++;
+                                break;
                         }
                     }
                 }
+
+                // multiplicative values
+                switch (token.type) {
+                    case 1:
+                    case 12:
+                        value *= 2;
+                        break;
+                    case 2:
+                        value *= -1;
+                        break;
+                    case 6:
+                        if (token.owner != turnOfPlayer) {
+                            value = 0;
+                        }
+                        break;
+                }
+
                 playerIncome [token.owner] += value;
+            } else {
+                for (int x = 1; x <= numberOfPlayers; x++) {
+                    PlayerClass player = Player [x];
+                    if (player == null) {
+                        continue;
+                    }
+                    PlayerPropertiesClass properties = player.properties;
+                    if (player.properties == null) {
+                        continue;
+                    }
+                    switch (player.properties.specialStatus) {
+                        case 1:
+                            playerIncome [x]++;
+                            break;
+                    }
+                }
             }
         }
         for (int x = 0; x < Player.Length; x++) {
@@ -147,7 +213,7 @@ public class MatchClass {
                 player.UpdateVisuals (this);
             }
         }
-        CheckFinishCondition ();
+        CheckFinishCondition (turnOfPlayer);
         if (!finished) {
             AfterTurn ();
         }
@@ -157,8 +223,89 @@ public class MatchClass {
     }
 
     public void AfterTurn () {
-        bool actionMade = false;
+        /*if (!real) {
+
+            Debug.Log ("Things happening");
+        }*/
         bool nextPlayerTurn = true;
+        bool [] destroyIsolatedTokens = new bool [numberOfPlayers + 1];
+        bool [] destroyTokens = new bool [numberOfPlayers + 1];
+
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            PlayerClass player = Player [x];
+            if (player == null) {
+                continue;
+            }
+            PlayerPropertiesClass properties = player.properties;
+            if (properties != null) {
+                switch (properties.specialStatus) {
+                    case 4:
+                        for (int y = 1; y <= numberOfPlayers; y++) {
+                            if (x != y) {
+                                destroyIsolatedTokens [y] = true;
+                                if (visualMatch) {
+                                    SoundManager.AddAudioClipToQueue (MyAudioClip.AbilityTokenDestruction);
+                                }
+                            }
+                        }
+                        break;
+                    case 10:
+                        if (turnOfPlayer != x) {
+                            break;
+                        }
+                        for (int y = 1; y <= numberOfPlayers; y++) {
+                            PlayerClass player2 = GetPlayer (y);
+                            if (player2 == null) {
+                                continue;
+                            }
+                            if (player.previousScoreIncome <= player2.previousScoreIncome &&
+                                player.scoreIncome > player2.scoreIncome) {
+                                nextPlayerTurn = false;
+                                if (visualMatch) {
+                                    SoundManager.AddAudioClipToQueue (MyAudioClip.TokenTrigger);
+                                }
+                            }
+                        }
+                        break;
+                    case 11:
+                        if (turnOfPlayer != player.properties.playerNumber) {
+                            break;
+                        }
+                        for (int y = 1; y <= numberOfPlayers; y++) {
+                            PlayerClass player2 = GetPlayer (y);
+                            if (player2 == null) {
+                                continue;
+                            }
+                            if (player2.scoreIncome < 12) {
+                                continue;
+                            }
+                            if (x != y) {
+                                destroyTokens [y] = true;
+                                if (visualMatch) {
+                                    SoundManager.AddAudioClipToQueue (MyAudioClip.AbilityTokenDestruction);
+                                }
+                            }
+                        }
+                        break;
+
+                }
+            }
+            HandClass hand = player.hand;
+            if (hand == null) {
+                continue;
+            }
+            foreach (StackClass stack in hand.stack) {
+                CardClass card = stack.getTopCard ();
+                if (card == null) {
+                    continue;
+                }
+                switch (card.abilityType) {
+                    case 61:
+                        ModifyCardValue (card, 2);
+                        break;
+                }
+            }
+        }
         foreach (TileClass tile in Board.tileList) {
             if (!tile.IsFilledTile ()) {
                 continue;
@@ -166,13 +313,61 @@ public class MatchClass {
             TokenClass token = tile.token;
             int tokenType = token.type;
             VectorInfo info = GetTokenVectorInfo (tile, token);
+            if (token.owner <= numberOfPlayers && ((destroyIsolatedTokens [token.owner] && info.targets.Count == 0) || destroyTokens [token.owner])) {
+                SetDestroy (tile);
+            }
+            PlayerClass player = GetPlayer (token.owner);
+            if (player != null && player.properties != null) {
+                switch (player.properties.specialStatus) {
+                    case 12:
+                        TokenClass thisTurnPlayedToken = ThisTurnPlayedToken ();
+                        if (turnOfPlayer == player.properties.playerNumber && thisTurnPlayedToken != null && tile.token.type != thisTurnPlayedToken.type) {
+                            ChangeType (tile, thisTurnPlayedToken.type);
+                            if (visualMatch) {
+                                SoundManager.AddAudioClipToQueue (MyAudioClip.MatchEvent);
+                            }
+                        }
+                        break;
+                }
+            }
             switch (tokenType) {
                 case 5:
                     ModifyTempValue (tile, -1);
+                    if (visualMatch) {
+                        SoundManager.AddAudioClipToQueue (MyAudioClip.TokenNegativeRegularAbility);
+                    }
                     break;
                 case 13:
+                    //Debug.Log ("Extra turn token " + tile.x + " " + tile.y);
                     nextPlayerTurn = false;
                     ChangeType (tile, 0);
+                    SoundManager.AddAudioClipToQueue (MyAudioClip.TokenTrigger);
+                    break;
+                case 16:
+                    if (prevMatch != null) {
+                        TokenClass prevToken = prevMatch.Board.GetTile (tile.x, tile.y).token;
+                        if (prevToken != null) {
+                            int delta = prevToken.value - tile.token.value;
+                            if (delta != 0) {
+                                ModifyTempValue (tile, delta);
+                                if (visualMatch != null) {
+                                    visualMatch.CreateRealTokenEffect (tile, tokenType);
+                                    SoundManager.AddAudioClipToQueue (MyAudioClip.TokenPositiveRegularAbility);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 20:
+                    SetDestroy (tile);
+                    SoundManager.AddAudioClipToQueue (MyAudioClip.AbilityTokenDestruction);
+                    break;
+            }
+            switch (tokenType) {
+                case 13:
+                    if (visualMatch != null) {
+                        visualMatch.CreateRealTokenEffect (tile, tokenType);
+                    }
                     break;
             }
             foreach (TileClass target in info.Triggered1) {
@@ -180,23 +375,47 @@ public class MatchClass {
                     case 3:
                     case 4:
                         if (visualMatch != null) {
-                            if (!actionMade) {
-                                VisualMatch.GlobalTimer += 0.5f;
-                            }
                             visualMatch.CreateRealTokenVectorEffect (tile, target, tokenType);
                         }
-                        actionMade = true;
+                        break;
+                    case 22:
+                    case 23:
+                        if (visualMatch != null) {
+                            visualMatch.CreateRealTokenVectorEffect (tile, target, tokenType);
+                        }
                         break;
                 }
                 switch (tokenType) {
                     case 3:
                         ModifyTempValue (target, 1);
+                        if (visualMatch) {
+                            SoundManager.AddAudioClipToQueue (MyAudioClip.TokenPositiveAbility);
+                        }
                         break;
                     case 4:
                         ModifyTempValue (target, -1);
+                        if (visualMatch) {
+                            SoundManager.AddAudioClipToQueue (MyAudioClip.TokenNegativeAbility);
+                        }
+                        break;
+                    case 22:
+                        ModifyTempValue (tile, -1);
+                        ModifyTempValue (target, 1);
+                        if (visualMatch) {
+                            SoundManager.AddAudioClipToQueue (MyAudioClip.TokenPositiveAbility);
+                        }
+                        break;
+                    case 23:
+                        ModifyTempValue (target, -1);
+                        if (visualMatch) {
+                            SoundManager.AddAudioClipToQueue (MyAudioClip.TokenNegativeAbility);
+                        }
                         break;
                 }
             }
+        }
+        if (visualMatch) {
+            SoundManager.PlayQueuedAudioClips ();
         }
 
         UpdateBoard ();
@@ -208,32 +427,101 @@ public class MatchClass {
         return properties.turnLimit - turn + 1;
     }
 
+    public int GetTeam (TileClass tile) {
+        TokenClass token = tile.token;
+        if (token == null) {
+            return 0;
+        } else {
+            return GetTeam (token.owner);
+        }
+    }
+
+    public int GetTeam (int playerNumber) {
+        PlayerPropertiesClass properties = GetPlayerProperties (playerNumber);
+        if (properties == null) {
+            return 0;
+        } else {
+            return properties.team;
+        }
+    }
+
     public void NewTurn (bool nextPlayerTurn) {
+        //Debug.Log ("NewTurn");
         ThisTurnMove = null;
         if (nextPlayerTurn) {
+            //Debug.Log (turnOfPlayer);
             IncrementTurnOfPlayer ();
+            //Debug.Log (turnOfPlayer);
         }
+        CheckFinishCondition (turnOfPlayer);
         turn++;
-        if (visualMatch != null && properties.turnWinCondition) {
-            visualMatch.UpdateTurnsLeft (TurnsLeft ());
+        if (visualMatch != null) {
+            if (properties.turnWinCondition) {
+                visualMatch.UpdateTurnsLeft (TurnsLeft ());
+            }
+            if (real) {
+                VisualMatch.GlobalTimer += AppSettings.TimeBetweenTurns;
+                TutorialManager.NewState (TutorialManager.newTurnState);
+            }
+        }
+        if (true) {
+            string s = turn.ToString () + " " + real.ToString();
+            for (int x = 1; x <= numberOfPlayers; x++) {
+                if (GetPlayerProperties (x) == null) {
+                    continue;
+                }
+                s += "Player: " + x + System.Environment.NewLine;
+                if (Player [x].hand == null) {
+                    continue;
+                }
+                StackClass [] stack = Player [x].hand.stack;
+                for (int y = 0; y < stack.Length; y++) {
+                    s += "Stack: " + y + ", Top card: " + stack [y].topCardNumber + System.Environment.NewLine;
+                }
+            }
+            //Debug.Log (s);
         }
     }
 
     public void IncrementTurnOfPlayer () {
+        if (real) {
+            //Debug.Log ("1TurnOfPlayer " + turnOfPlayer);
+            //Debug.Log ("NumberOfPlayers: " + numberOfPlayers);
+        }
         int newTurnOfPlayer = turnOfPlayer;
         do {
             newTurnOfPlayer = Mathf.Max (1, (newTurnOfPlayer + 1) % (numberOfPlayers + 1));
+            if (real) {
+               // Debug.Log ("NewTurnOfPlayer: " + newTurnOfPlayer);
+            }
         } while (!AbleToExecuteTurn (newTurnOfPlayer) && newTurnOfPlayer != turnOfPlayer);
         SetTurnOfPlayer (newTurnOfPlayer);
+        if (real) {
+            //Debug.Log ("2TurnOfPlayer " + turnOfPlayer);
+        }
     }
 
     public bool AbleToExecuteTurn (int playerNumber) {
         PlayerClass player = Player [playerNumber];
-        if (player == null) {
+        if (player == null || player.properties == null) {
             return false;
         }
-        HandClass hand = player.GetHand ();
-        return !player.properties.conceded && (hand == null || player.hand.atLeast1Enabled) && player.properties.enabled;
+        if (player.properties.conceded || !player.enabled) {
+            return false;
+        }
+        HandClass hand = player.hand;
+        if (!(hand == null || player.hand.atLeast1Enabled)) {
+            if (real) {
+                //Debug.Log ("BreakAfterCondition3");
+            }
+            return false;
+        }
+        foreach (TileClass tile in Board.tileList) {
+            if (tile.IsPlayable (playerNumber)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void SetTurnOfPlayer (int turnOfPlayer) {
@@ -241,7 +529,7 @@ public class MatchClass {
         if (visualMatch != null) {
             foreach (PlayerClass player in Player) {
                 if (player != null) {
-                    VisualPlayer vPlayer = player.visualPlayer;
+                    VisualTeam vPlayer = player.visualTeam;
                     if (vPlayer != null) {
                         vPlayer.DelayedSetActivePlayer (player.properties.playerNumber == turnOfPlayer);
                     }
@@ -275,10 +563,71 @@ public class MatchClass {
         }
     }
 
-    public void CheckFinishCondition () {
+    public void CheckFinishCondition (int playerNumber) {
+        // Counting number of player tokens
+        int [] teamScore = GetTeamScore ();
+        int [] tokenCount = new int [5];
+        bool [] enabledTeams = new bool [5];
+        bool atLeastOneDisabled = false;
+        foreach (TileClass tile in Board.tileList) {
+            if (tile.IsFilledTile ()) {
+                /*if (!real) {
+                    Debug.Log (tile.token.value + " " + tile.token.tempValue + " " + tile.token.owner + " " + tile.token.destroyed + " " + tile.x + " " + tile.y);
+                }*/
+                tokenCount [tile.token.owner]++;
+            }
+        }
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            PlayerClass player = Player [x];
+            if (player == null) {
+                continue;
+            }
+            PlayerPropertiesClass properties = player.properties;
+            if (properties == null) {
+                continue;
+            }
+            if (properties.specialStatus == 6) {
+                for (int y = 1; y <= numberOfPlayers; y++) {
+                    PlayerClass player2 = Player [y];
+                    if (player2 == null) {
+                        continue;
+                    }
+                    PlayerPropertiesClass properties2 = player2.properties;
+                    if (properties2 == null) {
+                        continue;
+                    }
+                    if (properties.team != properties2.team && tokenCount [y] == 0) {
+                        FinishGame (5, 0);
+                    }
+                }
+            }
+            if (properties.specialStatus == 7 && tokenCount [x] == 0 && !player.lost) {
+                player.enabled = false;
+                player.lost = true;
+                ShowMatchResults (player);
+            }
+            if (!player.lost) {
+                enabledTeams [properties.team] = true;
+            } else {
+                atLeastOneDisabled = true;
+            }
+        }
+        if (atLeastOneDisabled) {
+            int enabledTeamsCount = 0;
+            for (int x = 0; x < enabledTeams.Length; x++) {
+                if (enabledTeams [x]) {
+                    enabledTeamsCount++;
+                }
+            }
+            if (enabledTeamsCount == 1) {
+                FinishGame (6, 0);
+            }
+        }
+        
         if (properties.scoreWinCondition) {
             for (int x = 1; x <= numberOfPlayers; x++) {
-                if (Player [x] != null && Player [x].score >= properties.scoreLimit) {
+                PlayerPropertiesClass playerProperties = GetPlayerProperties (x);
+                if (playerProperties != null && teamScore [playerProperties.team] > properties.scoreLimit) {
                     FinishGame (1, properties.scoreLimit);
                     return;
                 }
@@ -290,7 +639,7 @@ public class MatchClass {
                 return;
             }
         }
-        if (Board.GetEmptyTiles ().Count == 0) {
+        if (Board.GetPlayableTiles (playerNumber).Count == 0) {
             FinishGame (3, 0);
             return;
         }
@@ -306,18 +655,121 @@ public class MatchClass {
         }
     }
 
+    public int [] GetTeamScore () {
+        int [] teamScore = new int [5];
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            PlayerClass player = Player [x];
+            if (player == null) {
+                continue;
+            }
+            PlayerPropertiesClass properties = player.properties;
+            if (properties == null) {
+                continue;
+            }
+            teamScore [properties.team] += player.score;
+        }
+        return teamScore;
+    }
+
     public void FinishGame (int winCondition, int limit) {
         this.winCondition = winCondition;
         finished = true;
+        int [] teamScore = GetTeamScore ();
+
+        // Counting number of player tokens
+        int [] tokenCount = new int [5];
+        foreach (TileClass tile in Board.tileList) {
+            if (tile.IsFilledTile ()) {
+                tokenCount [tile.token.owner]++;
+            }
+        }
+        bool strongestTokenRequired = false;
         for (int x = 1; x <= numberOfPlayers; x++) {
-            if (winner == null) {
-                winner = Player [x];
-            } else if (Player [x] != null) {
-                if (winner.score < Player [x].score) {
-                    winner = Player [x];
-                } else if (winner.score == Player [x].score) {
-                    winner = null;
+            PlayerPropertiesClass properties = GetPlayerProperties (x);
+            if (properties == null) {
+                continue;
+            }
+            switch (properties.specialStatus) {
+                case 5:
+                    strongestTokenRequired = true;
+                    break;
+                case 6:
+                    break;
+            }
+        }
+
+        int bestScore = -99999;
+        for (int x = 1; x <= numberOfPlayers; x++) {
+            PlayerClass player = GetPlayer (x);
+            if (player == null) {
+                continue;
+            }
+            PlayerPropertiesClass properties = player.properties;
+            if (properties == null || player.lost) {
+                continue;
+            }
+            if (winCondition == 6) {
+                if (player.enabled) {
+                    winner.Add (player);
                 }
+                continue;
+            }
+            if (winCondition == 5) {
+                if (properties.specialStatus == 6) {
+                    winner.Add (player);
+                }
+                continue;
+            }
+            if (properties.specialStatus == 7 && tokenCount [x] == 0) {
+                continue;
+            }
+            if (winner.Count == 0) {
+                winner.Add (player);
+                bestScore = teamScore [properties.team];
+            } else if (player != null) {
+                if (bestScore < teamScore [properties.team]) {
+                    winner.Clear ();
+                    winner.Add (player);
+                    bestScore = teamScore [properties.team];
+                } else if (bestScore == teamScore [properties.team]) {
+                    int anotherWinnerCount = winner.Count;
+                    bool skip = false;
+                    for (int y = 0; y < anotherWinnerCount; y++) {
+                        if (winner [0].properties.team == properties.team) {
+                            winner.Add (player);
+                            skip = true;
+                            break;
+                        }
+                    }
+                    if (skip) {
+                        continue;
+                    }
+                    winner.Clear ();
+                }
+            }
+        }
+        if (winner.Count > 0 && winner [0].properties != null && strongestTokenRequired) {
+            int strongestValue = 0;
+            bool conditionMeet = false;
+            foreach (TileClass tile in Board.tile) {
+                TokenClass token = tile.token;
+                if (token == null) {
+                    continue;
+                }
+                if (strongestValue < token.value) {
+                    if (token.owner == winner [0].properties.playerNumber) {
+                        conditionMeet = true;
+                    }
+                }
+                if (strongestValue <= token.value) {
+                    strongestValue = token.value;
+                    if (token.owner != winner [0].properties.playerNumber) {
+                        conditionMeet = false;
+                    }
+                }
+            }
+            if (conditionMeet) {
+                winner = null;
             }
         }
         if (real) {
@@ -329,7 +781,7 @@ public class MatchClass {
                         ClientInterface client = properties.client;
                         if (client != null) {
                             string accountName = client.AccountName;
-                            if (winner == player) {
+                            if (winner.Contains (player)) {
                                 ServerData.IncrementThisGameModeWon (accountName, this.properties.gameMode);
                             } else if (winner != null) {
                                 ServerData.IncrementThisGameModeLost (accountName, this.properties.gameMode);
@@ -359,6 +811,7 @@ public class MatchClass {
         if (player != null) {
             PlayerPropertiesClass properties = player.properties;
             if (InputController.autoRunAI) {
+                //Debug.Log ("wat");
                 RatingClass.AnalyzeStatistics (this);
             }
             if (properties != null) {
@@ -366,38 +819,44 @@ public class MatchClass {
                 ClientInterface client = properties.client;
                 if (client != null) {
                     string accountName = client.AccountName;
-                    int matchType = 0;
-                    // Puzzle
-                    if (Player.Length == 3) {
-                        AIClass AI = Player [2].properties.AI;
-                        if (AI != null && AI.puzzle){
-                            if (winner == Player [1]) {
-                                if (!ServerData.GetUserFinishedPuzzle (accountName, this.properties.gameMode)) {
-                                    client.SavePuzzleResult (this.properties.gameMode);
-                                    experienceGain += 40;
-                                }
-                                matchType = 1;
+                    int matchType = this.properties.specialType;
+                    switch (matchType) {
+                        case 1:
+                            if (winner.Contains (Player [1]) && !ServerData.GetUserFinishedPuzzle (accountName, this.properties.gameMode)) {
+                                client.SavePuzzleResult (this.properties.gameMode);
+                                experienceGain += 40;
                             }
-                        }
+                            break;
+                        case 2:
+                            if (winner.Contains (Player [1])){// && !ServerData.GetUserFinishedBoss (accountName, this.properties.gameMode)) {
+                                client.SaveBossResult (this.properties.gameMode, Player);
+                                experienceGain += 40;
+                            }
+                            break;
+                        case 3:
+                            if (winner.Contains (Player [1]) && !ServerData.GetUserFinishedTutorial (accountName, this.properties.gameMode)) {
+                                client.SaveTutorialResult (this.properties.gameMode);
+                                experienceGain += 40;
+                            }
+                            break;
                     }
 
-                    if (winner == player) {
+                    if (winner.Contains (player)) {
                         experienceGain += turn * 2;
                     } else if (!properties.conceded) {
                         experienceGain += turn;
                     }
-
                     //
-                    
+
                     ServerLogic.AddExperience (client, accountName, experienceGain);
-                    string winnerName = "";
-                    if (winner != null) {
-                        winnerName = winner.properties.displayName;
+                    string [] winnersNames = new string [winner.Count];
+                    for (int x = 0; x < winner.Count; x++) {
+                        winnersNames [x] = winner [x].properties.displayName;
                     }
                     int level = ServerData.GetUserLevel (accountName);
                     int currentExperience = ServerData.GetUserExperience (accountName);
                     int maxExperience = ServerLogic.ExperienceNeededToLevelUp (level);
-                    client.TargetShowMatchResult (client.connectionToClient, matchType, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
+                    client.TargetShowMatchResult (client.connectionToClient, matchType, winnersNames, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
                 }
             }
         }
@@ -411,12 +870,13 @@ public class MatchClass {
         Board = new BoardClass (this);
         Board.LoadRandomFromGameMode (gameMode, matchType);
     }
+
     public void RotateAbilityArea (int playerNumber, int stackNumber) {
         Player [playerNumber].RotateTopCard (stackNumber);
     }
 
-    public void MakeRandomMove () {
-        List<TileClass> tiles = Board.GetEmptyTiles ();
+    public void MakeRandomMove (int playerNumber) {
+        List<TileClass> tiles = Board.GetPlayableTiles (playerNumber);
         if (tiles.Count == 0) {
             return;
         }
@@ -424,12 +884,25 @@ public class MatchClass {
         PlayCard (tile.x, tile.y, turnOfPlayer, Random.Range (0, 4));
     }
 
+
     public void RunAI () {
-        Vector3Int output = Player [turnOfPlayer].properties.AI.FindBestMove (this);
+        //Debug.Log (turnOfPlayer);
+        ServerManagement.RunAIOnSeperateThread (this);
+        //new Thread (RunAIOnThread).Start();
+    }
+
+    public void RunAIOnThread () {
+        Vector3Int output = GetPlayer (turnOfPlayer).properties.AI.FindBestMove (this);
         int x = output.x;
         int y = output.y;
         //Debug.Log (x + " " + y + " " + Board.tile [x, y].enabled + " " + Board.tile [x, y].IsEmptyTile () + " ... " + Player [turnOfPlayer].GetTopCard (output.z).cardNumber);
-        PlayCard (output.x, output.y, turnOfPlayer, output.z);
+        ServerManagement.PlayCardOnMainThread (this, output.x, output.y, turnOfPlayer, output.z);
+    }
+
+    public IEnumerator IEPlayCard (int x, int y, int playerNumber, int stackNumber) {
+
+        PlayCard (x, y, playerNumber, stackNumber);
+        yield return 0;
     }
 
     public void PlayCard (int x, int y, int playerNumber, int stackNumber) {
@@ -438,6 +911,7 @@ public class MatchClass {
         }
         PlayerClass player = Player [playerNumber];
         CardClass card = player.GetTopCard (stackNumber);
+        //Debug.Log ("Attempting to play card: " + card.tokenType + " , top card number " + player.GetStack (stackNumber).topCardNumber);
         StackClass stack = Player [playerNumber].GetStack (stackNumber);
         if (real) {
             for (int p = 1; p < 3; p++) {
@@ -453,6 +927,7 @@ public class MatchClass {
             return;
         }
         PlayCard (lastMoveId + 1, x, y, playerNumber, stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.tokenValue);
+        //UpdateBoard ();
     }
 
     public void PlayCard (int moveID, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
@@ -465,11 +940,11 @@ public class MatchClass {
         }
         TileClass tile = Board.tile [x, y];
         if (InputController.debuggingEnabled && real) {
-            Debug.Log ("Checking conditions.");
-            Debug.Log ("Finished: " + finished);
-            Debug.Log ("Turn of player: " + turnOfPlayer + ", your number:" + playerNumber);
-            Debug.Log ("Tile enabled: " + tile.enabled);
-            Debug.Log ("Tile is empty: " + (tile.token == null).ToString ());
+            Debug.Log ("Checking conditions." + System.Environment.NewLine + 
+                "Finished: " + finished +
+                "Turn of player: " + turnOfPlayer + ", your number:" + playerNumber +
+                "Tile enabled: " + tile.enabled +
+                "Tile is empty: " + (tile.token == null).ToString ());
             if (tile.token != null) {
                 Debug.Log ("Token value: " + tile.token.value);
                 Debug.Log ("Token temp value: " + tile.token.tempValue);
@@ -478,7 +953,7 @@ public class MatchClass {
                 Debug.Log ("Token type: " + tile.token.type);
             }
         }
-        if (!finished && turnOfPlayer == playerNumber && tile.enabled && tile.token == null) {
+        if (!finished && turnOfPlayer == playerNumber && tile.IsPlayable (playerNumber)) {
             PlayerClass player = Player [playerNumber];
             CardClass card = new CardClass (tokenValue, tokenType, abilityArea, abilityType);
             VisualPlayCard (playerNumber, card);
@@ -497,6 +972,7 @@ public class MatchClass {
                 }
                 ClientInterface client = player2.properties.client;
                 if (client != null) {
+                    //Debug.Log ("Test11");
                     ServerLogic.TargetCurrentGameMakeAMove (client, lastMoveId, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
                     if (finished) {
                         ShowMatchResults (player2);
@@ -505,10 +981,18 @@ public class MatchClass {
                 }
             }
         }
-
         PlayerClass nextPlayer = Player [turnOfPlayer];
         AIClass AI = nextPlayer.properties.AI;
+        if (real) {
+            for (int px = 0; px < Player.Length; px++) {
+                if (GetPlayerProperties (px) != null && GetPlayerProperties (px) != null) {
+                    //Debug.Log (px + " " + GetPlayerProperties (px).AI);
+                }
+            }
+           // Debug.Log (finished + ", " + real + ", " + AI + ", " + turn + ",  " + turnOfPlayer);
+        }
         if (!finished && real && AI != null) {
+            //Debug.Log ("Test8");
             RunAI ();
         }
     }
@@ -522,19 +1006,17 @@ public class MatchClass {
         PlayerClass player = Player [playerNumber];
         TokenClass token = PlayToken (tile, card, playerNumber);
         int abilityType = card.abilityType;
-        HandClass hand = player.GetHand ();
+        HandClass hand = player.hand;
         int topCardNumber = 0;
         if (hand != null) {
             StackClass stack = player.GetStack (stackNumber);
             topCardNumber = player.GetTopCardNumber (stackNumber);
         }
         SaveThisTurnMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
-        player.MoveTopCard (stackNumber, topCardNumber, !properties.usedCardsArePutOnBottomOfStack);
+        player.MoveTopCard (stackNumber, topCardNumber, false, !properties.usedCardsArePutOnBottomOfStack);
         UseAbility (tile, playerNumber, stackNumber, topCardNumber, card.abilityArea, abilityType);
         SaveLastMove (tile.x, tile.y, playerNumber, stackNumber, topCardNumber, card, token);
         AILearning (abilityType);
-        updateBoard = true;
-        UpdateBoard ();
         UpdateVisuals ();
         player.VisualMoveTopCard (stackNumber, topCardNumber, !properties.usedCardsArePutOnBottomOfStack);
         EndTurn ();
@@ -577,6 +1059,10 @@ public class MatchClass {
         if (LastMove == null) {
             return null;
         } else {
+            PlayerClass player = Player [move.playerNumber];
+            if (player.hand == null) {
+                return LastMove.usedCard;
+            }
             return Player [move.playerNumber].GetCard (move.stackNumber, move.usedCardNumber);
         }
     }
@@ -586,64 +1072,90 @@ public class MatchClass {
             return;
         }
         if (visualMatch != null) {
-            VisualMatch.GlobalTimer += 0.5f;
+            VisualMatch.GlobalTimer += AppSettings.GetAnimationsDuration ();
         }
         updateBoard = false;
         foreach (TileClass tile in Board.tileList) {
             tile.UpdateTempValue ();
-        }
-        foreach (TileClass tile in Board.tileList) {
             tile.Update ();
+        }
+        if (visualMatch) {
+            SoundManager.PlayQueuedAudioClips ();
         }
         UpdateBoard ();
     }
 
     public VectorInfo GetVectorInfo (int x, int y, int playerNumber, int abilityArea, int abilityType, TokenClass token) {
-        return GetVectorInfo (Board.tile [x, y], abilityArea, abilityType, token);
+        return GetVectorInfo (Board.tile [x, y], playerNumber, abilityArea, abilityType, token);
     }
 
-    public VectorInfo GetVectorInfo (TileClass tile, int abilityArea, int abilityType, TokenClass token) {
-        AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, abilityArea);
-        VectorInfo info = new VectorInfo (vectors, token);
-        info.CheckAbilityTriggers (this, tile, abilityType, token);
+    public VectorInfo GetVectorInfo (TileClass tile, int playerNumber, int abilityArea, int abilityType, TokenClass token) {
+        List <AbilityVector> vectors = new List <AbilityVector> (Board.GetAbilityVectors (tile.x, tile.y, abilityArea));
+        if (tile != null) {
+            //Debug.Log (Board.BeforeAbilityTriggers.Count);
+        }
+        foreach (TokenClass triggeredToken in Board.BeforeAbilityTriggers) {
+            switch (triggeredToken.type) {
+                case 18:
+                    bool exists = false;
+                    foreach (AbilityVector vector in vectors) {
+                        if (vector.x == triggeredToken.x && vector.y == triggeredToken.y) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        vectors.Add (new AbilityVector (triggeredToken.tile));
+                    }
+                    break;
+            }
+        }
+        VectorInfo info = new VectorInfo (vectors.ToArray (), token, GetTeam (token.owner));
+        info.CheckAbilityTriggers (this, playerNumber, tile, abilityType, token);
         return info;
     }
 
     public void TokenLeavesTile (TokenClass token) {
         switch (token.type) {
-            case 13:
-                if (ThisTurnPlayedToken () != null) {
-                    SetDestroy (ThisTurnPlayedTile ());
-                }
-                break;
         }
 
     }
 
     public void DestroyToken (TokenClass token, int x, int y) {
+        /*if (!real) {
+            Debug.Log (real + " Destroy token");
+        }*/
         TokenLeavesTile (token);
         TileClass tile = Board.GetTile (x, y);
         VectorInfo VI = GetTokenVectorInfo (tile, token);
         int tokenType = token.type;
+        int tokenOwner = token.owner;
+        PlayerPropertiesClass hisProperties = GetPlayerProperties (tokenOwner);
+        int tokenTeam = 0;
+        if (hisProperties != null) {
+            tokenOwner = hisProperties.team;
+        }
         switch (tokenType) {
             case 5:
                 if (visualMatch != null) {
                     visualMatch.CreateRealTokenEffect (tile, tokenType);
+                    if (visualMatch) {
+                        SoundManager.AddAudioClipToQueue (MyAudioClip.TokenNegativeExplosion);
+                    }
                 }
                 break;
-            case 9:
-                Board.BeforeAbilityTriggers.Remove (tile);
-                break;
-            case 14:
-                Board.BeforeTokenPlayedTriggers.Remove (tile);
-                break;
             case 12:
+            case 21:
                 if (visualMatch != null) {
                     visualMatch.CreateRealTokenEffect (tile, tokenType);
+                    if (visualMatch) {
+                        SoundManager.AddAudioClipToQueue (MyAudioClip.TokenNegativeAbility);
+                    }
                 }
                 Player [token.owner].score -= 20;
                 break;
         }
+        token.RemoveType ();
         foreach (TileClass target in VI.Triggered1) {
             switch (tokenType) {
                 case 5:
@@ -654,30 +1166,58 @@ public class MatchClass {
                     break;
             }
         }
+        for (int p = 1; p < Player.Length; p++) {
+            PlayerPropertiesClass properties = GetPlayerProperties (p);
+            if (properties == null || properties.specialStatus != 9 || properties.team == tokenTeam) {
+                continue;
+            }
+            PlayerClass player = GetPlayer (p);
+            if (player.hand == null) {
+                continue;
+            }
+            foreach (StackClass stack in player.hand.stack) {
+                foreach (CardClass card in stack.card) {
+                    ModifyCardValue (card, 1);
+                }
+            }
+        }
     }
 
     public VectorInfo GetTokenVectorInfo (TileClass tile, TokenClass token) {
         AbilityVector [] vectors = Board.GetAbilityVectors (tile.x, tile.y, 4);
-        VectorInfo info = new VectorInfo (vectors, token);
+        VectorInfo info = new VectorInfo (vectors, token, GetTeam (token.owner));
         info.CheckTokenTriggers (this, tile, token);
         return info;
     }
 
     public void UseAbility (TileClass tile, int playerNumber, int stackNumber, int cardNumber, int abilityArea, int abilityType) {
-        abilityType = VerifyAbilityType (tile, abilityType);
-        VectorInfo info = GetVectorInfo (tile, abilityArea, abilityType, tile.token);
-        if (visualMatch != null) {
-            VisualEffectInterface.DelayedCreateRealEffects (info, abilityType);
-            VisualMatch.GlobalTimer += 0.5f;
+        Vector2Int vector = VerifyAbilityType (tile, playerNumber, abilityType);
+        abilityType = vector.x;
+        int castCount = vector.y;
+        for (int x = 0; x < castCount; x++) {
+            if (tile.token == null) {
+                return;
+            }
+            VectorInfo info = GetVectorInfo (tile, playerNumber, abilityArea, abilityType, tile.token);
+            if (visualMatch != null) {
+                VisualEffectInterface.DelayedCreateRealEffects (info, abilityType);
+            }
+            int tokenType = tile.token.type;
+            UseAbilityTrigger1 (info, tile, playerNumber, abilityType, tokenType);
+            UseAbilityTrigger2 (info, tile, playerNumber, abilityType, tokenType);
+            UseAbilityVector (info, tile, playerNumber, abilityType, tokenType);
+            UseAbilityConstant (info, tile, playerNumber, stackNumber, cardNumber, abilityType, tokenType);
+            if (visualMatch) {
+                if (real) {
+                    SoundManager.PlayAbilityAudioClips (abilityType);
+                }
+            }
+            updateBoard = true;
+            UpdateBoard ();
         }
-        if (tile.token == null) {
-            Debug.Log (51);
+        if (visualMatch) {
+            VisualMatch.GlobalTimer += AppSettings.GetAnimationsDuration ();
         }
-        int tokenType = tile.token.type;
-        UseAbilityTrigger1 (info, tile, playerNumber, abilityType, tokenType);
-        UseAbilityTrigger2 (info, tile, playerNumber, abilityType, tokenType);
-        UseAbilityVector (info, tile, playerNumber, abilityType, tokenType);
-        UseAbilityConstant (info, tile, playerNumber, stackNumber, cardNumber, abilityType, tokenType);
     }
 
     public void AILearning (int abilityType) {
@@ -703,34 +1243,53 @@ public class MatchClass {
         }
     }
 
-    public int VerifyAbilityType (TileClass tile, int abilityType) {
+    public Vector2Int VerifyAbilityType (TileClass tile, int playerNumber, int abilityType) {
         int newAbilityType = abilityType;
-        List<TileClass> removeFromList = new List<TileClass> ();
-        foreach (TileClass triggeredTile in Board.BeforeAbilityTriggers) {
-            if (triggeredTile != null) {
-                TokenClass triggeredToken = triggeredTile.token;
+        int castCount = 1;
+        if (Player [playerNumber].properties.specialStatus == 2) {
+            castCount ++;
+        }
+        List<TokenClass> tempList = new List<TokenClass> ();
+        foreach (TokenClass triggeredToken in Board.BeforeAbilityTriggers) {
+            tempList.Add (triggeredToken);
+        }
+        foreach (TokenClass triggeredToken in tempList) {
                 if (triggeredToken != null) {
                     int triggeredType = triggeredToken.type;
                     switch (triggeredType) {
                         case 9:
-                            if (abilityType != 0 && tile != triggeredTile) {
-                                newAbilityType = 0;
-                                ChangeType (triggeredTile, 0);
-                                removeFromList.Add (triggeredTile);
+                            if (abilityType != 0 && tile != triggeredToken.tile) {
+                                castCount--;
+                                ChangeType (triggeredToken.tile, 0);
+                                updateBoard = true;
+                            if (visualMatch) {
+                                SoundManager.AddAudioClipToQueue (MyAudioClip.TokenTrigger);
                             }
+                        }
+                            break;
+                        case 15:
+                            if (abilityType != 0) {
+                                castCount++;
+                                ChangeType (triggeredToken.tile, 0);
+                                updateBoard = true;
+                            if (visualMatch) {
+                                SoundManager.AddAudioClipToQueue (MyAudioClip.TokenTrigger);
+                            }
+                        }
                             break;
 
+                    }
+                    switch (triggeredType) {
+                        case 9:
+                        case 15:
+                        if (abilityType != 0 && visualMatch != null && (triggeredType != 9 || tile != triggeredToken.tile)) {
+                                visualMatch.CreateRealTokenEffect (triggeredToken.tile, triggeredType);
+                            }
+                            break;
                     }
                 } else {
                     //Debug.Log ("Wut");
                 }
-
-            } else {
-                Debug.Log ("wut2");
-            }
-        }
-        foreach (TileClass triggeredTile in removeFromList) {
-            Board.BeforeAbilityTriggers.Remove (triggeredTile);
         }
         //Debug.Log ("2");
 
@@ -746,13 +1305,8 @@ public class MatchClass {
                     abilityType = lastPlayedCard.abilityType;
                 }
                 break;
-            case 38:
-                if (visualMatch != null) {
-                    VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, true);
-                }
-                break;
         }
-        return abilityType;
+        return new Vector2Int (abilityType, castCount);
     }
 
     public void UseAbilityTrigger1 (VectorInfo info, TileClass tile, int playerNumber, int abilityType, int tokenType) {
@@ -810,9 +1364,14 @@ public class MatchClass {
                     CreateToken (target, LastPlayedToken ().type, LastPlayedToken ().value, playerNumber);
                     break;
                 case 19:
+                case 66:
                     SwapToken (tile, target);
                     break;
                 case 21:
+                case 29:
+                case 30:
+                case 35:
+                case 63:
                     SetDestroy (target);
                     break;
                 case 23:
@@ -835,22 +1394,78 @@ public class MatchClass {
                 case 28:
                     ModifyTempValue (target, LastPlayedToken ().value);
                     break;
-                case 29:
-                case 30:
-                case 35:
-                    SetDestroy (target);
-                    break;
                 case 32:
                     ModifyTempValue (tile, 1);
                     break;
                 case 39:
                     CreateToken (target, info.Triggered2 [0].token.type, 1, playerNumber);
                     break;
+                case 40:
+                    ChangeType (tile, 0);
+                    break;
                 case 41:
                     ModifyTempValue (target, -3);
                     break;
                 case 43:
-                    ModifyTempValue (target, -1);
+                    ModifyTempValue (target, 1);
+                    break;
+                case 44:
+                    ModifyTempValue (target, -2);
+                    break;
+                case 47:
+                    SetDestroy (target);
+                    Player [playerNumber].AddScore (10);
+                    break;
+                case 48:
+                    Player [playerNumber].AddScore (-20);
+                    CreateToken (target, 0, 1, playerNumber);
+                    break;
+                case 50:
+                    SetOwner (tile, target.token.owner);
+                    break;
+                case 52:
+                    ModifyTempValue (target, 2);
+                    break;
+                case 53:
+                    CreateToken (target, tile.token.type, 1, playerNumber);
+                    break;
+                case 54:
+                    ModifyTempValue (target, 1);
+                    ModifyTempValue (tile, 1);
+                    break;
+                case 55:
+                    ModifyTempValue (tile, target.token.value - 1);
+                    ModifyTempValue (target, 1 - target.token.value);
+                    break;
+                case 57:
+                    ModifyTempValue (target, info.Triggered2 [0].token.value - target.token.value);
+                    break;
+                case 58:
+                    ModifyTempValue (target, - (target.token.value) / 2);
+                    ChangeType (target, tile.token.type);
+                    break;
+                case 59:
+                    SetDestroy (target);
+                    DisableTile (target);
+                    break;
+                case 60:
+                    DisableTile (target);
+                    break;
+                case 64:
+                    SetOwner (target, playerNumber);
+                    break;
+                case 65:
+                    ModifyTempValue (tile, target.token.value);
+                    ModifyTempValue (target, - target.token.value);
+                    break;
+                case 67:
+                    SetDestroy (target);
+                    break;
+                case 68:
+                    ModifyTempValue (target, target.token.value);
+                    break;
+                case 69:
+                    SetDestroy (target);
                     break;
             }
         }
@@ -881,7 +1496,11 @@ public class MatchClass {
                     ModifyTempValue (target, LastPlayedToken ().value);
                     break;
                 case 43:
-                    ModifyTempValue (target, 1);
+                    ModifyTempValue (target, -1);
+                    break;
+                case 56:
+                    ModifyTempValue (info.Triggered1 [0], target.token.value);
+                    SetDestroy (target);
                     break;
             }
         }
@@ -907,19 +1526,19 @@ public class MatchClass {
     public void UseAbilityConstant (VectorInfo info, TileClass tile, int playerNumber, int stackNumber, int cardNumber, int abilityType, int tokenType) {
         switch (abilityType) {
             case 20:
-                if (info.TargetPlayers != null) {
-                    foreach (int pNumber in info.TargetPlayers) {
-                        if (Player.Length <= pNumber) {
-                            continue;
-                        }
-                        PlayerClass player = Player [pNumber];
+                if (info.triggeredPlayers != null) {
+                    foreach (int pNumber in info.triggeredPlayers) {
+                        PlayerClass player = GetPlayer (pNumber);
                         if (player == null) {
                             continue;
                         }
-                        HandClass hand = player.GetHand ();
+                        HandClass hand = player.hand;
+                        //Debug.Log ("Player: " + pNumber);
                         if (hand != null) {
                             for (int y = 0; y < hand.stack.Length; y++) {
+                                //Debug.Log (hand.stack [y].topCardNumber);
                                 player.MoveTopCard (y);
+                                //Debug.Log (hand.stack [y].topCardNumber);
                             }
                         }
                     }
@@ -957,12 +1576,6 @@ public class MatchClass {
                     ModifyCardValue (card, -1);
                 }
                 break;
-            case 40: {
-                if (info.remainsCount < 2) {
-                    ChangeType (tile, 0);
-                }
-            }
-            break;
             case 42: {
                 PlayerClass player = Player [playerNumber];
                 if (player.hand == null) {
@@ -972,10 +1585,12 @@ public class MatchClass {
                 SetCardValue (card, 1);
             }
             break;
-            /*
-            case 40:
-                if (info.TargetPlayers != null) {
-                    foreach (int pNumber in info.TargetPlayers) {
+            case 46:
+                if (!properties.turnWinCondition) {
+                    break;
+                }
+                if (info.triggeredPlayers != null) {
+                    foreach (int pNumber in info.triggeredPlayers) {
                         if (Player.Length <= pNumber) {
                             continue;
                         }
@@ -983,13 +1598,107 @@ public class MatchClass {
                         if (player == null) {
                             continue;
                         }
-                        CardClass card = player.GetLastMoveCard ();
-                        if (card != null) {
-                            card.tokenValue--;
+                        player.AddScore (-TurnsLeft ());
+                    }
+                }
+            break;
+            case 49: {
+                if (LastMove == null) {
+                    break;
+                }
+                int player = LastMove.playerNumber;
+                if (Player [player].hand == null) {
+                    break;
+                }
+                CardClass card = GetLastPlayedCard ();
+                if (card == null) {
+                    break;
+                }
+                Player [player].AIValue += AIClass.AproxTokenValue (card.tokenType, card.tokenValue - 2) - AIClass.AproxTokenValue (card.tokenType, card.tokenValue);
+                ModifyCardValue (card, -2);
+
+            }
+            break;
+            case 51:
+                if (info.triggeredPlayers != null) {
+                    AIClass AI = Player [playerNumber].properties.AI;
+                    foreach (int pNumber in info.triggeredPlayers) {
+                        if (Player.Length <= pNumber) {
+                            continue;
+                        }
+                        PlayerClass player = Player [pNumber];
+                        if (player == null) {
+                            continue;
+                        }
+                        if (AI != null) {
+                            player.AIValue -= 4.1f * AI.turnsLeft / properties.turnLimit;
+                        }
+                        HandClass hand = player.hand;
+                        if (hand != null) {
+                            for (int y = 0; y < hand.stack.Length; y++) {
+                                ModifyCardValue (player.GetTopCard(y), -1);
+                            }
                         }
                     }
                 }
-                break;*/
+                break;
+            case 53:
+                SetDestroy (tile);
+                break;
+            case 62:
+                if (LastMove != null) {
+                    Player [LastMove.playerNumber].MoveCardToTheTop (LastMove.stackNumber, LastMove.usedCardNumber);
+                }
+                break;
+            case 70:
+                if (info.triggeredPlayers != null) {
+                    foreach (int pNumber in info.triggeredPlayers) {
+                        PlayerClass targetPlayer = GetPlayer (pNumber);
+                        PlayerClass player = GetPlayer (playerNumber);
+                        if (targetPlayer != null && targetPlayer.score >= player.score + 20) {
+                            targetPlayer.AddScore (-20);
+                        }
+                    }
+                }
+                break;
+            case 71: 
+                {
+                PlayerClass player = GetPlayer (playerNumber);
+                HandClass hand = player.hand;
+                if (hand != null) {
+                    for (int y = 0; y < hand.stack.Length; y++) {
+                        player.RotateTopCard (y, info.tokenCount);
+                    }
+                }
+            }
+                break;
+                /*
+                case 40:
+                    if (info.TargetPlayers != null) {
+                        foreach (int pNumber in info.TargetPlayers) {
+                            if (Player.Length <= pNumber) {
+                                continue;
+                            }
+                            PlayerClass player = Player [pNumber];
+                            if (player == null) {
+                                continue;
+                            }
+                            CardClass card = player.GetLastMoveCard ();
+                            if (card != null) {
+                                card.tokenValue--;
+                            }
+                        }
+                    }
+                    break;*/
+        }
+        if (visualMatch != null) {
+            switch (abilityType) {
+                case 38:
+                case 42:
+                case 62:
+                    VisualEffectInterface.DelayedRealEffect (tile.x, tile.y, abilityType, true);
+                    break;
+            }
         }
     }
 
@@ -1004,7 +1713,20 @@ public class MatchClass {
     }
 
     public void ChangeType (TileClass tile, int newType) {
-        tile.token.ChangeType (newType);
+        if (tile == null) {
+            return;
+        }
+        TokenClass token = tile.token;
+        PlayerClass player = Player [token.owner];
+        if (token != null && (player == null || player.properties == null || player.properties.specialStatus != 3)) {
+            updateBoard = true;
+            tile.token.ChangeType (newType);
+        }
+    }
+
+    public void SetType (TileClass tile, int newType) {
+        updateBoard = true;
+        tile.token.SetType (newType);
     }
 
     public TileClass ThisTurnPlayedTile () {
@@ -1052,9 +1774,20 @@ public class MatchClass {
     public void ModifyTempValue (TileClass tile, int value) {
         if (tile != null) {
             TokenClass target = tile.token;
-            if (target != null) {
+            PlayerClass player = GetPlayer (target.owner);
+            if (target != null && (player == null || player.properties == null || player.properties.specialStatus != 3)) {
                 updateBoard = true;
                 target.ModifyTempValue (value);
+            }
+        }
+    }
+
+    public void SetOwner (TileClass tile, int owner) {
+        if (tile != null) {
+            TokenClass target = tile.token;
+            if (target != null) {
+                updateBoard = true;
+                target.SetOwner (owner);
             }
         }
     }
@@ -1063,7 +1796,7 @@ public class MatchClass {
         if (tile != null) {
             TokenClass target = tile.token;
             if (target != null) {
-                //updateBoard = true;
+                updateBoard = true;
                 target.destroyed = true;
             }
         }
@@ -1071,23 +1804,43 @@ public class MatchClass {
 
     public TokenClass PlayToken (TileClass tile, CardClass card, int playerNumber) {
         if (tile != null) {
-            TokenClass token = CreateToken (tile, card.tokenType, card.tokenValue + Board.NumberOfTypes [7] - Board.NumberOfTypes [11], playerNumber);
+            //Debug.Log ("Played card: " + card.tokenType);
+            //Debug.Log (Board.NumberOfTypes [7]);
+            int sumOfValues = card.tokenValue + Board.NumberOfTypes [7] - Board.NumberOfTypes [11];
+            TokenClass token = CreateToken (tile, card.tokenType, sumOfValues, playerNumber);
             //TokenClass token = tile.CreateToken (card, playerNumber);
             if (tile.visualTile != null) {
                 tile.token.visualToken.DelayedAddPlayAnimation ();
             }
-            foreach (TileClass triggeredTile in Board.BeforeTokenPlayedTriggers) {
-                if (triggeredTile != null) {
-                    TokenClass triggeredToken = triggeredTile.token;
-                    if (triggeredToken != null) {
-                        int triggeredType = triggeredToken.type;
-                        switch (triggeredType) {
-                            case 14:
-                                if (triggeredToken.value < token.value && RelationLogic.IsEnemy (triggeredTile, token.owner)) {
-                                    ModifyTempValue (triggeredTile, 1);
-                                }
-                                break;
+            foreach (TokenClass triggeredToken in Board.BeforeTokenPlayedTriggers) {
+                if (triggeredToken != null) {
+                    int triggeredType = triggeredToken.type;
+                    switch (triggeredType) {
+                        case 14:
+                            if (triggeredToken.value < token.value && RelationLogic.IsEnemyTeam (GetTeam (triggeredToken.tile), GetTeam (token.owner))) {
+                                ModifyTempValue (triggeredToken.tile, 1);
 
+                                SoundManager.AddAudioClipToQueue (MyAudioClip.TokenPositiveRegularAbility);
+                            }
+                            break;
+
+                    }
+                }
+            }
+            for (int x = 1; x < numberOfPlayers; x++) {
+                PlayerClass player = Player [x];
+                if (player != null) {
+                    HandClass hand = player.hand;
+                    if (hand != null) {
+                        foreach (StackClass stack in hand.stack) {
+                            CardClass tempCard = stack.getTopCard ();
+                            switch (tempCard.abilityType) {
+                                case 45:
+                                    if (tempCard.tokenValue < token.value && RelationLogic.IsEnemyTeam (GetTeam (x), GetTeam (token.owner))) {
+                                        ModifyCardValue (tempCard, 1);
+                                    }
+                                    break;
+                            }
                         }
                     }
                 }
@@ -1112,6 +1865,7 @@ public class MatchClass {
 
     public void DisableTile (TileClass tile) {
         if (tile != null) {
+            updateBoard = true;
             tile.EnableTile (false);
         }
     }
@@ -1155,14 +1909,32 @@ public class MatchClass {
         return 0;
     }
 
+    public PlayerClass GetPlayer (int playerNumber) {
+        if (playerNumber < 0 || playerNumber >= Player.Length) {
+            return null;
+        }
+        return Player [playerNumber];
+    }
+
+    public PlayerPropertiesClass GetPlayerProperties (int playerNumber) {
+        PlayerClass player = GetPlayer (playerNumber);
+        if (player == null) {
+            return null;
+        }
+        return player.properties;
+    }
+
     void SetPlayers () {
         Player = new PlayerClass [numberOfPlayers + 1];
-        Player [0] = new PlayerClass ();
     }
 
     public void SetPlayer (int PlayerNumber, PlayerClass player) {
         if (player == null) {
             return;
+        }
+        MatchClass currentlyPlayedMatch = MatchMakingClass.FindMatch (player.properties.accountName);
+        if (currentlyPlayedMatch != null && !InputController.autoRunAI) {
+            currentlyPlayedMatch.Concede (player.properties.accountName);
         }
         Player [PlayerNumber] = player;
         PlayerPropertiesClass properties = player.properties;

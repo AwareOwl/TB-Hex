@@ -47,4 +47,14 @@ public class CardPoolClass {
     public void LoadFromFile (int GameModeId) {
         LoadFromString (ServerData.GetCardPool (GameModeId));
     }
+
+    public CardPoolClass ExcludeLockedContent (bool [] unlockedAbilities, bool [] unlockedTokens) {
+        CardPoolClass newCardPool = new CardPoolClass ();
+        foreach (CardClass card in Card) {
+            if (unlockedAbilities [card.abilityType] && unlockedTokens [card.tokenType]) {
+                newCardPool.Card.Add (new CardClass (card));
+            }
+        }
+        return newCardPool;
+    }
 }

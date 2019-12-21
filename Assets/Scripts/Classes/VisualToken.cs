@@ -172,7 +172,6 @@ public class VisualToken {
                 break;
             case 7:
             case 11:
-            case 13:
                 Clone = GameObject.Instantiate (Resources.Load ("Prefabs/TokenBorderSpike")) as GameObject;
                 VES = Clone.AddComponent<VisualEffectScript> ();
                 VES.SetColor (AppDefaults.GetBorderColorAccent (type));
@@ -183,6 +182,7 @@ public class VisualToken {
                 BorderAccent.Add (Clone);
                 break;
             case 8:
+            case 19:
                 for (int x = 0; x < 3; x++) {
                     Clone = GameObject.Instantiate (Resources.Load ("Prefabs/AnotherSpike")) as GameObject;
                     VES = Clone.AddComponent<VisualEffectScript> ();
@@ -195,7 +195,7 @@ public class VisualToken {
                 }
                 break;
             case 9:
-            case 14:
+            case 15:
                 Clone = GameObject.Instantiate (Resources.Load ("Prefabs/HalfBorder")) as GameObject;
                 VES = Clone.AddComponent<VisualEffectScript> ();
                 VES.SetRotateVector (new Vector3 (0, 30, 0));
@@ -217,6 +217,87 @@ public class VisualToken {
                     Clone.transform.localEulerAngles = new Vector3 (0, 30 + x * 120, 0);
                     BorderAccent.Add (Clone);
                 }
+                break;
+            case 14:
+                for (int x = 0; x < 1; x++) {
+                    Clone = GameObject.Instantiate (Resources.Load ("Prefabs/RootAccent")) as GameObject;
+                    VES = Clone.AddComponent<VisualEffectScript> ();
+                    VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                    Clone.transform.parent = Anchor.transform;
+                    Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+                    Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                    Clone.transform.localEulerAngles = new Vector3 (0, 180, 0);
+                    BorderAccent.Add (Clone);
+                }
+                break;
+            case 16:
+                for (int x = 0; x < 2; x++) {
+                    Clone = GameObject.Instantiate (AppDefaults.Snake) as GameObject;
+                    VES = Clone.AddComponent<VisualEffectScript> ();
+                    VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                    Clone.transform.parent = Anchor.transform;
+                    Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+                    Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                    Clone.transform.localEulerAngles = new Vector3 (0, 135 + x * 180, 0);
+                    BorderAccent.Add (Clone);
+                }
+                break;
+            case 17:
+                for (int x = 0; x < 6; x++) {
+                    Clone = GameObject.Instantiate (AppDefaults.Socket) as GameObject;
+                    VES = Clone.AddComponent<VisualEffectScript> ();
+                    VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                    Clone.transform.parent = Anchor.transform;
+                    Clone.transform.localScale = new Vector3 (0.8f, 1.2f, 0.8f);
+                    Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                    Clone.transform.localEulerAngles = new Vector3 (0, x * 60 + 30, 0);
+                    BorderAccent.Add (Clone);
+                }
+                break;
+            case 18:
+                for (int x = 0; x < 4; x++) {
+                    Clone = GameObject.Instantiate (AppDefaults.Focus) as GameObject;
+                    VES = Clone.AddComponent<VisualEffectScript> ();
+                    VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                    Clone.transform.parent = Anchor.transform;
+                    Clone.transform.localScale = new Vector3 (0.8f, 1.2f, 0.8f);
+                    Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                    Clone.transform.localEulerAngles = new Vector3 (0, x * 90, 0);
+                    BorderAccent.Add (Clone);
+                }
+                break;
+            case 20:
+                for (int x = 0; x < 8; x++) {
+                    Clone = GameObject.Instantiate (AppDefaults.Focus) as GameObject;
+                    VES = Clone.AddComponent<VisualEffectScript> ();
+                    VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                    Clone.transform.parent = Anchor.transform;
+                    Clone.transform.localScale = new Vector3 (0.8f, 1.2f, 0.8f);
+                    Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                    Clone.transform.localEulerAngles = new Vector3 (0, x * 45, 0);
+                    BorderAccent.Add (Clone);
+                }
+                break;
+            case 21:
+                Clone = GameObject.Instantiate (AppDefaults.Currency) as GameObject;
+                VES = Clone.AddComponent<VisualEffectScript> ();
+                VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                Clone.transform.parent = Anchor.transform;
+                Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+                Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                Clone.transform.localEulerAngles = new Vector3 (0, 90, 0);
+                BorderAccent.Add (Clone);
+                break;
+            case 22:
+            case 23:
+                Clone = GameObject.Instantiate (AppDefaults.Cannon) as GameObject;
+                VES = Clone.AddComponent<VisualEffectScript> ();
+                VES.SetColor (AppDefaults.GetBorderColorAccent (type));
+                Clone.transform.parent = Anchor.transform;
+                Clone.transform.localScale = new Vector3 (0.8f, 0.8f, 0.8f);
+                Clone.transform.localPosition = new Vector3 (0, 0, 0);
+                Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
+                BorderAccent.Add (Clone);
                 break;
         }
     }

@@ -106,6 +106,7 @@ public class SetList : GOUI {
         GameObject Clone;
 
         Background = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 585, 10, 690, 870, false);
+        DestroyImmediate (Background.GetComponent<UIController> ());
         Text = CreateText (Language.SelectCardSet, 450, 245, 12, 0.035f);
         Text.GetComponent<TextMesh> ().anchor = TextAnchor.MiddleLeft;
         Text.GetComponent<TextMesh> ().fontStyle = FontStyle.Bold;
@@ -116,7 +117,7 @@ public class SetList : GOUI {
         row = new RowClass [5];
         for (int x = 0; x < 5; x++) {
             row [x] = CurrentGOUI.gameObject.AddComponent<RowClass> ();
-            row [x].Init (x, RowClass.SetList);
+            row [x].Init (x, ListMode.SetList);
         }
 
         GameObject pageUIObject = new GameObject ();

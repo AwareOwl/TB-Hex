@@ -18,6 +18,8 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public GameObject HoverObject;
 
     public PageUI pageUI;
+    public VisualTeam visualTeam;
+    public PlayerClass player;
     public CardClass card;
     public TileClass tile;
     public int abilityType = -1;
@@ -55,9 +57,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter (PointerEventData eventData) {
         Over = true;
-        if (!Pressed && interactible) {
-            SetOnMouseOverSprite ();
-        }
+        Entered = true;
     }
 
     public void OnPointerExit (PointerEventData eventData) {
@@ -65,6 +65,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             SetNormalSprite ();
         }
         Over = false;
+        Entered = false;
     }
 
     public void OnPointerDown (PointerEventData eventData) {
@@ -74,19 +75,43 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
+    bool Entered;
+
 
     private void OnMouseEnter () {
         timer = 0;
-        Over = true;
-        if (!Pressed) {
-            SetOnMouseOverSprite ();
-        }
-        if (!EventSystem.current.IsPointerOverGameObject ()) {
-            switch (name) {
-                case "Tile":
-                    OnMouseOverTileAction ();
-                    break;
-            }
+        Entered = true;
+    }
+
+    void OnEnter () {
+        //Debug.Log (this, gameObject);
+        SetOnMouseOverSprite ();
+        switch (name) {
+            // Exceptions
+            case UIString.InGameAvatar:
+            case UIString.InGameScoreBar:
+            case UIString.TurnCounter:
+                break;
+            case UIString.Tile:
+                if (tile.token == null) {
+                    SoundManager.PlayAudioClip (MyAudioClip.OnTileOver);
+                } else {
+                    //SoundManager.PlayAudioClip (MyAudioClip.OnTileOver);
+                }
+                break;
+            case UIString.SetEditorCollectionCard:
+                if (SetEditor.Collection [x, y] != null) {
+                    SoundManager.PlayAudioClip (MyAudioClip.OnButtonOver);
+                }
+                break;
+            case UIString.SetEditorSetCard:
+                if (SetEditor.Set [x, y] != null) {
+                    SoundManager.PlayAudioClip (MyAudioClip.OnButtonOver);
+                }
+                break;
+            default:
+                SoundManager.PlayAudioClip (MyAudioClip.OnButtonOver);
+                break;
         }
     }
 
@@ -101,6 +126,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             SetNormalSprite ();
         }
         Over = false;
+        Entered = false;
     }
 
     public void SetNormalSprite () {
@@ -131,7 +157,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 HoverObject.GetComponent<VisualEffectScript> ().SetColor (color);
             } else {
                 bool highlighted = color.a != 0;
-                tile.visualTile.Tile.GetComponent<VisualEffectScript> ().highlighted = highlighted;
+                VisualEffectScript VEScript = tile.visualTile.Tile.GetComponent<VisualEffectScript> ();
+                if (VEScript) {
+                    VEScript.highlighted = highlighted;
+                }
             }
         }
     }
@@ -148,15 +177,18 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void CreateTooltip () {
         if (card != null) {
+            TutorialManager.NewState (TutorialManager.inspectCard);
             Tooltip.NewTooltip (transform, card);
         }
         if (tile != null && tile.token != null) {
+            TutorialManager.NewState (TutorialManager.inspectToken);
             Tooltip.NewTooltip (transform, tile.token);
         }
         if (abilityType > -1) {
             Tooltip.NewAbilityTypeTooltip (transform, abilityType);
         }
         if (tokenType > -1) {
+            TutorialManager.NewState (TutorialManager.inspectToken);
             Tooltip.NewTokenTypeTooltip (transform, tokenType);
         }
         switch (name) {
@@ -167,11 +199,23 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 Tooltip.NewTooltip (transform, Language.JoinLocalNetworkTooltip);
                 break;
             case UIString.ProfileSettingsAvatar:
+            case UIString.Avatar:
                 Tooltip.NewTooltip (transform, Language.AvatarName [number]);
+                break;
+
+            case UIString.InGameAvatar:
+                Tooltip.NewTooltip (transform, player.properties.displayName + System.Environment.NewLine + System.Environment.NewLine + Language.StatusDescription [player.properties.specialStatus]);
+                break;
+
+            case UIString.ShowCodeMenu:
+                Tooltip.NewTooltip (transform, Language.EnterCode);
                 break;
 
             case UIString.ExitApp:
                 Tooltip.NewTooltip (transform, Language.ExitApp);
+                break;
+            case UIString.ShowSettingsMenu:
+                Tooltip.NewTooltip (transform, Language.ShowSettingsMenu);
                 break;
             case UIString.MainMenuStartGameVsAI:
                 Tooltip.NewTooltip (transform, Language.BeginGameAgainstAI);
@@ -220,6 +264,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.CreateNewSet:
                 Tooltip.NewTooltip (transform, Language.CreateNewSet);
+                break;
+            case UIString.MoreToUnlock:
+                Tooltip.NewTooltip (transform, Language.YouCanUnlockMoreCardsByFinishingPuzzlesAndIncreasingYourLevel);
                 break;
 
 
@@ -271,7 +318,6 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                     Tooltip.NewTooltip (transform, Language.ViewGameModeSettings);
                 }
                 break;
-                break;
             case UIString.GameModeEditorChangeName:
                 Tooltip.NewTooltip (transform, Language.ChangeGameVersionName);
                 break;
@@ -305,17 +351,60 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 }
                 break;
 
+            case UIString.ShowUnlockedContent:
+                Tooltip.NewTooltip (transform, Language.ShowUnlockedContent);
+                break;
+
             case UIString.CardPoolEditorNextAbilityPage:
+            case UIString.CardPoolEditorNextTokenPage:
                 Tooltip.NewTooltip (transform, Language.NextPage);
                 break;
             case UIString.CardPoolEditorPrevAbilityPage:
+            case UIString.CardPoolEditorPrevTokenPage:
                 Tooltip.NewTooltip (transform, Language.PrevPage);
+                break;
+
+
+            case UIString.PuzzleMenuApply:
+                Tooltip.NewTooltip (transform, Language.BeginPuzzle);
+                break;
+            case UIString.BossMenuApply:
+                Tooltip.NewTooltip (transform, Language.GoToTheSetEditor);
+                break;
+            case UIString.BossMenuLocked:
+                Tooltip.NewTooltip (transform, Language.BossUnlockTooltip);
+                break;
+            case UIString.SetEditorStartBossFight:
+                Tooltip.NewTooltip (transform, Language.BeginBossFight);
+                break;
+            case UIString.TutorialMenuApply:
+                Tooltip.NewTooltip (transform, Language.BeginMission);
+                break;
+
+            case UIString.RestartPuzzle:
+                Tooltip.NewTooltip (transform, Language.RestartPuzzle);
+                break;
+            case UIString.RestartBoss:
+                Tooltip.NewTooltip (transform, Language.RestartBoss);
+                break;
+            case UIString.PuzzleMenuLocked:
+                Tooltip.NewTooltip (transform, Language.PuzzleUnlockTooltip);
+                break;
+            case UIString.RestartTutorial:
+                Tooltip.NewTooltip (transform, Language.RestartMission);
+                break;
+
+            case UIString.ShowOptionsMenu:
+                Tooltip.NewTooltip (transform, Language.Options);
                 break;
 
             case UIString.SetEditorAbout:
             case UIString.GameModeEditorAbout:
             case UIString.BoardEditorAbout:
             case UIString.CardPoolEditorAbout:
+            case UIString.BossMenuAbout:
+            case UIString.PuzzleMenuAbout:
+            case UIString.LibraryMenuAbout:
                 Tooltip.NewTooltip (transform, Language.ClickToLearnMore);
                 break;
 
@@ -340,6 +429,30 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
         if (pageUI != null) {
             pageUI.SelectPage (number);
+        }
+        switch (name) {
+            case UIString.InGameAvatar:
+            case UIString.InGameScoreBar:
+            case UIString.TurnCounter:
+            case UIString.Tile:
+                break;
+            case UIString.SetEditorCollectionCard:
+                if (SetEditor.Collection [x, y] != null) {
+                    SoundManager.PlayAudioClip (MyAudioClip.SetClick);
+                }
+                break;
+            case UIString.SetEditorSetCard:
+                if (SetEditor.Set [x, y] != null) {
+                    Debug.Log (SetEditor.Set [x, y]);
+                    SoundManager.PlayAudioClip (MyAudioClip.SetClick);
+                }
+                break;
+            case UIString.InGameHandCard:
+                SoundManager.PlayAudioClip (MyAudioClip.SetClick);
+                break;
+            default:
+                SoundManager.PlayAudioClip (MyAudioClip.OnButtonClick);
+                break;
         }
         switch (name) {
             case "SelectPL":
@@ -412,6 +525,12 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.CardPoolEditorPrevAbilityPage:
                 CardPoolEditor.PrevAbilityPage ();
+                break;
+            case UIString.CardPoolEditorNextTokenPage:
+                CardPoolEditor.NextTokenPage ();
+                break;
+            case UIString.CardPoolEditorPrevTokenPage:
+                CardPoolEditor.PrevTokenPage ();
                 break;
             case UIString.CardPoolEditorCard:
                 CardPoolEditor.CardAction (number);
@@ -546,6 +665,9 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.CustomGameRoomSelectRow:
                 ClientLogic.MyInterface.CmdCustomGameMoveToDifferentSlot (id);
                 break;
+            case UIString.CustomGameRoomAvatar:
+                ClientLogic.MyInterface.CmdCustomGameChangeTeam (number);
+                break;
             case UIString.CustomGameRoomStartMatch:
                 CustomGameRoom.StartMatch ();
                 break;
@@ -562,9 +684,44 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.InGameHandCard:
                 InGameUI.SelectStack (x);
                 break;
+            case UIString.PlayedCard:
+                UsedCardPreview.ExtendPreview (x);
+                break;
 
             case UIString.RestartPuzzle:
                 InGameUI.RestartPuzzle ();
+                break;
+            case UIString.RestartBoss:
+                InGameUI.RestartBoss ();
+                break;
+            case UIString.RestartTutorial:
+                InGameUI.RestartTutorial ();
+                break;
+
+            case UIString.LibraryMenu:
+                LibraryMenu.ShowLibrary ();
+                break;
+            case UIString.LibraryMenuTokenType:
+                LibraryMenu.SelectButton (0, tokenType);
+                break;
+            case UIString.LibraryMenuAbilityType:
+                LibraryMenu.SelectButton (1, abilityType);
+                break;
+            case UIString.LibraryMenuNextAbilityPage:
+                LibraryMenu.NextAbilityPage ();
+                break;
+            case UIString.LibraryMenuPrevAbilityPage:
+                LibraryMenu.PrevAbilityPage ();
+                break;
+            case UIString.LibraryMenuAbout:
+                GOUI.ShowMessage (Language.LibraryMenuAbout);
+                break;
+
+            case UIString.ShowGameModePlayerSettingsMenu:
+                GameModePlayerSettingsMenu.ShowGameModePlayerSettingsMenu ();
+                break;
+            case UIString.GameModePlayerSettingsApply:
+                GameModePlayerSettingsMenu.Apply ();
                 break;
 
             case UIString.ShowGameModeMenu:
@@ -663,10 +820,64 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             case UIString.ProfileSettingsAvatar:
                 ProfileSettings.SelectAvatar (number);
                 break;
+            case UIString.InputMenuApplyInput:
+                InputMenu.Apply ();
+                break;
+
+            case UIString.ShowTutorialMenu:
+                TutorialMenu.ShowTutorialMenu ();
+                break;
+            case UIString.TutorialMenuRow:
+                TutorialMenu.SelectMission (id);
+                break;
+            case UIString.TutorialMenuApply:
+                TutorialMenu.Apply ();
+                break;
+
+
+            case UIString.TooltipDestroy:
+                Tooltip.DestroyPermanentTooltip ();
+                break;
 
 
             case UIString.ShowUnlockedContent:
                 UnlockedContent.ShowUnlockedContent ();
+                break;
+            case UIString.ShowCodeMenu:
+                InputMenu.ShowInputMenu (UIString.PromoCode);
+                break;
+
+            case UIString.ShowBossMenu:
+                BossMenu.ShowBossMenu ();
+                break;
+
+            case UIString.BossMenuApply:
+                BossMenu.Apply ();
+                break;
+            case UIString.BossMenuAbout:
+                GOUI.ShowMessage (Language.BossMenuAbout);
+                break;
+            case UIString.BossMenuType:
+                BossMenu.SelectType (number);
+                break;
+            case UIString.BossMenuRow:
+                BossMenu.SelectRow (number);
+                break;
+            case UIString.SetEditorStartBossFight:
+                SetEditor.StartBossFight ();
+                break;
+            case UIString.BossMenuPageButton:
+                BossMenu.SelectPage (number);
+                break;
+
+            case UIString.ShowSettingsMenu:
+                SettingsMenu.ShowSettingsMenu ();
+                break;
+            case UIString.SettingsMenuApply:
+                SettingsMenu.Instance.Apply ();
+                break;
+            case UIString.SettingsMenuExit:
+                SettingsMenu.Instance.Exit ();
                 break;
 
 
@@ -689,19 +900,23 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 GameModeMenu.ApplyGameMode ();
                 break;
 
-            case UIString.ShowInGameMenu:
-                InGameMenu.ShowInGameMenu ();
+            case UIString.ShowInGameOptionsMenu:
+                OptionsMenu.ShowOptionsMenu (OptionsMenu.OptionsMenuMode.inGame);
                 break;
             case UIString.DestroySubMenu:
-                InGameMenu.DestroySubMenu ();
+                OptionsMenu.DestroySubMenu ();
                 break;
             case UIString.ExitApp:
                 Application.Quit ();
                 break;
 
+            case UIString.ShowOptionsMenu:
+                OptionsMenu.ShowOptionsMenu (OptionsMenu.OptionsMenuMode.normal);
+                break;
+
             // Other
             default:
-                Debug.Log (name);
+                Debug.Log (name, gameObject);
                 break;
         }
     }
@@ -727,14 +942,14 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             if (Input.GetAxis ("Mouse ScrollWheel") > 0f) {
                 switch (name) {
                     case UIString.InGameHandCard:
-                        CardAnimation.stackZoomed [x] = true;
+                        CardAnimation.SetStackZoomed (x, true);
                         break;
                 }
             }
             if (Input.GetAxis ("Mouse ScrollWheel") < 0f) {
                 switch (name) {
                     case UIString.InGameHandCard:
-                        CardAnimation.stackZoomed [x] = false;
+                        CardAnimation.SetStackZoomed (x, false);
                         break;
                 }
             }
@@ -751,8 +966,18 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             SetEditor.RotateCardInCollection (x, y);
                             break;
 
+                        case UIString.LibraryMenuTokenType:
+                            LibraryMenu.EditElementToggle (0, tokenType);
+                            break;
+                        case UIString.LibraryMenuAbilityType:
+                            LibraryMenu.EditElementToggle (1, abilityType);
+                            break;
+
                         case UIString.InGameHandCard:
                             InGameUI.RotateAbilityAreaOnServer (x);
+                            break;
+                        case UIString.PlayedCard:
+                            UsedCardPreview.DestoryPreview (x);
                             break;
                     }
                 }
@@ -770,11 +995,17 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
-    public void OnMouseOverTileAction () {
+    public void OnMouseEnterTileAction () {
         if (BoardEditorMenu.instance != null) {
         }
         if (InGameUI.instance != null) {
             InGameUI.SetAreaHovers (x, y);
+        }
+    }
+
+    public void OnMouseOverTileAction () {
+        if (InGameUI.instance != null) {
+            InGameUI.CheckHideAreaCovers (x, y);
         }
     }
 
@@ -804,6 +1035,38 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     void Update () {
         if (Input.GetMouseButtonUp (0)) {
             FreeButton ();
+        }
+        if (Entered){// && !EventSystem.current.IsPointerOverGameObject ()) {
+            Over = true;
+            Entered = false;
+            if (!Pressed && interactible) {
+                OnEnter ();
+            }
+            switch (name) {
+                case UIString.Tile:
+                    OnMouseEnterTileAction ();
+                    break;
+            }
+        }
+        if (Over) {
+            if (!EventSystem.current.IsPointerOverGameObject ()) {
+                switch (name) {
+                    case "Tile":
+                        OnMouseOverTileAction ();
+                        break;
+                }
+            }
+            switch (name) {
+                case UIString.InGameScoreBar:
+                    visualTeam.DisplayDetailedHealthBar ();
+                    break;
+            }
+        } else {
+            switch (name) {
+                case UIString.InGameScoreBar:
+                    visualTeam.DisplaySimplifiedHealthBar ();
+                    break;
+            }
         }
     }
 

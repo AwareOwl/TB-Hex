@@ -22,7 +22,7 @@ public class PropertiesMenu : GOUI {
     static int propertiesMode;
 
     static bool iconOptions;
-    static string name;
+    static new string name;
 
     public void Start () {
         CreateSetPropertiesMenu ();
@@ -123,14 +123,17 @@ public class PropertiesMenu : GOUI {
     static public void CreateSetPropertiesMenu () {
         GameObject Clone;
         int maxY = 0;
+        int maxX = 8;
         int shift = 0;
         if (iconOptions) {
-            maxY = 3;
+            maxY = 5;
+            maxX = 12;
             shift = 1;
         }
 
 
-        BackgroundObject = CreateUIImage ("UI/Panel_Window_01_Sliced", 720, 540, 740, 400 + 75 * maxY + 140 * shift, false);
+        BackgroundObject = CreateUIImage ("UI/Panel_Window_01_Sliced", 720, 540, 140 + 75 * maxX, 400 + 75 * maxY + 140 * shift, false);
+        DestroyImmediate (BackgroundObject.GetComponent<UIController> ());
         BackgroundObject.GetComponent<Image> ().type = Image.Type.Tiled;
 
         Clone = CreateUIImage ("UI/Transparent", 720, 540, 10000, 10000, false);
@@ -161,7 +164,6 @@ public class PropertiesMenu : GOUI {
 
             Clone = CreateUIText (Language.ChoseNewSetIcon, 720, 530 - 75 * maxY / 2, 520, 36);
             Garbage.Add (Clone);
-            int maxX = 8;
 
             IconBackground = new GameObject [maxX, maxY];
             IconImage = new GameObject [maxX, maxY];
@@ -169,12 +171,12 @@ public class PropertiesMenu : GOUI {
             for (int y = 0; y < maxY; y++) {
                 for (int x = 0; x < maxX; x++) {
                     int number = x + y * maxX + 1;
-                    if (number >= AppDefaults.AvailableAbilities) {
+                    if (number >= AppDefaults.availableAbilities) {
                         continue;
                     }
-                    Clone = CreateUIImage ("UI/White", 460 + 75 * x, 505 + 75 * y, 60, 60, true);
+                    Clone = CreateUIImage ("UI/White", 720 - (75 * maxX / 2 - 37) + 75 * x, 595 - (75 * maxY / 2 - 37) + 75 * y, 60, 60, true);
                     IconBackground [x, y] = Clone;
-                    Clone = CreateUIButton (VisualCard.GetIconPath (number), 460 + 75 * x, 505 + 75 * y, 60, 60, true);
+                    Clone = CreateUIButton (VisualCard.GetIconPath (number), 720 - (75 * maxX / 2 - 37) + 75 * x, 595 - (75 * maxY / 2 - 37) + 75 * y, 60, 60, true);
                     Clone.name = UIString.SetEditorSelectIcon;
                     UIController UIC = Clone.GetComponent<UIController> ();
                     UIC.x = x;

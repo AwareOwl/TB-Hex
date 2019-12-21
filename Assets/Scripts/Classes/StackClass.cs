@@ -11,7 +11,10 @@ public class StackClass {
     public int topCardNumber;
 
     public CardClass getTopCard () {
-        return card [topCardNumber];
+        if (card.Count > topCardNumber) {
+            return card [topCardNumber];
+        }
+        return null;
     }
 
     public void MoveTopCard () {
@@ -45,12 +48,15 @@ public class StackClass {
         }
     }
 
-    public void RotateTopAbilityArea () {
-        RotateAbilityArea (topCardNumber);
+    public void RotateTopAbilityArea (int rotateAmount = 1) {
+        RotateAbilityArea (topCardNumber, rotateAmount);
     }
 
-    public void RotateAbilityArea (int cardNumber) {
-        card [cardNumber].RotateArea ();
+    public void RotateAbilityArea (int cardNumber, int rotateAmount = 1) {
+        if (!enabled [cardNumber]) {
+            return;
+        }
+        card [cardNumber].RotateArea (rotateAmount);
     }
 
     public StackClass () {
@@ -65,6 +71,7 @@ public class StackClass {
             enabled [x] = stack.enabled [x];
             //Debug.Log (enabled [x]);
         }
+        this.topCardNumber = stack.topCardNumber;
         this.atLeast1Enabled = stack.atLeast1Enabled;
     }
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class VisualCard {
 
+    public Collider collider;
     CardClass card;
     public GameObject Anchor;
     public GameObject Background;
@@ -62,6 +63,7 @@ public class VisualCard {
             case 11:
             case 22:
             case 38:
+            case 42:
                 Area.DisableAbilityArea ();
                 break;
         }
@@ -110,7 +112,7 @@ public class VisualCard {
 
     public void EnableHighlight () {
         if (Highlight == null) {
-            GameObject Clone = GOUI.CreateSprite ("Textures/Other/Selection");
+            GameObject Clone = GOUI.CreateBackgroundSprite ("Textures/Other/Selection");
             Clone.transform.SetParent (Background.transform, true);
             Clone.transform.localPosition = new Vector3 (0, 0, 0);
             Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
@@ -147,6 +149,7 @@ public class VisualCard {
         Background.transform.localPosition = new Vector3 (0, 0, -0.2f);
         Background.GetComponent<Renderer> ().material.color = Color.black;
         Background.AddComponent<UIController> ().card = card;
+        collider = Background.GetComponent<Collider> ();
         Background.name = "Card";
 
         Area = new VisualArea ();

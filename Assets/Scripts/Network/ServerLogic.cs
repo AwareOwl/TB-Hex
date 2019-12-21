@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -57,7 +58,9 @@ public class ServerLogic : MonoBehaviour {
         }
         client.UserName = userName;
         client.GameMode = ServerData.GetUserSelectedGameMode (accountName);
+        LoginReward (client);
         client.TargetLogIn (client.connectionToClient, accountName, userName);
+
 
         AccountVersionManager.CheckAccountVersion (client);
     }
@@ -98,6 +101,8 @@ public class ServerLogic : MonoBehaviour {
         }
         HandClass hand2 = new HandClass ();
         AIClass AI2 = new AIClass ();
+        //hand2.Init (1);
+        //hand2.stack [0].Add (new CardClass (2, 0, 4, 51));
         hand2.GenerateRandomHand (gameMode, AI2);
         MatchClass match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
             new PlayerPropertiesClass (1, AI1, client.AccountName, client.UserName, hand1, client),
@@ -145,7 +150,7 @@ public class ServerLogic : MonoBehaviour {
         }
         for (int x = 1; x <= match.numberOfPlayers; x++) {
             PlayerClass player = match.Player [x];
-            if (player == null) {
+            if (player == null || player.properties == null) {
                 continue;
             }
             ClientInterface client = player.properties.client;
@@ -161,6 +166,7 @@ public class ServerLogic : MonoBehaviour {
             if (player != null) {
                 if (player.properties.AI != null) {
                     match.RunAI ();
+                    
                 }
                 break;
             }
@@ -215,6 +221,76 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SetPlayerModeSelectedSet (client.AccountName, client.GameMode, selectedSetId);
     }
 
+    static public void EnterCode (ClientInterface client, string code) {
+        switch (code) {
+            case "cowlevel":
+                if (System.DateTime.Now.Year < 2020 || (System.DateTime.Now.Month <= 3 && System.DateTime.Now.Year <= 2020)) {
+                    Debug.Log ("Test");
+                    //UnlockAllAvatars (client);
+                    UnlockAllTokensAndAbilities (client);
+                    client.TargetLoadUnlockedContentData (client.connectionToClient, 2);
+                } else {
+                    client.TargetShowMessage (client.connectionToClient, Language.CodeHasExpiredKey);
+                }
+                break;
+            default:
+                client.TargetShowMessage (client.connectionToClient, Language.InvalidCodeKey);
+                break;
+
+        }
+
+    }
+
+    static public void UnlockAllAvatars (ClientInterface client) {
+        string accountName = client.AccountName;
+        bool [] previouslyUnlockedAvatars = ServerData.GetUserUnlockedAvatars (accountName);
+        int avatarCount = AppDefaults.availableAvatars;
+        List<int> avatarNumber = new List<int> ();
+        for (int x = 1; x < avatarCount; x++) {
+            if (!previouslyUnlockedAvatars [x]) {
+                avatarNumber.Add (x);
+            }
+        }
+        ServerData.UnlockAllAvatars (accountName);
+        if (client != null) {
+            if (avatarNumber.Count > 0) {
+                client.TargetDownloadUnlockedContentData3 (client.connectionToClient, avatarNumber.ToArray (), null, null);
+            }
+        }
+    }
+
+    static public void UnlockAllTokensAndAbilities (ClientInterface client) {
+        string accountName = client.AccountName;
+        bool [] previouslyUnlockedAbilities = ServerData.GetUserUnlockedAbilities (accountName);
+        int abilityCount = AppDefaults.availableAbilities;
+        List<int> abilityNumber = new List<int> ();
+        for (int x = 0; x < abilityCount; x++) {
+            if (!previouslyUnlockedAbilities [x]) {
+                abilityNumber.Add (x);
+            }
+        }
+        bool [] previouslyUnlockedTokens = ServerData.GetUserUnlockedTokens (accountName);
+        int tokenCount = AppDefaults.availableTokens;
+        List<int> tokenNumber = new List<int> ();
+        for (int x = 0; x < tokenCount; x++) {
+            if (!previouslyUnlockedTokens [x]) {
+                tokenNumber.Add (x);
+            }
+        }
+        ServerData.UnlockAllAbilities (accountName);
+        ServerData.UnlockAllTokens (accountName);
+        if (client != null) {
+            if (abilityNumber.Count > 0 || tokenNumber.Count > 0) {
+                client.TargetDownloadUnlockedContentData3 (client.connectionToClient, null, abilityNumber.ToArray (), tokenNumber.ToArray ());
+            }
+        }
+    }
+
+    static public void LoginReward (ClientInterface client) {
+        string accountName = client.AccountName;
+        LevelUpReward (client, accountName, ServerData.GetUserLevel (accountName));
+    }
+
     static public void LevelUpReward (ClientInterface client, string accountName, int reachedLevel) {
         bool [] previouslyUnlockedAbilities = ServerData.GetUserUnlockedAbilities (accountName);
         bool [] previouslyUnlockedTokens = ServerData.GetUserUnlockedTokens (accountName);
@@ -250,6 +326,31 @@ public class ServerLogic : MonoBehaviour {
                 tokenNumber.Add (14);
             }
         }
+        if (reachedLevel >= 8) {
+            if (!previouslyUnlockedAbilities [45]) {
+                abilityNumber.Add (45);
+            }
+        }
+        if (reachedLevel >= 9) {
+            if (!previouslyUnlockedAbilities [46]) {
+                abilityNumber.Add (46);
+            }
+        }
+        if (reachedLevel >= 10) {
+            if (!previouslyUnlockedAbilities [48]) {
+                abilityNumber.Add (48);
+            }
+        }
+        if (reachedLevel >= 11) {
+            if (!previouslyUnlockedAbilities [49]) {
+                abilityNumber.Add (49);
+            }
+        }
+        if (reachedLevel >= 12) {
+            if (!previouslyUnlockedAbilities [62]) {
+                abilityNumber.Add (62);
+            }
+        }
         if (abilityNumber.Count > 0) {
             ServerData.SetUserUnlockedAbilities (accountName, abilityNumber.ToArray ());
         }
@@ -257,10 +358,45 @@ public class ServerLogic : MonoBehaviour {
             ServerData.SetUserUnlockedTokens (accountName, tokenNumber.ToArray ());
         }
         if (client != null) {
-            if (abilityNumber.Count > 0 && tokenNumber.Count > 0) {
-                client.TargetDownloadUnlockedContentData2 (client.connectionToClient, abilityNumber.ToArray (), tokenNumber.ToArray ());
+            if (abilityNumber.Count > 0 || tokenNumber.Count > 0) {
+                client.TargetDownloadUnlockedContentData2 (client.connectionToClient, null, abilityNumber.ToArray (), tokenNumber.ToArray ());
             }
         }
+    }
+
+    static public void SaveBossResult (ClientInterface client, int id, PlayerClass [] player) {
+        string accountName = client.AccountName;
+        string bossName = ServerData.GetGameModeName (id);
+        int bossNumber = BossMenu.GameModeNameToBossID (bossName);
+        ServerData.SetUserFinishedBoss (accountName, id);
+        bool [] previouslyUnlockedAvatars = ServerData.GetUserUnlockedAvatars (accountName);
+        int unlockedAvatar = bossNumber + 9;
+        ServerData.SetUserUnlockedAvatar (accountName, unlockedAvatar);
+        if (!previouslyUnlockedAvatars [unlockedAvatar]) {
+            if (client != null) {
+                client.TargetDownloadUnlockedContentData2 (client.connectionToClient, new int [1] { unlockedAvatar }, null, null );
+            }
+        }
+        if (bossNumber == 7) {
+            if (player [2].lost && player [3].lost) {
+                ServerData.SetUserUnlockedBoss (accountName, 8);
+            }
+            if (player [2].lost && player [4].lost) {
+                ServerData.SetUserUnlockedBoss (accountName, 10);
+            }
+            if (player [3].lost && player [4].lost) {
+                ServerData.SetUserUnlockedBoss (accountName, 9);
+            }
+        }
+        if (bossNumber == 11) {
+            ServerData.SetUserUnlockedBoss (accountName, 12);
+        }
+    }
+
+    static public void SaveTutorialResult (ClientInterface client, int id) {
+        string accountName = client.AccountName;
+        string tutorialName = ServerData.GetGameModeName (id);
+        ServerData.SetUserFinishedTutorial (accountName, id);
     }
 
     static public void SavePuzzleResult (ClientInterface client, string accountName, int id) {
@@ -289,7 +425,7 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SetUserUnlockedAbilities (accountName, abilityArray);
         ServerData.SetUserUnlockedTokens (accountName, tokenArray);
         if (client != null) {
-            client.TargetDownloadUnlockedContentData2 (client.connectionToClient, abilityArray, tokenArray);
+            client.TargetDownloadUnlockedContentData2 (client.connectionToClient, null, abilityArray, tokenArray);
         }
     }
 
@@ -300,6 +436,72 @@ public class ServerLogic : MonoBehaviour {
         client.TargetDownloadUnlockedContentData (client.connectionToClient, abilities, tokens);
 
     }
+
+    static public void DownloadDataToBossMenu (ClientInterface client) {
+        string accountName = client.AccountName;
+        int [] list = ServerData.GetAllGameModes ();
+        bool [] unlockedBosses = ServerData.GetUserUnlockedBosses (accountName);
+        List<int> officialIds = new List<int> ();
+        List<int> officialBossNumbers = new List<int> ();
+        List<bool> officialFinished = new List<bool> ();
+        List<bool> unlocked = new List<bool> ();
+
+        int [] finished = ServerData.GetUserFinishedBosses (accountName);
+
+        foreach (int id in list) {
+            string [] owners = ServerData.GetGameModeOwners (id);
+            if (ServerData.GetGameModeIsOfficial (id) && ServerData.GetGameModeIsBoss (id)) {
+                officialIds.Add (id);
+            }
+        }
+        officialIds.Sort ((a, b) => (a.CompareTo (b)));
+
+        foreach (int id in officialIds) {
+            int number = BossMenu.GameModeNameToBossID (ServerData.GetGameModeName (id));
+            officialBossNumbers.Add (number);
+            officialFinished.Add (System.Array.IndexOf (finished, id) != -1);
+            if (number < unlockedBosses.Length) {
+                unlocked.Add (unlockedBosses [number]);
+            } else {
+                unlocked.Add (true);
+            }
+        }
+
+        client.TargetDownloadBossList (client.connectionToClient,
+            officialBossNumbers.ToArray (), officialIds.ToArray (), officialFinished.ToArray (), unlocked.ToArray ());
+    }
+
+    static public void DownloadDataToProfileSettings (ClientInterface client) {
+        string accountName = client.AccountName;
+        bool [] avatars = ServerData.GetUserUnlockedAvatars (accountName);
+
+        client.TargetDownloadDataToProfileSettings (client.connectionToClient, avatars);
+    }
+
+    static public void DownloadDataToTutorialMenu (ClientInterface client) {
+        string accountName = client.AccountName;
+        int [] list = ServerData.GetAllGameModes ();
+        List<int> officialIds = new List<int> ();
+        List<string> officialNames = new List<string> ();
+
+        foreach (int id in list) {
+            string [] owners = ServerData.GetGameModeOwners (id);
+            if (ServerData.GetGameModeIsOfficial (id) && ServerData.GetGameModeIsTutorial (id)) {
+                if (CheckIfUserShouldBeAllowedToDoPuzzle (accountName, id)) {
+                    officialIds.Add (id);
+                }
+            }
+        }
+        officialIds.Sort ((a, b) => (a.CompareTo (b)));
+
+        foreach (int id in officialIds) {
+            officialNames.Add (ServerData.GetGameModeName (id));
+        }
+
+        client.TargetDownloadDataToTutorialMenu (client.connectionToClient,
+            officialNames.ToArray (), officialIds.ToArray ());
+    }
+
 
     static public void DownloadDataToPuzzleMenu (ClientInterface client) {
         string accountName = client.AccountName;
@@ -382,12 +584,215 @@ public class ServerLogic : MonoBehaviour {
         MatchClass match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
             new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, AI2, "AI opponent", ServerData.GetGameModeName (id), hand2, null) });
-        PlayerPropertiesClass properties = match.Player [2].properties;
-        properties.enabled = false;
+        PlayerClass player = match.Player [2];
+        PlayerPropertiesClass properties = player.properties;
+        player.enabled = false;
         properties.AI.puzzle = true;
         match.properties.special = true;
+        match.properties.specialType = 1;
         StartMatch (match);
         return match;
+    }
+
+    static public MatchClass StartBoss (ClientInterface client, int id, string bossName2, string bossName3 = "", string bossName4 = "") {
+        
+        string accountName = client.AccountName;
+        int gameMode = id;
+
+        CardPoolClass cardPool = new CardPoolClass ();
+        cardPool.LoadFromString (ServerData.GetCardPool (id));
+
+        HandClass hand1 = new HandClass ();
+        int selectedSet = ServerData.GetAllPlayerModeSets (accountName, gameMode) [0];
+        hand1.LoadFromFile (client.AccountName, gameMode, selectedSet);
+        if (!hand1.IsValid (gameMode)) {
+            int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameMode);
+            client.TargetInvalidSet (client.connectionToClient, minimumNumberOfCardsInStack);
+            return null;
+        }
+
+        AIClass AI2 = new AIClass ();
+        string gameModeName = ServerData.GetGameModeName (id);
+        int bossNumber = int.Parse (gameModeName.Substring (gameModeName.IndexOf ('#') + 1));
+        HandClass hand2 = new HandClass ();
+        hand2.GenerateBossHand (bossNumber);
+        HandClass hand3 = new HandClass ();
+        HandClass hand4 = new HandClass ();
+        switch (bossNumber) {
+            case 6:
+                hand3.GenerateBossHand (bossNumber, 3);
+                break;
+            case 7:
+                hand3.GenerateBossHand (bossNumber, 3);
+                hand4.GenerateBossHand (bossNumber, 4);
+                break;
+        }
+
+        MatchClass match = null;
+        switch (bossNumber) {
+            case 6: {
+                AIClass AI3 = new AIClass ();
+                match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
+                    new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
+                    new PlayerPropertiesClass (2, AI2, "AI opponent", bossName2, hand2, null),
+                    new PlayerPropertiesClass (1, AI3, "AI opponent", bossName3, hand3, null) });
+                }
+        break;
+            case 7: {
+                AIClass AI3 = new AIClass ();
+                AIClass AI4 = new AIClass ();
+                match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
+                    new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
+                    new PlayerPropertiesClass (2, AI2, "AI opponent", bossName2, hand2, null),
+                    new PlayerPropertiesClass (2, AI3, "AI opponent", bossName3, hand3, null),
+                    new PlayerPropertiesClass (2, AI4, "AI opponent", bossName4, hand4, null) });
+            }
+            break;
+            default:
+                match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
+                    new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
+                    new PlayerPropertiesClass (2, AI2, "AI opponent", bossName2, hand2, null) });
+                break;
+        }
+        for (int x = 2; x <= 4; x++) {
+            if (match.numberOfPlayers < x) {
+                break;
+            }
+            PlayerPropertiesClass properties = match.Player [x].properties;
+            properties.AI.boss = true;
+            switch (x) {
+                default:
+                    switch (bossNumber) {
+                        default:
+                            properties.avatar = bossNumber + 9;
+                            properties.specialStatus = bossNumber;
+                            break;
+                        case 7:
+                            properties.avatar = 18;
+                            properties.specialStatus = 7;
+                            break;
+                    }
+                    break;
+                case 3:
+                    switch (bossNumber) {
+                        case 6:
+                            properties.avatar = 16;
+                            properties.specialStatus = 0;
+                            break;
+                        case 7:
+                            properties.avatar = 19;
+                            properties.specialStatus = 7;
+                            break;
+                    }
+                    break;
+                case 4:
+                    switch (bossNumber) {
+                        case 7:
+                            properties.avatar = 17;
+                            properties.specialStatus = 7;
+                            break;
+                    }
+                    break;
+            }
+        }
+        match.properties.special = true;
+        match.properties.specialType = 2;
+        StartMatch (match);
+        return match;
+    }
+
+    static public MatchClass StartTutorial (ClientInterface client, int id, string tutorialName) {
+
+        string accountName = client.AccountName;
+        int gameMode = id;
+
+        string gameModeName = ServerData.GetGameModeName (id);
+        int tutorialNumber = int.Parse (gameModeName.Substring (gameModeName.IndexOf ('#') + 1));
+
+        HandClass hand1 = new HandClass ();
+        hand1.GenerateTutorialHand (tutorialNumber, true);
+
+        AIClass AI2 = new AIClass ();
+        PlayerPropertiesClass properties;
+
+        MatchClass match = null;
+        switch (tutorialNumber) {
+            case 1:
+                match = MatchMakingClass.CreateGame (gameMode, 0, new PlayerPropertiesClass [] {
+            new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client) });
+
+                match.properties.scoreLimit = 24;
+                match.properties.turnWinCondition = false;
+                break;
+            case 2:
+                match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
+            new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
+                new PlayerPropertiesClass (2, AI2, "AI opponent", tutorialName, null, null) });
+                match.properties.scoreLimit = 50;
+                match.properties.turnWinCondition = false;
+
+
+                properties = match.Player [2].properties;
+                match.Player [2].enabled = false;
+                break;
+            case 3:
+            case 4:
+                HandClass hand2 = new HandClass ();
+                hand2.GenerateTutorialHand (tutorialNumber, false);
+
+                match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
+            new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
+            new PlayerPropertiesClass (2, AI2, "AI opponent", tutorialName, hand2, null) });
+
+                if (tutorialNumber == 3) {
+                    match.properties.scoreLimit = 125;
+                    match.properties.turnWinCondition = false;
+                } else {
+                    match.properties.scoreLimit = 250;
+                    match.properties.turnLimit = 10;
+                }
+
+                properties = match.Player [2].properties;
+                break;
+        }
+        match.properties.special = true;
+        match.properties.specialType = 3;
+        match.properties.specialId = tutorialNumber;
+        StartMatch (match);
+        return match;
+    }
+
+
+
+    static public void EditBossSet (ClientInterface client, int bossId) {
+        string accountName = client.AccountName;
+        int gameMode = bossId;
+        if (!ServerData.GameModeContentExists (gameMode)) {
+            client.TargetShowMessage (client.connectionToClient, Language.YouNeedToSelectSomethingFirstKey);
+            return;
+        }
+        int [] setIds = ServerData.GetAllPlayerModeSets (accountName, gameMode);
+        int setId;
+        HandClass hand = new HandClass ();
+        if (setIds.Length == 0) {
+            setId = ServerData.CreatePlayerModeSet (accountName, gameMode, hand.HandToString(), "Set");
+        } else {
+            setId = setIds [0];
+        }
+        string [] cardPool = ServerData.GetCardPool (gameMode);
+        bool [] unlockedAbilities = ServerData.GetUserUnlockedAbilities (accountName);
+        bool [] unlockedTokens = ServerData.GetUserUnlockedTokens (accountName);
+        hand.LoadFromFile (accountName, gameMode, setId);
+        string [] set = hand.HandToString ();
+        string name = "";
+        int iconNumber = 1;
+        bool usedCardsArePutOnBottomOfStack = true;
+        int numberOfStacks = 4;
+        int minimumNumberOfCardsOnStack = 2;
+        bool everyCardCanBeAddedToSetAnyNumberOfTimes = ServerData.GetGameModeEveryCardCanBeAddedToSetAnyNumberOfTimes (gameMode);
+        client.TargetDownloadDataToSetEditor (client.connectionToClient, setId, 1, cardPool, unlockedAbilities, unlockedTokens, set, 
+            name, iconNumber, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack, everyCardCanBeAddedToSetAnyNumberOfTimes);
+
     }
 
 
@@ -405,7 +810,9 @@ public class ServerLogic : MonoBehaviour {
         bool usedCardsArePutOnBottomOfStack = ServerData.GetGameModeUsedCardsArePutOnBottomOfStack (gameMode);
         int numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameMode);
         int minimumNumberOfCardsOnStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (gameMode);
-        client.TargetDownloadDataToSetEditor (client.connectionToClient, cardPool, unlockedAbilities, unlockedTokens, set, name, iconNumber, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack);
+        bool everyCardCanBeAddedToSetAnyNumberOfTimes = ServerData.GetGameModeEveryCardCanBeAddedToSetAnyNumberOfTimes (gameMode);
+        client.TargetDownloadDataToSetEditor (client.connectionToClient, setId, 0, cardPool, unlockedAbilities, unlockedTokens, set,
+            name, iconNumber, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsOnStack, everyCardCanBeAddedToSetAnyNumberOfTimes);
     }
 
 
@@ -436,6 +843,7 @@ public class ServerLogic : MonoBehaviour {
         List<int> avatars = new List<int> ();
         List<string> userNames = new List<string> ();
         List<bool> AI = new List<bool> ();
+        List<int> teams = new List<int> ();
 
         int count = CustomGameClass.GetNumberOfSlots (customGame.matchType);
         for (int x = 0; x < count; x++) {
@@ -454,13 +862,14 @@ public class ServerLogic : MonoBehaviour {
                 userNames.Add ("");
             }
             AI.Add (tAI);
+            teams.Add (customGame.team [x]);
         }
         foreach (ClientInterface client in customGame.clients) {
             if (client != null) {
                 bool isHost = client == customGame.host;
                 client.TargetDownloadCustomGameRoom (client.connectionToClient,
                     isHost, customGame.name, customGame.matchType, 
-                    avatars.ToArray (), userNames.ToArray (), AI.ToArray ());
+                    avatars.ToArray (), userNames.ToArray (), AI.ToArray (), teams.ToArray());
             }
         }
     }
@@ -503,7 +912,7 @@ public class ServerLogic : MonoBehaviour {
         foreach (int id in list) {
             string [] owners = ServerData.GetGameModeOwners (id);
             if (ServerData.GetGameModeIsOfficial (id)) {
-                if (!ServerData.GetGameModeIsPuzzle (id)) {
+                if (!ServerData.GetGameModeIsPuzzle (id) &&! ServerData.GetGameModeIsTutorial (id) && !ServerData.GetGameModeIsBoss (id)) {
                     officialIds.Add (id);
                 }
             } else {
@@ -551,17 +960,19 @@ public class ServerLogic : MonoBehaviour {
         int numberOfStacks = ServerData.GetGameModeNumberOfStacks (id);
         int minimumNumberOfCardsInStack = ServerData.GetGameModeMinimumNumberOfCardsInStack (id);
         bool usedCardsArePutOnBottomOfStack = ServerData.GetGameModeUsedCardsArePutOnBottomOfStack (id);
+        bool everyCardCanBeAddedToSetAnyNumberOfTimes = ServerData.GetGameModeEveryCardCanBeAddedToSetAnyNumberOfTimes (id);
 
 
         client.TargetDownloadGameModeSettingsToEditor (client.connectionToClient, 
             isClientOwner,
             hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue,
-            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack);
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack, everyCardCanBeAddedToSetAnyNumberOfTimes);
     }
 
     static public void SaveGameModeSettings (ClientInterface client, int id,
         bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
-        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack) {
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack,
+        bool everyCardCanBeAddedToSetAnyNumberOfTimes) {
         if (!ServerData.IsGameModeOwner (id, client.AccountName)) {
             return;
         }
@@ -573,6 +984,20 @@ public class ServerLogic : MonoBehaviour {
         ServerData.SetGameModeNumberOfStacks (id, numberOfStacks);
         ServerData.SetGameModeMinimumNumberOfCardsInStack (id, minimumNumberOfCardsInStack);
         ServerData.SetGameModeUsedCardsArePutOnBottomOfStack (id, usedCardsArePutOnBottomOfStack);
+        ServerData.SetGameModeEveryCardCanBeAddedToSetAnyNumberOfTimes (id, everyCardCanBeAddedToSetAnyNumberOfTimes);
+    }
+
+    static public void SaveGameModePlayerSettings (ClientInterface client, int id, int [] statuses) {
+        if (!ServerData.IsGameModeOwner (id, client.AccountName)) {
+            return;
+        }
+        ServerData.SetGameModeStatuses (id, statuses);
+        client.TargetShowMessage (client.connectionToClient, Language.SettingsHaveBeenSavedKey);
+    }
+
+    static public void DownloadGameModePlayerSettings (ClientInterface client, int id) {
+        int [] statuses = ServerData.GetGameModeStatuses (id);
+        client.TargetDownloadGameModePlayerSettings (client.connectionToClient, statuses);
     }
 
     static public void DownloadProfileData (ClientInterface client) {
@@ -600,7 +1025,7 @@ public class ServerLogic : MonoBehaviour {
 
 
     static public int ExperienceNeededToLevelUp (int level) {
-        return 160 + 40 * level;
+        return 170 + 30 * level;
     }
 
     static public void AddExperience (ClientInterface client, string accountName, int experienceToAdd) {
@@ -763,16 +1188,19 @@ public class ServerLogic : MonoBehaviour {
     }
 
     static public void SavePlayerModeSet (ClientInterface client, string [] lines, int setId) {
-        ServerData.SavePlayerModeSet (client.AccountName, client.GameMode, setId, lines);
+        SavePlayerModeSet (client, client.GameMode, lines, setId);
+        //client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (1));
+    }
+
+    static public void SavePlayerModeSet (ClientInterface client, int gameMode, string [] lines, int setId) {
+        ServerData.SavePlayerModeSet (client.AccountName, gameMode, setId, lines);
         HandClass hand = new HandClass ();
-        int gameMode = client.GameMode;
         hand.LoadFromFileString (gameMode, lines);
         if (hand.IsValid (gameMode)) {
             client.TargetShowMessage (client.connectionToClient, Language.SetSavedKey);
         } else {
             client.TargetInvalidSavedSet (client.connectionToClient);
         }
-        //client.TargetDownloadCardPoolToEditor (client.connectionToClient, ServerData.GetCardPool (1));
     }
 
     static public void SaveSetProperties (ClientInterface client, int setId, string setName, int iconNumber) {
@@ -818,7 +1246,7 @@ public class ServerLogic : MonoBehaviour {
         if (!match.properties.allowToRotateAbilityAreas) {
             return;
         }
-        match.Player [playerNumber].RotateTopCard (stackNumber);
+        match.RotateAbilityArea (playerNumber, stackNumber);
         client.TargetCurrentGameRotateAbilityArea (client.connectionToClient, stackNumber);
     }
 

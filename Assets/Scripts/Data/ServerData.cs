@@ -32,12 +32,18 @@ public class ServerData : MonoBehaviour {
     static public string NumberOfStacksKey = "NumberOfStacks";
     static public string MinimumNumberOfCardsInStackKey = "MinimumNumberOfCardsInStack";
     static public string UsedCardsArePutOnBottomOfStackKey = "UsedCardsArePutOnBottomOfStack";
+    static public string EveryCardCanBeAddedToSetAnyNumberOfTimes = "EveryCardCanBeAddedToSetAnyNumberOfTimes";
+    static public string StatusesKey = "Statuses";
 
     static public string IsCardPoolLegalKey = "IsCardPoolLegalKey";
     static public string OfficialKey = "Official";
     static public string GameModeOfficialKey = "GameModeOfficialKey";
     static public string GameModePuzzleKey = "GameModePuzzleKey";
+    static public string GameModeBossKey = "GameModeBoss";
+    static public string GameModeTutorialKey = "GameModeTutorial";
     static public string BoardPuzzleKey = "BoardPuzzleKey";
+    static public string BoardBossKey = "BoardBoss";
+    static public string BoardTutorialKey = "BoardTutorial";
     static public string UserSelectedGameModeKey = "UserSelectedGameMode";
     static public string UserLevelKey = "UserLevel";
     static public string UserExperienceKey = "UserExperience";
@@ -139,6 +145,30 @@ public class ServerData : MonoBehaviour {
             Directory.CreateDirectory (path);
         }
         return path;
+    }
+
+    static public int [] GetGameModeStatuses (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), StatusesKey);
+        if (s != null && s != "") {
+            string [] splited = s.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            int count = splited.Length;
+            int [] statuses = new int [count];
+            for (int x = 0; x < count; x++) {
+                statuses [x] = int.Parse (splited [x]);
+            }
+            return statuses;
+        }
+        return new int [] { 0, 0, 0, 0, 0 };
+    }
+
+    static public void SetGameModeStatuses (int id, int [] value) {
+        string path = GameModeContentPath (id);
+        string s = "";
+        for (int x = 0; x < value.Length; x++) {
+            s += value [x].ToString () + " ";
+        }
+        SetKeyData (KeyDataPath (path), StatusesKey, s);
     }
 
     static public bool GetGameModeHasScoreWinCondition (int id) {
@@ -261,6 +291,20 @@ public class ServerData : MonoBehaviour {
         }
         SetGameModeUsedCardsArePutOnBottomOfStack (id, true);
         return true;
+    }
+
+    static public void SetGameModeEveryCardCanBeAddedToSetAnyNumberOfTimes (int id, bool value) {
+        string path = GameModeContentPath (id);
+        string s = SetKeyData (KeyDataPath (path), EveryCardCanBeAddedToSetAnyNumberOfTimes, value.ToString ());
+    }
+
+    static public bool GetGameModeEveryCardCanBeAddedToSetAnyNumberOfTimes (int id) {
+        string path = GameModeContentPath (id);
+        string s = GetKeyData (KeyDataPath (path), EveryCardCanBeAddedToSetAnyNumberOfTimes);
+        if (s != null && s != "") {
+            return Convert.ToBoolean (s);
+        }
+        return false;
     }
 
     static public bool SetGameModeUsedCardsArePutOnBottomOfStack (int id, bool value) {
@@ -504,6 +548,30 @@ public class ServerData : MonoBehaviour {
         return isPuzzleString;
     }
 
+    static public bool GetBoardIsBoss (int boardId) {
+        string path = BoardContentPath (boardId);
+        string s = GetKeyData (KeyDataPath (path), BoardBossKey);
+        return Convert.ToBoolean (s);
+    }
+
+    static public void SetBoardIsBoss (int boardId, bool isBoss) {
+        string path = BoardContentPath (boardId);
+        string isBossString = isBoss.ToString ();
+        SetKeyData (KeyDataPath (path), BoardBossKey, isBossString);
+    }
+
+    static public bool GetBoardIsTutorial (int boardId) {
+        string path = BoardContentPath (boardId);
+        string s = GetKeyData (KeyDataPath (path), BoardTutorialKey);
+        return Convert.ToBoolean (s);
+    }
+
+    static public void SetBoardIsTutorial (int boardId, bool isTutorial) {
+        string path = BoardContentPath (boardId);
+        string isTutorialString = isTutorial.ToString ();
+        SetKeyData (KeyDataPath (path), BoardTutorialKey, isTutorialString);
+    }
+
     static public bool GetGameModeIsOfficial (int gameModeId) {
         string path = GameModeContentPath (gameModeId);
         string s = GetKeyData (KeyDataPath (path), GameModeOfficialKey);
@@ -517,17 +585,40 @@ public class ServerData : MonoBehaviour {
         return isOfficialString;
     }
 
+    static public bool GetGameModeIsTutorial (int gameModeId) {
+        string path = GameModeContentPath (gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GameModeTutorialKey);
+        return Convert.ToBoolean (s);
+    }
+
+    static public void SetGameModeIsTutorial (int gameModeId, bool isTutorial) {
+        string path = GameModeContentPath (gameModeId);
+        string isTutorialString = isTutorial.ToString ();
+        SetKeyData (KeyDataPath (path), GameModeTutorialKey, isTutorialString);
+    }
+
+    static public bool GetGameModeIsBoss (int gameModeId) {
+        string path = GameModeContentPath (gameModeId);
+        string s = GetKeyData (KeyDataPath (path), GameModeBossKey);
+        return Convert.ToBoolean (s);
+    }
+
+    static public void SetGameModeIsBoss (int gameModeId, bool isBoss) {
+        string path = GameModeContentPath (gameModeId);
+        string isBossString = isBoss.ToString ();
+        SetKeyData (KeyDataPath (path), GameModeBossKey, isBossString);
+    }
+
     static public bool GetGameModeIsPuzzle (int gameModeId) {
         string path = GameModeContentPath (gameModeId);
         string s = GetKeyData (KeyDataPath (path), GameModePuzzleKey);
         return Convert.ToBoolean (s);
     }
 
-    static public string SetGameModeIsPuzzle (int gameModeId, bool isPuzzle) {
+    static public void SetGameModeIsPuzzle (int gameModeId, bool isPuzzle) {
         string path = GameModeContentPath (gameModeId);
         string isPuzzleString = isPuzzle.ToString ();
         SetKeyData (KeyDataPath (path), GameModePuzzleKey, isPuzzleString);
-        return isPuzzleString;
     }
 
     static public string GameModeBoardsPath (int gameModeId) {
@@ -596,6 +687,32 @@ public class ServerData : MonoBehaviour {
         string path = BoardContentPath (boardId) + "GameModes.txt";
         return path;
     }
+
+    static public int [] GetAllNonSpecialBoards () {
+        string [] s = Directory.GetDirectories (BoardContentPath ());
+        List<int> ids = new List<int> ();
+        for (int x = 0; x < s.Length; x++) {
+            s [x] = s [x].Substring (s [x].LastIndexOf ('/') + 1);
+            int id = int.Parse (s [x]);
+            if (!GetBoardIsPuzzle (id) && !GetBoardIsBoss (id) && !GetBoardIsTutorial (id)) {
+                ids.Add (id);
+            }
+        }
+        return ids.ToArray ();
+    }
+
+    static public int [] GetAllOfficialNonSpecialBoards () {
+        int [] ids = GetAllNonSpecialBoards ();
+        List<int> officialIds = new List<int> ();
+        foreach (int id in ids) {
+            if (GetBoardIsOfficial (id)) {
+                officialIds.Add (id);
+            }
+        }
+        officialIds.Sort ((a, b) => (a.CompareTo (b)));
+        return officialIds.ToArray ();
+    }
+
 
     static public int [] GetAllNonPuzzleBoards () {
         string [] s = Directory.GetDirectories (BoardContentPath ());
@@ -985,7 +1102,7 @@ public class ServerData : MonoBehaviour {
         return s;
     }
 
-    static public void CreateNewPuzzle (string patchName, string puzzleName, string [] board, string [] cardPool, int numberOfTurns) {
+    static public void CreateNewPuzzle (string puzzleName, string [] board, string [] cardPool, int numberOfTurns) {
         int newId;
         int newBoardId;
         newId = CreateNewGameMode ("");
@@ -995,9 +1112,35 @@ public class ServerData : MonoBehaviour {
         SetGameModeIsPuzzle (newId, true);
         SetGameModeTurnWinConditionValue (newId, numberOfTurns);
         SetGameModeUsedCardsArePutOnBottomOfStack (newId, false);
-        newBoardId = SaveNewBoard (newId, patchName, "Board", board);
+        newBoardId = SaveNewBoard (newId, "", "Board", board);
         SetBoardIsOfficial (newBoardId, true);
         SetBoardIsPuzzle (newBoardId, true);
+    }
+
+    static public int CreateNewBoss (string bossName, string [] board, string [] cardPool) {
+        int newId;
+        int newBoardId;
+        newId = CreateNewGameMode ("");
+        SetCardPool (newId, cardPool);
+        SetGameModeName (newId, bossName);
+        SetGameModeIsOfficial (newId, true);
+        SetGameModeIsBoss (newId, true);
+        newBoardId = SaveNewBoard (newId, "", "Board", board);
+        SetBoardIsOfficial (newBoardId, true);
+        SetBoardIsBoss (newBoardId, true);
+        return newId;
+    }
+
+    static public void CreateNewTutorial (string tutorialName, string [] board) {
+        int newId;
+        int newBoardId;
+        newId = CreateNewGameMode ("");
+        SetGameModeName (newId, tutorialName);
+        SetGameModeIsOfficial (newId, true);
+        SetGameModeIsTutorial (newId, true);
+        newBoardId = SaveNewBoard (newId, "", "Board", board);
+        SetBoardIsOfficial (newBoardId, true);
+        SetBoardIsTutorial (newBoardId, true);
     }
 
 
@@ -1026,7 +1169,7 @@ public class ServerData : MonoBehaviour {
         int [] allIds = GetAllGameModes ();
         List<int> offIds = new List<int> ();
         foreach (int id in allIds) {
-            if (GetGameModeIsOfficial (id)) {
+            if (GetGameModeIsOfficial (id) && !GetGameModeIsBoss (id)) {
                 offIds.Add (id);
             }
         }
@@ -1175,6 +1318,173 @@ public class ServerData : MonoBehaviour {
         return path;
     }
 
+    static public string UserUnlockedBossesPath (string accountName) {
+        return UserUnlocksPath (accountName) + "Bosses.txt";
+    }
+
+    static public bool [] GetUserUnlockedBosses (string accountName) {
+        int [] newArray = new int [] { 1, 2, 3, 4, 5, 6, 7, 11 };
+        if (UserExists (accountName)) {
+            string path = UserUnlockedBossesPath (accountName);
+            if (File.Exists (path)) {
+                string [] lines = File.ReadAllLines (path);
+                int linesCount = lines.Length;
+                int count = AppDefaults.availableBosses;
+                bool [] values = new bool [count];
+                for (int x = 0; x < count; x++) {
+                    if (x < linesCount && lines [x] == "1" || Array.Exists (newArray, x2 => x2 == x)) {
+                        values [x] = true;
+                    } else {
+                        values [x] = false;
+                    }
+                }
+                return values;
+            }
+        }
+        SetUserUnlockedBosses (accountName, newArray, true);
+        return GetUserUnlockedBosses (accountName);
+    }
+
+    static public void SetUserUnlockedBoss (string accountName, int Boss) {
+        SetUserUnlockedBosses (accountName, new int [1] { Boss });
+    }
+
+    static public void SetUserUnlockedBosses (string accountName, int [] Bosses) {
+        SetUserUnlockedBosses (accountName, Bosses, false);
+    }
+
+    static public void UnlockAllBosses (string accountName) {
+        if (!UserExists (accountName)) {
+            return;
+        }
+        string path = UserUnlockedBossesPath (accountName);
+        int count = AppDefaults.availableBosses;
+        string [] lines = new string [count];
+        for (int x = 1; x < count; x++) {
+            lines [x] = "1";
+        }
+        File.WriteAllLines (path, lines);
+    }
+
+    static public void SetUserUnlockedBosses (string accountName, int [] Bosses, bool replace) {
+        if (!UserExists (accountName)) {
+            return;
+        }
+        string path = UserUnlockedBossesPath (accountName);
+        int count = AppDefaults.availableBosses;
+        int newCount = Bosses.Length;
+        string [] lines = new string [count];
+
+        if (replace) {
+            for (int x = 0; x < count; x++) {
+                lines [x] = "0";
+            }
+            for (int x = 0; x < Bosses.Length; x++) {
+                lines [Bosses [x]] = "1";
+            }
+            File.WriteAllLines (path, lines);
+            return;
+        }
+
+        bool [] unlockedBosses = GetUserUnlockedBosses (accountName);
+        for (int x = 0; x < count; x++) {
+            if (unlockedBosses [x]) {
+                lines [x] = "1";
+            } else {
+                lines [x] = "0";
+            }
+        }
+        for (int x = 0; x < newCount; x++) {
+            lines [Bosses [x]] = "1";
+
+        }
+        File.WriteAllLines (path, lines);
+    }
+
+    static public string UserUnlockedAvatarsPath (string accountName) {
+        return UserUnlocksPath (accountName) + "Avatars.txt";
+    }
+
+    static public bool [] GetUserUnlockedAvatars (string accountName) {
+        if (UserExists (accountName)) {
+            string path = UserUnlockedAvatarsPath (accountName);
+            if (File.Exists (path)) {
+                string [] lines = File.ReadAllLines (path);
+                int linesCount = lines.Length;
+                int count = AppDefaults.availableAvatars;
+                bool [] values = new bool [count];
+                for (int x = 0; x < count; x++) {
+                    if (x < linesCount && lines [x] == "1") {
+                        values [x] = true;
+                    } else {
+                        values [x] = false;
+                    }
+                }
+                return values;
+            }
+        }
+        int [] newArray = new int [9] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        SetUserUnlockedAvatars (accountName, newArray, true);
+        return GetUserUnlockedAvatars (accountName);
+    }
+
+    static public void SetUserUnlockedAvatar (string accountName, int Avatar) {
+        SetUserUnlockedAvatars (accountName, new int [1] { Avatar });
+    }
+
+    static public void SetUserUnlockedAvatars (string accountName, int [] Avatars) {
+        SetUserUnlockedAvatars (accountName, Avatars, false);
+    }
+
+    static public void UnlockAllAvatars (string accountName) {
+        if (!UserExists (accountName)) {
+            return;
+        }
+        string path = UserUnlockedAvatarsPath (accountName);
+        int count = AppDefaults.availableAvatars;
+        string [] lines = new string [count];
+        for (int x = 1; x < count; x++) {
+            lines [x] = "1";
+        }
+        File.WriteAllLines (path, lines);
+    }
+
+    static public void SetUserUnlockedAvatars (string accountName, int [] Avatars, bool replace) {
+        if (!UserExists (accountName)) {
+            return;
+        }
+        string path = UserUnlockedAvatarsPath (accountName);
+        int count = AppDefaults.availableAvatars;
+        int newCount = Avatars.Length;
+        string [] lines = new string [count];
+
+        if (replace) {
+            for (int x = 0; x < count; x++) {
+                lines [x] = "0";
+            }
+            for (int x = 0; x < Avatars.Length; x++) {
+                lines [Avatars [x]] = "1";
+            }
+            File.WriteAllLines (path, lines);
+            return;
+        }
+
+        bool [] unlockedAvatars = GetUserUnlockedAvatars (accountName);
+        for (int x = 0; x < count; x++) {
+            if (unlockedAvatars [x]) {
+                lines [x] = "1";
+            } else {
+                lines [x] = "0";
+            }
+        }
+        for (int x = 0; x < newCount; x++) {
+            lines [Avatars [x]] = "1";
+
+        }
+        File.WriteAllLines (path, lines);
+    }
+
+
     static public string UserUnlockedTokensPath (string accountName) {
         return UserUnlocksPath (accountName) + "Tokens.txt";
     }
@@ -1185,7 +1495,7 @@ public class ServerData : MonoBehaviour {
             if (File.Exists (path)) {
                 string [] lines = File.ReadAllLines (path);
                 int linesCount = lines.Length;
-                int count = AppDefaults.AvailableTokens;
+                int count = AppDefaults.availableTokens;
                 bool [] values = new bool [count];
                 for (int x = 0; x < count; x++) {
                     if (x < linesCount && lines [x] == "1") {
@@ -1210,12 +1520,25 @@ public class ServerData : MonoBehaviour {
         SetUserUnlockedTokens (accountName, tokens, false);
     }
 
+    static public void UnlockAllTokens (string accountName) {
+        if (!UserExists (accountName)) {
+            return;
+        }
+        string path = UserUnlockedTokensPath (accountName);
+        int count = AppDefaults.availableTokens;
+        string [] lines = new string [count];
+        for (int x = 0; x < count; x++) {
+            lines [x] = "1";
+        }
+        File.WriteAllLines (path, lines);
+    }
+
     static public void SetUserUnlockedTokens (string accountName, int [] tokens, bool replace) {
         if (!UserExists (accountName)) {
             return;
         }
         string path = UserUnlockedTokensPath (accountName);
-        int count = AppDefaults.AvailableTokens;
+        int count = AppDefaults.availableTokens;
         int newCount = tokens.Length;
         string [] lines = new string [count];
 
@@ -1255,7 +1578,7 @@ public class ServerData : MonoBehaviour {
             if (File.Exists (path)) {
                 string [] lines = File.ReadAllLines (path);
                 int linesCount = lines.Length;
-                int count = AppDefaults.AvailableAbilities;
+                int count = AppDefaults.availableAbilities;
                 bool [] values = new bool [count];
                 for (int x = 0; x < count; x++) {
                     if (x < linesCount && lines [x] == "1") {
@@ -1281,12 +1604,26 @@ public class ServerData : MonoBehaviour {
     }
 
 
+    static public void UnlockAllAbilities (string accountName) {
+        if (!UserExists (accountName)) {
+            return;
+        }
+        string path = UserUnlockedAbilitiesPath (accountName);
+        int count = AppDefaults.availableAbilities;
+        string [] lines = new string [count];
+        for (int x = 0; x < count; x++) {
+            lines [x] = "1";
+        }
+        File.WriteAllLines (path, lines);
+    }
+
+
     static public void SetUserUnlockedAbilities (string accountName, int [] abilities, bool replace) {
         if (!UserExists (accountName)) {
             return;
         }
         string path = UserUnlockedAbilitiesPath (accountName);
-        int count = AppDefaults.AvailableAbilities;
+        int count = AppDefaults.availableAbilities;
         int newCount = abilities.Length;
         string [] lines = new string [count];
 
@@ -1348,6 +1685,113 @@ public class ServerData : MonoBehaviour {
     static public int SetUserExperience (string accountName, int userLevel) {
         SetUserKeyData (accountName, UserExperienceKey, userLevel.ToString ());
         return userLevel;
+    }
+
+    static public string UserFinishedTutorialsPath (string userName) {
+        if (UserExists (userName)) {
+            string path = UserPath (userName) + "FinishedTutorials.txt";
+            return path;
+        }
+        return null;
+    }
+
+    static public int [] GetUserFinishedTutorials (string accountName) {
+        if (UserExists (accountName)) {
+            string path = UserFinishedTutorialsPath (accountName);
+            if (File.Exists (path)) {
+                string [] lines = File.ReadAllLines (path);
+                int count = lines.Length;
+                List<int> ids = new List<int> ();
+                for (int x = 0; x < count; x++) {
+                    ids.Add (int.Parse (lines [x]));
+                }
+                ids.Sort ((a, b) => (a.CompareTo (b)));
+                return ids.ToArray ();
+            }
+        }
+        return new int [0];
+    }
+
+    static public bool GetUserFinishedTutorial (string accountName, int TutorialId) {
+        int [] ids = GetUserFinishedTutorials (accountName);
+        foreach (int id in ids) {
+            if (TutorialId == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static public void SetUserFinishedTutorial (string accountName, int tutorialId) {
+        string path = UserFinishedTutorialsPath (accountName);
+        int [] ids = GetUserFinishedTutorials (accountName);
+        int count = ids.Length;
+        List<string> idString = new List<string> ();
+        bool alreadyExists = false;
+        for (int x = 0; x < count; x++) {
+            if (ids [x] == tutorialId) {
+                alreadyExists = true;
+            }
+            idString.Add (ids [x].ToString ());
+        }
+        if (!alreadyExists) {
+            idString.Add (tutorialId.ToString ());
+            File.WriteAllLines (path, idString.ToArray ());
+        }
+    }
+
+
+    static public string UserFinishedBossesPath (string userName) {
+        if (UserExists (userName)) {
+            string path = UserPath (userName) + "FinishedBosses.txt";
+            return path;
+        }
+        return null;
+    }
+
+    static public int [] GetUserFinishedBosses (string accountName) {
+        if (UserExists (accountName)) {
+            string path = UserFinishedBossesPath (accountName);
+            if (File.Exists (path)) {
+                string [] lines = File.ReadAllLines (path);
+                int count = lines.Length;
+                List<int> ids = new List<int> ();
+                for (int x = 0; x < count; x++) {
+                    ids.Add (int.Parse (lines [x]));
+                }
+                ids.Sort ((a, b) => (a.CompareTo (b)));
+                return ids.ToArray ();
+            }
+        }
+        return new int [0];
+    }
+
+    static public bool GetUserFinishedBoss (string accountName, int BossId) {
+        int [] ids = GetUserFinishedBosses (accountName);
+        foreach (int id in ids) {
+            if (BossId == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static public void SetUserFinishedBoss (string accountName, int BossId) {
+        string path = UserFinishedBossesPath (accountName);
+        int [] ids = GetUserFinishedBosses (accountName);
+        int count = ids.Length;
+        List<string> idString = new List<string> ();
+        bool alreadyExists = false;
+        for (int x = 0; x < count; x++) {
+            if (ids [x] == BossId) {
+                alreadyExists = true;
+            }
+            idString.Add (ids [x].ToString ());
+        }
+        if (!alreadyExists) {
+            idString.Add (BossId.ToString ());
+            File.WriteAllLines (path, idString.ToArray ());
+        }
     }
 
     static public string UserFinishedPuzzlesPath (string userName) {

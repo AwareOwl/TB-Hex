@@ -6,6 +6,7 @@ public class TokenClass {
 
     public VisualToken visualToken;
 
+    public BoardClass board;
     public TileClass tile;
 
     public int type;
@@ -14,15 +15,26 @@ public class TokenClass {
     public int owner;
     public bool destroyed;
 
+    int _x;
+    int _y;
+
     public int x {
         get {
-            return tile.x;
+            if (tile != null) {
+                return tile.x;
+            } else {
+                return _x;
+            }
         }
     }
 
     public int y {
         get {
-            return tile.y;
+            if (tile != null) {
+                return tile.y;
+            } else {
+                return _y;
+            }
         }
     }
 
@@ -33,8 +45,13 @@ public class TokenClass {
     public TokenClass (TokenClass tokenReference) {
         SetState (tokenReference.type, tokenReference.value, tokenReference.owner);
     }
+
     public TokenClass (TileClass tile, int type, int value, int owner) {
         this.tile = tile;
+        if (tile != null) {
+            tile.token = this;
+            board = tile.board;
+        }
         SetState (type, value, owner);
     }
 
@@ -84,26 +101,27 @@ public class TokenClass {
     public void ModifyTempValue (int value) {
         this.tempValue += value;
     }
+    public void SetOwner (int owner) {
+        this.owner = owner;
+    }
 
     public void SetTempValue (int value) {
         this.tempValue = value;
     }
 
+    public void RemoveType () {
+        RemoveFromTriggers ();
+    }
+
     public void SetType (int type) {
-        if (tile != null) {
-            BoardClass board = tile.board;
-            if (board != null) {
-                board.NumberOfTypes [type]++;
-            }
-        }
         this.type = type;
+        if (tile != null) {
+            tile.AddToTriggers ();
+        }
     }
 
     public void ChangeType (int type) {
-        BoardClass board = tile.board;
-        if (board != null) {
-            board.NumberOfTypes [this.type]--;
-        }
+        RemoveType ();
         SetType (type);
     }
 
@@ -140,6 +158,17 @@ public class TokenClass {
             visualToken.DelayedMoveToDisabledTile (x, y);
             visualToken = null;
         }
+        /*Debug.Log (tile);
+        Debug.Log (tile.board);
+        Debug.Log (tile.board.tile.GetLength (0));
+        Debug.Log (tile.board.tile.GetLength (1));
+        Debug.Log (x);
+        Debug.Log (y);
+        tile = tile.board.tile [x, y];*/
+        _x = x;
+        _y = y;
+        tile.token = null;
+        tile = null;
         DestroyToken (x, y);
     }
 
@@ -148,13 +177,36 @@ public class TokenClass {
     }
 
     public void DestroyToken (int x, int y) {
-        BoardClass board = tile.board;
+            //Debug.Log ("Destroy token");
+        if (board == null) {
+            return;
+        }
         MatchClass match = board.match;
         if (match != null) {
+                //Debug.Log (match.real + " Destroy token");
             match.DestroyToken (this, x, y);
-            board.NumberOfTypes [type]--;
+            //board.NumberOfTypes [type]--;
         }
-        tile.token = null;
+        if (tile != null) {
+            tile.token = null;
+        }
         DelayedDestroyVisual ();
+    }
+
+    public void RemoveFromTriggers () {
+        if (board != null) {
+            board.NumberOfTypes [type]--;
+            switch (type) {
+                case 9:
+                case 15:
+                case 18:
+                    //Debug.Log ("Remove");
+                    board.BeforeAbilityTriggers.Remove (this);
+                    break;
+                case 14:
+                    board.BeforeTokenPlayedTriggers.Remove (this);
+                    break;
+            }
+        }
     }
 }

@@ -9,15 +9,20 @@ public class CardAnimation : MonoBehaviour {
     int stackSize;
     int stack;
     int numberOfStacks;
-    public int position;
+    int position;
     VisualCard visual;
 
     public const float shuffleTime = 0.5f;
     public float shuffleTimer = 0;
 
+    static public void SetStackZoomed (int index, bool value) {
+        TutorialManager.NewState (TutorialManager.inspectStack);
+        stackZoomed [index] = value;
+    }
+
     static public void RemoveAllZooms () {
         for (int x = 0; x < stackZoomed.Length; x++) {
-            stackZoomed [x] = false;
+            SetStackZoomed (x, false);
         }
     }
 
@@ -26,7 +31,16 @@ public class CardAnimation : MonoBehaviour {
         this.stack = stack;
         this.stackSize = stackSize;
         this.numberOfStacks = numberOfStacks;
+        SetPosition (position);
+    }
+
+    public void SetPosition (int position) {
         this.position = position;
+        if (position == 0) {
+            visual.collider.enabled = true;
+        } else {
+            visual.collider.enabled = false;
+        }
     }
 	
 	// Update is called once per frame

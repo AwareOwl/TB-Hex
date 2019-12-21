@@ -1,0 +1,13 @@
+[0] No description
+[1] In order to prove yourself you've decided to find a worthy enemy, however this lesser creature was the only thing you have encountered on your path. It's difficult to start a fight with such a cute creature, but you've to start somewhere.
+[2] What could be more irritating than a parrot repeating everything you do? A parrot which do it twice. You wanted to go away, however this parrot kept following you, leaving you no choice but to fight.
+[3] Wandering through the forest your only hope was finding any road sign. Unforunately the sign you've found was completly wrapped by a snake, stubbornly sticking to it. You would prefer to avoid violence which could damage this sign.
+[4] Travelling after the nightfall turned out to be a terrible idea. The risk of encountering a predator is too high, and meeting any could have a tragic consequences for isolated prey.
+[5] Sometimes during a travel you can encounter things nobody would even expect. A great example is a huge wall, which wasn't mentioned by anyone and any map. Passing trough can be problematic.
+[6] You've encoutered a dragon fighting with three unkown to you beings. Without a second thought you've decided to rush with help, having a hope to make this unfair fight even.
+[7] Despite of noble did you've began to regret you decision when you realise that those three beings don't have positive intentions. Perhaps that dragon wasn't the bad guy there.
+[8] From the three of them only the green being has remained. You have a feeling your enemy is starting to fall into an anger. After a while the whole surroudings is entangled with roots, which definitely makes it harder to attempt any actions.
+[9] From the three of them only the red being has remained. You are pretty sure that death of his allies only have strengthened him. Aggression of your enemy has enlarged and nothing points that it will cool down.
+[10] From the three of them only the blue being has remained. The confidence of that creature has been increased leaving you with a feel that passed events went exactly as he wanted them to be, even if it doesn't seem to make sense to you.
+[11] After entering a cave an view out of this space appeard behind you, and you have noticed something shiny far away. Temptation of reaching it was large, however terrain seemed to be as unstable, as thin ice.
+[12] After reaching golden cannon you've decided to test it on the nearby terrain. After the first shot you've realised that local beings are not appreciating that idea - perhaps this cannon already had an owner.

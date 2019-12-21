@@ -4,7 +4,7 @@
 [3] Destroys target empty tiles.
 [4] Increases your current score by sum of values of target tokens.
 [5] Pushes target tokens away from played token unless their path is blocked by another token.
-[6] Reduces value of played token by %d1 for every target empty field.
+[6] Reduces value of played token by %d1 for every target empty tile.
 [7] This ability has the same effect as the ability of last played card
 [8] Reduces value of last played token by %d1 for every target enemy token.
 [9] Increases value of weakest target token by %d1.
@@ -16,24 +16,57 @@
 [15] Steals values of your target tokens.
 [16] Type of the weakest target token becomes the same as the type of played token.
 [17] Swaps type of the weaker target token with played token.
-[18] Creates a copy of last played token on target empty field. You own the copy.
+[18] Creates a copy of last played token on target empty tile. You own the copy.
 [19] Swaps positions of played token with your target token.
 [20] Owners of target tokens put the top card from their card stacks on the bottom of those stacks.
-[21] Destroys your taget tokens to reduce value of last played token by sum of their values.
+[21] Sacrifice your taget tokens in order to reduce value of last played token by sum of their values.
 [22] Sets type of last played token by value of target token.
 [23] Enemy target tokens steal 1 value from last played token.
 [24] Reduces values of target tokens by number equal to count of target allied tokens.
-[25] Creates up to 3 Normal Tokens with value 1 on target empty fields.
+[25] Creates up to 3 Normal Tokens with value 1 on target empty tiles.
 [26] Reduces values of weakest target tokens by 1, and increases values of strongest target tokens by 1.
 [27] Increases values of target tokens with different type than played token by 1.
 [28] Double value of last played token, and increase value of target ally token by the same value.
 [29] Destroy up to 2 target enemy tokens.
-[30] Sacrifice 20 earned points to destroy all target tokens.
-[31] Create 1-value Normal tokens on target remains of destroyed tokens.
+[30] Sacrifices 20 earned points in order to destroy all target tokens.
+[31] Creates 1-value Normal tokens on target remains of destroyed tokens.
 [32] Increases value of played token by 1 for every target remains of destroyed tokens.
-[33] Sacrifice 20 earned points to change types of target tokens to type of played token.
+[33] Sacrifice 20 earned points in order to change types of target tokens to type of played token.
 [34] Pushes target tokens away from played token, if it's possible to push them on empty tiles.
 [35] Destroys weaker target tokens.
 [36] Swaps positions of 2 target tokens.
 [37] Swaps types of 2 target tokens.
 [38] Reduces value of token on this card by 1.
+[39] Creates copies of target enemy token on empty tiles. Copies have value 1 and you own them.
+[40] If less than 2 remains of destroyed tokens are targeted, changes type of played token into Normal Token.
+[41] Reduces value of stronger target token by 3.
+[42] Reduces value of token on this card to 1.
+[43] Increases values of weakest target tokens by 1 and reduces values of strongest target tokens by 1.
+[44] Reduces value of target stronger tokens by 2.
+[45] When it's on the top of stack it increases its value by 1 whenever enemy plays stronger token.
+[46] Owners of target tokens lose score equal to amount of reamining turns.
+[47] Sacrifices allied target tokens in order to gain 10 score for each one.
+[48] Sacrifices X * 20 score in order to create X Normal Tokens with value 1 on target empty tiles.
+[49] Reduces token value on last played card by 2.
+[50] Owner of target enemy token becomes owner of played token.
+[51] Owners of target tokens reduce tokens value on cards from the top of their stacks by 1.
+[52] Increases value of allied target tokens by 2.
+[53] Creates 1-value tokens with the same type as played token on target empty field and destroys played token.
+[54] Increases value of target enemy tokens by 1 to increase its value by 1 for every of those tokens.
+[55] Steals all value of allied target tokens expect of the last value point.
+[56] Forces weakest target token to steal values of other target tokens belonging to the same player.
+[57] Reduces value of target tokens to value of weakest target tokens.
+[58] Cuts value of target tokens in half (rounded up) and changes their type into type of played token.
+[59] Destroys target tokens and tiles they are standing on.
+[60] Destroys target tiles which have remains of destroyed tokens on them.
+[61] When this card is on the top of stack, increases its value by 2 between each turn.
+[62] Returns last played card to the top of stack this card was played from.
+[63] Destroys target tokens belonging to players who have at least 20 score advantage.
+[64] Takes control over weakest target token belonging to player who has at least 20 score advantage.
+[65] Steals value of target tokens belonging to players who have at least 20 score advantage.
+[66] Exchanges position of played token with target enemy token.
+[67] Destroys target tokens which value is equal to the number of empty target fields.
+[68] Doubles value of target tokens which value is equal to the number of empty target fields.
+[69] Destroys target tokens belonging to players who generated 20 score last turn.
+[70] Remove 20 score to owners of target tokens who have at least 20 score advantage.
+[71] Rotates area of abilities from your top cards by 1 for each target token.

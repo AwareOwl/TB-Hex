@@ -1,0 +1,11 @@
+[0] Select a card to be able to play it
+[1] Click on empty tile to play selected card
+[2] After making a move tokens generate score for their owner. Fill your score bar to win the match.
+[3] In order to win you need to have more points than your opponent at the end of match.
+[4] After using a card it's palced on the bottom of stack. Move mouse over a card to learn what does this card do.
+[5] You can finish game faster by filling all empty tiles with tokens.
+[6] Before making a move you can select which stack do you want to use card from.
+[7] After making a move enemy turn begins. You can check out card played by enemy by moving mouse over that card.
+[8] There is a turn limit in the game. When all turns are used, match is finished.
+[9] Some tokens have special abilities. Move mouse over a token to learn what does this token do.
+[10] If you want to check what cards are placed in a stack, move mouse over this stack and use your mouse wheel, or press H button to check all the stacks at once.

@@ -8,3 +8,15 @@
 [7] Spider
 [8] Stone owl
 [9] Greedy eye
+[10] Spirit of the leaves
+[11] Two-head parrot
+[12] Stubborn snake
+[13] Chupacabra
+[14] Stone gate
+[15] Dragon of light
+[16] Trinity of phantoms
+[17] Phantom of nature
+[18] Phantom of flames
+[19] Phantom of coldness
+[20] Shiny future
+[21] Unexpected swarm

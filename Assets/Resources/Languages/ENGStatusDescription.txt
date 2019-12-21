@@ -1,0 +1,13 @@
+[0] No status
+[1] At the end of each turn generates bonus score equal to number of empty fields.
+[2] That player has its abilities activated additional time.
+[3] Effects changing properties of his tokens won't affect them.
+[4] Between turns destroys enemy tokens not adjacted to any other token.
+[5] Enemies of this player can't win unless he has stronger token than enemy tokens.
+[6] That player wins when any of his enemies loses his tokens.
+[7] When that player lost all his tokens, he instantly loses.
+[8] Enemies of that player can't generate score with tokens not adjacted to any empty tile.
+[9] Whenever this player destroys an enemy token, values of his tokens on all his cards is increased by 1.
+[10] That player gains an extra turn whenever he regains score income advantage above his enemy.
+[11] After finishing its turn destroys tokens of enemies who generated 12 or more score that turn.
+[12] After finishing its turn changes type of all its tokens to type of last played token.

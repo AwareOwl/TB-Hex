@@ -7,7 +7,7 @@ public class PuzzleMenu : GOUI {
 
     static PageUI pageUI;
 
-    static string [] name;
+    static new string [] name;
     static int [] id;
     static bool [] finished;
     static int toUnlockCount;
@@ -20,6 +20,8 @@ public class PuzzleMenu : GOUI {
     static VisualCard [] VC = new VisualCard [4];
     static GameObject [,] visualTile = new GameObject [8, 8];
     static VisualToken [,] visualToken = new VisualToken [8, 8];
+
+    static UIController [] typeButton = new UIController [2];
 
     static Text PuzzleNameText;
 
@@ -99,13 +101,16 @@ public class PuzzleMenu : GOUI {
                 }
 
                 Text.GetComponent<TextMesh> ().text = name [list [number]];
+                Clone.name = UIString.PuzzleMenuRow;
             } else if (number == puzzleCount && toUnlockCount > 0 && pageType == 0) {
                 SetSprite (Clone, "UI/Panel_Slot_01_Sliced_D", true);
                 Text.GetComponent<TextMesh> ().text = toUnlockCount + " " + Language.MoreToUnlock;
-                Text.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 0.4f); 
+                Text.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 0.4f);
+                Clone.name = UIString.PuzzleMenuLocked;
             } else {
                 SetSprite (Clone, "UI/Panel_Slot_01_Sliced_D", true);
                 Text.GetComponent<TextMesh> ().text = "";
+                Clone.name = UIString.PuzzleMenuRow;
             }
         }
     }
@@ -140,7 +145,6 @@ public class PuzzleMenu : GOUI {
         }
     }
 
-    static UIController [] typeButton = new UIController [2];
     static public void SelectType () {
         SelectType (pageType);
     }
@@ -177,6 +181,7 @@ public class PuzzleMenu : GOUI {
         UIController UIC;
 
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 1440, 1080, false);
+        DestroyImmediate (Clone.GetComponent<UIController> ());
         //Clone = CreateSprite ("UI/White", 720, 540, 11, 5, 1080, false);
 
         Clone = CreateUIText (Language.ListOfPuzzles, 325, 120, 500, 36);

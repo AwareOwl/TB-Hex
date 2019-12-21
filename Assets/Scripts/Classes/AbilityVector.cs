@@ -8,6 +8,8 @@ public class AbilityVector {
     public int y;
     public TileClass target;
 
+    public bool directional = false;
+
     public int pushX;
     public int pushY;
     public TileClass pushTarget;
@@ -18,10 +20,14 @@ public class AbilityVector {
 
 
     public AbilityVector (TileClass tile) {
+        directional = false;
+        x = tile.x;
+        y = tile.y;
         target = tile;
     }
 
     public AbilityVector (BoardClass board, int sx, int sy, int relativeNumber) {
+        directional = true;
         switch (relativeNumber) {
             case 1:
                 x = sx - 1;

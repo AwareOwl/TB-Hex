@@ -8,3 +8,15 @@
 [7] Pająk
 [8] Kamienna sowa
 [9] Chciwe oko
+[10] Dusza liści
+[11] Dwugłowa papuga
+[12] Uparty wąż
+[13] Chupacabra
+[14] Kamienne wrota
+[15] Smok światłości
+[16] Trójca widm
+[17] Widmo natury
+[18] Widmo płomieni
+[19] Widmo chłodu
+[20] Świetlana przyszłość
+[21] Niespodziewany rój

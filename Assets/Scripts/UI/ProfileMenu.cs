@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ProfileMenu : GOUI {
 
-    static string userName;
+    static public string userName;
     static public int avatar;
     static int thisModeWon;
     static int thisModeLost;
@@ -72,9 +72,10 @@ public class ProfileMenu : GOUI {
         GameObject Clone;
 
         Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 1200, 660, false);
+        DestroyImmediate (Clone.GetComponent<UIController> ());
 
-        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 360, 525, 11, 300, 300, false);
-        SetSprite (Clone, AppDefaults.Avatar [avatar]);
+        Clone = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", 360, 525, 11, 300, 300);
+        SetSprite (Clone, AppDefaults.avatar [avatar]);
 
         Clone = CreateUIText (ClientLogic.MyInterface.UserName, 330, 315, 240, 36);
         Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
@@ -82,11 +83,14 @@ public class ProfileMenu : GOUI {
         Clone = CreateSprite ("UI/Butt_S_Name", 480, 315, 11, 60, 60, false);
         Clone.name = UIString.ShowProfileSettings;
 
-        Clone = CreateUIText (Language.Level + " " + level.ToString() + " (" + currentExperience + "/" + neededExperience + ")", 330, 715, 240, 24);
+        Clone = CreateUIText (Language.Level + " " + level.ToString() + System.Environment.NewLine + "(" + currentExperience + "/" + neededExperience + ")", 330, 715, 240, 24);
         Clone.GetComponent<Text> ().alignment = TextAnchor.MiddleLeft;
 
         Clone = CreateSprite ("UI/Butt_S_Ability", 480, 715, 11, 60, 60, false);
         Clone.name = UIString.ShowUnlockedContent;
+
+        Clone = CreateSprite ("UI/Butt_S_Name", 420, 715, 11, 60, 60, false);
+        Clone.name = UIString.ShowCodeMenu;
 
         int firstRowY = 390;
         int firstColumnX = 690;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,12 +7,19 @@ public class PlayerClass {
 
     public int score;
     public int scoreIncome;
+    public int previousScoreIncome;
+
+    public bool enabled = true;
+    public bool lost = false;
+
+    public float AIValue;
+
 
     public PlayerPropertiesClass properties;
 
     public HandClass hand;
 
-    public VisualPlayer visualPlayer;
+    public VisualTeam visualTeam;
 
     public MoveHistoryClass LastMove;
 
@@ -19,8 +27,8 @@ public class PlayerClass {
 
     }
 
-    public void RotateTopCard (int stackNumber) {
-        GetStack (stackNumber).RotateTopAbilityArea ();
+    public void RotateTopCard (int stackNumber, int rotateAmount = 1) {
+        GetStack (stackNumber).RotateTopAbilityArea (rotateAmount);
     }
 
     public CardClass GetLastMoveCard () {
@@ -34,12 +42,18 @@ public class PlayerClass {
         List <string> s = new List<string> ();
         s.Add (score.ToString ());
         s.Add (scoreIncome.ToString ());
+        s.Add (previousScoreIncome.ToString ());
+        s.Add (enabled.ToString ());
+        s.Add (lost.ToString ());
         return s.ToArray ();
     }
 
     public void LoadFromString (string [] lines) {
         score = int.Parse (lines [0]);
         scoreIncome = int.Parse (lines [1]);
+        previousScoreIncome = int.Parse (lines [2]);
+        enabled = Convert.ToBoolean (lines [3]);
+        lost = Convert.ToBoolean (lines [4]);
     }
 
     public PlayerClass (PlayerPropertiesClass properties) {
@@ -53,51 +67,61 @@ public class PlayerClass {
     public PlayerClass (PlayerClass player) {
         this.score = player.score;
         this.scoreIncome = player.scoreIncome;
+        this.enabled = player.enabled;
+        this.lost = player.lost;
+
         this.properties = player.properties;
         this.hand = new HandClass (player.hand);
         this.LastMove = player.LastMove;
     }
 
-    public HandClass GetHand () {
-        if (properties == null) {
-            return null;
-        }
-        return hand;
-    }
-
     public int GetNumberOfStacks () {
-        return GetHand ().GetNumberOfStacks ();
+        return hand.GetNumberOfStacks ();
     }
 
     public StackClass GetStack (int stackNumber) {
-        if (GetHand () == null) {
+        if (hand == null) {
             return null;
         }
-        return GetHand ().GetStack (stackNumber);
+        return hand.GetStack (stackNumber);
     }
 
     public int GetStackSize (int stackNumber) {
-        return GetHand ().GetStackSize (stackNumber);
+        return hand.GetStackSize (stackNumber);
     }
 
     public CardClass GetCard (int stackNumber, int cardNumber) {
-        return GetHand ().GetCard (stackNumber, cardNumber);
+        return hand.GetCard (stackNumber, cardNumber);
     }
 
     public CardClass GetTopCard (int stackNumber) {
-        return GetHand ().stack [stackNumber].getTopCard ();
+        return hand.stack [stackNumber].getTopCard ();
     }
 
     public int GetTopCardNumber (int stackNumber) {
-        return GetHand ().stack [stackNumber].topCardNumber;
+        return hand.stack [stackNumber].topCardNumber;
     }
 
     public void MoveTopCard (int stackNumber) {
-        MoveTopCard (stackNumber, GetTopCardNumber (stackNumber), false);
+        MoveTopCard (stackNumber, GetTopCardNumber (stackNumber), true, false);
     }
 
-    public void MoveTopCard (int stackNumber, int cardNumber, bool disable) {
-        if (GetHand () == null) {
+    public void MoveCardToTheTop (int stackNumber, int cardNumber) {
+        if (hand == null || !hand.stack [stackNumber].enabled [cardNumber]) {
+            return;
+        }
+        hand.stack [stackNumber].topCardNumber = cardNumber;
+        int stackSize = GetStackSize (stackNumber);
+        if (visualTeam != null) {
+            for (int x = 0; x < stackSize; x++) {
+                DelayedUpdateCardVisuals (stackNumber, x);
+            }
+            DelayedShuffleCardVisual (stackNumber, cardNumber);
+        }
+    }
+
+    public void MoveTopCard (int stackNumber, int cardNumber, bool visual, bool disable) {
+        if (hand == null || !hand.stack [stackNumber].enabled [cardNumber]) {
             return;
         }
         StackClass stack = GetStack (stackNumber);
@@ -107,16 +131,24 @@ public class PlayerClass {
         if (disable) {
             hand.DisableCard (stackNumber, cardNumber);
         }
+        if (!visual) {
+            return;
+        }
+        if (visualTeam != null) {
+            for (int x = 0; x < stackSize; x++) {
+                DelayedUpdateCardVisuals (stackNumber, x);
+            }
+            DelayedShuffleCardVisual (stackNumber, cardNumber);
+        }
     }
 
     public void VisualMoveTopCard (int stackNumber, int cardNumber, bool disable) {
-        if (GetHand () == null) {
+        if (hand == null) {
             return;
         }
-        StackClass stack = GetStack (stackNumber);
         int topCard = GetTopCardNumber (stackNumber);
         int stackSize = GetStackSize (stackNumber);
-        if (visualPlayer != null) {
+        if (visualTeam != null) {
             for (int x = 0; x < stackSize; x++) {
                 DelayedUpdateCardVisuals (stackNumber, x);
             }
@@ -150,7 +182,7 @@ public class PlayerClass {
         if (anchor.GetComponent<CardAnimation> () == null) {
             anchor.AddComponent<CardAnimation> ().Init (card.visualCard, stackNumber, stackSize, GetNumberOfStacks (), position);
         } else {
-            anchor.GetComponent<CardAnimation> ().position = position;
+            anchor.GetComponent<CardAnimation> ().SetPosition (position);
         }
     }
 
@@ -164,6 +196,7 @@ public class PlayerClass {
     public void ShuffleCardVisual (CardClass card) {
         GameObject anchor = card.visualCard.Anchor;
         anchor.GetComponent<CardAnimation> ().shuffleTimer = CardAnimation.shuffleTime;
+        SoundManager.PlayAudioClip (MyAudioClip.ShufflingCard);
     }
 
     public void DelayedDestroyCardVisual (int stackNumber, int cardNumber) {
@@ -175,6 +208,7 @@ public class PlayerClass {
         }
     }
     public void SetScoreIncome (int scoreIncome) {
+        this.previousScoreIncome = this.scoreIncome;
         this.scoreIncome = scoreIncome;
     }
 
@@ -183,14 +217,17 @@ public class PlayerClass {
     }
 
     public void UpdateVisuals (MatchClass match) {
-        if (visualPlayer != null) {
-            visualPlayer.UpdateVisuals (match);
+        if (visualTeam != null) {
+            visualTeam.DelayedUpdateVisuals (match);
         }
     }
 
     public void EnableVisuals () {
-        if (visualPlayer == null) {
-            visualPlayer = new VisualPlayer ();
+        if (properties == null) {
+            return;
+        }
+        if (visualTeam == null) {
+            visualTeam = new VisualTeam ();
 
             if (properties.playerNumber == InGameUI.myPlayerNumber) {
                 for (int x = 0; x < GetNumberOfStacks (); x++) {
@@ -208,7 +245,7 @@ public class PlayerClass {
     }
 
     public void DestroyVisuals () {
-        if (visualPlayer != null) {
+        if (visualTeam != null) {
             if (hand != null) {
                 for (int x = 0; x < GetNumberOfStacks (); x++) {
                     for (int y = 0; y < GetStackSize (x); y++) {
@@ -219,7 +256,7 @@ public class PlayerClass {
                     }
                 }
             }
-            visualPlayer = null;
+            visualTeam = null;
         }
     }
 

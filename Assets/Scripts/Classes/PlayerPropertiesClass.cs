@@ -11,7 +11,8 @@ public class PlayerPropertiesClass {
     public int playerNumber;
 
     public bool conceded = false;
-    public bool enabled = true;
+
+    public int specialStatus;
 
     public int team;
 
@@ -29,7 +30,7 @@ public class PlayerPropertiesClass {
         s.Add (team.ToString());
         s.Add (playerNumber.ToString ());
         s.Add (conceded.ToString ());
-        s.Add (enabled.ToString ());
+        s.Add (specialStatus.ToString ());
         return s.ToArray ();
     }
 
@@ -39,7 +40,7 @@ public class PlayerPropertiesClass {
         team = int.Parse (lines [2]);
         playerNumber = int.Parse (lines [3]);
         conceded = Convert.ToBoolean (lines [4]);
-        enabled = Convert.ToBoolean (lines [5]);
+        specialStatus = int.Parse (lines [5]);
     }
 
     public PlayerPropertiesClass () {

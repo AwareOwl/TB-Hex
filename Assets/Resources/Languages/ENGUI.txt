@@ -52,7 +52,7 @@
 [51] Select card set
 [52] Delete card set
 [53] Create new card set
-[54] Close
+[54] Close this menu
 [55] Change game version
 [56] Official game versions
 [57] Public game versions
@@ -153,3 +153,70 @@
 [152] more to unlock
 [153] Create your own Token Battle Hex server. Other players from your local area network will be able to join this server.
 [154] Join to server from your local area network. Server in this network is required to use this option.
+[155] Unlocked avatar
+[156] Unlocked avatars
+[157] New avatar unlocked
+[158] New avatars unlocked
+[159] Unlocked abilities
+[160] Unlocked tokens
+[161] Unlocked ability
+[162] Unlocked token
+[163] Show unlocked content
+[164] Enter promotional code
+[165] All tokens and abilities have been unlocked
+[166] Tutorial
+[167] Bosses
+[168] New ability unlocked
+[169] New abilities unlocked
+[170] New token unlocked
+[171] Code has expired
+[172] Invalid code
+[173] List of bosses
+[174] Bosses are challengin opponents you can face. Before starting the fight you have to create a set of cards using available card pool. Bosses might start the match with huge advantage and more powerful cards, but also they might have poweful bonuses during the game.
+[175] Opponent trait
+[176] Missions
+[177] New tokens unlocked
+[178] Begin puzzle
+[179] Go to the set editor
+[180] Begin boss fight
+[181] Begin mission
+[182] You need to select something first
+[183] Level up and finish puzzles to unlock more cards.
+[184] Mission
+[185] Restart puzzle
+[186] Restart mission
+[187] Restart boss
+[188] File
+[189] Tile filling
+[190] Token owner
+[191] Token value
+[192] Token type
+[193] Ability type
+[194] Ability area
+[195] You can unlock more cards by finishing puzzles and increasing your level.
+[196] Library
+[197] Works well with
+[198] Is good against
+[199] Is weak against
+[200] In this menu you can inspect pros and cons of particular tokens and abilities. There is a chance those tips will inspire you to creating new strategies.
+[201] Players settings
+[202] Player
+[203] Player statuses
+[204] Settings have been saved
+[205] Every card can be added to set any number of times
+[206] One of players status has finished the game.
+[207] Players %s have won the game.
+[208] and
+[209] Other players have lost the game.
+[210] Team
+[211] You've been kicked from the room.
+[212] Meet hidden conditions in order to unlock more bosses.
+[213] Unlock more abilities and/or tokens in order to get access to next puzzles.
+[214] Settings
+[215] Show settings menu
+[216] Options
+[217] Music volume
+[218] SFX volume
+[219] Animations duration
+[220] Time between turns
+[221] Played card display time

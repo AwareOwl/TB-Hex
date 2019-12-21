@@ -6,9 +6,13 @@ public class AIClass {
 
     static public float maxCardValue = 0;
 
+    public float turnsLeft;
+
     int difficulty = 100;
 
     public bool puzzle = false;
+    public bool boss = false;
+    public bool tutorial = false;
 
     public int edgeDanger = 8;
     public int surroundDanger = 5;
@@ -39,37 +43,37 @@ public class AIClass {
     public float MaxEmptyTileCount;
 
     public AIClass () {
-        edgeDanger = Random.Range (0, 12);
-        surroundDanger = Random.Range (3, 8);
-        multiTargetDanger = Random.Range (0, 8);
+        edgeDanger = new MyRandom ().Range (0, 10);
+        surroundDanger = new MyRandom ().Range (1, 6);
+        multiTargetDanger = new MyRandom ().Range (0, 7);
 
-        abilityRow = Random.Range (7, 16);
-        tokenRow = Random.Range (8, 16);
-        abilityTokenRow = Random.Range (12, 29);
+        abilityRow = new MyRandom ().Range (11, 21);
+        tokenRow = new MyRandom ().Range (15, 25);
+        abilityTokenRow = new MyRandom ().Range (16, 35);
 
-        abilityStackSize = Random.Range (3, 7);
-        tokenStackSize = Random.Range (1, 7);
-        abilityTokenStackSize = Random.Range (3, 9);
+        abilityStackSize = new MyRandom ().Range (2, 9);
+        tokenStackSize = new MyRandom ().Range (1, 9);
+        abilityTokenStackSize = new MyRandom ().Range (3, 11);
 
-        abilityAfterAbility = Random.Range (4, 11);
-        abilityAfterToken = Random.Range (1, 15);
-        tokenAfterAbility = Random.Range (2, 15);
-        tokenAfterToken = Random.Range (1, 14);
+        abilityAfterAbility = new MyRandom ().Range (3, 11);
+        abilityAfterToken = new MyRandom ().Range (1, 17);
+        tokenAfterAbility = new MyRandom ().Range (2, 17);
+        tokenAfterToken = new MyRandom ().Range (3, 15);
 
-        ability_AbilitySynergy = Random.Range (4, 10);
-        ability_TokenSynergy = Random.Range (8, 20);
-        token_TokenSynergy = Random.Range (8, 10);
+        ability_AbilitySynergy = new MyRandom ().Range (5, 14);
+        ability_TokenSynergy = new MyRandom ().Range (10, 25);
+        token_TokenSynergy = new MyRandom ().Range (10, 15);
 
-        abilityAgainstAbility = Random.Range (4, 7);
-        abilityAgainstToken = Random.Range (4, 7);
-        tokenAgainstAbility = Random.Range (4, 7);
-        tokenAgainstToken = Random.Range (4, 7);
+        abilityAgainstAbility = new MyRandom ().Range (4, 7);
+        abilityAgainstToken = new MyRandom ().Range (4, 7);
+        tokenAgainstAbility = new MyRandom ().Range (4, 7);
+        tokenAgainstToken = new MyRandom ().Range (4, 8);
     }
 
     public Vector3Int FindBestMove (MatchClass match) {
         int playerNumber = match.turnOfPlayer;
         PlayerClass player = match.Player [playerNumber];
-        TileClass [] tiles = match.Board.GetEmptyTiles ().ToArray ();
+        TileClass [] tiles = match.Board.GetPlayableTiles (playerNumber).ToArray ();
         TileClass bestTile = null;
         float bestValue = -999999f;
         int bestStack = 0;
@@ -77,25 +81,60 @@ public class AIClass {
         if (tiles.Length == 0){
             Debug.Log ("Board error, turn: " + match.turn.ToString() + ", board: " + match.Board.boardTemplateId.ToString() + ", all tiles count: " + match.Board.tileList.Count);
             Debug.Log (match.finished);
+            for (int x = 1; x <= 2; x++) {
+                PlayerClass tempPlayer = match.Player [x];
+                foreach (StackClass stack in tempPlayer.hand.stack) {
+                    foreach (CardClass card in stack.card) {
+                        RatingClass.buggedCard [card.cardNumber]++;
+                        RatingClass.buggedAbility [card.abilityType]++;
+                        RatingClass.buggedToken [card.tokenType]++;
+                    }
+                }
+            }
         }
-        foreach (TileClass tile in tiles) {
-            if (tile == null || !tile.enabled || tile.token != null) {
+        int count = tiles.Length;
+        TileClass [] RandomizedTiles = new TileClass [count];
+        List <int> tempRNGNumbers = new List<int > ();
+        for (int x = 0; x < count; x++) {
+            tempRNGNumbers.Add (x);
+        }
+
+        for (int x = 0; x < count; x++) {
+            int randomNumber = new MyRandom ().Range (0, count - x);
+            RandomizedTiles [x] = tiles [ tempRNGNumbers [randomNumber]];
+            tempRNGNumbers.RemoveAt (randomNumber);
+        }
+
+        int brk = 0;
+        foreach (TileClass tile in RandomizedTiles) {
+            if (tile == null || !tile.enabled || !tile.IsPlayable (playerNumber)) {
                 Debug.Log ("Tile error");
             }
+            brk++;
+            if (brk > 40) {
+                break;
+            }
             for (int x = 0; x < player.hand.stack.Length; x++) {
+                //Debug.Log ("Currently testing x: " + tile.x + ", y: " + tile.y + ", stack: " + x + ", top card: " + player.hand.GetStack (x).topCardNumber);
+                //Debug.Log ("Start");
                 MatchClass tempMatch = new MatchClass (match);
+               // Debug.Log ("Currently testing x: " + tile.x + ", y: " + tile.y + ", stack: " + x + ", top card: " + tempMatch.Player [playerNumber].hand.GetStack (x).topCardNumber);
                 tempMatch.real = false;
                 tempMatch.PlayCard (tile.x, tile.y, playerNumber, x);
-                float tempValue = CalculateMatchValue (tempMatch, playerNumber);
+                float tempValue = CalculateMatchValue (tempMatch, playerNumber, x);
                 if (tempMatch.finished) {
-                    if (tempMatch.winner != null) {
-                        if (tempMatch.winner.properties.playerNumber == playerNumber) {
+                    if (tempMatch.winner.Count > 0) {
+                        if (tempMatch.winner [0].properties.playerNumber == playerNumber) {
                             tempValue += 100000;
                         } else {
                             tempValue -= 100000;
                         }
                     }
                 }
+                if (!tempMatch.Player [playerNumber].enabled) {
+                    tempValue -= 10000;
+                }
+                //Debug.Log ("TempValue: " + tempValue);
                 if (bestTile == null || bestValue < tempValue) {
                     bestTile = tile;
                     bestStack = x;
@@ -103,7 +142,7 @@ public class AIClass {
                     numberOfBests = 1;
                 } else if (bestValue == tempValue) {
                     numberOfBests++;
-                    if (Random.Range (0, numberOfBests) == 0) {
+                    if (new MyRandom ().Range (0, numberOfBests) == 0) {
                         bestTile = tile;
                         bestStack = x;
                         bestValue = tempValue;
@@ -111,42 +150,120 @@ public class AIClass {
                 }
             }
         }
+        //Debug.Log ("BestValue: " + bestValue);
         return new Vector3Int (bestTile.x, bestTile.y, bestStack);
     }
 
-    public float CalculateMatchValue (MatchClass match, int playerNumber) {
+    public float CalculateMatchValue (MatchClass match, int playerNumber, int stack) {
+        string s = "";
         float value = 0;
-        float playerValue = 4f;
-        float myTurnsToWin = TurnToWinPredict (match, playerNumber);
-        float turnsToWin = myTurnsToWin;
-        for (int x = 1; x <= match.numberOfPlayers; x++) {
-            if (x != playerNumber) {
-                float hisTurnToWin = TurnToWinPredict (match, x);
-                playerValue *= hisTurnToWin / myTurnsToWin;
-                turnsToWin = Mathf.Min (turnsToWin, hisTurnToWin);
-                //value += myScoreIncome - match.Player [x].scoreIncome;
+        PlayerClass player = match.Player [playerNumber];
+        value += player.AIValue;
+        float advantageValue = match.properties.scoreLimit;
+
+        s += "Player value " + player.AIValue + System.Environment.NewLine;
+
+        s += "PlayerScore: ";
+
+        PlayerPropertiesClass playerProperties = match.GetPlayerProperties (playerNumber);
+        int teamNumber = playerProperties.team;
+        int [] teamScore = new int [5];
+        for (int x = 1; x < match.Player.Length; x++) {
+            PlayerPropertiesClass playerProperties2 = match.GetPlayerProperties (x);
+            if (playerProperties2 != null) {
+                PlayerClass player2 = match.GetPlayer (x);
+                teamScore [playerProperties2.team] += player2.score;
+                s += x + ", " + player2.score + "; ";
             }
         }
-        //value += playerValue;
-        value += CalculateBoardValue (match, playerNumber, turnsToWin);
-        value += CalculateTurnValue (match, playerNumber, turnsToWin);
+
+        s += System.Environment.NewLine;
+
+        s += "TeamScore: ";
+
+        for (int x = 1; x < match.Player.Length; x++) {
+            s += teamScore [x] + " ";
+        }
+        s += System.Environment.NewLine;
+
+        turnsLeft = match.properties.turnLimit;
+        for (int x = 1; x <= match.numberOfPlayers; x++) {
+            PlayerPropertiesClass playerProperties2 = match.GetPlayerProperties (x);
+            if (playerProperties2 == null) {
+                continue;
+            }
+            float hisTurnToWin = TurnToWinPredict (match, x);
+            turnsLeft = Mathf.Min (turnsLeft, hisTurnToWin);
+            if (x != playerNumber) {
+                s += "PlayerNumber: " + playerProperties2.playerNumber + ", Team score: " + teamScore [teamNumber] + ", Compare to score: " + teamScore [playerProperties2.team] + 
+                    ", Difference of score: " + (teamScore [teamNumber] - teamScore [playerProperties2.team]).ToString() +
+                    ", Turns left: " + turnsLeft + System.Environment.NewLine;
+                advantageValue = Mathf.Min (advantageValue, teamScore [teamNumber] - teamScore [playerProperties2.team]);
+                value -= match.GetPlayer (x).AIValue;
+            }
+        }
+
+        s += System.Environment.NewLine;
+        
+
+        advantageValue /= turnsLeft;
+        
+        value += advantageValue;
+        s += "advantageValue " + advantageValue + System.Environment.NewLine;
+
+        float boardValue = CalculateBoardValue (match, playerNumber, turnsLeft);
+        value += boardValue;
+        s += "CalculateBoardValue " + boardValue + System.Environment.NewLine;
+
+        float turnValue = CalculateTurnValue (match, playerNumber, turnsLeft, stack);
+        value += turnValue;
+        s += "CalculateBoardValue " + turnValue + System.Environment.NewLine;
+
+        s += "Total value: " + value + System.Environment.NewLine;
+        //Debug.Log (s);
         return value;
     }
 
-    public float CalculateTurnValue (MatchClass match, int playerNumber, float turnsLeft) {
+    public float CalculateTurnValue (MatchClass match, int playerNumber, float turnsLeft, int stack) {
         float value = 0;
         float prefix = 0;
-        for (int x = 0; x < turnsLeft; x++) {
-            if (match.turnOfPlayer == playerNumber) {
-                prefix += 4;
-                match.IncrementTurnOfPlayer ();
-            } else {
-                prefix -= 4 / Mathf.Max (1, match.numberOfPlayers - 1);
+        PlayerPropertiesClass properties = match.GetPlayerProperties (playerNumber);
+        if (properties == null) {
+            return 0;
+        }
+        string s = "";
+        int myTeam = properties.team;
+        int numberOfAllies = 0;
+        int numberOfEnemies = 0;
+        for (int x = 1; x <= 4; x++) {
+            PlayerPropertiesClass properties2 = match.GetPlayerProperties (x);
+            if (properties2 == null) {
+                continue;
             }
+            s += "Player " + x + ", Team" + properties2.team + " ";
+            if (properties2.team == myTeam) {
+                s += "ally";
+                numberOfAllies++;
+            } else {
+                s += "enemy";
+                numberOfEnemies++;
+            }
+            s += System.Environment.NewLine;
+        }
+        for (int x = 0; x < turnsLeft; x++) {
+            PlayerPropertiesClass properties2 = match.GetPlayerProperties (match.turnOfPlayer);
+            if (properties2 != null && properties2.team == myTeam) {
+                prefix += 4 / Mathf.Max (1, numberOfAllies);
+            } else {
+                prefix -= 4 / Mathf.Max (1, numberOfEnemies);
+            }
+            s += prefix + " (" + match.turnOfPlayer + ") ";
+            match.IncrementTurnOfPlayer ();
             value += prefix;
         }
+        //Debug.Log (match.turn + ", PlayerNumber: " + playerNumber + System.Environment.NewLine + 
+            //"Value: " +  value + ", Turns left" + turnsLeft + ", value / turnsLeft:" + (value / turnsLeft).ToString() + ", Stack: " + stack + " " + match.Player[playerNumber].GetStack (stack).topCardNumber + System.Environment.NewLine + s);
         value /= turnsLeft;
-        //Debug.Log (value)
         return value;
     }
 
@@ -173,10 +290,10 @@ public class AIClass {
                 foreach (AbilityVector vector in vectors) {
                     if (tile.IsFilledTile ()) {
                         if (vector.target == null || !vector.target.enabled) {
-                            if (vector.flipTarget != null && vector.flipTarget.IsEmptyTile ()) {
+                            if (vector.flipTarget != null && vector.flipTarget.IsPlayable (playerNumber)) {
                                 edgeCount++;
                             }
-                        } else if (vector.target.IsEmptyTile ()) {
+                        } else if (vector.target.IsPlayable (playerNumber)) {
                             dangerCount++;
                         }
                     } else if (vector.target != null && vector.target.IsFilledTile ()) {
@@ -224,60 +341,139 @@ public class AIClass {
                                 tokenValue = 0;
                             }
                             break;
+                        case 19:
+                            tokenValue++;
+                            break;
                     }
 
                 }
                 tokenValue = Mathf.Max (tokenValue, 0);
-                switch (tokenType) {
-                    case 1:
-                    case 12:
-                        tokenValue *= 1.9f;
-                        break;
-                    case 2:
-                        tokenValue *= -0.9f;
-                        break;
-                    case 5:
-                        tokenValue = (tokenValue * (tokenValue + 1) - Mathf.Max (tokenValue - turnsLeft, 0) * (tokenValue - turnsLeft + 1)) / 2 / turnsLeft;
-                        break;
-                    case 6:
-                        tokenValue *= 1.06f / match.numberOfPlayers;
-                        break;
-                    case 9:
-                    case 11:
-                        tokenValue += 1;
-                        break;
-                    case 10:
-                        tokenValue = valueOverTime (tokenValue + oVE.emptyTileCount, - oVE.emptyTileCount, oVE.emptyTileCount, turnsLeft);
-                        break;
-                    case 13:
-                        tokenValue += 3f;
-                        break;
-                    case 14:
-                        tokenValue = valueOverTime (tokenValue, Mathf.Max (4f - tokenValue, tokenValue), 4, turnsLeft);
-                        break;
+                if (tokenValue > 0) {
+                    switch (tokenType) {
+                        case 1:
+                        case 12:
+                            tokenValue *= 1.9f;
+                            break;
+                        case 2:
+                            tokenValue *= -0.9f;
+                            break;
+                        case 5:
+                            tokenValue = (tokenValue * (tokenValue + 1) - Mathf.Max (tokenValue - turnsLeft, 0) * (tokenValue - turnsLeft + 1)) / 2 / turnsLeft;
+                            break;
+                        case 6:
+                            tokenValue *= 1.06f / match.numberOfPlayers;
+                            break;
+                        case 9:
+                            if (match.turnOfPlayer == playerNumber) {
+                                tokenValue += 1f;
+                            } else {
+                                tokenValue += 2.1f;
+                            }
+                            break;
+                        case 11:
+                            tokenValue += 1;
+                            break;
+                        case 10:
+                            tokenValue = valueOverTime (tokenValue + oVE.emptyTileCount, -oVE.emptyTileCount, oVE.emptyTileCount, turnsLeft);
+                            break;
+                        case 13:
+                            tokenValue += 4 * (turnsLeft - 1) / turnsLeft;
+                            break;
+                        case 14:
+                            tokenValue = valueOverTime (tokenValue, Mathf.Max (4f - tokenValue, tokenValue), 4, turnsLeft);
+                            break;
+                        case 15:
+                            if (match.turnOfPlayer == playerNumber) {
+                                tokenValue += 0.9f;
+                            } else {
+                                tokenValue -= 0.8f;
+                            }
+                            break;
+                        case 17:
+                            tokenValue += 0.1f;
+                            break;
+                        case 16:
+                            tokenValue = (tokenValue - 1) * 1.4f + 1;
+                            break;
+                    }
                 }
                 switch (tokenType) {
                     case 12:
-                        riskValue = Mathf.Sqrt (tokenValue) - 0.2f;
+                    case 21:
+                        riskValue = Mathf.Sqrt (Mathf.Abs (tokenValue)) - 0.2f;
                         break;
                     default:
-                        riskValue = tokenValue + 1 - Mathf.Sqrt (tokenValue + 1);
+                        riskValue = tokenValue + 1 - Mathf.Sqrt (Mathf.Abs (tokenValue) + 1);
                         break;
                 }
+
                 riskValue *= Mathf.Min (1f, (
                     dangerCount * surroundDanger +
                     edgeCount * edgeDanger) / 100f);
-                if (tile.token.owner != playerNumber) {
-                    tokenValue *= -1;
+                PlayerPropertiesClass properties = match.GetPlayerProperties (tokenOwner);
+                PlayerPropertiesClass properties2 = match.GetPlayerProperties (playerNumber);
+                if (properties == null) {
+                    tokenValue = 0;
+                } else {
+                    if (properties.team != properties2.team) {
+                        tokenValue *= -1;
+                    }
+                    tokenValue -= riskValue;
                 }
-                tokenValue -= riskValue;
                 value += tokenValue;
+                //Debug.Log (tokenValue);
             } else {
+                
                 riskValue *= multiDangerCount * multiTargetDanger / 200f;
                 value -= riskValue;
+                if (match.Player [playerNumber].properties.specialStatus == 1) {
+                    value++;
+                }
+                //Debug.Log (riskValue);
             }
         }
+        //Debug.Log (playerNumber + " " + value);
         return value;
+    }
+
+    static public float AproxTokenValue (int tokenType, int value) {
+        float output = value;
+        if (value > 0) {
+            switch (tokenType) {
+                case 1:
+                case 12:
+                    output *= 1.9f;
+                    break;
+                case 2:
+                    output *= -0.9f;
+                    break;
+                case 3:
+                case 4:
+                case 9:
+                case 11:
+                    output += 1.05f;
+                    break;
+                case 6:
+                    output *= 0.53f;
+                    break;
+                case 8:
+                    output = output + (output - 1) / 2;
+                    break;
+                case 10:
+                    output += 2.2f;
+                    break;
+                case 13:
+                    output += 3.8f;
+                    break;
+                case 14:
+                    output = (4 - value) * 0.75f + value * 0.25f;
+                    break;
+                case 15:
+                    output += 0.8f;
+                    break;
+            }
+        }
+        return output;
     }
 
     public float valueOverTime (float value, float valueDifference, float turnDelay, float turnsLeft) {
@@ -290,13 +486,28 @@ public class AIClass {
         if (player == null) {
             return 10000;
         }
+        PlayerPropertiesClass playerProperties = match.GetPlayerProperties (playerNumber);
+
+
+        int teamNumber = playerProperties.team;
+        int teamScore = 0;
+        int teamIncome = 0;
+        for (int x = 1; x < match.Player.Length; x++) {
+            PlayerPropertiesClass playerProperties2 = match.GetPlayerProperties (x);
+            if (playerProperties2 != null && playerProperties2.team == teamNumber) {
+                PlayerClass player2 = match.GetPlayer (playerNumber);
+                teamScore += player2.score;
+                teamIncome += player2.scoreIncome;
+            }
+        }
+
         MatchPropertiesClass properties = match.properties;
         float value = properties.turnLimit - match.turn + 1;
         BoardClass board = match.Board;
-        int emptyTiles = board.GetEmptyTilesCount ();
-        value = Mathf.Min (value, 1f * (properties.scoreLimit - player.score) / Mathf.Max (player.scoreIncome, 0.1f));
-        if (MaxEmptyTileCount > emptyTiles) {
-            value = Mathf.Min (value, emptyTiles / ((MaxEmptyTileCount - emptyTiles) / match.turn));
+        int playableTiles = board.GetPlayableTilesCount (playerNumber);
+        value = Mathf.Min (value, 1f * (properties.scoreLimit - teamScore) / Mathf.Max (teamIncome, 0.1f));
+        if (MaxEmptyTileCount > playableTiles) {
+            value = Mathf.Min (value, playableTiles / ((MaxEmptyTileCount - playableTiles) / match.turn));
         }
         value = Mathf.Max (value, 0.001f);
         return value;

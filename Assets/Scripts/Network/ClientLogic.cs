@@ -20,7 +20,11 @@ public class ClientLogic : MonoBehaviour {
 
             //AIRatingMenu.ShowAIRatingMenuMenu (MyInterface.GameMode);
             //AIRatingMenu.RefreshPage ();
-            MainMenu.ShowMainMenu ();
+            if (UnlockedContent.cached) {
+                UnlockedContent.LoadUnlockedContentMenu (0);
+            } else {
+                MainMenu.ShowMainMenu ();
+            }
         } else {
             //ServerLogic.JoinGameAgainstAI (ClientLogic.MyInterface).RunAI ();
             AIRatingMenu.ShowAIRatingMenuMenu (MyInterface.GameMode);
@@ -76,11 +80,11 @@ public class ClientLogic : MonoBehaviour {
         match.LastMove.PlayedLoadFromString (match, lines);
     }
 
-    static public void LoadCustomGameRoom (bool isHost, string gameName, int matchType, int [] avatars, string [] names, bool [] AIs) {
+    static public void LoadCustomGameRoom (bool isHost, string gameName, int matchType, int [] avatars, string [] names, bool [] AIs, int [] teams) {
         if (GOUI.CurrentGOUI.GetType () != typeof (CustomGameRoom)) {
             CustomGameRoom.ShowCustomGameRoom ();
         }
-        CustomGameRoom.LoadData (isHost, gameName, matchType, avatars, names, AIs);
+        CustomGameRoom.LoadData (isHost, gameName, matchType, avatars, names, AIs, teams);
     }
 
     static public void RefreshProfileSettings (ClientInterface client, string userName, int avatar) {

@@ -7,8 +7,8 @@ public class AbilityClass {
     static public List<int> [] AbilityValue;
 
     static AbilityClass () {
-        AbilityValue = new List<int> [AppDefaults.AvailableAbilities];
-        for (int x = 0; x < AppDefaults.AvailableAbilities; x++) {
+        AbilityValue = new List<int> [AppDefaults.availableAbilities];
+        for (int x = 0; x < AppDefaults.availableAbilities; x++) {
             AbilityValue [x] = new List<int> ();
         }
         AbilityValue [1].Add (1);

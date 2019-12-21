@@ -39,6 +39,34 @@
 [38] Ryzykowny start
 [39] Klonowanie
 [40] Adaptacja
-[41] Porażenie
+[41] Cios
 [42] Bardzo ryzykowny start
 [43] Przewrót
+[44] Skoszenie
+[45] Przygotowanie
+[46] Proroctwo przegranej
+[47] Przeciążenie
+[48] Rozsianie
+[49] Rozbrojenie
+[50] Infiltracja
+[51] Osłabienie
+[52] Przywództwo
+[53] Pączkowanie
+[54] Inflacja
+[55] Pasożytnictwo
+[56] Abominacja
+[57] Miniaturyzacja
+[58] Zmiana profesji
+[59] Pogrzebanie
+[60] Przepaść
+[61] Element zaskoczenia
+[62] Zupełnie jak bumerang
+[63] Nieudany plan
+[64] Zwątpienie
+[65] Utrata tempa
+[66] Podstęp
+[67] Osaczenie
+[68] Pozycjonowanie
+[69] Łowy
+[70] Spowolnienie
+[71] Korekcja

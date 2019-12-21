@@ -14,12 +14,12 @@ public class ClientInterface : NetworkBehaviour {
 
     public void Start () {
         if (isServer) {
-            gameObject.AddComponent<ServerManagement> ();
+            gameObject.AddComponent<ServerManagement> ().enabled = true;
         }
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.9.0.6");
+            CmdCompareServerVersion ("0.15.0.3");
         }
     }
 
@@ -35,6 +35,11 @@ public class ClientInterface : NetworkBehaviour {
 
     [TargetRpc]
     public void TargetShowMessage (NetworkConnection target, int messageID) {
+        Debug.Log (Language.UI [messageID]);
+        if (messageID == Language.YouHaveBeenKickedFromTheRoomKey) {
+            GOUI.ShowMessage (Language.UI [messageID], UIString.ShowCustomGameLobby);
+            return;
+        }
         GOUI.ShowMessage (Language.UI [messageID]);
     }
 
@@ -45,13 +50,13 @@ public class ClientInterface : NetworkBehaviour {
 
     
     [TargetRpc]
-    public void TargetShowMatchResult (NetworkConnection target, int matchType, string winnerName, int winCondition, int limit, 
+    public void TargetShowMatchResult (NetworkConnection target, int matchType, string [] winnersNames, int winCondition, int limit, 
         int level, int currentExperience, int maxExperience, int experienceGain) {
         MatchClass pm = InGameUI.PlayedMatch;
         if (pm != null) {
             VisualMatch vm = pm.visualMatch;
             if (vm != null) {
-                vm.ShowMatchResult (matchType, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
+                vm.ShowMatchResult (matchType, winnersNames, winCondition, limit, level, currentExperience, maxExperience, experienceGain);
             }
         }
     }
@@ -61,6 +66,18 @@ public class ClientInterface : NetworkBehaviour {
         ClientLogic.LogIn (accountName, userName);
     }
 
+    public void SaveBossResult (int id, PlayerClass [] player) {
+        if (isServer) {
+            ServerLogic.SaveBossResult (this, id, player);
+        }
+    }
+
+    public void SaveTutorialResult (int id) {
+        if (isServer) {
+            ServerLogic.SaveTutorialResult (this, id);
+        }
+    }
+
     public void SavePuzzleResult (int id) {
         if (isServer) {
             ServerLogic.SavePuzzleResult (this, AccountName, id);
@@ -68,8 +85,25 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdEnterCode (string s) {
+        ServerLogic.EnterCode (this, s);
+    }
+
+    [Command]
     public void CmdJoinGameAgainstAI () {
         ServerLogic.JoinGameAgainstAI (this);
+    }
+
+    [Command]
+    public void CmdStartBoss (int id, string name2, string name3, string name4) {
+        ServerLogic.StartBoss (this, id, name2, name3, name4);
+    }
+
+
+
+    [Command]
+    public void CmdStartTutorial (int id, string name) {
+        ServerLogic.StartTutorial (this, id, name);
     }
 
     [Command]
@@ -133,9 +167,50 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [TargetRpc]
-    public void TargetDownloadUnlockedContentData2 (NetworkConnection target, int [] abilities, int [] tokens) {
-        UnlockedContent.LoadUnlockedContentData (abilities, tokens);
+    public void TargetDownloadUnlockedContentData2 (NetworkConnection target, int [] avatars, int [] abilities, int [] tokens) {
+        UnlockedContent.LoadUnlockedContentData (avatars, abilities, tokens);
     }
+
+    [TargetRpc]
+    public void TargetDownloadUnlockedContentData3 (NetworkConnection target, int [] avatars, int [] abilities, int [] tokens) {
+        UnlockedContent.LoadUnlockedContentData (avatars, abilities, tokens);
+    }
+
+    [TargetRpc]
+    public void TargetLoadUnlockedContentData (NetworkConnection target, int redirection) {
+        UnlockedContent.LoadUnlockedContentMenu (redirection);
+    }
+
+    [Command]
+    public void CmdDownloadDataToBossMenu () {
+        ServerLogic.DownloadDataToBossMenu (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadBossList (NetworkConnection target, int [] bossNumbers, int [] officialIds, bool [] officialFinished, bool [] unlocked) {
+        BossMenu.LoadBossMenu (bossNumbers, officialIds, officialFinished, unlocked);
+    }
+
+    [Command]
+    public void CmdDownloadDataToProfileSettings () {
+        ServerLogic.DownloadDataToProfileSettings (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadDataToProfileSettings (NetworkConnection target, bool [] ids) {
+        ProfileSettings.LoadData (ids);
+    }
+
+    [Command]
+    public void CmdDownloadDataToTutorialMenu () {
+        ServerLogic.DownloadDataToTutorialMenu (this);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadDataToTutorialMenu (NetworkConnection target, string [] officialNames, int [] officialIds) {
+        TutorialMenu.LoadTutorialMenu (officialNames, officialIds);
+    }
+
 
     [Command]
     public void CmdDownloadDataToPuzzleMenu () {
@@ -158,14 +233,21 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdEditBossSet (int bossId) {
+        ServerLogic.EditBossSet (this, bossId);
+    }
+
+    [Command]
     public void CmdDownloadDataToSetEditor (int setId) {
         ServerLogic.DownloadDataToSetEditor (this, setId);
     }
 
     [TargetRpc]
-    public void TargetDownloadDataToSetEditor (NetworkConnection target, string [] cardPool, bool [] unlockedAbilities, bool [] unlockedTokens, string [] set, string name, int icon, 
-        bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimumNumberOfCardsPerStack) {
-        SetEditor.LoadData (cardPool, unlockedAbilities, unlockedTokens, set, name, icon, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsPerStack);
+    public void TargetDownloadDataToSetEditor (NetworkConnection target, int setId, int editorMode, string [] cardPool, bool [] unlockedAbilities, bool [] unlockedTokens, string [] set,
+        string name, int icon, 
+        bool usedCardsArePutOnBottomOfStack, int numberOfStacks, int minimumNumberOfCardsPerStack, bool everyCardCanBeAddedToSetAnyNumberOfTimes) {
+        SetEditor.LoadData (setId, editorMode, cardPool, unlockedAbilities, unlockedTokens, set, 
+            name, icon, usedCardsArePutOnBottomOfStack, numberOfStacks, minimumNumberOfCardsPerStack, everyCardCanBeAddedToSetAnyNumberOfTimes);
     }
     
     [Command]
@@ -175,7 +257,6 @@ public class ClientInterface : NetworkBehaviour {
 
     [TargetRpc]
     public void TargetDownloadCardPoolToEditor (NetworkConnection target, bool isClientOwner, int gameModeId, string [] lines) {
-        Debug.Log (lines);
         CardPoolEditor.LoadDataToEditor (gameModeId, lines);
     }
 
@@ -214,6 +295,11 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdSavePlayerModeSet2 (int gameMode, string [] s, int setId) {
+        ServerLogic.SavePlayerModeSet (this, gameMode, s, setId);
+    }
+
+    [Command]
     public void CmdSaveSetProperties (int setId, string setName, int iconNumber) {
         ServerLogic.SaveSetProperties (this, setId, setName, iconNumber);
     }
@@ -244,11 +330,7 @@ public class ClientInterface : NetworkBehaviour {
         int [] officialIds, int [] publicIds, int [] yourIds, bool [] yourIsLegal) {
         GameModeMenu.UpdateLists (gameMode, officialNames, publicNames, yourNames, officialIds, publicIds, yourIds, yourIsLegal);
     }
-
-    [TargetRpc]
-    public void TargetDownloadSetToEditor (NetworkConnection target, string [] lines, string name, int iconNumber) {
-        SetEditor.LoadSet (lines, name, iconNumber);
-    }
+    
 
     [TargetRpc]
     public void TargetDownloadCurrentGameMatch (NetworkConnection target, string [] lines) {
@@ -353,20 +435,37 @@ public class ClientInterface : NetworkBehaviour {
     public void TargetDownloadGameModeSettingsToEditor (NetworkConnection target, 
         bool isClientOwner,
         bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
-        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack) {
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack,
+        bool everyCardCanBeAddedToSetAnyNumberOfTimes) {
         GameModeSettingsEditor.ShowGameModeSettingsEditor (
             isClientOwner, 
             hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue, 
-            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack);
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack, everyCardCanBeAddedToSetAnyNumberOfTimes);
     }
 
     [Command]
     public void CmdSaveGameModeSettings (int id,
         bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
-        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack) {
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack,
+        bool everyCardCanBeAddedToSetAnyNumberOfTimes) {
         ServerLogic.SaveGameModeSettings (this, id,
             hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue,
-            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack);
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack, everyCardCanBeAddedToSetAnyNumberOfTimes);
+    }
+
+    [Command]
+    public void CmdSaveGameModePlayerSettings (int id, int [] statuses) {
+        ServerLogic.SaveGameModePlayerSettings (this, id, statuses);
+    }
+
+    [Command]
+    public void CmdDownloadGameModePlayerSettings (int id) {
+        ServerLogic.DownloadGameModePlayerSettings (this, id);
+    }
+
+    [TargetRpc]
+    public void TargetDownloadGameModePlayerSettings (NetworkConnection target, int [] statuses) {
+        GameModePlayerSettingsMenu.LoadGameModePlayerSettingsMenu (statuses);
     }
 
     [Command]
@@ -489,6 +588,11 @@ public class ClientInterface : NetworkBehaviour {
     }
 
     [Command]
+    public void CmdCustomGameChangeTeam (int slotNumber) {
+        CustomGameManager.ChangeTeam (this, slotNumber);
+    }
+
+    [Command]
     public void CmdCustomGameRoomStartMatch () {
         CustomGameManager.StartCustomGame (this);
     }
@@ -496,8 +600,8 @@ public class ClientInterface : NetworkBehaviour {
 
     [TargetRpc]
     public void TargetDownloadCustomGameRoom (NetworkConnection target, 
-       bool host, string roomName, int matchType, int [] avatars, string [] names, bool [] AIs) {
-        ClientLogic.LoadCustomGameRoom (host, roomName, matchType, avatars, names, AIs);
+       bool host, string roomName, int matchType, int [] avatars, string [] names, bool [] AIs, int [] teams) {
+        ClientLogic.LoadCustomGameRoom (host, roomName, matchType, avatars, names, AIs, teams);
     }
 
     [Command]

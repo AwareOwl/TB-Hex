@@ -24,7 +24,7 @@ public class EnvironmentScript : MonoBehaviour {
 
     static public List<GameObject> Clouds = new List<GameObject> ();
 
-    static int Theme = 1;
+    static public int Theme = 1;
 
     static public float disabledHeight = -0.5f;
     static public float themeDisabledHeight = -0.5f;
@@ -52,8 +52,8 @@ public class EnvironmentScript : MonoBehaviour {
     }
 
     static public void CreateNewBackground () {
-        //CreateNewBackground (5);
-        CreateNewBackground (Random.Range (1, 7));
+        CreateNewBackground (Random.Range (1, 10));
+        //CreateNewBackground (Random.Range (1, 7));
     }
 
     static public void CreateNewBackground (int theme) {
@@ -79,34 +79,19 @@ public class EnvironmentScript : MonoBehaviour {
             case 6:
                 CreateMoutainBackground ();
                 break;
+            case 7:
+                CreateMagicBackground ();
+                break;
+            case 8:
+                CreateCrystalBackground ();
+                break;
+            case 9:
+                CreateCaveBackground ();
+                break;
                 /*
             case 3:
                 CreateLavaBackground ();
                 break;*/
-        }
-    }
-
-    static public void CreateRandomBoard () {
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                if (true) {
-                    //if (Random.Range (0, 2) != 0) {
-                    //VisualTile tile = new VisualTile ();
-                    if (Random.Range (0, 3) == 0) {
-                        CreateAttachedTile (x, 0, y);
-                    }
-
-                    /*VisualToken token;
-                    if (Random.Range (0, 3) == -1) {
-                        token = new VisualToken ();
-                        token.Anchor.transform.parent = tile.Anchor.transform;
-                        token.Anchor.transform.localPosition = new Vector3 (0, 0.4f, 0);
-
-                        token.Base.GetComponent<VisualEffectScript> ().Init (AppDefaults.PlayerColor [Random.Range (0, 4)], false, true);
-                    }*/
-
-                }
-            }
         }
     }
 
@@ -317,11 +302,11 @@ public class EnvironmentScript : MonoBehaviour {
                 BackgroundTiles [x - minX, y - minZ] = hex;
             }
         }
-
+        /*
         float minTX = VisualTile.TilePosition (minX, 0, minZ).x - 1.1f;
         float minTZ = VisualTile.TilePosition (minX, 0, minZ).z - 0.7f;
         float maxTX = VisualTile.TilePosition (maxX, 0, maxZ).x + 1.1f;
-        float maxTZ = VisualTile.TilePosition (maxX, 0, maxZ).z + 0.5f;
+        float maxTZ = VisualTile.TilePosition (maxX, 0, maxZ).z + 0.5f;*/
 
         /*
         for (int i = 0; i < 800; i++) {
@@ -482,7 +467,89 @@ public class EnvironmentScript : MonoBehaviour {
         }
         return value;
     }
-   
+
+    static private void CreateMagicBackground () {
+        disabledHeight = -3f;
+        gravity = 0.5f;
+        int minX = -1;
+        int maxX = 8;
+        int minY = -8;
+        int maxY = -3;
+        int minZ = -1;
+        int maxZ = 8;
+        GameObject water = Instantiate (ResourcesManager.Instance.BackgroundTheme7) as GameObject;
+        water.transform.parent = Background.transform;
+        int deltaX = maxX - minX + 1;
+        int deltaZ = maxZ - minZ + 1;
+        CreateArrays (deltaX, deltaZ);
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minZ; y <= maxZ; y++) {
+                int py = Random.Range (minY, maxY);
+                GameObject hex = CreateAttachedTile (x, py, y);
+                BackgroundTiles [x - minX, y - minZ] = hex;
+            }
+        }
+    }
+
+    static private void CreateCrystalBackground () {
+        disabledHeight = -3f;
+        gravity = 0.5f;
+        int minX = -1;
+        int maxX = 8;
+        int minY = -8;
+        int maxY = -3;
+        int minZ = -1;
+        int maxZ = 8;
+        GameObject water = Instantiate (ResourcesManager.Instance.BackgroundTheme8) as GameObject;
+        water.transform.parent = Background.transform;
+        int deltaX = maxX - minX + 1;
+        int deltaZ = maxZ - minZ + 1;
+        CreateArrays (deltaX, deltaZ);
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minZ; y <= maxZ; y++) {
+                int py = Random.Range (minY, maxY);
+                GameObject hex = CreateAttachedTile (x, py, y);
+                BackgroundTiles [x - minX, y - minZ] = hex;
+            }
+        }
+    }
+    static private void CreateCaveBackground () {
+        disabledHeight = -3f;
+        gravity = 0.5f;
+        int minX = -1;
+        int maxX = 8;
+        int minY = -9;
+        int maxY = -4;
+        int minZ = -1;
+        int maxZ = 8;
+        GameObject water = Instantiate (ResourcesManager.Instance.GetBackgroundTheme (Theme)) as GameObject;
+        water.transform.parent = Background.transform;
+        int deltaX = maxX - minX + 1;
+        int deltaZ = maxZ - minZ + 1;
+        CreateArrays (deltaX, deltaZ);
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minZ; y <= maxZ; y++) {
+                int py = Random.Range (minY, maxY);
+                GameObject hex = CreateAttachedTile (x, py, y);
+                BackgroundTiles [x - minX, y - minZ] = hex;
+            }
+        }
+        int margin = 6;
+
+        for (int x = minX - margin; x <= maxX + margin; x++) {
+            for (int y = minZ - margin; y <= maxZ + margin; y++) {
+                if (Random.Range (0, 9) != 0) {
+                    continue;
+                }
+                float py = Random.Range (minY, maxY);
+                GameObject hex = CreateAttachedTile (x, py, y);
+                if (x >= minX && x <= maxX && y >= minZ && y <= maxZ) {
+                    BackgroundTiles [x - minX, y - minZ] = hex;
+                }
+            }
+        }
+    }
+
 
     static public void CreateCloud () {
         GameObject cloud = GameObject.CreatePrimitive (PrimitiveType.Quad);
@@ -490,7 +557,7 @@ public class EnvironmentScript : MonoBehaviour {
         Material material;
         material = cloud.GetComponent<Renderer> ().material;
         material.shader = AppDefaults.sprite;
-        material.mainTexture = AppDefaults.Cloud [Random.Range (1, 4)];
+        material.mainTexture = AppDefaults.cloud [Random.Range (1, 4)];
         SetRandomCloudProperties (cloud, true);
         cloud.transform.parent = Background.transform;
         Clouds.Add (cloud);
@@ -620,6 +687,16 @@ public class EnvironmentScript : MonoBehaviour {
         return TileColorMain (false);
     }
 
+    static public bool ThemeHasColors () {
+        switch (Theme) {
+            case 7:
+            case 8:
+                return false;
+            default:
+                return true;
+        }
+    }
+
     static public Color TileColorMain (bool enabled) {
         return TileColorMain (enabled, Theme);
     }
@@ -669,7 +746,6 @@ public class EnvironmentScript : MonoBehaviour {
                     return new Color (sc * 0.92f, sc, sc);
                     //return new Color (Random.Range (0.57f, 0.60f) * (1 - disabledMultiplier * 0.39f), Random.Range (0.43f, 0.49f) * (1 - disabledMultiplier * 0.33f), 0.14f - disabledMultiplier * 0.07f);
                 }
-                break;
             default:
                 return new Color (1, 1, 1);
         }
@@ -684,9 +760,12 @@ public class EnvironmentScript : MonoBehaviour {
         switch (Theme) {
             case 1:
             case 2:
-                tile = Instantiate (AppDefaults.Tile) as GameObject;
+                /*tile = Instantiate (AppDefaults.Tile) as GameObject;
                 tile.transform.localScale = new Vector3 (1, 1, 1);
-                tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.15f);
+                tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.15f);*/
+                tile = Instantiate (AppDefaults.DetailedTile) as GameObject;
+                tile.transform.localScale = new Vector3 (1, 1, 1);
+                tile.transform.Find ("Tile").transform.localScale = new Vector3 (1, 1, 1.5f);
                 break;
             case 3:
                 tile = Instantiate (AppDefaults.ChalliceTile) as GameObject;
@@ -712,13 +791,43 @@ public class EnvironmentScript : MonoBehaviour {
                 tile.transform.Find ("Tile").transform.localScale = new Vector3 (scale2, scale2, scale1);
                 tile.transform.Find ("Tile").transform.localPosition = new Vector3 (0, -scale1 / 2, 0);
                 break;
+            case 7:
+                tile = Instantiate (ResourcesManager.Instance.TileTheme7) as GameObject;
+                tile.transform.localScale = new Vector3 (1, 1, 1);
+                //tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.1f);
+                break;
+            case 8: {
+                tile = Instantiate (ResourcesManager.Instance.TileTheme8) as GameObject;
+                tile.transform.localScale = new Vector3 (1, 1, 1);
+                float width = Random.Range (0.35f, 0.65f);
+                VisualEffectScript VES = tile.transform.Find ("Tile").GetComponent<VisualEffectScript> ();
+                VES.SetLastScale (new Vector3 (width, width, Random.Range (1.6f, 4f)));
+                VES.SetLastPosition (new Vector3 (0, Random.Range (-0.4f, -0.15f), 0));
+                VES.SetRotateVector (new Vector3 (0, Random.Range (-25f, 45f) * Random.Range (-1, 0), 0));
+                //tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.1f);
+            }
+            break;
+            case 9: {
+                tile = Instantiate (ResourcesManager.Instance.GetTileTheme (Theme)) as GameObject;
+                float width = Random.Range (0.8f, 1.075f);
+                float height = Random.Range (0.625f, 2.5f);
+                tile.transform.localScale = new Vector3 (1, 1, 1);
+                tile.transform.Find ("Tile").transform.localScale = new Vector3 (width, width, height);
+                tile.transform.Find ("Tile").transform.localPosition = new Vector3 (0, -(height - 1) / 20f, 0);
+                tile.transform.localEulerAngles = new Vector3 (0, Random.Range (0, 5) * 60, 0);
+                //tile.transform.Find ("Tile").transform.localScale = new Vector3 (0.5f, 0.5f, 0.1f);
+            }
+                break;
         }
         GameObject add;
         Color col;
 
         VisualEffectScript AEffect = tile.AddComponent<VisualEffectScript> ();
         AEffect.endPhase = 0;
-        VisualEffectScript TEffect = tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ();
+        VisualEffectScript TEffect = null;
+        if (Theme < 7) {
+            TEffect = tile.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ();
+        }
         switch (Theme) {
             case 1:
                 col = TileColorMain ();
@@ -781,6 +890,16 @@ public class EnvironmentScript : MonoBehaviour {
                 add.name = "Add";
                 TEffect = add.transform.Find ("Tile").gameObject.AddComponent<VisualEffectScript> ();
                 TEffect.SetColor (ConvertToTileColorTheme (col));
+                break;
+            case 7:
+                col = TileColorMain ();
+                //TEffect.SetColor (col);
+                AEffect.SetDrift (true);
+                break;
+            case 9:
+                //col = TileColorMain ();
+                //TEffect.SetColor (col);
+                AEffect.SetDrift (true);
                 break;
 
         }

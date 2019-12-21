@@ -124,21 +124,21 @@ public class GameModeEditor : GOUI {
         GameObject Button;
         GameObject Clone;
 
-        Background = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 720, 810, false);
+        Background = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 720, 810);
 
         Clone = CreateUIText (Language.AvailableBoards + ":", 720, 230, 520, 36);
 
         row = new RowClass [5];
         for (int x = 0; x < 5; x++) {
             row [x] = CurrentGOUI.gameObject.AddComponent<RowClass> ();
-            row [x].Init (x, RowClass.BoardList);
+            row [x].Init (x, ListMode.BoardList);
         }
 
         GameObject pageUIObject = new GameObject ();
         pageUI = pageUIObject.AddComponent<PageUI> ();
         
 
-        Background = CreateSprite ("UI/Panel_Window_01_Sliced", 195, 330, 10, 390, 390, false);
+        Background = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", 195, 330, 10, 390, 390);
         Clone = CreateUIText (Language.Tools + ":", 195, 225, 520, 36);
 
         if (editMode) {
@@ -151,6 +151,8 @@ public class GameModeEditor : GOUI {
         Clone.name = UIString.GameModeEditorSettings;
         Clone = CreateSprite ("UI/Butt_S_Help", 270, 315, 11, 60, 60, true);
         Clone.name = UIString.GameModeEditorAbout;
+        Clone = CreateSprite ("UI/Butt_S_SetList", 90, 375, 11, 60, 60, true);
+        Clone.name = UIString.ShowGameModePlayerSettingsMenu;
 
         /*Clone = CreateSprite ("UI/Butt_M_Apply", 105, 420, 11, 90, 90, true);
         Clone.name = UIString.GameModeEditorApply;*/

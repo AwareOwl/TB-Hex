@@ -43,7 +43,11 @@ public class VisualTile {
             Clone.transform.localScale = new Vector3 (1, 1, 1);
             Clone.GetComponent<Renderer> ().material.shader = AppDefaults.sprite;
             Clone.GetComponent<Renderer> ().material.mainTexture = Resources.Load ("Textures/Effects/Dot") as Texture;
-            Clone.GetComponent<Renderer> ().material.color = new Color (0.1f, 0.1f, 0.1f, 0.2f);
+            if (EnvironmentScript.Theme != 8) {
+                Clone.GetComponent<Renderer> ().material.color = new Color (0.1f, 0.1f, 0.1f, 0.2f);
+            } else {
+                Clone.GetComponent<Renderer> ().material.color = new Color (0.3f, 0.1f, 0.15f, 0.8f);
+            }
             Collider.GetComponent<UIController> ().number = 1;
             Remains = Clone;
         }
@@ -86,7 +90,10 @@ public class VisualTile {
 
     public void EnableTile (bool enable) {
         Color col = EnvironmentScript.TileColorMain (enable);
-        Tile.GetComponent<VisualEffectScript> ().SetColor (col);
+        VisualEffectScript VEScript = Tile.GetComponent<VisualEffectScript> ();
+        if (VEScript && EnvironmentScript.ThemeHasColors ()) {
+            VEScript.SetColor (col);
+        }
         Transform add = Anchor.transform.Find ("Add");
         if (add != null) {
             add.transform.Find ("Tile").GetComponent<VisualEffectScript> ().SetColor (EnvironmentScript.ConvertToTileColorTheme (col));

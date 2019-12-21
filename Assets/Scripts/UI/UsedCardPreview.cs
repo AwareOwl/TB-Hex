@@ -16,7 +16,7 @@ public class UsedCardPreview : MonoBehaviour {
     public bool destroy;
 
     public float timer = 0;
-    float timerScale;
+    float timerScale = 0.5f;
     public float destroyTime;
 
     static public void ClearEverything () {
@@ -31,11 +31,19 @@ public class UsedCardPreview : MonoBehaviour {
         }
     }
 
+    static public void DestoryPreview (int playerNumber) {
+        ExistingPreviews [playerNumber] [0].GetComponent <UsedCardPreview>().destroyTime = 0;
+    }
+
+    static public void ExtendPreview (int playerNumber) {
+        ExistingPreviews [playerNumber] [0].GetComponent<UsedCardPreview> ().timer = -9000;
+    }
+
 
     public void Init (int playerNumber, bool player, int playerPosition, CardClass card) {
-        timerScale = AppSettings.AnimationDuration;
-        destroyTime = timerScale + 20f * AppSettings.CardPreviewDuration;
-        if (AppSettings.CardPreviewDuration >= 1) {
+        //Debug.Log ("Init");
+        destroyTime = 1;
+        if (AppSettings.PlayedCardPreviewDuration >= 1 || TutorialManager.tutorialNumber == 3 && TutorialManager.state > 2) {
             destroyTime += 10000f;
         }
         PlayerNumber = playerNumber;
@@ -65,6 +73,8 @@ public class UsedCardPreview : MonoBehaviour {
         VisualEffectScript VEScript = Clone.AddComponent<VisualEffectScript> ();
         VEScript.SetScale (new Vector3 [] { new Vector3 (0, 0, 0), new Vector3 (1, 1, 1) });
         VEScript.destroyThisOnEnd = true;
+        //Debug.Log (VEScript, VEScript.gameObject);
+        CreatePreviewCard ();
 
         RefreshPosition ();
     }
@@ -75,7 +85,7 @@ public class UsedCardPreview : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        timer += Time.deltaTime * ExistingPreviews [PlayerNumber].Count * ExistingPreviews [PlayerNumber].Count;
+        timer += Time.deltaTime * ExistingPreviews [PlayerNumber].Count * ExistingPreviews [PlayerNumber].Count / 26 / AppSettings.PlayedCardPreviewDuration;
         RefreshPosition ();
         /*if (PlayerScript.CScript () == null && gameObject != null) {
             DestroyImmediate (gameObject);
@@ -116,32 +126,34 @@ public class UsedCardPreview : MonoBehaviour {
         float gray = 0.6f;
         if (timer * 2 > timerScale && timer - destroyTime < 0) {
             if (Card == null) {
-                GameObject Clone;
-                VisualCard VC = new VisualCard (card);
-                Clone = VC.Anchor;
-                Clone.transform.parent = Anchor.transform;
-                Clone.transform.localScale = new Vector3 (1, 1, 1);
-                Clone.transform.localPosition = new Vector3 (0, 0, 0);
-                Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
-                VC.Background.GetComponent<Renderer> ().material.color = AppDefaults.PlayerColor [PlayerNumber] * 0.25f;
-                Card = Clone;
+                CreatePreviewCard ();
             }
         } else if (ExistingPreviews [PlayerNumber] [0] == gameObject || destroy) {
             if (timer - destroyTime >= 0 && timer - destroyTime < timerScale) {
                 gray = 0.4f;
-                if ((timer - destroyTime) * 2 >= timerScale) {
-                    if (Card != null) {
-                        if (Anchor.GetComponent<VisualEffectScript> () == null) {
-                            VisualEffectScript VEScript = Anchor.AddComponent<VisualEffectScript> ();
-                            VEScript.SetScale (new Vector3 [] { new Vector3 (1, 1, 1), new Vector3 (0, 0, 0) });
-                            VEScript.destroyOnEnd = true;
-                        }
-                    }
+                if ((timer - destroyTime) * 2 >= timerScale
+                    && Card != null
+                    && Anchor.GetComponent<VisualEffectScript> () == null) {
+                    VisualEffectScript VEScript = Anchor.AddComponent<VisualEffectScript> ();
+                    VEScript.SetScale (new Vector3 [] { new Vector3 (1, 1, 1), new Vector3 (0, 0, 0) });
+                    VEScript.destroyOnEnd = true;
                 }
             } else if (timer >= destroyTime + timerScale) {
                 ExistingPreviews [PlayerNumber].RemoveAt (pos);
                 DestroyImmediate (gameObject);
             }
         }
+    }
+
+    void CreatePreviewCard () {
+        GameObject Clone;
+        VisualCard VC = new VisualCard (card);
+        Clone = VC.Anchor;
+        Clone.transform.parent = Anchor.transform;
+        Clone.transform.localScale = new Vector3 (1, 1, 1);
+        Clone.transform.localPosition = new Vector3 (0, 0, 0);
+        Clone.transform.localEulerAngles = new Vector3 (0, 0, 0);
+        VC.Background.GetComponent<Renderer> ().material.color = AppDefaults.PlayerColor [PlayerNumber] * 0.25f;
+        Card = Clone;
     }
 }

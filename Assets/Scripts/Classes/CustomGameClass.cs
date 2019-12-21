@@ -20,6 +20,7 @@ public class CustomGameClass {
 
     public ClientInterface [] clients;
     public bool [] AI;
+    public int [] team;
 
     public int NumberOfPlayers () {
         int count = 0;
@@ -69,8 +70,14 @@ public class CustomGameClass {
         this.name = gameName;
         this.gameMode = gameMode;
         this.matchType = matchType;
-        clients = new ClientInterface [GetNumberOfSlots (matchType)];
-        AI = new bool [clients.Length];
+        int count = GetNumberOfSlots (matchType);
+        clients = new ClientInterface [count];
+        AI = new bool [count];
+
+        team = new int [count];
+        for (int x = 0; x < count; x++) {
+            team [x] = x + 1;
+        }
     }
 
     public bool JoinGame (ClientInterface client) {
@@ -104,6 +111,10 @@ public class CustomGameClass {
         RefreshRoomForClients ();
     }
 
+    public void ChangeTeam (int slot) {
+        team [slot] = team [slot] % team.Length + 1;
+    }
+
     public void AddAI (ClientInterface client, int slot) {
         if (!host == client) {
             return;
@@ -133,9 +144,13 @@ public class CustomGameClass {
                 }
             }
             if (!replaced) {
+                clients [slot].TargetShowMessage (clients [slot].connectionToClient, Language.YouHaveBeenKickedFromTheRoomKey);
                 CustomGameManager.RemoveCustomGame (this);
                 return;
             }
+        }
+        if (clients [slot] != null) {
+            clients [slot].TargetShowMessage (clients [slot].connectionToClient, Language.YouHaveBeenKickedFromTheRoomKey);
         }
         clients [slot] = null;
         AI [slot] = false;
@@ -151,12 +166,12 @@ public class CustomGameClass {
         PlayerPropertiesClass [] properties = new PlayerPropertiesClass [count];
         for (int x = 0; x < count; x++) {
             if (clients [x] != null) {
-                properties [x] = new PlayerPropertiesClass (x + 1, clients [x]);
+                properties [x] = new PlayerPropertiesClass (team [x], clients [x]);
             } else if (AI [x]) {
                 HandClass hand2 = new HandClass ();
                 AIClass AI = new AIClass ();
                 hand2.GenerateRandomHand (gameMode, AI);
-                properties [x] = new PlayerPropertiesClass (x + 1, AI, "AI opponent", "AI opponent", hand2, null);
+                properties [x] = new PlayerPropertiesClass (team [x], AI, "AI opponent", "AI opponent", hand2, null);
             } else {
                 properties [x] = null;
             }

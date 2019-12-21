@@ -1,0 +1,13 @@
+﻿[0] Brak specjalnych właściwości
+[1] Na koniec tury dodatkowo generuje on punkty równe ilości pustych pól.
+[2] Jego umiejętności są aktywowane dodatkowy raz.
+[3] Efekty zmieniające właściwości jego żetonów nie zmieniają ich.
+[4] Pomiędzy turami niszczy wrogie żetony które nie przylegają do żadnego żetonu.
+[5] Przeciwnicy tego gracza nie mogą wygrać gry jeśli nie posiada żetonu silniejszego od wrogich żetonów.
+[6] Ten gracz wygrywa jeśli dowolny wróg straci wszystkie żetony.
+[7] Ten gracz natychmiast przegrywa gdy straci wszystkie żetony.
+[8] Wrogie dla niego żetony nie generują punktacji jeśli nie przylegają do żadnego pustego pola.
+[9] Gdy w trakcie jego tury zniszczy wrogi sobie żeton, wartość wszytkich jego żetonów na kartach wzrasta o 1.
+[10] Zyskuje dodatkową turę za każdym razem gdy uda mu się odzyskać przewagę przyrostu punktacji nad jego przeciwnikiem.
+[11] Po wykonaniu swojej tury niszczy żetony wrogów którzy wygenerowali w tej turze 12 lub więcej punktów.
+[12] Po wykonaniu swojej tury zamienia wszystkie typ wszystkich swoich żetonów na typ ostatnio zagranego żetonu.

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +15,10 @@ public class Language {
     static string TokenDescriptionKey = "TokenDescription";
     static string AbilityNameKey = "AbilityName";
     static string AbilityDescriptionKey = "AbilityDescription";
+    static string BossNameKey = "BossName";
+    static string BossDescriptionKey = "BossDescription";
+    static string StatusDescriptionKey = "StatusDescription";
+    static string TutorialTooltipKey = "TutorialTooltip";
 
 
     public const int English = 0;
@@ -27,6 +32,11 @@ public class Language {
     static public string [] AbilityDescription;
     static public string [] TokenName;
     static public string [] TokenDescription;
+    static public string [] BossName;
+    static public string [] BossDescription;
+    static public string [] StatusDescription;
+
+    static public string [] TutorialTooltip = new string [15];
 
     static public string CreateLocalNetwork;
     static public string CreateLocalNetworkTooltip;
@@ -70,6 +80,7 @@ public class Language {
 
     static public string MainMenuButton;
     static public string ExitGameButton;
+    static public string Settings;
     static public string ContinueButton;
 
     // main menu
@@ -96,9 +107,17 @@ public class Language {
     static public string GoBackToGameVersionSelection;
     static public string EnterNewGameVersionName;
 
+    static public string WorksWellWith;
+    static public string IsGoodAgains;
+    static public string IsWeakAgainst;
+
     static public string ViewGameModeEditor;
     static public string GameModeEditorDescription;
     static public string GameModeEditorReadOnlyDescription;
+    static public string PlayersSettings;
+    static public string PlayerStatuses;
+
+    static public string Player;
 
     static public string AvailableBoards;
     static public string Tools;
@@ -137,6 +156,12 @@ public class Language {
     static public string NumberOfStacks;
     static public string MinimumNumberOfCardsInStack;
     static public string UsedCardsArePlacedOnBottomOfStack;
+    static public string EveryCardCanBeAddedToSetAnyNumberOfTimes;
+
+    static public string Team;
+    
+    static public string BossUnlockTooltip;
+    static public string PuzzleUnlockTooltip;
 
     static public string NumberOfTurnsLeftToTheEndOfGame;
     static public string ShowMenu;
@@ -174,12 +199,22 @@ public class Language {
 
     static public string AvailableMatchTypes;
 
+    static public string Tutorial;
+    static public string Bosses;
+
     static public string Puzzles;
     static public string PuzzleAbout;
     static public string Unfinished;
     static public string Finished;
     static public string ListOfPuzzles;
     static public string MoreToUnlock;
+
+    static public string Missions;
+    static public string Mission;
+
+    static public string ListOfBosses;
+    static public string BossMenuAbout;
+    static public string OpponentTrait;
 
     static public string ShowTokenValueFilters;
     static public string ShowTokenTypeFilters;
@@ -191,10 +226,54 @@ public class Language {
 
     static public string AIOpponent;
 
-    static public string UnlockedAbilities;
-    static public string UnlockedTokens;
+    static public string EnterCode;
+
+    static public string Library;
+    static public string LibraryMenuAbout;
+
+    static public string BeginPuzzle;
+    static public string GoToTheSetEditor;
+    static public string BeginBossFight;
+    static public string BeginMission;
+    static public string RestartPuzzle;
+    static public string RestartMission;
+    static public string RestartBoss;
+
+    static public string LevelUpAndFinishPuzzlesToUnlockMoreCards;
+
+    static public string ShowUnlockedContent;
+    static public string UnlockedAvatar;
+    static public string UnlockedAvatars;
+    static public string NewAvatarUnlocked;
+    static public string NewAvatarsUnlocked;
     static public string UnlockedAbility;
+    static public string UnlockedAbilities;
+    static public string NewAbilityUnlocked;
+    static public string NewAbilitiesUnlocked;
     static public string UnlockedToken;
+    static public string UnlockedTokens;
+    static public string NewTokenUnlocked;
+    static public string NewTokensUnlocked;
+
+    static public string File;
+    static public string TileFilling;
+    static public string TokenOwner;
+    static public string TokenValue;
+    static public string TokenType;
+    static public string AbilityType;
+    static public string AbilityArea;
+
+    static public string Options;
+
+
+    static public string ShowSettingsMenu;
+    static public string MusicVolume;
+    static public string SFXVolume;
+    static public string AnimationDuration;
+    static public string TimeBetweenTurns;
+    static public string PlayedCardDisplayTime;
+
+    static public string YouCanUnlockMoreCardsByFinishingPuzzlesAndIncreasingYourLevel;
 
     static public int PasswordIsIncorrectKey;
     static public int AccountDoesntExistKey;
@@ -213,6 +292,12 @@ public class Language {
     static public int GameVersionDoesNotMeetRequirementsKey;
     static public int SelectedMatchVersionIsNotAvailableKey;
     static public int FailedToConnectToTheGameKey;
+    static public int CodeHasExpiredKey;
+    static public int InvalidCodeKey;
+    static public int YouNeedToSelectSomethingFirstKey;
+    static public int SettingsHaveBeenSavedKey;
+
+    static public int YouHaveBeenKickedFromTheRoomKey;
 
     static public void SetLanguage (int languageKey) {
         PlayerPrefs.SetInt (SelectedLanguageKey, languageKey);
@@ -390,97 +475,106 @@ public class Language {
         MoreToUnlock = UI [152];
         CreateLocalNetworkTooltip = UI [153];
         JoinLocalNetworkTooltip = UI [154];
+        UnlockedAvatar = UI [155];
+        UnlockedAvatars = UI [156];
+        NewAvatarUnlocked = UI [157];
+        NewAvatarsUnlocked = UI [158];
         UnlockedAbilities = UI [159];
         UnlockedTokens = UI [160];
         UnlockedAbility = UI [161];
         UnlockedToken = UI [162];
-
+        ShowUnlockedContent = UI [163];
+        EnterCode = UI [164];
+        Tutorial = UI [166];
+        Bosses = UI [167];
+        NewAbilityUnlocked = UI [168];
+        NewAbilitiesUnlocked = UI [169];
+        NewTokenUnlocked = UI [170];
+        CodeHasExpiredKey = 171;
+        InvalidCodeKey = 172;
+        ListOfBosses = UI [173];
+        BossMenuAbout = UI [174];
+        OpponentTrait = UI [175];
+        Missions = UI [176];
+        NewTokensUnlocked = UI [177];
+        BeginPuzzle = UI [178];
+        GoToTheSetEditor = UI [179];
+        BeginBossFight = UI [180];
+        BeginMission = UI [181];
+        YouNeedToSelectSomethingFirstKey = 182;
+        LevelUpAndFinishPuzzlesToUnlockMoreCards = UI [183];
+        Mission = UI [184];
+        RestartPuzzle = UI [185];
+        RestartMission = UI [186];
+        RestartBoss = UI [187];
+        File = UI [188];
+        TileFilling = UI [189];
+        TokenOwner = UI [190];
+        TokenValue = UI [191];
+        TokenType = UI [192];
+        AbilityType = UI [193];
+        AbilityArea = UI [194];
+        YouCanUnlockMoreCardsByFinishingPuzzlesAndIncreasingYourLevel = UI [195];
+        Library = UI [196];
+        WorksWellWith = UI [197];
+        IsGoodAgains = UI [198];
+        IsWeakAgainst = UI [199];
+        LibraryMenuAbout = UI [200];
+        PlayersSettings = UI [201];
+        Player = UI [202];
+        PlayerStatuses = UI [203];
+        SettingsHaveBeenSavedKey = 204;
+        EveryCardCanBeAddedToSetAnyNumberOfTimes = UI [205];
+        Team = UI [210];
+        YouHaveBeenKickedFromTheRoomKey = 211;
+        BossUnlockTooltip = UI [212];
+        PuzzleUnlockTooltip = UI [213];
+        Settings = UI [214];
+        ShowSettingsMenu = UI [215];
+        Options = UI [216];
+        MusicVolume = UI [217];
+        SFXVolume = UI [218];
+        AnimationDuration = UI [219];
+        TimeBetweenTurns = UI [220];
+        PlayedCardDisplayTime = UI [221];
 
         LoadNamesAndDescriptions (language);
-        LoadAvatarNames (language);
-    }
-    static public void LoadAvatarNames (int language) {
-        string path;
-        TextAsset asset;
-        string allLines;
-        string [] lines;
-
-        path = "Languages/" + FileName [language] + AvatarNameKey;
-        asset = Resources.Load (path) as TextAsset;
-        allLines = asset.text;
-        lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
-        AvatarName = new string [lines.Length];
-        for (int x = 0; x < lines.Length; x++) {
-            int index = lines [x].IndexOf (']');
-            if (lines [x].Length > index + 2) {
-                AvatarName [x] = lines [x].Substring (index + 2);
-            } else {
-                AvatarName [x] = "";
-            }
-        }
     }
 
      static public void LoadNamesAndDescriptions (int language) {
-        string path;
+        string prefixPath = "Languages/" + FileName [language];
+
+        AvatarName = LoadLanguageFile (prefixPath + AvatarNameKey);
+        TokenName = LoadLanguageFile (prefixPath + TokenNameKey);
+        TokenDescription = LoadLanguageFile (prefixPath + TokenDescriptionKey);
+        AbilityName = LoadLanguageFile (prefixPath + AbilityNameKey);
+        AbilityDescription = LoadLanguageFile (prefixPath + AbilityDescriptionKey);
+        BossName = LoadLanguageFile (prefixPath + BossNameKey);
+        BossDescription = LoadLanguageFile (prefixPath + BossDescriptionKey);
+        StatusDescription = LoadLanguageFile (prefixPath + StatusDescriptionKey);
+        TutorialTooltip = LoadLanguageFile (prefixPath + TutorialTooltipKey);
+
+    }
+
+    static public string [] LoadLanguageFile (string path) {
         TextAsset asset;
         string allLines;
         string [] lines;
-
-        path = "Languages/" + FileName [language] + TokenNameKey;
+        string [] output;
+        
         asset = Resources.Load (path) as TextAsset;
         allLines = asset.text;
         lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
-        TokenName = new string [lines.Length];
+        output = new string [lines.Length];
         for (int x = 0; x < lines.Length; x++) {
             int index = lines [x].IndexOf (']');
             if (lines [x].Length > index + 2) {
-                TokenName [x] = lines [x].Substring (index + 2);
+                output [x] = lines [x].Substring (index + 2);
             } else {
-                TokenName [x] = "";
+                output [x] = "";
             }
         }
-
-        path = "Languages/" + FileName [language] + TokenDescriptionKey;
-        asset = Resources.Load (path) as TextAsset;
-        allLines = asset.text;
-        lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
-        TokenDescription = new string [lines.Length];
-        for (int x = 0; x < lines.Length; x++) {
-            int index = lines [x].IndexOf (']');
-            if (lines [x].Length > index + 2) {
-                TokenDescription [x] = lines [x].Substring (index + 2);
-            } else {
-                TokenDescription [x] = "";
-            }
-        }
-
-        path = "Languages/" + FileName [language] + AbilityNameKey;
-        asset = Resources.Load (path) as TextAsset;
-        allLines = asset.text;
-        lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
-        AbilityName = new string [lines.Length];
-        for (int x = 0; x < lines.Length; x++) {
-            int index = lines [x].IndexOf (']');
-            if (lines [x].Length > index + 2) {
-                AbilityName [x] = lines [x].Substring (index + 2);
-            } else {
-                AbilityName [x] = "";
-            }
-        }
-
-        path = "Languages/" + FileName [language] + AbilityDescriptionKey;
-        asset = Resources.Load (path) as TextAsset;
-        allLines = asset.text;
-        lines = allLines.Split (new string [2] { System.Environment.NewLine + "[", "[" }, System.StringSplitOptions.RemoveEmptyEntries);
-        AbilityDescription = new string [lines.Length];
-        for (int x = 0; x < lines.Length; x++) {
-            int index = lines [x].IndexOf (']');
-            if (lines [x].Length > index + 2) {
-                AbilityDescription [x] = lines [x].Substring (index + 2);
-            } else {
-                AbilityDescription [x] = "";
-            }
-        }
+        return output; 
     }
 
     static public string GetSetEditorDescription () {
@@ -499,15 +593,26 @@ public class Language {
         return s;
     }
 
+    static public string GetTokenDescription (int tokenType) {
+        string s = TokenDescription [tokenType];
+        if (InputController.debuggingEnabled) {
+            s = "[" + tokenType + "] " + s;
+        }
+        return s;
+    }
+
     static public string GetAbilityDescription (int abilityType) {
         string s = AbilityDescription [abilityType];
         for (int x = 0; x < AbilityClass.AbilityValue [abilityType].Count; x++) {
             s = s.Replace ("%d" + (x + 1).ToString (), AbilityClass.AbilityValue [abilityType] [x].ToString());
         }
+        if (InputController.debuggingEnabled) {
+            s = "[" + abilityType + "] " + s;
+        }
         return s;
     }
 
-    static public string GetMatchResult (string winner, int winCondition, int limit) {
+    static public string GetMatchResult (string [] winners, int winCondition, int limit) {
         string s = "";
         switch (winCondition) {
             case 1:
@@ -522,9 +627,29 @@ public class Language {
             case 4:
                 s += UI [63];
                 break;
+            case 5:
+                s += UI [206];
+                break;
+            case 6:
+                s += UI [209];
+                break;
         }
-        if (winner != null && winner != "") {
-            s += " " + UI [16].Replace ("%s", winner);
+        if (winners.Length > 0) {
+            if (winners.Length == 1) {
+                s += " " + UI [16].Replace ("%s", winners [0]);
+            } else {
+                string winnersString = "";
+                int count = winners.Length;
+                for (int x = 0; x < count; x++) {
+                    winnersString += winners [x];
+                    if (x + 2 < count) {
+                        winnersString += ", ";
+                    } else if (x + 2 == count) {
+                        winnersString += " " + UI [208] + " ";
+                    }
+                }
+                s += " " + UI [207].Replace ("%s", winnersString);
+            }
         } else {
             s += " " + UI [20];
         }

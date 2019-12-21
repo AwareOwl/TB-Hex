@@ -26,19 +26,47 @@
 [25] Tworzy do 3 Zwykłych Żetonów o wartość 1 na pustych polach będących celem.
 [26] Zmniejsza wartość najsłabszych żetonów będących celem o 1, oraz zwiększa wartość najsilniejszych żetonów będących celem o 1.
 [27] Zwiększa wartość żetonów będących celem o innym typie niż zagrany żeton o 1.
-[28] Podwój wartość ostatnio zagranego żetonu, oraz zwiększ wartość przyjaznego żetonu będącego celem o tą samą wartość.
-[29] Zniszcz do 2 wrogich żetonów będących celem.
-[30] Poświęć 20 zdobytych punktów aby zniszczyć wszystkie żetony będące celem.
+[28] Podwaja wartość ostatnio zagranego żetonu, oraz zwiększ wartość przyjaznego żetonu będącego celem o tą samą wartość.
+[29] Niszczy do 2 wrogich żetonów będących celem.
+[30] Poświęca 20 zdobytych punktów aby zniszczyć wszystkie żetony będące celem.
 [31] Utwórz Zwykłe Żetony o wartość 1 na szczątkach zniszczonych żetonów będących celem.
 [32] Zwiększa wartość zagrywanego żetonu o 1 za każde szczątki zniszczonych żetonów będących celem.
-[33] Poświęć 20 zdobytych punktów aby zmienić typy żetonów będących celem na typ zagranego żetonu.
+[33] Poświęca 20 zdobytych punktów aby zmienić typy żetonów będących celem na typ zagranego żetonu.
 [34] Odpycha żetony będące celem od zagrywanego żetonu, o ile mogą być odepchnięte na puste pola.
 [35] Niszczy słabsze żetony będące celem.
 [36] Zamienia pozycje 2 żetonów będące celem.
 [37] Zamienia typy 2 żetonów będących celem.
 [38] Zmniejsza wartość żetonu na tej karcie o 1.
 [39] Tworzy kopie wrogiego żetonu będącego celem na pustych polach będących celem. Kopie mają wartość 1 i należą do ciebie.
-[40] Jeśli mniej niż 2 szczątki żetonów zostały obrane za cel, zamień typ zagrywanego żetonu na zwykły żeton.
-[41] Zmniejsz wartość silniejszego żetonu będącego celem o 3.
+[40] Jeśli mniej niż 2 szczątki żetonów zostały obrane za cel, zamień typ zagrywanego żetonu na Zwykły Żeton.
+[41] Zmniejsza wartość silniejszego żetonu będącego celem o 3.
 [42] Zmniejsza wartość żetonu na tej karcie do 1.
 [43] Zwiększa wartość najsłabszych żetonów będących celem o 1, oraz zmniejsza wartość najsilniejszych żetonów będących celem o 1.
+[44] Zmniejsza wartość silniejszych żetonów będących celem o 2.
+[45] Gdy jest na szczycie stosu, zwiększa swoją wartość o 1 za każdym razem gdy przeciwnik zagra silniejszy żeton.
+[46] Właściciele żetonów będących celem tracą punkty równe ilości pozostałych tur.
+[47] Poświęca przyjazne żetony będące celem w celu uzyskania 10 punktów za każdy z nich.
+[48] Poświęca X * 20 punktów aby utworzyć X Zwykłych Żetonów o wartości 1 na pustych polach będących celem.
+[49] Zmniejsza wartość żetonu na ostatnio zagranej karcie o 2.
+[50] Właścicielem zagrywanego żetonu staje się właściciel wrogiego żetonu będącego celem.
+[51] Właściciele żetonów będących celem zmniejszają wartość żetonów na kartach ze szczytu ich stosów o 1.
+[52] Zwiększa wartość przyjaznych żetonów będących celem o 2.
+[53] Tworzy żetony o wartości 1 i typie zagranego żetonu na pustych polach będących celem, a następnie niszczy zagrywany żeton.
+[54] Zwiększa wartość wrogich żetonów będących celem o 1 by zwiększyć swoją własną wartość o 1 za każdy z tych żetonów.
+[55] Kradnie całą wartość sojuszniczych żetonów będących celem za wyjątkiem ostatniego punktu.
+[56] Sprawia że najsłabszy żeton będący celem kradnie wartości pozostałych żetonów tego samego gracza będących celem.
+[57] Zmniejsza wartość żetonów będących celem do wartości najsłabszych żetonów będących celem.
+[58] Redukuje wartość żetonów będących celem o połowę (zaokrąglone w górę) i zmienia ich typ na typ zagrywanego żetonu.
+[59] Niszczy żetony będące celem oraz pola na których się znajdują.
+[60] Niszczy pola będące celem na których znajdują się szczątki żetonów.
+[61] Gdy ta karta jest na szczycie stosu, zwiększa swoją wartość o 2 pomiędzy każdą turą.
+[62] Cofa ostatnio zagraną kartę na szczyt stosu z którego została zagrana.
+[63] Niszczy żetony będące celem należące do graczy mających przewagę co najmniej 20 punktów.
+[64] Przejmuje najsłabszy żeton będący celem należący do gracza mającego przewagę co najmniej 20 punktów.
+[65] Kradnie wartości żetonów będących celem należących do graczy mających przewagę co najmniej 20 punktów.
+[66] Zamienia pozycje zagrywanego żetonu z wrogim żetonem będącym celem.
+[67] Zniszcz żetony będące celem których wartość jest równa liczbie pustych pól będących celem.
+[68] Podwój wartość żetonów będących celem których wartość jest równa liczbie pustych pól.
+[69] Zniszcz żetony będące celem których właściciele wygenerowali żetonami w poprzedniej turze co najmniej 20 punktów.
+[70] Usuń 20 punktów właścicielom żetonów będących celem którzy mają przewagę co najmniej 20 punktów.
+[71] Obraca obszary umiejętności kart ze szczytów twoich stosów o 1 za każdy żeton będący celem.

@@ -31,12 +31,12 @@ public class CustomGameRoom : GOUI {
         CurrentCanvas.AddComponent<CustomGameRoom> ();
     }
 
-    static public void LoadData (bool isHost, string gameName, int matchType, int [] avatars, string [] names, bool [] AIs) {
+    static public void LoadData (bool isHost, string gameName, int matchType, int [] avatars, string [] names, bool [] AIs, int [] teams) {
         if (row == null) {
             row = new RowClass [CustomGameClass.GetNumberOfSlots (matchType)];
             for (int x = 0; x < row.Length; x++) {
                 row [x] = CurrentGOUI.gameObject.AddComponent<RowClass> ();
-                row [x].Init (x, RowClass.RoomUsers);
+                row [x].Init (x, ListMode.RoomUsers);
             }
         }
         CustomGameRoom.isHost = isHost;
@@ -66,6 +66,7 @@ public class CustomGameRoom : GOUI {
             } else {
                 row [x].SetState (5);
             }
+            row [x].SetTeam (teams [x]);
         }
     }
 

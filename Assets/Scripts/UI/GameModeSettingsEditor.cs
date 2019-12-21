@@ -9,6 +9,7 @@ public class GameModeSettingsEditor : GOUI {
     static Toggle hasTurnLimitToggle;
     static Toggle isAllowedToRotateCardsToggle;
     static Toggle usedCardsArePutOnBottomOfStackToggle;
+    static Toggle everyCardCanBeAddedToSetAnyNumberOfTimesToggle;
 
     static InputField scoreInputField;
     static InputField turnInputField;
@@ -25,6 +26,7 @@ public class GameModeSettingsEditor : GOUI {
     static int numberOfStacks;
     static int minimumNumberOfCardsInStack;
     static bool usedCardsArePutOnBottomOfStack;
+    static bool everyCardCanBeAddedToSetAnyNumberOfTimes;
 
     static List<GameObject> Garbage = new List<GameObject> ();
 
@@ -49,7 +51,7 @@ public class GameModeSettingsEditor : GOUI {
     }
 
     static public void ShowGameModeSettingsEditor (bool isClientOwner, bool hasScoreWinCondition, int scoreWinConditionValue, bool hasTurnWinCondition, int turnWinConditionValue,
-        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack) {
+        bool isAllowedToRotateCardsDuringMatch, int numberOfStacks, int minimumNumberOfCardsInStack, bool usedCardsArePutOnBottomOfStack, bool everyCardCanBeAddedToSetAnyNumberOfTimes) {
 
         editMode = isClientOwner;
         GameModeSettingsEditor.hasScoreWinCondition = hasScoreWinCondition;
@@ -60,6 +62,7 @@ public class GameModeSettingsEditor : GOUI {
         GameModeSettingsEditor.numberOfStacks = numberOfStacks;
         GameModeSettingsEditor.minimumNumberOfCardsInStack = minimumNumberOfCardsInStack;
         GameModeSettingsEditor.usedCardsArePutOnBottomOfStack = usedCardsArePutOnBottomOfStack;
+        GameModeSettingsEditor.everyCardCanBeAddedToSetAnyNumberOfTimes = everyCardCanBeAddedToSetAnyNumberOfTimes;
 
         DestroyMenu ();
         CurrentCanvas.AddComponent<GameModeSettingsEditor> ();
@@ -75,10 +78,11 @@ public class GameModeSettingsEditor : GOUI {
         numberOfStacks = int.Parse (numberOfStacksInputField.text);
         minimumNumberOfCardsInStack = int.Parse (minimumNumberOfCardsPerStackInputField.text);
         usedCardsArePutOnBottomOfStack = usedCardsArePutOnBottomOfStackToggle.isOn;
+        everyCardCanBeAddedToSetAnyNumberOfTimes = everyCardCanBeAddedToSetAnyNumberOfTimesToggle.isOn;
 
         ClientLogic.MyInterface.CmdSaveGameModeSettings (GameModeEditor.gameModeId,
             hasScoreWinCondition, scoreWinConditionValue, hasTurnWinCondition, turnWinConditionValue,
-            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack);
+            isAllowedToRotateCardsDuringMatch, numberOfStacks, minimumNumberOfCardsInStack, usedCardsArePutOnBottomOfStack, everyCardCanBeAddedToSetAnyNumberOfTimes);
         GameModeEditor.ShowGameModeEditor ();
     }
 
@@ -86,9 +90,9 @@ public class GameModeSettingsEditor : GOUI {
         GameObject Clone;
         InputField inputField;
 
-        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 1200, 720, false);
+        Clone = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 1200, 810);
 
-        int start = 270;
+        int start = 240;
 
         Clone = CreateUIText (Language.GameModeSettings + ":", 720, start, 520, 36);
 
@@ -222,12 +226,19 @@ public class GameModeSettingsEditor : GOUI {
             usedCardsArePutOnBottomOfStackToggle.interactable = false;
         }
 
+        Clone = CreateUIToggle (Language.EveryCardCanBeAddedToSetAnyNumberOfTimes, 690, start + 450, 900, 36);
+        everyCardCanBeAddedToSetAnyNumberOfTimesToggle = Clone.GetComponent<Toggle> ();
+        everyCardCanBeAddedToSetAnyNumberOfTimesToggle.isOn = everyCardCanBeAddedToSetAnyNumberOfTimes;
+        if (!editMode) {
+            everyCardCanBeAddedToSetAnyNumberOfTimesToggle.interactable = false;
+        }
+
         if (editMode) {
-            Clone = CreateSprite ("UI/Butt_M_Apply", 240, start + 510, 11, 90, 90, true);
+            Clone = CreateSprite ("UI/Butt_M_Apply", 240, start + 570, 11, 90, 90, true);
             Clone.name = UIString.SaveGameModeSettings;
         }
 
-        Clone = CreateSprite ("UI/Butt_M_Discard", 1200, start + 510, 11, 90, 90, true);
+        Clone = CreateSprite ("UI/Butt_M_Discard", 1200, start + 570, 11, 90, 90, true);
         Clone.name = UIString.GoBackToGameModeEditor;
 
     }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class RatingData : MonoBehaviour {
+public class RatingData : ServerData {
 
     static public string RatingPath () {
-        string path = ServerData.ServerPath () + "Rating/";
+        string path = ServerPath () + "Rating/";
         if (!Directory.Exists (path)) {
             Directory.CreateDirectory (path);
         }
@@ -57,10 +57,61 @@ public class RatingData : MonoBehaviour {
         return path;
     }
 
+    static public string RatingAbilityOnStackPath () {
+        return RatingPath () + "AbilityOnStack.txt";
+    }
+
     static public string SaveRatingAbilityOnStack (string [] lines) {
-        string path = RatingPath () + "AbilityOnStack.txt";
+        string path = RatingAbilityOnStackPath ();
         File.WriteAllLines (path, lines);
         return path;
+    }
+
+    static public string [] GetRatingAbilityOnStack () {
+        string path = RatingAbilityOnStackPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
+    static public string RatingTokenOnStackPath () {
+        return RatingPath () + "TokenOnStack.txt";
+    }
+
+    static public string SaveRatingTokenOnStack (string [] lines) {
+        string path = RatingTokenOnStackPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingTokenOnStack () {
+        string path = RatingTokenOnStackPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
+    }
+
+    static public string RatingAbilityTokenOnStackPath () {
+        return RatingPath () + "AbilityTokenOnStack.txt";
+    }
+
+    static public string SaveRatingAbilityTokenOnStack (string [] lines) {
+        string path = RatingAbilityTokenOnStackPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string [] GetRatingAbilityTokenOnStack () {
+        string path = RatingAbilityTokenOnStackPath ();
+        if (File.Exists (path)) {
+            string [] lines = File.ReadAllLines (path);
+            return lines;
+        }
+        return null;
     }
 
     static public string RatingAbilityOnRowPath () {
@@ -339,6 +390,38 @@ public class RatingData : MonoBehaviour {
         }
         return new string [0];
     }
+
+    static public string RatingBuggedCardPath () {
+        return RatingPath () + "BuggedCard.txt";
+    }
+
+    static public string SaveRatingBuggedCard (string [] lines) {
+        string path = RatingBuggedCardPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string RatingBuggedAbilityPath () {
+        return RatingPath () + "BuggedAbility.txt";
+    }
+
+    static public string SaveRatingBuggedAbility (string [] lines) {
+        string path = RatingBuggedAbilityPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+    static public string RatingBuggedTokenPath () {
+        return RatingPath () + "BuggedToken.txt";
+    }
+
+    static public string SaveRatingBuggedToken (string [] lines) {
+        string path = RatingBuggedTokenPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
+
 
     static public string RatingTokenStackSizePath () {
         return RatingPath () + "TokenStackSize.txt";

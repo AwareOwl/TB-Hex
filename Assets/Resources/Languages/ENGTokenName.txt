@@ -11,3 +11,14 @@
 [10] Token of Ease
 [11] Token of Deflation
 [12] Token of Risk
+[13] Token of Time
+[14] Token of Adaptation
+[15] Token of Echo
+[16] Token of Renovation
+[17] Socket Token
+[18] Token of Provocation
+[19] Token of Support
+[20] Token of Autodestruction
+[21] Token of Debt
+[22] Token of Generosity
+[23] Token of Dominatiom

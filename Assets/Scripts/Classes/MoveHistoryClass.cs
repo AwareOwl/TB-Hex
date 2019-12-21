@@ -41,6 +41,11 @@ public class MoveHistoryClass  {
         s.Add (playerNumber.ToString ());
         s.Add (stackNumber.ToString ());
         s.Add (usedCardNumber.ToString ());
+        s.Add (usedCard.tokenType.ToString ());
+        s.Add (usedCard.tokenValue.ToString ());
+        s.Add (usedCard.abilityType.ToString ());
+        s.Add (usedCard.abilityArea.ToString ());
+
         return s.ToArray();
     }
 
@@ -55,6 +60,8 @@ public class MoveHistoryClass  {
         PlayerClass player = match.Player [playerNumber];
         if (player.hand != null) {
             usedCard = player.GetCard (stackNumber, usedCardNumber);
+        } else {
+            usedCard = new CardClass (int.Parse (s [7]), int.Parse (s [6]), int.Parse (s [9]), int.Parse (s [8]));
         }
     }
 

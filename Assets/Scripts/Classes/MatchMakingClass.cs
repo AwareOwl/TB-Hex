@@ -10,7 +10,7 @@ public class MatchMakingClass {
     static public MatchClass FindMatch (string accountName) {
         foreach (MatchClass match in matches) {
             foreach (PlayerClass player in match.Player) {
-                if (player.properties != null && player.properties.accountName == accountName && !player.properties.conceded) {
+                if (player != null && player.properties != null && player.properties.accountName == accountName && !player.properties.conceded) {
                     return match;
                 }
             }
@@ -54,6 +54,7 @@ public class MatchMakingClass {
     static public MatchClass CreateGame (int gameMode, int matchType, PlayerPropertiesClass [] properties) {
         MatchClass match = new MatchClass ();
         match.NewMatch (gameMode, matchType, properties.Length);
+        int [] statuses = ServerData.GetGameModeStatuses (gameMode);
         for (int x = 0; x < properties.Length; x++) {
             if (properties [x] != null) {
                 match.SetPlayer (x + 1, new PlayerClass (properties [x]));
@@ -61,6 +62,7 @@ public class MatchMakingClass {
                 if (player != null) {
                     PlayerPropertiesClass pProperties = player.properties;
                     if (pProperties != null) {
+                        pProperties.specialStatus = statuses [x + 1];
                         ClientInterface client = pProperties.client;
                         if (client != null) {
                             ServerData.IncrementThisGameModeUnfinished (client.AccountName, gameMode);

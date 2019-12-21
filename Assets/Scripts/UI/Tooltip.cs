@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Tooltip : GOUI {
 
+    static public bool permanent = false;
+
     static public List<bool> Bolds;
     static public List<Texture> Textures;
     static public List<string> Texts;
@@ -50,6 +52,9 @@ public class Tooltip : GOUI {
     }
 
     static public void NewTooltip () {
+        if (permanent) {
+            return;
+        }
         DestroyTooltip ();
         Bolds = new List<bool> ();
         Textures = new List<Texture> ();
@@ -57,29 +62,49 @@ public class Tooltip : GOUI {
         garbage = new List<GameObject> ();
     }
 
+    static public void NewTooltip (int px, int py, int side, string s) {
+        DestroyPermanentTooltip ();
+        NewTooltip ();
+        permanent = true;
+        AddFragment (null, s, false);
+        FinalizeTooltip (px, py, side);
+    }
+
     static public void NewTooltip (Transform transform, string s) {
+        if (permanent) {
+            return;
+        }
         NewTooltip ();
         AddFragment (null, s, false);
         FinalizeTooltip (transform);
     }
 
     static public void NewTooltip (Transform transform, CardClass card) {
+        if (permanent) {
+            return;
+        }
         NewTooltip ();
         AddFragment (null, Language.AbilityName [card.abilityType], true);
         AddFragment (null, Language.GetAbilityDescription (card.abilityType), false);
         AddFragment (null, "", false);
         AddFragment (null, Language.TokenName [card.tokenType], true);
-        AddFragment (null, Language.TokenDescription [card.tokenType], false);
+        AddFragment (null, Language.GetTokenDescription (card.tokenType), false);
         FinalizeTooltip (transform);
     }
 
     static public void NewAvatarTooltip (Transform transform, int avatarNumber) {
+        if (permanent) {
+            return;
+        }
         NewTooltip ();
         AddFragment (null, Language.AvatarName [avatarNumber], true);
         FinalizeTooltip (transform);
     }
 
     static public void NewAbilityTypeTooltip (Transform transform, int abilityType) {
+        if (permanent) {
+            return;
+        }
         NewTooltip ();
         AddFragment (null, Language.AbilityName [abilityType], true);
         AddFragment (null, Language.GetAbilityDescription (abilityType), false);
@@ -87,13 +112,19 @@ public class Tooltip : GOUI {
     }
 
     static public void NewTokenTypeTooltip (Transform transform, int tokenType) {
+        if (permanent) {
+            return;
+        }
         NewTooltip ();
         AddFragment (null, Language.TokenName [tokenType], true);
-        AddFragment (null, Language.TokenDescription [tokenType], false);
+        AddFragment (null, Language.GetTokenDescription (tokenType), false);
         FinalizeTooltip (transform);
     }
 
     static public void NewTooltip (Transform transform, TokenClass token) {
+        if (permanent) {
+            return;
+        }
         NewTooltip ();
         AddFragment (null, Language.TokenName [token.type], true);
         AddFragment (null, Language.TokenDescription [token.type], false);
@@ -107,35 +138,48 @@ public class Tooltip : GOUI {
         //Title.GetComponent<Text> ().preferredHeight / 2;
     }
 
-    static public void DestroyTooltip () {
+    static public void DestroyPermanentTooltip () {
         foreach (GameObject garbage in garbage) {
             if (garbage != null) {
                 GameObject.DestroyImmediate (garbage);
             }
         }
         garbage = new List<GameObject> ();
+        permanent = false;
+    }
+
+    static public void DestroyTooltip () {
+        if (permanent) {
+            return;
+        }
+        DestroyPermanentTooltip ();
     }
 
 
     static public void FinalizeTooltip (Transform transform) {
-        FinalizeUpperTooltip (transform);
+        if (permanent) {
+            return;
+        }
+        if (!FinalizeUpperTooltip (transform)) {
+            DestroyTooltip ();
+            FinalizeSideTooltip (transform);
+        }
         if (garbage.Count > 0) {
             garbage [0].AddComponent<Tooltip> ().UpdateTransparency ();
         }
     }
 
-    static public void FinalizeUpperTooltip (Transform transform) {
-        background = CreateUIImage ("UI/Panel_PopUp_01_Sliced", false);
-        GameObject.DestroyImmediate (background.GetComponent<BoxCollider> ());
-        GameObject.DestroyImmediate (background.GetComponent<UIController> ());
-        background.GetComponent<Image> ().raycastTarget = false;
-        pointer = CreateUIImage ("UI/Panel_PopUp_01_Sliced_Tip", false);
-        GameObject.DestroyImmediate (pointer.GetComponent<BoxCollider> ());
-        GameObject.DestroyImmediate (pointer.GetComponent<UIController> ());
-        pointer.GetComponent<Image> ().raycastTarget = false;
-        garbage.Add (background);
-        garbage.Add (pointer);
+    static public void FinalizeTooltip (int px, int py, int side) {
+        px = px * Screen.height / 1080;
+        py = (1080 - py) * Screen.height / 1080;
+        px += Screen.width / 2 - 720;
+        FinalizeUpperTooltip (px, py, side);
+        if (garbage.Count > 0) {
+            garbage [0].AddComponent<Tooltip> ().UpdateTransparency ();
+        }
+    }
 
+    static public bool FinalizeUpperTooltip (Transform transform) {
         GameObject someAnchor = new GameObject ();
         someAnchor.transform.SetParent (transform);
         someAnchor.transform.localPosition = new Vector3 (0, 0, 0.5f);
@@ -145,18 +189,44 @@ public class Tooltip : GOUI {
             someAnchor.transform.localPosition = new Vector3 (0, 0.5f, 0);
             someAnchor.transform.localPosition *= SR.size.y;
         }
-
-        anchor = new Vector3 ((int) (Input.mousePosition.x/* - 540 * Screen.width / Screen.height + 720*/),// - 1440 * (1 - Screen.width / Screen.height)),
-            (int) (Camera.main.WorldToScreenPoint (someAnchor.transform.position)).y);
+        int nx = (int) (Input.mousePosition.x);
+        int ny = (int) (Camera.main.WorldToScreenPoint (someAnchor.transform.position)).y;
         DestroyImmediate (someAnchor);
+        return FinalizeUpperTooltip (nx, ny, 1);
+    }
 
-        //anchor = Input.mousePosition;
+    static public bool FinalizeUpperTooltip (int px, int py, int side) {
+        background = CreateUIImage ("UI/Panel_PopUp_01_Sliced", false);
+        DestroyImmediate (background.GetComponent<BoxCollider> ());
+        DestroyImmediate (background.GetComponent<UIController> ());
+        background.GetComponent<Image> ().raycastTarget = false;
+        pointer = CreateUIImage ("UI/Panel_PopUp_01_Sliced_Tip", false);
+        DestroyImmediate (pointer.GetComponent<BoxCollider> ());
+        DestroyImmediate (pointer.GetComponent<UIController> ());
+        pointer.GetComponent<Image> ().raycastTarget = false;
+        garbage.Add (background);
+        garbage.Add (pointer);
+
+        anchor = new Vector3 (px, py);
+
         anchor *= 1080f / Screen.height;
         anchor.x = (int) (anchor.x - 540 * Screen.width / Screen.height + 720);
         anchor.y = 1080f - anchor.y;
 
         height = 30;
         width = 30;
+
+        /*GameObject button = null;
+        
+        if (permanent) {
+            button = CreateUIButton ("UI/Butt_M_Apply",  true);
+            button.name = UIString.TooltipDestroy;
+            button.GetComponent<Image> ().type = Image.Type.Simple;
+            SetInPixScale (button, 60, 60);
+            garbage.Add (button);
+            height += 90;
+        }*/
+
 
         int count = Texts.Count;
         textObjects = new GameObject [count];
@@ -180,13 +250,20 @@ public class Tooltip : GOUI {
             garbage.Add (textObject);
         }
 
-        if (anchor.y - height < 0) {
-            DestroyTooltip ();
-            FinalizeSideTooltip (transform);
-            return;
+        if (anchor.y < height) {
+            if (permanent) {
+                DestroyPermanentTooltip ();
+                permanent = true;
+                FinalizeSideTooltip (px, py, side);
+            }
+            return false;
         }
         
         float posX2 = Mathf.Clamp (anchor.x, width / 2, 1440 - width / 2);
+
+        /*if (permanent) {
+            SetAnchoredPosition (button, (int) posX2, (int) (anchor.y - 75));
+        }*/
 
         for (int x = Texts.Count - 1; x >= 0; x--) {
             SetAnchoredPosition (textObjects [x], (int) posX2, (int) (anchor.y - textHeights [x]));
@@ -196,9 +273,34 @@ public class Tooltip : GOUI {
         SetInPixPosition (pointer, (int) (anchor.x), (int) (anchor.y - 15 - anchor.y % 2), 31, false);
         SetInPixScale (background, (int) width, (int) height, false);
         SetInPixScale (pointer, 30, 30, false);
+        return true;
     }
 
-    static public void FinalizeSideTooltip (Transform transform) {
+    static public bool FinalizeSideTooltip (Transform transform) {
+        int side = 1;
+        if (Input.mousePosition.x > Screen.width / 2) {
+            side = -1;
+        }
+
+        GameObject someAnchor = new GameObject ();
+        someAnchor.transform.SetParent (transform);
+        someAnchor.transform.localPosition = new Vector3 (0.5f * side, 0, 0);
+
+        SpriteRenderer SR = transform.GetComponent<SpriteRenderer> ();
+        if (SR != null) {
+            someAnchor.transform.localPosition = new Vector3 (0.5f * side, 0, 0);
+            someAnchor.transform.localPosition *= SR.size.x;
+        }
+
+        int px = (int) (Camera.main.WorldToScreenPoint (someAnchor.transform.position)).x + 10 * side;
+        int py = (int) Input.mousePosition.y;
+
+        DestroyImmediate (someAnchor);
+
+        return FinalizeSideTooltip (px, py, side);
+    }
+
+    static public bool FinalizeSideTooltip (int px, int py, int side) {
         background = CreateUIImage ("UI/Panel_PopUp_01_Sliced", false);
         GameObject.DestroyImmediate (background.GetComponent<BoxCollider> ());
         GameObject.DestroyImmediate (background.GetComponent<UIController> ());
@@ -208,7 +310,7 @@ public class Tooltip : GOUI {
         garbage.Add (background);
         garbage.Add (pointer);
 
-        int side = 1;
+        /*int side = 1;
         if (Input.mousePosition.x > Screen.width / 2) {
             side = -1;
         }
@@ -226,15 +328,27 @@ public class Tooltip : GOUI {
         anchor = new Vector3 (
             (int) (Camera.main.WorldToScreenPoint (someAnchor.transform.position)).x + 10 * side,
             (int) Input.mousePosition.y);
-        DestroyImmediate (someAnchor);
+        DestroyImmediate (someAnchor);*/
+        anchor = new Vector3 (px, py);
 
         //anchor = Input.mousePosition;
         anchor *= 1080f / Screen.height;
         anchor.x = (int) (anchor.x - 540 * Screen.width / Screen.height + 720);
-        anchor.y = 1080f - anchor.y + 15;
+        anchor.y = 1080f - anchor.y;
 
         height = 30;
         width = 30;
+
+        /*GameObject button = null;
+
+        if (permanent) {
+            button = CreateUIButton ("UI/Butt_M_Apply", true);
+            button.name = UIString.TooltipDestroy;
+            button.GetComponent<Image> ().type = Image.Type.Simple;
+            SetInPixScale (button, 60, 60);
+            garbage.Add (button);
+            height += 90;
+        }*/
 
         GameObject [] textObjects = new GameObject [Texts.Count];
 
@@ -255,19 +369,27 @@ public class Tooltip : GOUI {
             garbage.Add (textObjects [x]);
         }
 
-        float tempHeight = anchor.y + height / 2 - 30;
+        float tempHeight = anchor.y + height / 2 - 15;
+        if (anchor.y < height / 2) {
+            tempHeight += (height / 2) - anchor.y;
+        }
+            /*
+            if (permanent) {
+                SetAnchoredPosition (button, (int) (anchor.x + side * width / 2), (int) (tempHeight - 75));
+            }*/
 
-        for (int x = Texts.Count - 1; x >= 0; x--) {
+            for (int x = Texts.Count - 1; x >= 0; x--) {
             Text textC = textObjects [x].GetComponent<Text> ();
             float thisHeight = textC.preferredHeight;
             tempHeight -= thisHeight;
             SetAnchoredPosition (textObjects [x], (int) (anchor.x + side * width / 2), (int) (tempHeight + thisHeight / 2));
         }
-
-        SetInPixPosition (background, (int) (anchor.x + side * width / 2), (int) (anchor.y - 15), 30, false);
-        SetInPixPosition (pointer, (int) anchor.x, (int) (anchor.y - 15 - anchor.y % 2), 31, false);
+        
+        SetInPixPosition (background, (int) (anchor.x + side * width / 2), Mathf.Max ((int) (anchor.y), (int) (height / 2)), 30, false);
+        SetInPixPosition (pointer, (int) anchor.x, (int) (anchor.y - anchor.y % 2), 31, false);
         SetInPixScale (background, (int) width, (int) height, false);
         SetInPixScale (pointer, 30, 30, false);
         pointer.transform.localEulerAngles = new Vector3 (0, 0, -90 * side);
+        return true;
     }
 }

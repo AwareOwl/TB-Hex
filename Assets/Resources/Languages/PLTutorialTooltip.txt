@@ -1,0 +1,11 @@
+﻿[0] Wybierz kartę by móc ją zagrać
+[1] Kliknij na puste pole by zagrać tą kartę
+[2] Po wykonaniu ruchu żetony generują punkty właścicielowi. Zapełnij swój pasek punktacji aby wygrać mecz.
+[3] Gdy grasz z przeciwnikiem, pod koniec meczu musisz mieć więcej punktów niż on aby wygrać.
+[4] Po użyciu karty zostaje ona odłożona na spód stosu. Najedź myszką na kartę z wierzchu stosu aby dowiedzieć się co ona robi.
+[5] Możesz przyspieszyć koniec meczu poprzez zapełnienie żetonami wszystkich pól.
+[6] Przed wykonaniem ruchu możesz wybrać z którego stosu chcesz użyć kartę.
+[7] Po wykonaniu ruchu następuje tura przeciwnika. Możesz przyjrzeć się karcie zagranej przez przeciwnika najeżdżając na nią myszką.
+[8] W grze obowiązuje limit tur. Gdy wszystkie tury zostaną wykorzystane, mecz zostanie zakończony.
+[9] Niektóre żetony mogą mieć specjalne właściwości. Najedź na nie myszką aby dowiedzieć się co robią.
+[10] Jeśli chcesz dowiedzieć się jake karty znajdują się na danym stosie, najedź na niego myszką i użyj rolki, lub naciśnij klawisz H aby zobaczyć wszystkie stosy.

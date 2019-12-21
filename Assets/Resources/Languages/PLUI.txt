@@ -52,7 +52,7 @@
 [51] Wybierz zestaw kart
 [52] Usuń zestaw kart
 [53] Utwórz nowy zestaw kart
-[54] Zamknij
+[54] Zamknij to menu
 [55] Zmień wersję gry
 [56] Oficjalne wersje gry
 [57] Publiczne wersje gry
@@ -153,11 +153,70 @@
 [152] więcej do odblokowania
 [153] Utwórz własny serwer dzięki któremu będziesz mógł grać w Token Battle Hex. Gracze z Twojej sieci lokalnej będą mogli się podłączyć do tego serwera.
 [154] Dołącz się do serwera w Twojej sieci lokalnej. Jedna osoba z sieci musi założyć serwer abyś mógł skorzystać z tej opcji.
-[155] Wybierz kartę by móc ją zagrać
-[156] Kliknij na puste pole by zagrać tą kartę
-[157] Po wykonaniu ruchu twoje żetony generują punkty. Zapełnij swój pasek punktacji aby wygrać mecz.
-[158] Aby wygrać, pod koniec meczu musisz mieć więcej punktów niż przeciwnik.
+[155] Odblokowany avatar
+[156] Odblokowane avatary
+[157] Odblokowano nowy avatar
+[158] Odblokowano nowe avatary
 [159] Odblokowane umiejętności
 [160] Odblokowane żetony
 [161] Odblokowana umiejętność
 [162] Odblokowany żeton
+[163] Pokaż odblokowaną zawartość
+[164] Wprowadź kod promocyjny
+[165] Odblokowano wszystkie żetony i umiejętności
+[166] Samouczek
+[167] Bossowie
+[168] Odblokowano nową umiejętność
+[169] Odblokowano nowe umiejętności
+[170] Odblokowano nowy żeton
+[171] Kod stracił ważność
+[172] Niepoprawny kod
+[173] Lista bossów
+[174] Bossowie są przeciwnikami stanowiącymi dla gracza wyzwanie. Walcząc z bossami musisz złożyć zestaw kart z określonej puli kart. Bossowie często mogą zaczynać z dużą przewagę i poteżniejszymi kartami, a także posiadać specjalne premie podczas gry.
+[175] Cecha przeciwnika
+[176] Misje
+[177] Odblokowano nowe żetony
+[178] Zacznij puzzle
+[179] Przejdź do edycji zestawu kart
+[180] Rozpocznij walkę z bossem
+[181] Rozpocznij misję
+[182] Najpierw musisz coś wybrać
+[183] Zdobywaj poziomy i przejdź puzzle aby odblokować więcej kart.
+[184] Misja
+[185] Zrestartuj puzzle
+[186] Zrestartuj misję
+[187] Zrestartuj bossa
+[188] Plik
+[189] Wypełnienie pól
+[190] Właściciel żetonu
+[191] Wartość żetonu
+[192] Typ żetonu
+[193] Typ umiejętności
+[194] Obszar umiejętności
+[195] Możesz odblokować więcej kart przechodząc puzzle oraz zwiększając swój poziom.
+[196] Biblioteka
+[197] Dobrze współgra z
+[198] Skuteczne przeciwko
+[199] Słabe przeciwko
+[200] W tym menu możesz przyjrzeć się nieco zaletom i słabościom poszczególnych żetonów i umiejętności. Być może wskazówki te zainspirują Cię do stworzenia nowych strategii.
+[201] Ustawienia graczy
+[202] Gracz
+[203] Statusy graczy
+[204] Ustawienia zostały zapisane
+[205] Każda karta może być dodana do zestawu dowolną ilość razy
+[206] Status jednego z graczy zakończył grę.
+[207] Gracze %s wygrali grę.
+[208] i
+[209] Pozostali gracze przegrali grę.
+[210] Drużyna
+[211] Zostałeś wyrzucony z pokoju.
+[212] Spełnij ukryte warunki aby odblokować więcej bossów.
+[213] Odblokuj więcej umiejętności i/lub żetonów aby zyskać dostęp do kolejnych puzzli.
+[214] Ustawienia
+[215] Pokaż menu ustawień
+[216] Opcje
+[217] Głośność muzyki
+[218] Głośność SFX
+[219] Długość animacji
+[220] Odstęp między turami
+[221] Czas wyświetlania zagranych kart

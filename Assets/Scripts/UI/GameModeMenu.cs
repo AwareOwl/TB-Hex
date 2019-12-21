@@ -109,7 +109,11 @@ public class GameModeMenu : GOUI {
                 if (currentGroup == 2) {
                     legal = yourIsLegal [number];
                 }
-                row [x].SetState (names [currentGroup] [number], ids [currentGroup] [number], 0, legal);
+                if (InputController.debuggingEnabled) {
+                    row [x].SetState (names [currentGroup] [number] + " (" + ids [currentGroup] [number] + ")", ids [currentGroup] [number], 0, legal);
+                } else {
+                    row [x].SetState (names [currentGroup] [number], ids [currentGroup] [number], 0, legal);
+                }
                 if (ids [currentGroup] [number] == selectedId) {
                     row [x].SelectRow ();
                 }
@@ -139,6 +143,7 @@ public class GameModeMenu : GOUI {
         GameObject Clone;
 
         Background = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 1230, 990, false);
+        DestroyImmediate (Background.GetComponent<UIController> ());
 
         //Clone = CreateUIText (Language.OfficialGameVersions + ":", 720, 230, 520, 36);
 
@@ -183,7 +188,7 @@ public class GameModeMenu : GOUI {
         row = new RowClass [5];
         for (int x = 0; x < 5; x++) {
             row [x] = CurrentGOUI.gameObject.AddComponent <RowClass>();
-            row [x].Init (x, RowClass.GameModeList);
+            row [x].Init (x, ListMode.GameModeList);
         }
     }
 }

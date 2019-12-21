@@ -25,6 +25,7 @@ public class TileClass {
         this.remains = tile.remains;
         if (tile.token != null) {
             this.AttachToken (new TokenClass (tile.token));
+            token.board = board;
         }
         this.board = board;
     }
@@ -32,6 +33,10 @@ public class TileClass {
     public TileClass (BoardClass board, int x, int y) {
         this.board = board;
         SetXY (x, y);
+    }
+
+    public bool IsPlayable (int playerNumber) {
+        return enabled && (token == null || (token.type == 17 && token.owner == playerNumber));
     }
 
     public bool IsEmptyTile () {
@@ -44,6 +49,10 @@ public class TileClass {
 
     public bool IsFilledTile () {
         return enabled && token != null;
+    }
+
+    public int GetTeam () {
+        return board.match.GetTeam (token.owner);
     }
 
     void SetXY (int x, int y) {
@@ -109,21 +118,43 @@ public class TileClass {
     }
 
     public TokenClass CreateToken (int type, int value, int owner) {
-        if (enabled && token == null) {
-            token = new TokenClass (this, type, value, owner);
-            switch (token.type) {
-                case 9:
-                    board.BeforeAbilityTriggers.Add (token.tile);
-                    break;
-                case 14:
-                    board.BeforeTokenPlayedTriggers.Add (token.tile);
-                    break;
-            }
-            if (visualTile != null) {
-                token.EnableVisual ();
+        if (enabled){
+            if (token == null) {
+                token = new TokenClass (this, type, value, owner);
+                if (visualTile != null) {
+                    token.EnableVisual ();
+                }
+            } else if (token.type == 17) {
+                int mergedValue = token.value + value;
+                DestroyToken ();
+                token = new TokenClass (this, type, mergedValue, owner);
+                if (visualTile != null) {
+                    token.EnableVisual ();
+                }
+                token.ChangeType (type);
             }
         }
         return token;
+    }
+
+    public void AddToTriggers () {
+        if (board != null && token != null) {
+            board.NumberOfTypes [token.type]++;
+            if (token.tile == null) {
+                Debug.Log ("code 3");
+            }
+            switch (token.type) {
+                case 9:
+                case 15:
+                case 18:
+                    //Debug.Log (board.match.real +  " ADD");
+                    board.BeforeAbilityTriggers.Add (token);
+                    break;
+                case 14:
+                    board.BeforeTokenPlayedTriggers.Add (token);
+                    break;
+            }
+        }
     }
 
     public void AttachToken (TokenClass token) {

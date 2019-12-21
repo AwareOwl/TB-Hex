@@ -1,0 +1,13 @@
+﻿[0] Brak opisu
+[1] Chcąc się wykazać wyruszyłeś na poszukiwania godnego przeciwnika, ale to pomniejsze stworzenie było jedynym co napotkałeś na swojej drodze. Trudno jest podjąć walkę z tak uroczym stworzeniem, ale od czegoś trzeba zacząć.
+[2] Co może być bardziej wkurzające niż papuga powtarzająca wszystko co robisz? Papuga która robi to dwukrotnie. Chciałeś od niej odejść, ale ona zaczęła podążać za tobą, co zmusiło cię do ostatecznego działania.
+[3] Błąkając się po lesie twoją nadzieją było natrafienie na jakikolwiek znak drogowy. Niefortunnie ten znak który znalazłeś był owinięty wężem, który uparcie się go trzymał. Wolałbyś uniknąć przemocy która mogłaby uszkodzić ten znak.
+[4] Podróżowanie o zmroku okazało się być marnym pomysłem. Ryzyko napotkanie drapieżcy jest zbyt duże, a spotkanie z nim kończy się tragicznie dla samotnych ofiar.
+[5] Czasami w trakcie swojej podróży można napotkać rzeczy których nigdy by się nie spodziewało. Przykładem może być mur, o którym nikt nigdy nie mówił i którego nigdy nie było na żadnej mapie. Przejście przez niego może być kłopotliwe.
+[6] Na swojej drodze napotkałeś smoka walczącego z trójką nieznanych Ci istot. Nie zastanawiając się długo postanowić pośpieszyć im z pomocą, mając nadzieję że wyrównasz tą nierówną walkę.
+[7] Pomimo szlachetnego czynu szybko zaczynasz żałować swojej decyzji, gdy zdajesz sobie sprawę że tajemnicze postacie nie mają wobec ciebie pozytywnych zamiarów. Być może ten smok nie był taki zły jak się wydawało.
+[8] Z całej trójki pozostała tylko zielona istota, a przez ciebie przenika wrażenie że zaczyna ona wpadać w gniew. Po chwili cały teren zostaje pokryty pnączami, które zdecydowanie utrudniają tobie jakiekolwiek akcje.
+[9] Z całej trójki pozostała tylko czerwona istota, choć odnosisz wrażenie że śmierć pozostałych jedynie tą istotę wzmocniły. Jej agresja wzrosła i nic nie wskazuje na to, że zacznie maleć.
+[10] Z całej trójki pozostała tylko niebieska istota, ale ta zyskała jedynie na pewności siebie, tak jakby pozostanie ostatnim było to czego pragnęła, choć nie potrafisz dostrzec powodów ku takiemu zachowaniu.
+[11] Wchodząc do jednej z jaskiń ujrzałeś widok jakby nie z tego świata, a w oddali imponująco mienił się złoty przedmiot. Pokusa by po niego sięgnąć jest wielka, jednak droga ku niemu wydaje się być niemal równie niestabilna co kruchy lód.
+[12] Po dosięgnięciu złotego działa postanowiłeś przetestować je na pobliskim otoczeniu. Po pierwszym strzale okazało się jednak że tutejszym istotom raczej nie spodobał się twój pomysł - być może to działo wcale nie było niczyje.

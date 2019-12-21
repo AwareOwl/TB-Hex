@@ -50,6 +50,9 @@ public class HandClass  {
     }
 
     public StackClass GetStack (int stackNumber) {
+        if (stackNumber < 0 || stackNumber >= stack.Length) {
+            return null;
+        }
         return stack [stackNumber];
     }
 
@@ -116,9 +119,255 @@ public class HandClass  {
         output += 1 / scale - 1f;
         output *= scale;
         output -= 1 / scale - 1f;
-        output *= 0.65f;
-        output = Mathf.Clamp (output, 0.5f, 2.2f);
+        output *= 0.99f;
+        output = Mathf.Clamp (output, 0.4f, 5.2f);
+        //output = Mathf.Clamp (output, 0.8f, 1.2f);
+        //output = 1;
         return output;
+    }
+
+    public void GenerateTutorialHand (int id, bool player) {
+        if (player) {
+            switch (id) {
+                case 1:
+                    Init (1);
+                    stack [0].Add (new CardClass (4, 0, 0, 0));
+                    break;
+                case 2:
+                    Init (1);
+                    stack [0].Add (new CardClass (4, 0, 0, 0));
+                    stack [0].Add (new CardClass (3, 0, 1, 1));
+                    break;
+                case 3:
+                    Init (2);
+                    stack [0].Add (new CardClass (4, 0, 0, 0));
+                    stack [0].Add (new CardClass (3, 0, 1, 1));
+                    stack [1].Add (new CardClass (2, 0, 1, 5));
+                    stack [1].Add (new CardClass (2, 0, 1, 2));
+                    break;
+                case 4:
+                    Init (4);
+                    stack [0].Add (new CardClass (4, 0, 0, 0));
+                    stack [0].Add (new CardClass (3, 0, 1, 1));
+                    stack [1].Add (new CardClass (2, 0, 1, 5));
+                    stack [1].Add (new CardClass (2, 0, 1, 2));
+                    stack [2].Add (new CardClass (2, 1, 0, 0));
+                    stack [2].Add (new CardClass (2, 0, 4, 9));
+                    stack [3].Add (new CardClass (1, 1, 4, 5));
+                    stack [3].Add (new CardClass (2, 0, 4, 1));
+                    break;
+            }
+        } else {
+            switch (id) {
+                case 2:
+                    Init (1);
+                    stack [0].Add (new CardClass (2, 0, 4, 1));
+                    stack [0].Add (new CardClass (3, 0, 0, 0));
+                    break;
+                case 3:
+                    Init (1);
+                    stack [0].Add (new CardClass (2, 0, 4, 1));
+                    stack [0].Add (new CardClass (3, 0, 0, 0));
+                    stack [0].Add (new CardClass (2, 0, 1, 2));
+                    stack [0].Add (new CardClass (4, 0, 0, 0));
+                    break;
+                case 4:
+                    Init (1);
+                    stack [0].Add (new CardClass (2, 0, 4, 1));
+                    stack [0].Add (new CardClass (2, 1, 0, 0));
+                    stack [0].Add (new CardClass (1, 1, 1, 2));
+                    stack [0].Add (new CardClass (2, 1, 0, 0));
+                    break;
+            }
+        }
+    }
+
+
+    public void GenerateBossHand (int id, int playerNumber = 2) {
+        switch (playerNumber) {
+            case 2:
+                switch (id) {
+                    case 1:
+                        Init (4);
+                        stack [0].Add (new CardClass (1, 0, 1, 25));
+                        stack [1].Add (new CardClass (1, 0, 2, 25));
+                        stack [2].Add (new CardClass (1, 0, 3, 25));
+                        stack [3].Add (new CardClass (3, 0, 4, 15));
+                        break;
+                    case 2:
+                        Init (4);
+                        stack [0].Add (new CardClass (2, 0, Random.Range (1, 4), 1));
+                        stack [0].Add (new CardClass (2, 0, Random.Range (1, 4), 1));
+                        stack [0].Add (new CardClass (2, 0, Random.Range (1, 4), 1));
+                        stack [0].Add (new CardClass (2, 0, Random.Range (1, 4), 1));
+                        stack [1].Add (new CardClass (1, 6, 4, 1));
+                        stack [2].Add (new CardClass (2, 0, 4, 7));
+                        stack [3].Add (new CardClass (1, 15, 4, 7));
+                        break;
+                    case 3:
+                        Init (4);
+                        stack [0].Add (new CardClass (3, 10, 4, 31));
+                        stack [1].Add (new CardClass (1, 2, 1, 25));
+                        stack [2].Add (new CardClass (1, 2, 2, 25));
+                        stack [3].Add (new CardClass (1, 2, 3, 25));
+                        break;
+                    case 4:
+                        Init (3);
+                        stack [0].Add (new CardClass (1, 0, 4, 5));
+                        stack [0].Add (new CardClass (1, 0, 4, 5));
+                        stack [0].Add (new CardClass (1, 0, 4, 5));
+                        stack [0].Add (new CardClass (1, 0, 4, 5));
+                        stack [0].Add (new CardClass (3, 0, 4, 5));
+                        stack [1].Add (new CardClass (1, 6, 4, 12));
+                        stack [1].Add (new CardClass (1, 6, 4, 12));
+                        stack [1].Add (new CardClass (1, 6, 4, 12));
+                        stack [1].Add (new CardClass (1, 6, 4, 12));
+                        stack [1].Add (new CardClass (3, 0, 4, 12));
+                        stack [2].Add (new CardClass (2, 0, 4, 34));
+                        stack [2].Add (new CardClass (2, 0, 4, 34));
+                        stack [2].Add (new CardClass (2, 0, 4, 34));
+                        stack [2].Add (new CardClass (2, 0, 4, 34));
+                        stack [2].Add (new CardClass (4, 0, 4, 34));
+                        break;
+                    case 5:
+                        Init (1);
+                        stack [0].Add (new CardClass (1, 0, 0, 49));
+                        break;
+                    case 6:
+                        Init (4);
+                        stack [0].Add (new CardClass (5, 0, 4, 29));
+                        stack [1].Add (new CardClass (7, 0, 4, 31));
+                        stack [2].Add (new CardClass (5, 0, 4, 35));
+                        stack [3].Add (new CardClass (4, 0, 4, 59));
+                        break;
+                    case 7:
+                        Init (3);
+                        stack [0].Add (new CardClass (2, 0, 1, 1));
+                        stack [0].Add (new CardClass (2, 0, 2, 1));
+                        stack [0].Add (new CardClass (2, 0, 3, 1));
+                        stack [0].Add (new CardClass (2, 0, 4, 1));
+                        stack [1].Add (new CardClass (4, 5, 0, 0));
+                        stack [1].Add (new CardClass (3, 5, 0, 0));
+                        stack [1].Add (new CardClass (2, 5, 0, 0));
+                        stack [1].Add (new CardClass (1, 5, 0, 0));
+                        stack [2].Add (new CardClass (2, 0, 4, 24));
+                        stack [2].Add (new CardClass (2, 0, 4, 24));
+                        stack [2].Add (new CardClass (3, 0, 4, 24));
+                        break;
+                    case 8:
+                        Init (4);
+                        stack [0].Add (new CardClass (3, 2, 4, 2));
+                        stack [1].Add (new CardClass (1, 2, 1, 25));
+                        stack [1].Add (new CardClass (1, 2, 2, 25));
+                        stack [1].Add (new CardClass (1, 2, 3, 25));
+                        stack [2].Add (new CardClass (1, 0, 4, 60));
+                        stack [3].Add (new CardClass (2, 2, 4, 31));
+                        break;
+                    case 9:
+                        Init (4);
+                        stack [0].Add (new CardClass (1, 6, 4, 24));
+                        stack [1].Add (new CardClass (1, 2, 4, 35));
+                        stack [2].Add (new CardClass (1, 5, 0, 0));
+                        stack [3].Add (new CardClass (1, 1, 0, 42));
+                        break;
+                    case 10:
+                        Init (4);
+                        stack [0].Add (new CardClass (1, 20, 4, 31));
+                        stack [1].Add (new CardClass (1, 6, 1, 69));
+                        stack [1].Add (new CardClass (1, 6, 2, 69));
+                        stack [1].Add (new CardClass (1, 6, 3, 69));
+                        stack [2].Add (new CardClass (1, 2, 4, 46));
+                        stack [3].Add (new CardClass (1, 20, 0, 61));
+                        stack [3].Add (new CardClass (1, 20, 0, 61));
+                        stack [3].Add (new CardClass (1, 20, 0, 61));
+                        stack [3].Add (new CardClass (1, 20, 0, 61));
+                        stack [3].Add (new CardClass (1, 20, 0, 61));
+                        break;
+                    case 11:
+                        Init (4);
+                        stack [0].Add (new CardClass (3, 6, 1, 59));
+                        stack [0].Add (new CardClass (5, 6, 1, 59));
+                        stack [0].Add (new CardClass (7, 6, 1, 59));
+                        stack [0].Add (new CardClass (8, 6, 1, 59));
+                        stack [1].Add (new CardClass (3, 6, 2, 59));
+                        stack [1].Add (new CardClass (5, 6, 2, 59));
+                        stack [1].Add (new CardClass (7, 6, 2, 59));
+                        stack [1].Add (new CardClass (8, 6, 2, 59));
+                        stack [2].Add (new CardClass (3, 6, 3, 59));
+                        stack [2].Add (new CardClass (5, 6, 3, 59));
+                        stack [2].Add (new CardClass (7, 6, 3, 59));
+                        stack [2].Add (new CardClass (8, 6, 3, 59));
+                        stack [3].Add (new CardClass (2, 6, 4, 8));
+                        break;
+                    case 12:
+                        Init (2);
+                        stack [0].Add (new CardClass (5, 6, 1, 25));
+                        stack [0].Add (new CardClass (1, 6, 4, 2));
+                        stack [0].Add (new CardClass (1, 6, 4, 2));
+                        stack [0].Add (new CardClass (1, 6, 4, 2));
+                        stack [0].Add (new CardClass (1, 6, 0, 0));
+                        stack [1].Add (new CardClass (2, 6, 4, 25));
+                        stack [1].Add (new CardClass (1, 1, 4, 2));
+                        stack [1].Add (new CardClass (1, 1, 4, 2));
+                        stack [1].Add (new CardClass (1, 1, 4, 2));
+                        stack [1].Add (new CardClass (1, 1, 4, 2));
+                        break;
+                }
+                break;
+            case 3:
+                switch (id) {
+                    case 6:
+                        Init (4);
+                        stack [0].Add (new CardClass (1, 0, 1, 1));
+                        stack [0].Add (new CardClass (3, 13, 1, 1));
+                        stack [1].Add (new CardClass (1, 20, 1, 25));
+                        stack [1].Add (new CardClass (2, 13, 1, 25));
+                        stack [2].Add (new CardClass (1, 0, 1, 70));
+                        stack [2].Add (new CardClass (3, 13, 1, 70));
+                        stack [3].Add (new CardClass (2, 0, 0, 0));
+                        stack [3].Add (new CardClass (4, 13, 0, 0));
+                        stack [0].Add (new CardClass (1, 0, 1, 1));
+                        stack [0].Add (new CardClass (3, 13, 4, 1));
+                        stack [1].Add (new CardClass (1, 20, 1, 25));
+                        stack [1].Add (new CardClass (1, 13, 4, 25));
+                        stack [2].Add (new CardClass (1, 0, 1, 70));
+                        stack [2].Add (new CardClass (4, 13, 1, 70));
+                        break;
+                    case 7:
+                        Init (4);
+                        stack [0].Add (new CardClass (3, 0, 1, 10));
+                        stack [0].Add (new CardClass (3, 0, 2, 10));
+                        stack [0].Add (new CardClass (3, 0, 3, 10));
+                        stack [0].Add (new CardClass (3, 0, 4, 10));
+                        stack [1].Add (new CardClass (3, 0, 1, 46));
+                        stack [1].Add (new CardClass (3, 0, 2, 46));
+                        stack [1].Add (new CardClass (3, 0, 3, 46));
+                        stack [2].Add (new CardClass (3, 0, 1, 47));
+                        stack [2].Add (new CardClass (3, 0, 2, 47));
+                        stack [2].Add (new CardClass (3, 0, 3, 47));
+                        stack [3].Add (new CardClass (3, 0, 1, 70));
+                        stack [3].Add (new CardClass (3, 0, 2, 70));
+                        stack [3].Add (new CardClass (3, 0, 3, 70));
+                        break;
+                }
+                break;
+            case 4:
+                switch (id) {
+
+                    case 7:
+                        Init (2);
+                        stack [0].Add (new CardClass (1, 0, 1, 2));
+                        stack [0].Add (new CardClass (1, 0, 2, 2));
+                        stack [0].Add (new CardClass (1, 0, 3, 2));
+                        stack [0].Add (new CardClass (1, 6, 4, 2));
+                        stack [1].Add (new CardClass (1, 6, 1, 52));
+                        stack [1].Add (new CardClass (1, 6, 2, 52));
+                        stack [1].Add (new CardClass (1, 6, 3, 52));
+                        stack [1].Add (new CardClass (1, 20, 4, 52));
+                        break;
+                }
+                break;
+        }
     }
 
     public void GenerateRandomHand (int gameModeId, AIClass AI) {
@@ -170,11 +419,11 @@ public class HandClass  {
             }
         }
 
-        for (int y = 0; y < 5; y++) {
+        for (int x = 0; x < numberOfStacks; x++) {
             if (SumOfValues == 0) {
                 break;
             }
-            for (int x = 0; x < numberOfStacks; x++) {
+            for (int y = 0; y < 5; y++) {
                 if (stackSize [x] <= y) {
                     continue;
                 }
@@ -248,7 +497,7 @@ public class HandClass  {
 
                     if (CardValue [z] != 0) {
                         CardValue [z] = Mathf.Sqrt (CardValue [z]);
-                        CardValue [z] = Mathf.Max (0.1f, CardValue [z]);
+                        CardValue [z] = Mathf.Max (0.01f, CardValue [z]);
                     }
 
                 }
@@ -281,13 +530,13 @@ public class HandClass  {
         CardPoolClass cardPool = new CardPoolClass ();
         cardPool.LoadFromFile (gameMode);
         stack [0].Add (cardPool.Card [0]);
-        stack [1].Add (cardPool.Card [1]);
-        stack [2].Add (cardPool.Card [32]);
-        stack [3].Add (cardPool.Card [2]);
-        stack [4].Add (cardPool.Card [15]);
-        stack [5].Add (cardPool.Card [12]);
-        stack [6].Add (cardPool.Card [6]);
-        stack [7].Add (cardPool.Card [5]);
+        stack [0].Add (cardPool.Card [1]);
+        stack [1].Add (cardPool.Card [32]);
+        stack [1].Add (cardPool.Card [2]);
+        stack [2].Add (cardPool.Card [15]);
+        stack [2].Add (cardPool.Card [12]);
+        stack [3].Add (cardPool.Card [6]);
+        stack [3].Add (cardPool.Card [5]);
     }
 
     public string [] ModeHandToString () {
@@ -310,11 +559,13 @@ public class HandClass  {
         LoadFromFileString (gameModeId, ServerData.GetPlayerModeSet (accountName, gameModeId, setId));
         bool [] unlockedAbilities = ServerData.GetUserUnlockedAbilities (accountName);
         bool [] unlockedTokens = ServerData.GetUserUnlockedTokens (accountName);
+       // DebugString ();
         for (int x = 0; x < numberOfStacks; x++) {
             StackClass tStack = stack [x];
             StackClass newStack = new StackClass ();
             for (int y = 0; y < tStack.card.Count; y++) {
                 CardClass card = tStack.card [y];
+                //Debug.Log (card.abilityArea);
                 if (!unlockedAbilities [card.abilityType] || !unlockedTokens [card.tokenType]) {
                 } else {
                     newStack.Add (card);
@@ -322,6 +573,7 @@ public class HandClass  {
             }
             stack [x] = newStack;
         }
+        //DebugString ();
     }
 
     public void LoadFromFileString (int gameModeId, string [] lines) {
@@ -329,6 +581,7 @@ public class HandClass  {
         cardPool.LoadFromFile (gameModeId);
         int numberOfStacks = ServerData.GetGameModeNumberOfStacks (gameModeId);
         LoadFromFileString (cardPool, lines, numberOfStacks);
+        //DebugString ();
     }
 
     public void LoadFromFileString (CardPoolClass cardPool, string [] lines, int numberOfStacks) {
@@ -348,12 +601,13 @@ public class HandClass  {
                 int abilityArea = int.Parse (word [y * 2 + 1]);
                 if (stack [x].card [row].abilityArea == 0) {
 
-                } else if (stack [x].card [row].abilityArea < 3 && abilityArea < 3) {
-                    stack [x].card [row].abilityArea = abilityArea;
+                } else if (stack [x].card [row].abilityArea <= 3 && abilityArea <=3) {
+                    stack [x].card [row].abilityArea = Mathf.Max (abilityArea, 1);
                 }
                 row ++;
             }
         }
+        //DebugString ();
     }
 
     public void LoadFromModeString (string [] lines) {
@@ -369,6 +623,18 @@ public class HandClass  {
                 stack [x].Add (card);
             }
         }
+    }
+
+    public void DebugString () {
+        string s = "";
+        for (int x = 0; x < numberOfStacks; x++) {
+            StackClass stack = this.stack [x];
+            for (int y = 0; y < stack.card.Count; y++) {
+                s += stack.card [y].abilityArea + " ";
+            }
+            s += System.Environment.NewLine;
+        }
+        Debug.Log (s);
     }
 
 }

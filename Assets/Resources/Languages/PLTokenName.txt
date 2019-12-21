@@ -13,3 +13,12 @@
 [12] Żeton Ryzyka
 [13] Żeton Czasu
 [14] Żeton Adaptacji
+[15] Żeton Echo
+[16] Żeton Odnowy
+[17] Gniazdowy Żeton
+[18] Żeton Prowokacji
+[19] Żeton Wsparcia
+[20] Żeton Autodestrukcji
+[21] Żeton Długu
+[22] Żeton Hojności
+[23] Żeton Dominacji

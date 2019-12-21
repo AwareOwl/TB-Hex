@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AIRatingMenu : GOUI {
 
+    static int sortMode;
     static int count;
     static int gameModeId;
     static GameObject [] Card;
@@ -18,6 +19,10 @@ public class AIRatingMenu : GOUI {
     private void Update () {
         if (Input.GetKeyDown ("r")) {
             ShowAIRatingMenuMenu (gameModeId);
+            RefreshPage ();
+        }
+        if (Input.GetKeyDown ("s")) {
+            sortMode = (sortMode + 1) % 2;
             RefreshPage ();
         }
     }
@@ -43,11 +48,11 @@ public class AIRatingMenu : GOUI {
             Card [z].transform.localPosition = new Vector3 (1000, 1000, 1000);
             
             card.Anchor.transform.SetParent (GOUI.CurrentCanvas.transform);
-            card.Anchor.transform.localScale = Vector3.one * 0.14f;
+            card.Anchor.transform.localScale = Vector3.one * 0.12f;
             card.Anchor.transform.localEulerAngles = new Vector3 (-90, 0, 0);
 
             GameObject Clone = CreateText (z.ToString ());
-            Clone.transform.localScale = Vector3.one * 0.025f;
+            Clone.transform.localScale = Vector3.one * 0.022f;
             Clone.transform.SetParent (Card [z].transform);
             Clone.transform.localPosition = new Vector3 (0, 0, -1.1f);
             Text [z] = Clone;
@@ -56,22 +61,45 @@ public class AIRatingMenu : GOUI {
 
     }
 
+    static int rowCount = 22;
+
     static public void RefreshPage () {
-        List<int> Popularity = new List<int> ();
-        for (int x = 0; x < count; x++) {
-            Popularity.Add (x);
-        }
-        Popularity.Sort ((t1, t2) => RatingClass.cardPopularity [t1].CompareTo (RatingClass.cardPopularity [t2]));
+        if (sortMode == 0) {
+            List<int> Popularity = new List<int> ();
+            for (int x = 0; x < count; x++) {
+                Popularity.Add (x);
+            }
+            Popularity.Sort ((t1, t2) => RatingClass.cardPopularity [t1].CompareTo (RatingClass.cardPopularity [t2]));
 
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 14; x++) {
-                int number = x + y * 12;
-                if (number >= count) {
-                    break;
+            for (int y = 0; y < 9; y++) {
+                for (int x = 0; x < rowCount; x++) {
+                    int number = x + y * rowCount;
+                    if (number >= count) {
+                        break;
+                    }
+
+                    SetInPixPosition (Card [Popularity [number]], -150 + 85 * x, 80 + 120 * y, 12);
+                    Text [number].GetComponent<TextMesh> ().text = number.ToString () + " (" + RatingClass.cardPopularity [number].ToString () + ")";
                 }
+            }
 
-                SetInPixPosition (Card [Popularity [number]], 50 + 110 * x, 80 + 145 * y, 12);
-                Text [number].GetComponent <TextMesh>().text = number.ToString () + " (" + RatingClass.cardPopularity [number].ToString() + ")";
+        } else {
+            List<int> winRatio = new List<int> ();
+            for (int x = 0; x < count; x++) {
+                winRatio.Add (x);
+            }
+            winRatio.Sort ((t1, t2) => RatingClass.cardNumberWinRatio [t1].CompareTo (RatingClass.cardNumberWinRatio [t2]));
+
+            for (int y = 0; y < 9; y++) {
+                for (int x = 0; x < rowCount; x++) {
+                    int number = x + y * rowCount;
+                    if (number >= count) {
+                        break;
+                    }
+
+                    SetInPixPosition (Card [winRatio [number]], -150 + 85 * x, 80 + 120 * y, 12);
+                    Text [number].GetComponent<TextMesh> ().text = number.ToString () + " (" + RatingClass.cardNumberWinRatio [number].ToString () + ")";
+                }
             }
         }
     }

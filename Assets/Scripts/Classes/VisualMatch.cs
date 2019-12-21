@@ -12,7 +12,7 @@ public class VisualMatch : MonoBehaviour {
 
     private void Awake () {
         instance = this;
-        GlobalTimer = 0;
+        GlobalTimer = 0.5f;
     }
 
     private void Update () {
@@ -36,7 +36,10 @@ public class VisualMatch : MonoBehaviour {
 
     public IEnumerator IEPlayCard (int playerNumber, bool player, int playerPosition, CardClass card) {
         yield return new WaitForSeconds (GlobalTimer);
-        new GameObject ().AddComponent<UsedCardPreview> ().Init (playerNumber, player, playerPosition, card);
+        GameObject Clone = new GameObject ();
+        Clone.AddComponent<UsedCardPreview> ().Init (playerNumber, player, playerPosition, card);
+        //Clone.AddComponent<UIController> ();
+        //Clone.name = UIString.UsedCardPreview;
     }
 
     public void CreateRemains (VisualTile tile) {
@@ -148,20 +151,20 @@ public class VisualMatch : MonoBehaviour {
     }
 
 
-    public void SetPlayerHealthBar (VisualPlayer player, int score, int scoreIncome, int scoreLimit) {
+    public void SetPlayerHealthBar (VisualTeam player, int [] score, int [] scoreIncome, int scoreLimit) {
         StartCoroutine (IESetPlayerHealthBar (player, score, scoreIncome, scoreLimit));
     }
 
-    public IEnumerator IESetPlayerHealthBar (VisualPlayer player, int score, int scoreIncome, int scoreLimit) {
+    public IEnumerator IESetPlayerHealthBar (VisualTeam player, int [] score, int [] scoreIncome, int scoreLimit) {
         yield return new WaitForSeconds (GlobalTimer);
         player.SetPlayerHealthBar (score, scoreIncome, scoreLimit);
     }
 
-    public void SetPlayerActive (VisualPlayer player, bool active) {
+    public void SetPlayerActive (VisualTeam player, bool active) {
         StartCoroutine (IESetPlayerActive (player, active));
     }
 
-    public IEnumerator IESetPlayerActive (VisualPlayer player, bool active) {
+    public IEnumerator IESetPlayerActive (VisualTeam player, bool active) {
         yield return new WaitForSeconds (GlobalTimer);
         player.SetPlayerActive (active);
     }
@@ -179,6 +182,7 @@ public class VisualMatch : MonoBehaviour {
         yield return new WaitForSeconds (GlobalTimer);
         VisualEffectInterface.CreateRealEffects (info, abilityType);
     }
+
     public void RealEffect (int x, int y, int abilityType, bool triggered) {
         StartCoroutine (IERealEffect (x, y, abilityType, triggered));
     }
@@ -209,14 +213,20 @@ public class VisualMatch : MonoBehaviour {
 
 
 
-    public void ShowMatchResult (int matchType, string winnerName, int winCondition, int limit, int level, int currentExperience, int maxExperience, int experienceGain) {
-        StartCoroutine (IEShowMatchResult (matchType, winnerName, winCondition, limit, level, currentExperience, maxExperience, experienceGain));
+    public void ShowMatchResult (int matchType, string [] winnersNames, int winCondition, int limit, int level, int currentExperience, int maxExperience, int experienceGain) {
+        StartCoroutine (IEShowMatchResult (matchType, winnersNames, winCondition, limit, level, currentExperience, maxExperience, experienceGain));
     }
 
-    public IEnumerator IEShowMatchResult (int matchType, string winnerName, int winCondition, int limit, int level, int currentExperience, int maxExperience, int experienceGain) {
+    public IEnumerator IEShowMatchResult (int matchType, string [] winnersNames, int winCondition, int limit, int level, int currentExperience, int maxExperience, int experienceGain) {
         yield return new WaitForSeconds (GlobalTimer);
         string type;
         switch (matchType) {
+            case 3:
+                type = "TutorialResults";
+                break;
+            case 2:
+                type = "BossResults";
+                break;
             case 1:
                 type = "PuzzleResults";
                 break;
@@ -224,7 +234,7 @@ public class VisualMatch : MonoBehaviour {
                 type = "MatchResults";
                 break;
         }
-        GOUI.ShowMessageWithProgressionBar (Language.GetMatchResult (winnerName, winCondition, limit), type, level, currentExperience, maxExperience, experienceGain);
+        GOUI.ShowMessageWithProgressionBar (Language.GetMatchResult (winnersNames, winCondition, limit), type, level, currentExperience, maxExperience, experienceGain);
     }
 
 
@@ -273,6 +283,15 @@ public class VisualMatch : MonoBehaviour {
     public IEnumerator IEUpdateTurnsLeft (int turnsLeft) {
         yield return new WaitForSeconds (GlobalTimer);
         InGameUI.SetTurn (turnsLeft);
+    }
+
+    public void DelayedTooltip (int px, int py, int side, string s) {
+        StartCoroutine (IEDelayedTooltip (px, py, side, s));
+    }
+
+    public IEnumerator IEDelayedTooltip (int px, int py, int side, string s) {
+        yield return new WaitForSeconds (GlobalTimer);
+        Tooltip.NewTooltip (px, py, side, s);
     }
 
 

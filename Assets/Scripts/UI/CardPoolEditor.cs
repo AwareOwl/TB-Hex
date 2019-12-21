@@ -21,6 +21,7 @@ public class CardPoolEditor : GOUI {
 
     static int page;
     static int abilityPage;
+    static int tokenPage;
 
     static int [] NumberOfButtons = new int [] { 3, 8, 6, 2, 13 };
     static int [] Selected = new int [] { 0, 1, 0, 0, 1 };
@@ -39,8 +40,8 @@ public class CardPoolEditor : GOUI {
 
     private void Start () {
         instance = this;
-        NumberOfButtons [2] = AppDefaults.AvailableTokens;
-        NumberOfButtons [4] = AppDefaults.AvailableAbilities;
+        NumberOfButtons [2] = AppDefaults.availableTokens;
+        NumberOfButtons [4] = AppDefaults.availableAbilities;
         editMode = GameModeEditor.editMode;
         CreateCardPoolEditorMenu ();
         CurrentGOUI = this;
@@ -73,8 +74,18 @@ public class CardPoolEditor : GOUI {
         pageUI.SelectPage (page);
     }
 
-    static int PageLimit () {
-        if (AppDefaults.AvailableAbilities <= 34) {
+    static int AbilityPageLimit () {
+        if (AppDefaults.availableAbilities <= 34) {
+            return 1;
+        } else if (AppDefaults.availableAbilities <= 65) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    static int TokenPageLimit () {
+        if (AppDefaults.availableTokens <= 20) {
             return 1;
         } else {
             return 2;
@@ -89,10 +100,24 @@ public class CardPoolEditor : GOUI {
         SelectAbilityPage (abilityPage + 1);
     }
 
+    static public void PrevTokenPage () {
+        SelectTokenPage (tokenPage - 1);
+    }
+
+    static public void NextTokenPage () {
+        SelectTokenPage (tokenPage + 1);
+    }
+
     static public void SelectAbilityPage (int pageNumber) {
-        abilityPage = Mathf.Min (pageNumber, PageLimit ());
+        abilityPage = Mathf.Min (pageNumber, AbilityPageLimit ());
         RefreshAbilityPage ();
     }
+
+    static public void SelectTokenPage (int pageNumber) {
+        tokenPage = Mathf.Min (pageNumber, TokenPageLimit ());
+        RefreshTokenPage ();
+    }
+
     static public void RefreshAbilityPage () {
         RefreshAbilityPage (abilityPage);
     }
@@ -111,7 +136,7 @@ public class CardPoolEditor : GOUI {
                 buttonImage.GetComponent<Renderer> ().enabled = false;
                 UIController UIC = button.GetComponent<UIController> ();
                 UIC.FreeAndUnlcok ();
-                if (abilityPage < PageLimit () - 1 && x == 33) {
+                if (abilityPage < AbilityPageLimit () - 1 && x == 33) {
                     button.name = UIString.CardPoolEditorNextAbilityPage;
                     SetText (buttonText, ">");
                 } else if (abilityPage > 0 && x == 0) {
@@ -119,8 +144,7 @@ public class CardPoolEditor : GOUI {
                     SetText (buttonText, "<");
                 } else {
                     button.name = UIString.CardPoolEditorAbilityType;
-                    BackgroundObject.name = UIString.CardPoolEditorAbilityType;
-                    if (number < AppDefaults.AvailableAbilities) {
+                    if (number < AppDefaults.availableAbilities) {
                         SetSprite (buttonImage, VisualCard.GetIconPath (number));
                         buttonImage.GetComponent<SpriteRenderer> ().color = AppDefaults.GetAbilityColor (number);
                         UIC.abilityType = number;
@@ -138,8 +162,64 @@ public class CardPoolEditor : GOUI {
         }
     }
 
+    static public void RefreshTokenPage () {
+        RefreshTokenPage (tokenPage);
+    }
+
+    static public void RefreshTokenPage (int tokenPage) {
+        VisualToken VT;
+        GameObject Clone;
+        type = 2;
+        int count = Buttons [type].Length;
+        for (int x = 0; x < count; x++) {
+            int number = TokenButtonToTokenNumber (x);
+            GameObject button = Buttons [type] [x];
+            GameObject buttonText = ButtonText [type] [x];
+            if (button != null) {
+                button.GetComponent<Renderer> ().enabled = true;
+                button.GetComponent<Collider> ().enabled = true;
+                if (button.transform.childCount > 0) {
+                    DestroyImmediate (button.transform.GetChild (0).gameObject);
+                }
+                UIController UIC = button.GetComponent<UIController> ();
+                UIC.FreeAndUnlcok ();
+                if (tokenPage < TokenPageLimit () - 1 && x == 19) {
+                    button.name = UIString.CardPoolEditorNextTokenPage;
+                    SetText (buttonText, ">");
+                } else if (tokenPage > 0 && x == 0) {
+                    button.name = UIString.CardPoolEditorPrevTokenPage;
+                    SetText (buttonText, "<");
+                } else {
+                    button.name = UIString.CardPoolEditorTokenType;
+                    if (number < AppDefaults.availableTokens) {
+                        VT = new VisualToken ();
+                        Clone = VT.Anchor;
+                        Clone.transform.SetParent (button.transform);
+                        Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
+                        Clone.transform.localPosition = Vector3.zero;
+                        Clone.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
+                        VT.SetType (number);
+                        DestroyImmediate (VT.Text);
+                        if (Selected [type] == number) {
+                            UIC.PressAndLock ();
+                        }
+                        UIC.tokenType = number;
+                    } else {
+                        button.GetComponent<Renderer> ().enabled = false;
+                        button.GetComponent<Collider> ().enabled = false;
+                    }
+                    SetText (buttonText, "");
+                }
+            }
+        }
+    }
+
     static public int AbilityButtonToAbilityNumber (int buttonNumber) {
         int output = buttonNumber + abilityPage * 32;
+        return output;
+    }
+    static public int TokenButtonToTokenNumber (int buttonNumber) {
+        int output = buttonNumber + tokenPage * 18;
         return output;
     }
 
@@ -169,6 +249,8 @@ public class CardPoolEditor : GOUI {
         EmptyCardSlot = CreateEmptySlot ();
         //SetEmptySlot (0);
         RefreshPage ();
+        RefreshAbilityPage ();
+        RefreshTokenPage ();
     }
 
     static public void RefreshPage () {
@@ -339,23 +421,20 @@ public class CardPoolEditor : GOUI {
     }
 
     static public void SelectButton (int type, int number) {
-        if (type == 4) {
+        if (type == 2) {
+            if (number != 0 && number != 19) {
+                Selected [type] = TokenButtonToTokenNumber (number);
+            } else if (number == 0 && tokenPage == 0) {
+                Selected [type] = 0;
+            }
+            RefreshTokenPage ();
+        } else if (type == 4) {
             if (number != 0 && number != 33) {
                 Selected [type] = AbilityButtonToAbilityNumber (number);
             } else if (number == 0 && abilityPage == 0) {
                 Selected [type] = 0;
             }
             RefreshAbilityPage ();
-            /*int count = Buttons [type].Length;
-            for (int x = 0; x < count; x++) {
-                GameObject button = Buttons [type] [x];
-                if (button != null) {
-                    button.GetComponent<UIController> ().FreeAndUnlcok ();
-                    if (AbilityButtonToAbilityNumber (number) == Selected [type]) {
-                        Buttons [type] [x].GetComponent<UIController> ().PressAndLock ();
-                    }
-                }
-            }*/
         } else {
             Selected [type] = number;
             foreach (GameObject button in Buttons [type]) {
@@ -376,30 +455,29 @@ public class CardPoolEditor : GOUI {
     static void AddButtons (int px, int py, int maxX, int maxY) {
 
         GameObject Clone;
-        VisualToken VT;
 
         int sx = 90 + 60 * maxX;
         int sy = 140 + 60 * maxY;
         int dy = 70;
 
-        BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", px, py, 10, sx, sy, false);
+        BackgroundObject = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", px, py, 10, sx, sy);
 
         switch (type) {
 
             case 0:
-                Clone = CreateText ("File", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.File, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
             case 1:
-                Clone = CreateText ("Token Value", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.TokenValue, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
             case 2:
-                Clone = CreateText ("Token Type", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.TokenType, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
             case 3:
-                Clone = CreateText ("Ability Area", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.AbilityArea, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
             case 4:
-                Clone = CreateText ("Ability Type", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.AbilityType, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
         }
 
@@ -445,14 +523,7 @@ public class CardPoolEditor : GOUI {
                         case 2:
                             BackgroundObject.GetComponent<UIController> ().tokenType = number;
                             BackgroundObject.name = UIString.CardPoolEditorTokenType;
-                            VT = new VisualToken ();
-                            Clone = VT.Anchor;
-                            Clone.transform.SetParent (BackgroundObject.transform);
-                            Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
-                            Clone.transform.localPosition = Vector3.zero;
-                            Clone.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-                            VT.SetType (number);
-                            DestroyImmediate (VT.Text);
+                            ButtonText [type] [number] = CreateText ("", npx, npy, 13, 0.03f);
                             break;
                         case 3:
                             BackgroundObject.name = UIString.CardPoolEditorAbilityArea;

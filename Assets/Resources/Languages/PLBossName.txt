@@ -1,0 +1,13 @@
+﻿[0] Boss
+[1] Dusza liści
+[2] Dwugłowa papuga
+[3] Uparty wąż
+[4] Chupacabra
+[5] Kamienne wrota
+[6] Smok światłości
+[7] Trójca widm
+[8] Widmo natury
+[9] Widmo płomieni
+[10] Widmo chłodu
+[11] Świetlana przyszłość
+[12] Niespodziewany rój

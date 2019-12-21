@@ -21,10 +21,14 @@ public class MainMenu : GOUI {
     static public void CreateMainMenu () {
         GameObject Clone;
         GameObject Button;
-        int maxX = 3;
-        CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 105 + maxX * 345, 330, false);
+        int maxX = 5;
+        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 720, 540, 10, 450, 105 + maxX * 105, false);
+        DestroyImmediate (Clone.GetComponent<UIController> ());
         for (int x = 0; x < maxX; x++) {
-            Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.PlayAgainstAI, 720 + (int) (345 * (x - maxX / 2f + 0.5f)), 480, 11, 330, 90);
+            if (x == 3) {
+                continue;
+            }
+            Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.PlayAgainstAI, 720, 540 + (int) (105 * (x - maxX / 2f + 0.5f)), 11, 330, 90);
             switch (x) {
                 case 0:
                     Button.name = UIString.MainMenuStartGameVsAI;
@@ -37,13 +41,16 @@ public class MainMenu : GOUI {
                     Button.name = UIString.ShowCustomGameLobby;
                     Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.CustomGame;
                     break;
+                case 4:
+                    Button.name = UIString.ShowSetList;
+                    Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.SelectCardSetTooltip;
+                    break;
             }
         }
-        Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.SelectCardSetTooltip, 720, 600, 11, 330, 90);
-        Button.name = UIString.ShowSetList;
 
-        maxX = 3;
-        CreateSprite ("UI/Panel_Window_01_Sliced", 1200, 990 - 30 * maxX, 10, 360, 120 + 60 * maxX, false);
+        maxX = 6;
+        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 1200, 990 - 30 * maxX, 10, 360, 120 + 60 * maxX, false);
+        DestroyImmediate (Clone.GetComponent<UIController> ());
         for (int x = 0; x < maxX; x++) {
             Button = CreateSpriteWithText ("UI/Butt_M_EmptySquare", Language.PlayAgainstAI, 1200, 960 - 60 * x, 11, 240, 60);
             switch (x) {
@@ -52,12 +59,24 @@ public class MainMenu : GOUI {
                     Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.GameVersion;
                     break;
                 case 1:
+                    Button.name = UIString.LibraryMenu;
+                    Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.Library;
+                    break;
+                case 2:
                     Button.name = UIString.ShowProfileMenu;
                     Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.Profile;
                     break;
-                case 2:
+                case 3:
+                    Button.name = UIString.ShowBossMenu;
+                    Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.Bosses;
+                    break;
+                case 4:
                     Button.name = UIString.ShowPuzzleMenu;
                     Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.Puzzles;
+                    break;
+                case 5:
+                    Button.name = UIString.ShowTutorialMenu;
+                    Button.transform.Find ("Text").GetComponent<TextMesh> ().text = Language.Tutorial;
                     break;
 
             }

@@ -8,6 +8,7 @@ public class Launcher : GOUI {
 	void Start () {
 
         UICanvas = GameObject.Find ("Canvas");
+
         EnvironmentScript.CreateNewBackground (1);
         //Debug.Log (Language.test);
         //EnvironmentScript.CreateRandomBoard ();
@@ -23,6 +24,7 @@ public class Launcher : GOUI {
     }
 
     public void CreateLauncherGUI () {
+
         GameObject Clone;
         GameObject Parent;
 
@@ -51,28 +53,32 @@ public class Launcher : GOUI {
 
         //Clone = CreateSprite ("UI/White", 720, 540, 13, 1440, 1080, false);
 
-        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 300, 450, 10, 510, 300, false);
+        Clone = CreateSprite ("UI/Panel_Window_01_Sliced", 740, 540, 10, 510, 300, false);
+        DestroyImmediate (Clone.GetComponent<UIController> ());
 
 
         Clone = CreateSprite ("UI/Butt_M_EmptySquare", true);
         SetInPixScale (Clone, 400, 90);
-        SetInPixPosition (Clone, 300, 400, 11);
+        SetInPixPosition (Clone, 740, 490, 11);
         Parent = Clone;
         Clone.name = "StartHost";
 
-        Clone = CreateText (Language.CreateLocalNetwork, 300, 400, 12, 0.03f);
+        Clone = CreateText (Language.CreateLocalNetwork, 740, 490, 12, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
 
         Clone = CreateSprite ("UI/Butt_M_EmptySquare", true);
         SetInPixScale (Clone, 400, 90);
-        SetInPixPosition (Clone, 300, 500, 11);
+        SetInPixPosition (Clone, 740, 590, 11);
         Parent = Clone;
         Clone.name = "StartClient";
 
-        Clone = CreateText (Language.JoinLocalNetwork, 300, 500, 12, 0.03f);
+        Clone = CreateText (Language.JoinLocalNetwork, 740, 590, 12, 0.03f);
         Clone.GetComponent<TextMesh> ().color = Color.black;
         AddTextToGameObject (Parent, Clone);
+
+
+        SetExitButton ();
 
         /*
         Clone = CreateSprite ("UI/Butt_M_EmptySquare", true);

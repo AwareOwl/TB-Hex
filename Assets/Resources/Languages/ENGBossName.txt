@@ -1,0 +1,13 @@
+[0] Boss
+[1] Spirit of the Leaves
+[2] Two-headed parrot
+[3] Stubborn snake
+[4] Chupacabra
+[5] Stone gate
+[6] Dragon of light
+[7] Trinity of phantoms
+[8] Phantom of nature
+[9] Phantom of flames
+[10] Phantom of coldness
+[11] Shiny future
+[12] Unexpected swarm

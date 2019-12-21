@@ -37,3 +37,36 @@
 [36] Travel
 [37] Role swap
 [38] Risky start
+[39] Cloning
+[40] Adaptation
+[41] Strike
+[42] Very risky start
+[43] Overthrow
+[44] Mow
+[45] Preparation
+[46] Prophecy of defeat
+[47] Overcharge
+[48] Sow
+[49] Disarm
+[50] Inflitration
+[51] Weaken
+[52] Leadership
+[53] Gemmation
+[54] Inflation
+[55] Parasitism
+[56] Abomination
+[57] Miniaturization
+[58] Change of profession
+[59] Burial
+[60] Abyss
+[61] Element of surprise
+[62] Just like a boomerang
+[63] Failed plan
+[64] Doubt
+[65] Lost of tempo
+[66] Deception
+[67] Encirclement
+[68] Positioning
+[69] Hunt
+[70] Slow
+[71] Corection

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class InGameUI : GOUI {
 
@@ -55,12 +56,22 @@ public class InGameUI : GOUI {
         CreatePlayersUI ();
         CreateTurnUI ();
         CreateSpecialUI ();
-        GetPlayer (PlayedMatch.turnOfPlayer).visualPlayer.SetPlayerActive (true);
+        GetPlayer (PlayedMatch.turnOfPlayer).visualTeam.SetPlayerActive (true);
         PlayedMatch.EnableVisuals ();
-        SelectStack (0);
+        if (PlayedMatch.properties.specialType != 3) {
+            SelectStack (0);
+        } else {
+            SelectStack (-1);
+        }
 
-        ExitButton.name = UIString.ShowInGameMenu;
-        GOUI.SetSprite (ExitButton, "UI/Butt_S_Settings", true);
+        OptionsButton.name = UIString.ShowInGameOptionsMenu;
+
+        SoundManager.PlayAudioClip (MyAudioClip.MatchStart);
+
+        if (PlayedMatch.properties.specialType == 3) {
+            TutorialManager.SetTutorialNumber (PlayedMatch.properties.specialId);
+        }
+        TutorialManager.NewState (TutorialManager.beginMatch);
     }
 
 
@@ -78,7 +89,11 @@ public class InGameUI : GOUI {
         foreach (CardClass card in stack.card) {
             card.visualCard.DisableHighlight ();
         }*/
+        if (PlayedMatch.Player [myPlayerNumber].hand.GetNumberOfStacks () <= x || !GetPlayer ().GetStack (x).atLeast1Enabled) {
+            return;
+        }
         selectedStack = x;
+        TutorialManager.NewState (TutorialManager.selectCardState);
         //GetSelectedCard ().visualCard.EnableHighlight ();
         RefreshHovers ();
     }
@@ -94,6 +109,11 @@ public class InGameUI : GOUI {
 
     public void Update () {
         fetchMissingPacketsTimer += Time.deltaTime;
+
+
+        //Tooltip.permanent = false;
+        //Tooltip.NewTooltip (720, (int) (Time.time * 5 % 1080), Language.TutorialTooltip [0]);
+
         if (fetchMissingPacketsTimer >= 0) {
             fetchMissingPacketsTimer -= 2;
             ClientLogic.MyInterface.CmdCurrentGameFetchMissingMoves (PlayedMatch.lastMoveId);
@@ -122,7 +142,7 @@ public class InGameUI : GOUI {
             stacksZoomed = !stacksZoomed;
             int count = CardAnimation.stackZoomed.Length;
             for (int x = 0; x < count; x++) {
-                CardAnimation.stackZoomed [x] = stacksZoomed;
+                CardAnimation.SetStackZoomed (x, stacksZoomed);
             }
         }
         /*if (Input.GetKeyDown ("r")) {
@@ -158,6 +178,12 @@ public class InGameUI : GOUI {
         if (InputController.debuggingEnabled) {
             Debug.Log ("Tile action performed");
         }
+        if (selectedStack < 0 || selectedStack >= GetPlayer ().hand.stack.Length) {
+            return;
+        }
+        if (TutorialManager.blockActions) {
+            return;
+        }
         ClientLogic.MyInterface.CmdCurrentGameMakeAMove (x, y, selectedStack);
         //PlayedMatch.PlayCard (x, y, MyPlayerNumber, SelectedStack);
         RefreshHovers ();
@@ -185,21 +211,54 @@ public class InGameUI : GOUI {
     
     static public void CreatePlayersUI () {
         int numberOfPlayers = 0;
-        int playerPosition = 0;
+        int numberOfTeams = 0;
+        int globalPosition = 0;
+        int teamPosition = 0;
+        bool numerate = false;
+        int myTeam = GetPlayer (myPlayerNumber).properties.team;
         for (int x = 1; x <= InGameUI.numberOfPlayers; x++) {
             PlayerClass player = GetPlayer (x);
             if (player != null) {
                 numberOfPlayers++;
             }
         }
+        List<PlayerClass> [] teams = new List<PlayerClass> [5];
+        for (int x = 0; x < teams.Length; x++) {
+            teams [x] = new List<PlayerClass> ();
+        }
         for (int x = 1; x <= InGameUI.numberOfPlayers; x++) {
             PlayerClass player = GetPlayer (x);
-            if (player != null) {
-                bool ally = player.properties.team == GetPlayer (myPlayerNumber).properties.team;
-                player.EnableVisuals ();
-                player.visualPlayer.CreatePlayerUI (player, ally, numberOfPlayers, playerPosition);
-                player.visualPlayer.SetPlayerHealthBar (PlayedMatch, player);
-                playerPosition++;
+            if (player == null) {
+                continue;
+            }
+            PlayerPropertiesClass properties = player.properties;
+            if (player.properties == null) {
+                continue;
+            }
+            if (properties.team != x) {
+                numerate = true;
+            }
+            int team = properties.team;
+            if (teams [team].Count == 0) {
+                numberOfTeams++;
+            }
+            teams [properties.team].Add (player);
+            player.EnableVisuals ();
+        }
+        for (int x = 1; x < teams.Length; x++) {
+            int count = teams [x].Count;
+            if (count > 0) {
+                PlayerClass player = teams [x] [0];
+                bool ally = player.properties.team == myTeam;
+                VisualTeam vTeam = player.visualTeam;
+                vTeam.CreatePlayerUI (teams [x], numerate, ally, numberOfTeams, numberOfPlayers, teamPosition++, globalPosition);
+                for (int y = 0; y < count; y++) {
+                    player = teams [x] [y];
+                    player.visualTeam = vTeam;
+                    //vTeam.SetPlayerHealthBar (y, player.score, player.scoreIncome, PlayedMatch.properties.scoreLimit);
+                }
+                vTeam.UpdateVisuals (PlayedMatch);
+                globalPosition += count;
             }
         }
         int sx = PlayedMatch.Board.tile.GetLength (0);
@@ -220,6 +279,9 @@ public class InGameUI : GOUI {
     static TextMesh TurnText;
 
     static public void CreateTurnUI () {
+        if (!PlayedMatch.properties.turnWinCondition) {
+            return;
+        }
         GameObject Clone;
         Clone = CreateSprite ("UI/White", 75, 45, 10, 120, 70, true);
         Clone.name = UIString.TurnCounter;
@@ -243,13 +305,49 @@ public class InGameUI : GOUI {
         }
         GameObject Clone;
         Clone = CreateSprite ("UI/Butt_S_Revert", 1380, 1020, 11, 90, 90, true);
-        Clone.name = UIString.RestartPuzzle;
+        switch (PlayedMatch.properties.specialType) {
+            case 1:
+                Clone.name = UIString.RestartPuzzle;
+                break;
+            case 2:
+                Clone.name = UIString.RestartBoss;
+                break;
+            case 3:
+                Clone.name = UIString.RestartTutorial;
+                break;
+        }
     }
 
     static public void RestartPuzzle () {
         ClientInterface client = ClientLogic.MyInterface;
         client.CmdCurrentGameConcede ();
         client.CmdStartPuzzle (PlayedMatch.properties.gameMode);
+    }
+
+    static public void RestartBoss () {
+        ClientInterface client = ClientLogic.MyInterface;
+        client.CmdCurrentGameConcede ();
+        string bossName2;
+        string bossName3 = "";
+        string bossName4 = "";
+        bossName2 = PlayedMatch.Player [2].properties.displayName;
+        if (PlayedMatch.GetPlayer (3) != null) {
+            bossName3 = PlayedMatch.Player [3].properties.displayName;
+        }
+        if (PlayedMatch.GetPlayer (4) != null) {
+            bossName4 = PlayedMatch.Player [4].properties.displayName;
+        }
+        client.CmdStartBoss (PlayedMatch.properties.gameMode, bossName2, bossName3, bossName4);
+    }
+
+    static public void RestartTutorial () {
+        ClientInterface client = ClientLogic.MyInterface;
+        client.CmdCurrentGameConcede ();
+        string tutorialName = "";
+        if (numberOfPlayers > 1) {
+            tutorialName = PlayedMatch.Player [2].properties.displayName;
+        }
+        client.CmdStartTutorial (PlayedMatch.properties.gameMode, tutorialName);
     }
 
     static public void SetTurn (int turnsLeft) {
@@ -265,7 +363,7 @@ public class InGameUI : GOUI {
     }
 
     static public void HideAreaHovers () {
-        currentlyOverX = -1;
+        //currentlyOverX = -1;
         foreach (GameObject anchor in VisualEffectAnchor) {
             Transform [] childs = new Transform [anchor.transform.childCount];
             for (int c = 0; c < childs.Length; c++) {
@@ -278,9 +376,19 @@ public class InGameUI : GOUI {
     }
 
     static public void RefreshHovers () {
+        //Debug.Log (currentlyOverX + " " + currentlyOverY);
         SetAreaHovers (currentlyOverX, currentlyOverY);
     }
 
+    static public void CheckHideAreaCovers (int x, int y) {
+        StackClass stack = GetPlayer ().GetStack (selectedStack);
+        if (stack == null) {
+            return;
+        }
+        if (!PlayedMatch.Board.tile [x, y].IsPlayable (myPlayerNumber) || !stack.atLeast1Enabled) {
+            HideAreaHovers ();
+        }
+    }
 
     static public void SetAreaHovers (int x, int y) {
         if (x  < 0) {
@@ -291,8 +399,11 @@ public class InGameUI : GOUI {
         currentlyOverY = y;
 
         StackClass stack = GetPlayer ().GetStack (selectedStack);
+        if (stack == null) {
+            return;
+        }
 
-        if (PlayedMatch.Board.tile [x, y].IsEmptyTile () && stack.atLeast1Enabled) {
+        if (PlayedMatch.Board.tile [x, y].IsPlayable (myPlayerNumber) && stack.atLeast1Enabled) {
             CardClass card = GetSelectedCard ();
             int abilityType = card.abilityType;
             int abilityArea = card.abilityArea;
@@ -332,7 +443,13 @@ public class InGameUI : GOUI {
                     }
                     break;
                 case 38:
+                case 42:
+                case 49:
                     Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, true, false);
+                    Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
+                    break;
+                case 40:
+                    Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, tokenInfo.remainsCount < 2, false);
                     Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
                     break;
             }

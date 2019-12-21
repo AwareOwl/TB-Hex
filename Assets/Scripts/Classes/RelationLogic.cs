@@ -9,8 +9,12 @@ public class RelationLogic {
         return tile != null && tile.IsFilledTile ();
     }
 
-    static public bool IsEnemy (TileClass tile, int playerNumber) {
-        return IsFilledTile (tile) && tile.token.owner != playerNumber && tile.token.owner != 0;
+    static public bool IsEnemyTeam (int teamNumber1, int teamNumber2) {
+        return teamNumber1 != teamNumber2 && teamNumber1 != 0 && teamNumber2 != 0;
+    }
+
+    static public bool IsAllyTeam (int teamNumber1, int teamNumber2) {
+        return teamNumber1 == teamNumber2 && teamNumber1 != 0 && teamNumber2 != 0;
     }
 
 }

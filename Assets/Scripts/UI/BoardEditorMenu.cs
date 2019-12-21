@@ -65,12 +65,13 @@ public class BoardEditorMenu : GOUI {
         MatchClass match = MatchMakingClass.CreateGame (gameMode, 1, new PlayerPropertiesClass [] {
             new PlayerPropertiesClass (1, null, client.AccountName, client.UserName, hand1, client),
             new PlayerPropertiesClass (2, AI2, "AI opponent", ServerData.GetGameModeName (id), hand2, null) });
-        PlayerPropertiesClass properties = match.Player [2].properties;
+        PlayerClass player = match.Player [2];
+        PlayerPropertiesClass properties = player.properties;
         match.properties.turnLimit = numberOfTurns;
 
         match.Board = new BoardClass (match);
         match.Board.LoadFromFile (currentId);
-        properties.enabled = false;
+        player.enabled = false;
         properties.AI.puzzle = true;
         ServerLogic.StartMatch (match);
     }
@@ -149,7 +150,7 @@ public class BoardEditorMenu : GOUI {
     static public void CreateBoardEditorMenu () {
         type = 0;
 
-        NumberOfButtons [4] = AppDefaults.AvailableTokens;
+        NumberOfButtons [4] = AppDefaults.availableTokens;
 
         Buttons = new GameObject [NumberOfButtons.Length] [];
         for (int x = 0; x < NumberOfButtons.Length; x++) {
@@ -185,11 +186,12 @@ public class BoardEditorMenu : GOUI {
 
             AddButtons (px, py, maxX, maxY);
 
+            maxX = (AppDefaults.availableTokens - 1) / 3 + 1;
             maxY += 1;
 
             py += 210 + dy;
 
-            AddButtons (px, py, maxX, maxY);
+            AddButtons (px + 30 * maxX - 150, py, maxX, maxY);
         }
 
         for (int x = 1; x < 5; x++) {
@@ -224,23 +226,23 @@ public class BoardEditorMenu : GOUI {
         int sy = 140 + 60 * maxY;
         int dy = 70;
 
-        BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", px, py, 10, sx, sy, false);
+        BackgroundObject = CreateBackgroundSprite ("UI/Panel_Window_01_Sliced", px, py, 10, sx, sy);
         switch (type) {
 
             case 0:
-                Clone = CreateText ("File", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.File, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
             case 1:
-                Clone = CreateText ("Tile filling", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.TileFilling, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
             case 2:
-                Clone = CreateText ("Owner", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.TokenOwner, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
             case 3:
-                Clone = CreateText ("Token value", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.TokenValue, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
             case 4:
-                Clone = CreateText ("Token type", px, py - sy / 2 + dy, 12, 0.02f);
+                Clone = CreateText (Language.TokenType, px, py - sy / 2 + dy, 12, 0.02f);
                 break;
         }
 

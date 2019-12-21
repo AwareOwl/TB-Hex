@@ -12,7 +12,7 @@ public class VisualEffectScript : MonoBehaviour {
     
 	float timer;
     float percentageTimer;
-    float timerScale = AppSettings.AnimationDuration;
+    float timerScale = AppSettings.GetAnimationsDuration ();
     int currentPhase = 0;
     public List <float> phaseTimer;
     
@@ -248,14 +248,14 @@ public class VisualEffectScript : MonoBehaviour {
         Vector3 newPosition;
         Vector3 Position1 = basicPosition [currentPhase];
         Vector3 Position2 = basicPosition [Mathf.Min (currentPhase + 1, endPhase)];
-        if (deltaPosition != null) {
+        if (deltaPosition != null && deltaPosition.Count != 0) {
             Position1 += deltaPosition [currentPhase];
             Position2 += deltaPosition [Mathf.Min (currentPhase + 1, endPhase)];
         }
 
         float magnitude = (Position2 - Position1).magnitude;
 
-        if (lerpPosition != null && lerpPosition [currentPhase]) {
+        if (lerpPosition != null && lerpPosition.Count != 0 && lerpPosition [currentPhase]) {
 
             transform.localPosition = Vector3.Lerp (transform.localPosition, Position2, 0.15f);
 
@@ -263,12 +263,12 @@ public class VisualEffectScript : MonoBehaviour {
 
             newPosition = Position1 * (1 - percentageTimer) + Position2 * (percentageTimer);
 
-            if (jumpAnimation != null && jumpAnimation [currentPhase]) {
+            if (jumpAnimation != null && jumpAnimation.Count != 0 && jumpAnimation [currentPhase]) {
                 newPosition += new Vector3 (0, Mathf.Sin (percentageTimer * Mathf.PI) * magnitude, 0);
             }
 
 
-            if (drift != null && drift [currentPhase]) {
+            if (drift != null && drift.Count != 0 && drift [currentPhase]) {
                 //Debug.Log ("Test");
                 float heightModifier = Mathf.Abs (driftDestination - driftHeight) * 6;
                 float driftSpeed = Mathf.Min ((1f + heightModifier) * Time.deltaTime, 1);
@@ -307,7 +307,7 @@ public class VisualEffectScript : MonoBehaviour {
     }
 
     public void UpdateRotation () {
-        if (rotateTo != null) {
+        if (rotateTo != null && rotateTo.Count != 0) {
             Vector3 rot1 = transform.localEulerAngles;
             Vector3 rot2 = rotateTo [currentPhase];
             transform.localRotation = Quaternion.Lerp (Quaternion.Euler (rot1), Quaternion.Euler (rot2), Time.deltaTime * 5);
@@ -317,7 +317,7 @@ public class VisualEffectScript : MonoBehaviour {
              Mathf.LerpAngle (rot1.z, rot2.z, Time.deltaTime * 5));*/
             return;
         }
-        if (rotateVector != null) {
+        if (rotateVector != null && rotateVector.Count != 0) {
             Vector3 rot2 = rotateVector [currentPhase];
             transform.localEulerAngles += new Vector3 (rot2.x * Time.deltaTime, rot2.y * Time.deltaTime, rot2.z * Time.deltaTime);
             return;
@@ -325,7 +325,7 @@ public class VisualEffectScript : MonoBehaviour {
         if (rotateToCameraVertical) {
             Vector3 dPos = transform.position - Camera.main.transform.position;
             float atan = Mathf.Atan2 (dPos.y, dPos.x);
-            transform.localEulerAngles = new Vector3 (0, atan * 180 / Mathf.PI + 90, 0);
+            transform.localEulerAngles = new Vector3 (0, atan * 180 / Mathf.PI + 90, transform.localEulerAngles.z);
         }
         if (rotateToCamera) {
             Vector3 dPos = transform.position - Camera.main.transform.position;

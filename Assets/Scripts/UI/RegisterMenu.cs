@@ -85,6 +85,9 @@ public class RegisterMenu : GOUI {
     }
 
     static public void CreateRegisterMenu () {
+
+        instance.SetExitButton ();
+
         GameObject Clone;
         DestroyImmediate (ChatButton);
 
@@ -100,6 +103,7 @@ public class RegisterMenu : GOUI {
         sy = 60;
 
         BackgroundObject = CreateSprite ("UI/Panel_Window_01_Sliced", px, 540, 10, sx + 120, 705, false);
+        DestroyImmediate (BackgroundObject.GetComponent<UIController> ());
 
         Clone = CreateInputField (Language.AccountName, px, py, sx, sy);
         accountNameInput = Clone.GetComponent<InputField> ();

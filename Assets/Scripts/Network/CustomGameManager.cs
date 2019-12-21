@@ -34,6 +34,7 @@ public class CustomGameManager {
         foreach (CustomGameClass customGame in customGames) {
             if (customGame.host == client) {
                 customGame.KickPlayer (client, slotNumber);
+                return;
             }
         }
     }
@@ -85,6 +86,15 @@ public class CustomGameManager {
                     customGame.ChangeSlot (x, newSlot);
                     return;
                 }
+            }
+        }
+    }
+
+    static public void ChangeTeam (ClientInterface client, int slot) {
+        foreach (CustomGameClass customGame in customGames) {
+            if (customGame.host == client) {
+                customGame.ChangeTeam (slot);
+                customGame.RefreshRoomForClients ();
             }
         }
     }

@@ -11,5 +11,14 @@
 [10] Generuje dodatkowy punkt przyrostu punktacji za każde sąsiadujące pole nie okupowane przez żeton.
 [11] Wszystkie zagrywane żetony (każdego z graczy) będą miały wartość mniejszą o 1.
 [12] Generuje podwójny przyrost punktacji. Gdy zostanie zniszczony, właściciel traci 20 punktów.
-[13] Po turze właściciela zostaje przemiony w Normalny Żeton, a gracz może wykonać dodatkową turę.
+[13] Po turze właściciela zostaje przemieniony w Normalny Żeton, a gracz może wykonać dodatkową turę.
 [14] Zwiększa swoją wartość o 1 za każdym razem gdy przeciwnik zagra silniejszy żeton.
+[15] Gdy zostaje zagrana umiejętność, zostaje ona zagrana dodatkowy raz, a ten żeton zmienia się w Zwykły Żeton.
+[16] Pomiędzy turami cofa zmiany swojej wartości które nastąpiły w trakcie ostatniej tury.
+[17] Właściciel może zagrywać żetony na ten żeton aby wzmocnić jego wartość i zmienić jego typ.
+[18] Ten żeton zawsze jest dodany jako cel nie-kierunkowych umiejętności.
+[19] Zwiększa przyrost punktacji generowany przez pobliskie żetony o 1.
+[20] Jest niszczony po zakończeniu tury.
+[21] Gdy zostanie zniszczony, właściciel traci 20 punktów.
+[22] Pomiędzy turami przekazuje 1 punkt swojej wartości dla każdego z pobliskich przyjaznych żetonów.
+[23] Pomiędzy turami redukuje wartość pobliskich wrogów o tej samej wartości takiej samej co ten żeton o 1.

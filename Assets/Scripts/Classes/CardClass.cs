@@ -44,9 +44,11 @@ public class CardClass {
         return this;
     }
 
-    public void RotateArea () {
+    public void RotateArea (int rotateAmount = 1) {
         if (abilityArea > 0 && abilityArea < 4) {
-            abilityArea = (abilityArea % 3 + 1);
+            rotateAmount %= 3;
+            abilityArea = (300 + abilityArea + rotateAmount - 1) % 3 + 1;
+            //abilityArea = (abilityArea + rotateAmount + 301) % 3 + 1;
         }
         SetState (tokenValue, tokenType, abilityArea, abilityType);
         if (visualCard != null) {
@@ -54,12 +56,17 @@ public class CardClass {
         }
     }
 
+
     public int GetAbilityArea (int abilityType, int abilityArea) {
         switch (abilityType) {
             case 0:
             case 11:
             case 22:
             case 38:
+            case 45:
+            case 49:
+            case 61:
+            case 62:
                 return 0;
             default:
                 return abilityArea;
@@ -79,7 +86,7 @@ public class CardClass {
         this.abilityArea = GetAbilityArea (abilityType, abilityArea);
     }
 
-    public string ToString () {
+    public override string ToString () {
         return cardNumber + " " + tokenValue + " " + tokenType + " " + abilityArea + " " + abilityType;
     }
 

@@ -12,8 +12,8 @@ public class BoardClass {
     public TileClass [,] tile;
     public List<TileClass> tileList = new List<TileClass> ();
 
-    public List<TileClass> BeforeAbilityTriggers = new List<TileClass> ();
-    public List<TileClass> BeforeTokenPlayedTriggers = new List<TileClass> ();
+    public List<TokenClass> BeforeAbilityTriggers = new List<TokenClass> ();
+    public List<TokenClass> BeforeTokenPlayedTriggers = new List<TokenClass> ();
 
     public int [] NumberOfTypes;
 
@@ -47,7 +47,7 @@ public class BoardClass {
     }
 
     public void Init () {
-        NumberOfTypes = new int [AppDefaults.AvailableTokens];
+        NumberOfTypes = new int [AppDefaults.availableTokens];
     }
 
     public void EnableTile (int x, int y) {
@@ -55,6 +55,26 @@ public class BoardClass {
     }
     public void DisableTile (int x, int y) {
         EnableTile (x, y, false);
+    }
+
+    public List<TileClass> GetPlayableTiles (int playerNumber) {
+        List<TileClass> tiles = new List<TileClass> ();
+        foreach (TileClass tile in tileList) {
+            if (tile.IsPlayable (playerNumber)) {
+                tiles.Add (tile);
+            }
+        }
+        return tiles;
+    }
+    
+    public int GetPlayableTilesCount (int playerNumber) {
+        int count = 0;
+        foreach (TileClass tile in tileList) {
+            if (tile.IsPlayable (playerNumber)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public List<TileClass> GetEmptyTiles () {
@@ -66,6 +86,7 @@ public class BoardClass {
         }
         return tiles;
     }
+
 
     public int GetEmptyTilesCount () {
         int count = 0;

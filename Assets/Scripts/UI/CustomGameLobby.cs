@@ -100,7 +100,7 @@ public class CustomGameLobby : GOUI {
         row = new RowClass [5];
         for (int x = 0; x < 5; x++) {
             row [x] = CurrentGOUI.gameObject.AddComponent<RowClass> ();
-            row [x].Init (x, RowClass.RoomList);
+            row [x].Init (x, ListMode.RoomList);
         }
 
         pageUI = new PageUI ();

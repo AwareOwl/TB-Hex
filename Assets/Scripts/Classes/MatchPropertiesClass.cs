@@ -7,6 +7,8 @@ public class MatchPropertiesClass {
 
     public int gameMode;
     public bool special;
+    public int specialType;
+    public int specialId;
     public bool scoreWinCondition = true;
     public int scoreLimit = 500;
     public bool turnWinCondition = true;
@@ -32,6 +34,8 @@ public class MatchPropertiesClass {
         List<string> s = new List<string> ();
         s.Add (gameMode.ToString ());
         s.Add (special.ToString ());
+        s.Add (specialType.ToString ());
+        s.Add (specialId.ToString ());
         s.Add (scoreWinCondition.ToString ());
         s.Add (scoreLimit.ToString ());
         s.Add (turnWinCondition.ToString ());
@@ -44,11 +48,13 @@ public class MatchPropertiesClass {
     public void LoadFromString (string [] lines) {
         gameMode = int.Parse (lines [0]);
         special = Convert.ToBoolean (lines [1]);
-        scoreWinCondition = Convert.ToBoolean (lines [2]);
-        scoreLimit = int.Parse (lines [3]);
-        turnWinCondition = Convert.ToBoolean (lines [4]);
-        turnLimit = int.Parse (lines [5]);
-        allowToRotateAbilityAreas = Convert.ToBoolean (lines [6]);
-        usedCardsArePutOnBottomOfStack = Convert.ToBoolean (lines [7]);
+        specialType = int.Parse (lines [2]);
+        specialId = int.Parse (lines [3]);
+        scoreWinCondition = Convert.ToBoolean (lines [4]);
+        scoreLimit = int.Parse (lines [5]);
+        turnWinCondition = Convert.ToBoolean (lines [6]);
+        turnLimit = int.Parse (lines [7]);
+        allowToRotateAbilityAreas = Convert.ToBoolean (lines [8]);
+        usedCardsArePutOnBottomOfStack = Convert.ToBoolean (lines [9]);
     }
 }
