@@ -64,6 +64,10 @@ public class AIRatingMenu : GOUI {
     static int rowCount = 22;
 
     static public void RefreshPage () {
+        switch (sortMode) {
+            case 0:
+                break;
+        }
         if (sortMode == 0) {
             List<int> Popularity = new List<int> ();
             for (int x = 0; x < count; x++) {

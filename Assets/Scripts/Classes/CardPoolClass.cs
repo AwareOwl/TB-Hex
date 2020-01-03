@@ -14,7 +14,7 @@ public class CardPoolClass {
         return newCard;
     }
 
-    public void SetCard (int cardNumber, int tokenValue, int tokenType, int abilityArea, int abilityType) {
+    public void SetCard (int cardNumber, int tokenValue, TokenType tokenType, int abilityArea, AbilityType abilityType) {
         CardClass card = Card.Find (x => x.cardNumber == cardNumber);
         if (card == null) {
             card = AddCard ();
@@ -51,7 +51,7 @@ public class CardPoolClass {
     public CardPoolClass ExcludeLockedContent (bool [] unlockedAbilities, bool [] unlockedTokens) {
         CardPoolClass newCardPool = new CardPoolClass ();
         foreach (CardClass card in Card) {
-            if (unlockedAbilities [card.abilityType] && unlockedTokens [card.tokenType]) {
+            if (unlockedAbilities [(int) card.abilityType] && unlockedTokens [(int) card.tokenType]) {
                 newCardPool.Card.Add (new CardClass (card));
             }
         }

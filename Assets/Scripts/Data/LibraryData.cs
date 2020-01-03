@@ -24,6 +24,12 @@ public class LibraryData : ServerData {
         return path;
     }
 
+    static public string SaveWorksWellWith (string [] lines) {
+        string path = WorksWellWithPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
     static public string GetWorksWellWith () {
         string path = WorksWellWithPath ();
         if (File.Exists (path)) {
@@ -43,6 +49,12 @@ public class LibraryData : ServerData {
         return path;
     }
 
+    static public string SaveIsGoodAgainst (string [] lines) {
+        string path = IsGoodAgainstPath ();
+        File.WriteAllLines (path, lines);
+        return path;
+    }
+
     static public string GetIsGoodAgainst () {
         string path = IsGoodAgainstPath ();
         if (File.Exists (path)) {
@@ -59,6 +71,12 @@ public class LibraryData : ServerData {
     static public string SaveIsWeakAgainst (string lines) {
         string path = IsWeakAgainstPath ();
         File.WriteAllText (path, lines);
+        return path;
+    }
+
+    static public string SaveIsWeakAgainst (string [] lines) {
+        string path = IsWeakAgainstPath ();
+        File.WriteAllLines (path, lines);
         return path;
     }
 

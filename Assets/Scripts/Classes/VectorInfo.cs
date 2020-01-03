@@ -53,7 +53,7 @@ public class VectorInfo {
                 if (vector.target.IsFilledTile ()) {
                     targets.Add (vector.target);
                     int value = vector.target.token.value;
-                    int type = vector.target.token.type;
+                    TokenType tokenType = vector.target.token.type;
                     int owner = vector.target.token.owner;
                     if (strongestValue < value) {
                         strongestTargets = new List<TileClass> ();
@@ -79,7 +79,7 @@ public class VectorInfo {
                         strongerCount++;
                     }
 
-                    if (token.type != type) {
+                    if (token.type != tokenType) {
                         differentTypesCount++;
                     }
 
@@ -153,45 +153,45 @@ public class VectorInfo {
         if (token == null) {
             return;
         }
-        int tokenType = token.type;
+        TokenType tokenType = token.type;
         switch (tokenType) {
-            case 3:
-            case 4:
-            case 5:
-            case 22:
-            case 23:
+            case TokenType.T3:
+            case TokenType.T4:
+            case TokenType.T5:
+            case TokenType.T22:
+            case TokenType.T23:
                 break;
             default:
                 return;
         }
         switch (tokenType) {
-            case 3:
+            case TokenType.T3:
                 if (weakestTargets.Count == 1) {
                     Triggered1.Add (weakestTargets [0]);
                 }
                 break;
-            case 4:
+            case TokenType.T4:
                 if (strongestTargets.Count == 1) {
                     Triggered1.Add (strongestTargets [0]);
                 }
                 break;
-            case 5:
+            case TokenType.T5:
                 break;
         }
         foreach (AbilityVector vector in vectors) {
             switch (tokenType) {
-                case 5:
+                case TokenType.T5:
                     if (IsFilledTile (vector.target)) {
                         Triggered1.Add (vector.target);
                     }
                     break;
-                case 22:
+                case TokenType.T22:
                     if (IsFilledTile (vector.target) && IsAllyTeam (match.GetTeam (vector.target), match.GetTeam (token.owner))){
 
                         Triggered1.Add (vector.target);
                     }
                     break;
-                case 23:
+                case TokenType.T23:
                     if (IsFilledTile (vector.target) && IsEnemyTeam (match.GetTeam (vector.target), match.GetTeam (token.owner)) && vector.target.token.value == token.value) {
 
                         Triggered1.Add (vector.target);
@@ -203,7 +203,7 @@ public class VectorInfo {
 
     }
 
-    public void CheckAbilityTriggers (MatchClass match, int playerNumber, TileClass playTile, int abilityType, TokenClass token) {
+    public void CheckAbilityTriggers (MatchClass match, int playerNumber, TileClass playTile, AbilityType abilityType, TokenClass token) {
         this.PlayedTokenTile = playTile;
         foreach (AbilityVector vector in vectors) {
             TokenClass targetToken = vector.target.token;
@@ -214,24 +214,24 @@ public class VectorInfo {
                 isAlly = IsAllyTeam (match.GetTeam (vector.target), match.GetTeam (token.owner));
             }
             switch (abilityType) {
-                case 1:
-                case 4:
-                case 10:
-                case 13:
-                case 20:
-                case 24:
-                case 46:
-                case 51:
-                case 58:
-                case 59:
-                case 71:
+                case AbilityType.T1:
+                case AbilityType.T4:
+                case AbilityType.T10:
+                case AbilityType.T13:
+                case AbilityType.T20:
+                case AbilityType.T24:
+                case AbilityType.T46:
+                case AbilityType.T51:
+                case AbilityType.T58:
+                case AbilityType.T59:
+                case AbilityType.T71:
                     if (IsFilledTile (vector.target)) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 2:
+                case AbilityType.T2:
                     if (IsFilledTile (vector.target)) {
                         Triggered1.Add (vector.target);
                     }
@@ -239,16 +239,16 @@ public class VectorInfo {
                         Triggered2.Add (vector.target);
                     }
                     break;
-                case 3:
-                case 6:
-                case 53:
+                case AbilityType.T3:
+                case AbilityType.T6:
+                case AbilityType.T53:
                     if (IsEmptyTile (vector.target)) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 5:
+                case AbilityType.T5:
                     if (!vector.directional) {
                         break;
                     }
@@ -258,82 +258,91 @@ public class VectorInfo {
                         NotTriggeredVector.Add (vector);
                     }
                     break;
-                case 8:
+                case AbilityType.T8:
                     if (IsFilledTile (vector.target) && isEnemy && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 9:
+                case AbilityType.T9:
                     if (IsFilledTile (vector.target) && weakestTargets.Count == 1 && vector.target.token.value == weakestValue) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 12:
+                case AbilityType.T12:
                     if (IsFilledTile (vector.target) && strongestTargets.Count == 1 && vector.target.token.value == strongestValue) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 14:
-                case 16:
-                case 17:
+                case AbilityType.T14:
+                case AbilityType.T16:
+                case AbilityType.T17:
                     if (IsFilledTile (vector.target) && weakerCount == 1 && vector.target.token.value < token.value) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 15:
-                case 47:
-                case 52:
-                case 55:
+                case AbilityType.T15:
+                case AbilityType.T47:
+                case AbilityType.T52:
+                case AbilityType.T55:
                     if (IsFilledTile (vector.target) && isAlly) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 21:
+                case AbilityType.T74:
+                    if (IsFilledTile (vector.target) && isAlly) {
+                        Triggered1.Add (vector.target);
+                    } else if (HasRemains (vector.target)){
+                        Triggered2.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case AbilityType.T21:
                     if (IsFilledTile (vector.target) && isAlly && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 23:
+                case AbilityType.T23:
                     if (IsFilledTile (vector.target) && isEnemy && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 18:
+                case AbilityType.T18:
                     if (IsEmptyTile (vector.target) && emptyTileCount == 1 && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 19:
+                case AbilityType.T19:
                     if (IsFilledTile (vector.target) && isAlly && allyCount == 1) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 25:
+                case AbilityType.T25:
                     if (IsEmptyTile (vector.target) && emptyTileCount <= 3) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 26:
+                case AbilityType.T26:
                     if (IsFilledTile (vector.target) && strongestValue == vector.target.token.value && weakestValue != vector.target.token.value) {
                         Triggered1.Add (vector.target);
                     } else if (IsFilledTile (vector.target) && weakestValue == vector.target.token.value && strongestValue != vector.target.token.value) {
@@ -342,14 +351,14 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 27:
+                case AbilityType.T27:
                     if (IsFilledTile (vector.target) && vector.target.token.type != token.type) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 28:
+                case AbilityType.T28:
                     if (IsFilledTile (vector.target) && isAlly && allyCount == 1 && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                         Triggered2.Add (match.LastPlayedTile ());
@@ -357,31 +366,38 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 29:
+                case AbilityType.T75:
+                    if (IsFilledTile (vector.target) && tokenCount <= 2) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case AbilityType.T29:
                     if (IsFilledTile (vector.target) && enemyCount <= 2 && isEnemy) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 30:
-                case 33:
+                case AbilityType.T30:
+                case AbilityType.T33:
                     if (IsFilledTile (vector.target) && match.Player [token.owner].score >= 20) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 31:
-                case 32:
-                case 60:
+                case AbilityType.T31:
+                case AbilityType.T32:
+                case AbilityType.T60:
                     if (HasRemains (vector.target)) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 34:
+                case AbilityType.T34:
                     if (!vector.directional) {
                         break;
                     }
@@ -391,22 +407,22 @@ public class VectorInfo {
                         NotTriggeredVector.Add (vector);
                     }
                     break;
-                case 35:
+                case AbilityType.T35:
                     if (IsFilledTile (vector.target) && vector.target.token.value < token.value) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 36:
-                case 37:
+                case AbilityType.T36:
+                case AbilityType.T37:
                     if (targets.Count == 2 && IsFilledTile (vector.target)) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 39:
+                case AbilityType.T39:
                     if (emptyTileCount >= 1 && enemyCount == 1) {
                         if (IsEmptyTile (vector.target)) {
                             Triggered1.Add (vector.target);
@@ -417,21 +433,21 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 40:
+                case AbilityType.T40:
                     if (HasRemains (vector.target)) {
                         Triggered2.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 41:
+                case AbilityType.T41:
                     if (IsFilledTile (vector.target) && strongerCount == 1 && vector.target.token.value > token.value) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 43:
+                case AbilityType.T43:
                     if (IsFilledTile (vector.target) && strongestValue == vector.target.token.value && weakestValue != vector.target.token.value) {
                         Triggered2.Add (vector.target);
                     } else if (IsFilledTile (vector.target) && weakestValue == vector.target.token.value && strongestValue != vector.target.token.value) {
@@ -440,35 +456,35 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 44:
+                case AbilityType.T44:
                     if (IsFilledTile (vector.target) && vector.target.token.value > token.value) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 48:
+                case AbilityType.T48:
                     if (IsEmptyTile (vector.target) && emptyTileCount * 20 <= match.Player [playerNumber].score) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 50:
+                case AbilityType.T50:
                     if (IsFilledTile (vector.target) && isEnemy && enemyCount == 1) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 54:
+                case AbilityType.T54:
                     if (IsFilledTile (vector.target) && isEnemy) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 56:
+                case AbilityType.T56:
                     if (IsFilledTile (vector.target) && weakestTargets.Count == 1) {
                         if (vector.target.token.value == weakestValue) {
                             Triggered1.Add (vector.target);
@@ -479,7 +495,7 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 57:
+                case AbilityType.T57:
                     if (IsFilledTile (vector.target)) {
                         if (weakestValue == vector.target.token.value) {
                             Triggered2.Add (vector.target);
@@ -490,9 +506,9 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 63:
-                case 65:
-                case 70:
+                case AbilityType.T63:
+                case AbilityType.T65:
+                case AbilityType.T70:
                     if (IsFilledTile (vector.target) && 
                         match.GetPlayer (targetToken.owner) != null && match.GetPlayer (targetToken.owner).score >= match.Player [token.owner].score + 20) {
                         Triggered1.Add (vector.target);
@@ -500,7 +516,7 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 64:
+                case AbilityType.T64:
                     if (IsFilledTile (vector.target) && weakestTargets.Count == 1 && weakestValue == vector.target.token.value &&
                         match.GetPlayer (targetToken.owner) != null && match.GetPlayer (targetToken.owner).score >= match.Player [token.owner].score + 20) {
                         Triggered1.Add (vector.target);
@@ -508,24 +524,31 @@ public class VectorInfo {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 66:
+                case AbilityType.T66:
                     if (IsFilledTile (vector.target) && isEnemy && enemyCount == 1) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 67:
-                case 68:
+                case AbilityType.T67:
+                case AbilityType.T68:
                     if (IsFilledTile (vector.target) && targetToken.value == emptyTileCount) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
                     }
                     break;
-                case 69:
+                case AbilityType.T69:
                     if (IsFilledTile (vector.target) &&
                         match.GetPlayer (targetToken.owner) != null && match.GetPlayer (targetToken.owner).scoreIncome >= 20) {
+                        Triggered1.Add (vector.target);
+                    } else {
+                        NotTriggered.Add (vector.target);
+                    }
+                    break;
+                case AbilityType.T73:
+                    if (IsFilledTile (vector.target) && tokenCount == 1 && match.LastPlayedToken () != null) {
                         Triggered1.Add (vector.target);
                     } else {
                         NotTriggered.Add (vector.target);
@@ -534,24 +557,24 @@ public class VectorInfo {
             }
         }
         switch (abilityType) {
-            case 22:
+            case AbilityType.T22:
                 if (match.LastPlayedToken () != null) {
                     Triggered1.Add (playTile);
                 }
                 break;
-            case 30:
-            case 33:
-            case 48:
+            case AbilityType.T30:
+            case AbilityType.T33:
+            case AbilityType.T48:
                 if (match.Player [token.owner].score >= 20) {
                     Triggered2.Add (playTile);
                 }
                 break;
-            case 40:
+            case AbilityType.T40:
                 if (remainsCount < 2) {
                     Triggered1.Add (playTile);
                 }
                 break;
-            case 54:
+            case AbilityType.T54:
                 Triggered2.Add (playTile);
                 break;
 
@@ -562,21 +585,26 @@ public class VectorInfo {
             }
         }
         switch (abilityType) {
-            case 8:
-            case 11:
-            case 18:
-            case 21:
-            case 22:
-            case 23:
+            case AbilityType.T8:
+            case AbilityType.T11:
+            case AbilityType.T18:
+            case AbilityType.T21:
+            case AbilityType.T22:
+            case AbilityType.T23:
                 if (match.LastPlayedToken () != null) {
+                    Triggered2.Add (match.LastPlayedTile ());
+                }
+                break;
+            case AbilityType.T73:
+                if (match.LastPlayedToken () != null && tokenCount == 1) {
                     Triggered2.Add (match.LastPlayedTile ());
                 }
                 break;
 
         }
         switch (abilityType) {
-            case 44:
-            case 53:
+            case AbilityType.T44:
+            case AbilityType.T53:
                 Triggered2.Add (playTile);
                 break;
         }

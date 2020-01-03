@@ -84,10 +84,10 @@ public class Tooltip : GOUI {
             return;
         }
         NewTooltip ();
-        AddFragment (null, Language.AbilityName [card.abilityType], true);
+        AddFragment (null, Language.AbilityName [(int) card.abilityType], true);
         AddFragment (null, Language.GetAbilityDescription (card.abilityType), false);
         AddFragment (null, "", false);
-        AddFragment (null, Language.TokenName [card.tokenType], true);
+        AddFragment (null, Language.TokenName [(int) card.tokenType], true);
         AddFragment (null, Language.GetTokenDescription (card.tokenType), false);
         FinalizeTooltip (transform);
     }
@@ -101,22 +101,22 @@ public class Tooltip : GOUI {
         FinalizeTooltip (transform);
     }
 
-    static public void NewAbilityTypeTooltip (Transform transform, int abilityType) {
+    static public void NewAbilityTypeTooltip (Transform transform, AbilityType abilityType) {
         if (permanent) {
             return;
         }
         NewTooltip ();
-        AddFragment (null, Language.AbilityName [abilityType], true);
+        AddFragment (null, Language.AbilityName [(int) abilityType], true);
         AddFragment (null, Language.GetAbilityDescription (abilityType), false);
         FinalizeTooltip (transform);
     }
 
-    static public void NewTokenTypeTooltip (Transform transform, int tokenType) {
+    static public void NewTokenTypeTooltip (Transform transform, TokenType tokenType) {
         if (permanent) {
             return;
         }
         NewTooltip ();
-        AddFragment (null, Language.TokenName [tokenType], true);
+        AddFragment (null, Language.TokenName [(int) tokenType], true);
         AddFragment (null, Language.GetTokenDescription (tokenType), false);
         FinalizeTooltip (transform);
     }
@@ -126,8 +126,8 @@ public class Tooltip : GOUI {
             return;
         }
         NewTooltip ();
-        AddFragment (null, Language.TokenName [token.type], true);
-        AddFragment (null, Language.TokenDescription [token.type], false);
+        AddFragment (null, Language.TokenName [(int) token.type], true);
+        AddFragment (null, Language.GetTokenDescription (token.type), false);
         FinalizeTooltip (transform);
     }
 

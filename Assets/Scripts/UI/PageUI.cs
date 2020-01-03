@@ -65,6 +65,7 @@ public class PageUI : GOUI {
             return Mathf.Max (number, Mathf.Min (pageLimit - 1, Mathf.Min (number + currentPage - (numberOfButtons - 1) / 2, pageLimit + number - numberOfButtons)));
         }
     }
+    //public int SelectPageByButtonNumber
 
     public int SelectPage (int page) {
         page = ButtonNumberToPageNumber (page);
@@ -77,6 +78,7 @@ public class PageUI : GOUI {
             button.GetComponent<UIController> ().FreeAndUnlcok ();
 
             int number = ButtonNumberToPageNumber (x);
+            //Debug.Log (page + " " + number);
             ButtonText [x].text = (number + 1).ToString ();
             if (number == page && button != null) {
                 UIController UIC = button.GetComponent<UIController> ();

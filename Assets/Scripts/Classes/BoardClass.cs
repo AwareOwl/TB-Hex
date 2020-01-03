@@ -158,7 +158,7 @@ public class BoardClass {
         return tile [x, y];
     }
 
-    public TokenClass SetToken (int x, int y, int type, int value, int owner) {
+    public TokenClass SetToken (int x, int y, TokenType type, int value, int owner) {
         return tile [x, y].SetToken (type, value, owner);
     }
 
@@ -187,7 +187,7 @@ public class BoardClass {
             s2 += " ";
             s2 += tile.enabled ? 1 : 0;
             if (tile.token != null) {
-                s2 += " " + tile.token.type;
+                s2 += " " + (int) tile.token.type;
                 s2 += " " + tile.token.value;
                 s2 += " " + tile.token.owner;
             }
@@ -232,10 +232,10 @@ public class BoardClass {
                     tile [px, py].remains = i [3] == 1 ? true : false;
                     break;
                 case 6:
-                    tile [px, py].CreateToken (i [3], i [4], i [5]);
+                    tile [px, py].CreateToken ((TokenType) i [3], i [4], i [5]);
                     break;
                 case 7:
-                    tile [px, py].CreateToken (i [3], i [4], i [5]);
+                    tile [px, py].CreateToken ((TokenType) i [3], i [4], i [5]);
                     tile [px, py].remains = i [6] == 1 ? true : false;
                     break;
             }

@@ -60,7 +60,7 @@ public class SoundManager : MonoBehaviour {
         queuedClips.Clear ();
     }
 
-    static public void PlayAbilityAudioClips (int abilityType) {
+    static public void PlayAbilityAudioClips (AbilityType abilityType) {
         PlayAudioClips (SoundResourcesManager.Instance.GetAbilitySound (abilityType));
     }
 

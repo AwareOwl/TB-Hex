@@ -213,7 +213,7 @@ public class UnlockedContent : GOUI {
                 int npy = py + y * 60 + 90;
                 BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx, npy, 11, 60, 60, true);
                 UIController UIC = BackgroundObject.GetComponent<UIController> ();
-                UIC.abilityType = number;
+                UIC.abilityType = (AbilityType) number;
                 //Debug.Log (cashed + " " + y + " " + x);
                 if (cached || unlockedAbility [number]) {
                     Clone = CreateSprite (VisualCard.GetIconPath (number), npx, npy, 12, 45, 45, false);
@@ -255,6 +255,7 @@ public class UnlockedContent : GOUI {
         for (int y = 0; y < tokenRows; y++) {
             for (int x = 0; x < maxX; x++) {
                 int number = y * maxX + x;
+                TokenType tokenType = (TokenType) number;
                 if (number >= tokenCount) {
                     continue;
                 }
@@ -265,7 +266,7 @@ public class UnlockedContent : GOUI {
                 int npy = py + y * 60 + 90;
                 BackgroundObject = CreateSprite ("UI/Butt_M_EmptySquare", npx, npy, 11, 60, 60, true);
                 UIController UIC = BackgroundObject.GetComponent<UIController> ();
-                UIC.tokenType = number;
+                UIC.tokenType = tokenType;
 
                 //BackgroundObject.name = UIString.CardPoolEditorTokenType;
                 if (cached || unlockedToken [number]) {
@@ -277,7 +278,7 @@ public class UnlockedContent : GOUI {
                     Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
                     Clone.transform.localPosition = Vector3.zero;
                     Clone.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-                    VT.SetType (number);
+                    VT.SetType (tokenType);
                     DestroyImmediate (VT.Text);
                 } else {
                     Clone = CreateSprite ("Textures/Other/Lock", npx, npy, 12, 45, 45, false);

@@ -48,21 +48,21 @@ public class AIClass {
         multiTargetDanger = new MyRandom ().Range (0, 7);
 
         abilityRow = new MyRandom ().Range (11, 21);
-        tokenRow = new MyRandom ().Range (15, 25);
+        tokenRow = new MyRandom ().Range (16, 25);
         abilityTokenRow = new MyRandom ().Range (16, 35);
 
         abilityStackSize = new MyRandom ().Range (2, 9);
-        tokenStackSize = new MyRandom ().Range (1, 9);
-        abilityTokenStackSize = new MyRandom ().Range (3, 11);
+        tokenStackSize = new MyRandom ().Range (1, 8);
+        abilityTokenStackSize = new MyRandom ().Range (3, 10);
 
         abilityAfterAbility = new MyRandom ().Range (3, 11);
         abilityAfterToken = new MyRandom ().Range (1, 17);
         tokenAfterAbility = new MyRandom ().Range (2, 17);
-        tokenAfterToken = new MyRandom ().Range (3, 15);
+        tokenAfterToken = new MyRandom ().Range (2, 16);
 
         ability_AbilitySynergy = new MyRandom ().Range (5, 14);
-        ability_TokenSynergy = new MyRandom ().Range (10, 25);
-        token_TokenSynergy = new MyRandom ().Range (10, 15);
+        ability_TokenSynergy = new MyRandom ().Range (11, 25);
+        token_TokenSynergy = new MyRandom ().Range (11, 15);
 
         abilityAgainstAbility = new MyRandom ().Range (4, 7);
         abilityAgainstToken = new MyRandom ().Range (4, 7);
@@ -86,8 +86,8 @@ public class AIClass {
                 foreach (StackClass stack in tempPlayer.hand.stack) {
                     foreach (CardClass card in stack.card) {
                         RatingClass.buggedCard [card.cardNumber]++;
-                        RatingClass.buggedAbility [card.abilityType]++;
-                        RatingClass.buggedToken [card.tokenType]++;
+                        RatingClass.buggedAbility [(int) card.abilityType]++;
+                        RatingClass.buggedToken [(int) card.tokenType]++;
                     }
                 }
             }
@@ -311,7 +311,7 @@ public class AIClass {
             if (tile.IsFilledTile ()) {
                 VectorInfo oVE = VE [tile.x, tile.y];
                 float tokenValue = tile.token.value;
-                int tokenType = tile.token.type;
+                TokenType tokenType = tile.token.type;
                 int tokenOwner = tile.token.owner;
                 foreach (AbilityVector vector in oVE.vectors) {
                     TileClass targetTile = vector.target;
@@ -320,28 +320,28 @@ public class AIClass {
                     }
                     VectorInfo tVE = VE [targetTile.x, targetTile.y];
                     TokenClass targetToken = targetTile.token;
-                    int targetType = targetToken.type;
+                    TokenType targetType = targetToken.type;
                     int targetValue = targetToken.value;
                     switch (targetType) {
-                        case 3:
+                        case TokenType.T3:
                             if (tVE.weakestTargets.Count == 1 && tVE.weakestTargets [0] == tile) {
                                 tokenValue = valueOverTime (tokenValue, 1, 1, turnsLeft);
                             }
                             break;
-                        case 4:
+                        case TokenType.T4:
                             if (tVE.strongestTargets.Count == 1 && tVE.strongestTargets [0] == tile) {
                                 tokenValue = valueOverTime (tokenValue, -1, 1, turnsLeft);
                             }
                             break;
-                        case 5:
+                        case TokenType.T5:
                             tokenValue = valueOverTime (tokenValue, -3, targetValue, turnsLeft);
                             break;
-                        case 8:
+                        case TokenType.T8:
                             if (tokenValue < targetValue) {
                                 tokenValue = 0;
                             }
                             break;
-                        case 19:
+                        case TokenType.T19:
                             tokenValue++;
                             break;
                     }
@@ -350,56 +350,56 @@ public class AIClass {
                 tokenValue = Mathf.Max (tokenValue, 0);
                 if (tokenValue > 0) {
                     switch (tokenType) {
-                        case 1:
-                        case 12:
+                        case TokenType.T1:
+                        case TokenType.T12:
                             tokenValue *= 1.9f;
                             break;
-                        case 2:
+                        case TokenType.T2:
                             tokenValue *= -0.9f;
                             break;
-                        case 5:
+                        case TokenType.T5:
                             tokenValue = (tokenValue * (tokenValue + 1) - Mathf.Max (tokenValue - turnsLeft, 0) * (tokenValue - turnsLeft + 1)) / 2 / turnsLeft;
                             break;
-                        case 6:
+                        case TokenType.T6:
                             tokenValue *= 1.06f / match.numberOfPlayers;
                             break;
-                        case 9:
+                        case TokenType.T9:
                             if (match.turnOfPlayer == playerNumber) {
                                 tokenValue += 1f;
                             } else {
                                 tokenValue += 2.1f;
                             }
                             break;
-                        case 11:
+                        case TokenType.T11:
                             tokenValue += 1;
                             break;
-                        case 10:
+                        case TokenType.T10:
                             tokenValue = valueOverTime (tokenValue + oVE.emptyTileCount, -oVE.emptyTileCount, oVE.emptyTileCount, turnsLeft);
                             break;
-                        case 13:
+                        case TokenType.T13:
                             tokenValue += 4 * (turnsLeft - 1) / turnsLeft;
                             break;
-                        case 14:
+                        case TokenType.T14:
                             tokenValue = valueOverTime (tokenValue, Mathf.Max (4f - tokenValue, tokenValue), 4, turnsLeft);
                             break;
-                        case 15:
+                        case TokenType.T15:
                             if (match.turnOfPlayer == playerNumber) {
                                 tokenValue += 0.9f;
                             } else {
                                 tokenValue -= 0.8f;
                             }
                             break;
-                        case 17:
+                        case TokenType.T17:
                             tokenValue += 0.1f;
                             break;
-                        case 16:
+                        case TokenType.T16:
                             tokenValue = (tokenValue - 1) * 1.4f + 1;
                             break;
                     }
                 }
                 switch (tokenType) {
-                    case 12:
-                    case 21:
+                    case TokenType.T12:
+                    case TokenType.T21:
                         riskValue = Mathf.Sqrt (Mathf.Abs (tokenValue)) - 0.2f;
                         break;
                     default:
@@ -436,39 +436,39 @@ public class AIClass {
         return value;
     }
 
-    static public float AproxTokenValue (int tokenType, int value) {
+    static public float AproxTokenValue (TokenType tokenType, int value) {
         float output = value;
         if (value > 0) {
             switch (tokenType) {
-                case 1:
-                case 12:
+                case TokenType.T1:
+                case TokenType.T12:
                     output *= 1.9f;
                     break;
-                case 2:
+                case TokenType.T2:
                     output *= -0.9f;
                     break;
-                case 3:
-                case 4:
-                case 9:
-                case 11:
+                case TokenType.T3:
+                case TokenType.T4:
+                case TokenType.T9:
+                case TokenType.T11:
                     output += 1.05f;
                     break;
-                case 6:
+                case TokenType.T6:
                     output *= 0.53f;
                     break;
-                case 8:
+                case TokenType.T8:
                     output = output + (output - 1) / 2;
                     break;
-                case 10:
+                case TokenType.T10:
                     output += 2.2f;
                     break;
-                case 13:
+                case TokenType.T13:
                     output += 3.8f;
                     break;
-                case 14:
+                case TokenType.T14:
                     output = (4 - value) * 0.75f + value * 0.25f;
                     break;
-                case 15:
+                case TokenType.T15:
                     output += 0.8f;
                     break;
             }

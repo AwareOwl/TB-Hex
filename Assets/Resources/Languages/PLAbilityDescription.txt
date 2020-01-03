@@ -70,3 +70,7 @@
 [69] Zniszcz żetony będące celem których właściciele wygenerowali żetonami w poprzedniej turze co najmniej 20 punktów.
 [70] Usuń 20 punktów właścicielom żetonów będących celem którzy mają przewagę co najmniej 20 punktów.
 [71] Obraca obszary umiejętności kart ze szczytów twoich stosów o 1 za każdy żeton będący celem.
+[72] Gdy ta karta jest na szczycie stosu, zwiększa swoją wartość o 1 za każdym razem gdy zostanie zniszczony twój żeton.
+[73] Zamienia żeton będący celem w kopię ostatnio zagranego żetonu.
+[74] Zwiększa wartość przyjaznych żetonów będących celem o liczbę szczątek będących celem.
+[75] Niszczy do 2 żetonów będących celem.

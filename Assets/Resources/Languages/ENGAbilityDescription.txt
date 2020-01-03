@@ -70,3 +70,6 @@
 [69] Destroys target tokens belonging to players who generated 20 score last turn.
 [70] Remove 20 score to owners of target tokens who have at least 20 score advantage.
 [71] Rotates area of abilities from your top cards by 1 for each target token.
+[72] When it's on the top of stack, increases its value by 1 every time an ally token is destroyed.
+[73] Transforms target token into a copy of last played token.
+[74] Increases values of target allied tokens by number of target remains of destroyed tokens.

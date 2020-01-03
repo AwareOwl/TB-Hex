@@ -36,7 +36,7 @@ public class TileClass {
     }
 
     public bool IsPlayable (int playerNumber) {
-        return enabled && (token == null || (token.type == 17 && token.owner == playerNumber));
+        return enabled && (token == null || (token.type == TokenType.T17 && token.owner == playerNumber));
     }
 
     public bool IsEmptyTile () {
@@ -48,7 +48,7 @@ public class TileClass {
     }
 
     public bool IsFilledTile () {
-        return enabled && token != null;
+        return enabled && token != null && !token.destroyed;
     }
 
     public int GetTeam () {
@@ -89,7 +89,7 @@ public class TileClass {
         }
     }
 
-    public TokenClass SetToken (int type, int value, int owner) {
+    public TokenClass SetToken (TokenType type, int value, int owner) {
         if (token == null) {
             token = CreateToken (type, value, owner);
         } else {
@@ -117,14 +117,14 @@ public class TileClass {
         }
     }
 
-    public TokenClass CreateToken (int type, int value, int owner) {
+    public TokenClass CreateToken (TokenType type, int value, int owner) {
         if (enabled){
             if (token == null) {
                 token = new TokenClass (this, type, value, owner);
                 if (visualTile != null) {
                     token.EnableVisual ();
                 }
-            } else if (token.type == 17) {
+            } else if (token.type == TokenType.T17) {
                 int mergedValue = token.value + value;
                 DestroyToken ();
                 token = new TokenClass (this, type, mergedValue, owner);
@@ -139,18 +139,18 @@ public class TileClass {
 
     public void AddToTriggers () {
         if (board != null && token != null) {
-            board.NumberOfTypes [token.type]++;
+            board.NumberOfTypes [(int) token.type]++;
             if (token.tile == null) {
                 Debug.Log ("code 3");
             }
             switch (token.type) {
-                case 9:
-                case 15:
-                case 18:
+                case TokenType.T9:
+                case TokenType.T15:
+                case TokenType.T18:
                     //Debug.Log (board.match.real +  " ADD");
                     board.BeforeAbilityTriggers.Add (token);
                     break;
-                case 14:
+                case TokenType.T14:
                     board.BeforeTokenPlayedTriggers.Add (token);
                     break;
             }
@@ -174,10 +174,16 @@ public class TileClass {
         }
     }
 
-
-    public void Update () {
+    public void CheckIfShouldBeDestroyed () {
         if (token != null) {
-            token.Update ();
+            token.CheckIfShouldBeDestroyed ();
+        }
+    }
+
+
+    public void DestroyIfNecessary () {
+        if (token != null) {
+            token.DestroyIfNecessary ();
         }
     }
 }

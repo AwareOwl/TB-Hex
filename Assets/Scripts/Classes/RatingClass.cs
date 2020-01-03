@@ -185,16 +185,16 @@ public class RatingClass {
         }
 
         for (int x = 0; x < count; x++) {
-            int abilityType1 = card [x].abilityType;
+            int abilityType1 = (int) card [x].abilityType;
             int abilityArea1 = card [x].AreaSize ();
-            int tokenType1 = card [x].tokenType;
+            int tokenType1 = (int) card [x].tokenType;
             int tokenValue1 = card [x].tokenValue;
 
 
             for (int y = 0; y < count; y++) {
-                int abilityType2 = card [y].abilityType;
+                int abilityType2 = (int) card [y].abilityType;
                 int abilityArea2 = card [y].AreaSize ();
-                int tokenType2 = card [y].tokenType;
+                int tokenType2 = (int) card [y].tokenType;
                 int tokenValue2 = card [y].tokenValue;
 
                 float popularity = cardPopularity [y];
@@ -244,48 +244,56 @@ public class RatingClass {
                 for (int z = 0; z < cardCount; z++) {
                     CardClass card = stack.card [z];
                     int abilityArea = card.AreaSize ();
-                    int abilityType = card.abilityType;
-                    int tokenType = card.tokenType;
+                    int abilityType = (int) card.abilityType;
+                    int tokenType = (int) card.tokenType;
                     int tokenValue = card.tokenValue;
                     foreach (CardClass usedCard in usedCards [x]) {
-                        if (abilityType < usedCard.abilityType) {
-                            ability_AbilitySynergy [abilityType, abilityArea, usedCard.abilityType, usedCard.AreaSize ()] *= 0.999f;
+                        int usedAbilityArea = usedCard.AreaSize ();
+                        int usedAbilityType = (int) usedCard.abilityType;
+                        int usedTokenType = (int) usedCard.tokenType;
+                        int usedTokenValue = usedCard.tokenValue;
+                        if (abilityType < usedAbilityType) {
+                            ability_AbilitySynergy [abilityType, abilityArea, usedAbilityType, usedAbilityArea] *= 0.999f;
                         } else {
-                            ability_AbilitySynergy [usedCard.abilityType, usedCard.AreaSize (), abilityType, abilityArea] *= 0.999f;
+                            ability_AbilitySynergy [usedAbilityType, usedAbilityArea, abilityType, abilityArea] *= 0.999f;
                         }
-                        if (tokenType < usedCard.tokenType) {
-                            token_TokenSynergy [tokenType, tokenValue, usedCard.tokenType, usedCard.tokenValue] *= 0.999f;
+                        if (tokenType < usedTokenType) {
+                            token_TokenSynergy [tokenType, tokenValue, usedTokenType, usedTokenValue] *= 0.999f;
                         } else {
-                            token_TokenSynergy [usedCard.tokenType, usedCard.tokenValue, tokenType, tokenValue] *= 0.999f;
+                            token_TokenSynergy [usedTokenType, usedTokenValue, tokenType, tokenValue] *= 0.999f;
                         }
-                        ability_TokenSynergy [abilityType, abilityArea, usedCard.tokenType, usedCard.tokenValue] *= 0.999f;
-                        ability_TokenSynergy [usedCard.abilityType, usedCard.AreaSize (), tokenType, tokenValue] *= 0.999f;
+                        ability_TokenSynergy [abilityType, abilityArea, usedTokenType, usedTokenValue] *= 0.999f;
+                        ability_TokenSynergy [usedAbilityType, usedAbilityArea, tokenType, tokenValue] *= 0.999f;
                         if (winnerNumber == x) {
-                            if (abilityType < usedCard.abilityType) {
-                                ability_AbilitySynergy [abilityType, abilityArea, usedCard.abilityType, usedCard.AreaSize ()] += 0.001f;
+                            if (abilityType < usedAbilityType) {
+                                ability_AbilitySynergy [abilityType, abilityArea, usedAbilityType, usedAbilityArea] += 0.001f;
                             } else {
-                                ability_AbilitySynergy [usedCard.abilityType, usedCard.AreaSize (), abilityType, abilityArea] += 0.001f;
+                                ability_AbilitySynergy [usedAbilityType, usedAbilityArea, abilityType, abilityArea] += 0.001f;
                             }
-                            if (tokenType < usedCard.tokenType) {
-                                token_TokenSynergy [tokenType, tokenValue, usedCard.tokenType, usedCard.tokenValue] += 0.001f;
+                            if (tokenType < usedTokenType) {
+                                token_TokenSynergy [tokenType, tokenValue, usedTokenType, usedTokenValue] += 0.001f;
                             } else {
-                                token_TokenSynergy [usedCard.tokenType, usedCard.tokenValue, tokenType, tokenValue] += 0.001f;
+                                token_TokenSynergy [usedTokenType, usedTokenValue, tokenType, tokenValue] += 0.001f;
                             }
-                            ability_TokenSynergy [abilityType, abilityArea, usedCard.tokenType, usedCard.tokenValue] += 0.001f;
-                            ability_TokenSynergy [usedCard.abilityType, usedCard.AreaSize (), tokenType, tokenValue] += 0.001f;
+                            ability_TokenSynergy [abilityType, abilityArea, usedTokenType, usedTokenValue] += 0.001f;
+                            ability_TokenSynergy [usedAbilityType, usedAbilityArea, tokenType, tokenValue] += 0.001f;
                         }
                     }
                     if (z > 0) {
                         CardClass prevCard = stack.card [z - 1];
-                        abilityAfterAbility [abilityType, abilityArea, prevCard.abilityType, prevCard.AreaSize ()] *= 0.999f;
-                        abilityAfterToken [abilityType, abilityArea, prevCard.tokenType, prevCard.tokenValue] *= 0.999f;
-                        tokenAfterAbility [tokenType, tokenValue, prevCard.abilityType, prevCard.AreaSize ()] *= 0.999f;
-                        tokenAfterToken [tokenType, tokenValue, prevCard.tokenType, prevCard.tokenValue] *= 0.999f;
+                        int prevAbilityArea = prevCard.AreaSize ();
+                        int prevAbilityType = (int) prevCard.abilityType;
+                        int prevTokenType = (int) prevCard.tokenType;
+                        int prevTokenValue = prevCard.tokenValue;
+                        abilityAfterAbility [abilityType, abilityArea, prevAbilityType, prevAbilityArea] *= 0.999f;
+                        abilityAfterToken [abilityType, abilityArea, prevTokenType, prevTokenValue] *= 0.999f;
+                        tokenAfterAbility [tokenType, tokenValue, prevAbilityType, prevAbilityArea] *= 0.999f;
+                        tokenAfterToken [tokenType, tokenValue, prevTokenType, prevTokenValue] *= 0.999f;
                         if (winnerNumber == x) {
-                            abilityAfterAbility [abilityType, abilityArea, prevCard.abilityType, prevCard.AreaSize ()] += 0.001f;
-                            abilityAfterToken [abilityType, abilityArea, prevCard.tokenType, prevCard.tokenValue] += 0.001f;
-                            tokenAfterAbility [tokenType, tokenValue, prevCard.abilityType, prevCard.AreaSize ()] += 0.001f;
-                            tokenAfterToken [tokenType, tokenValue, prevCard.tokenType, prevCard.tokenValue] += 0.001f;
+                            abilityAfterAbility [abilityType, abilityArea, prevAbilityType, prevAbilityArea] += 0.001f;
+                            abilityAfterToken [abilityType, abilityArea, prevTokenType, prevTokenValue] += 0.001f;
+                            tokenAfterAbility [tokenType, tokenValue, prevAbilityType, prevAbilityArea] += 0.001f;
+                            tokenAfterToken [tokenType, tokenValue, prevTokenType, prevTokenValue] += 0.001f;
                         }
                     }
                     usedCards [x].Add (card);
@@ -391,14 +399,14 @@ public class RatingClass {
                 }
                 loserNumber = y;
                 foreach (CardClass loserCard in usedCards [loserNumber]) {
-                    int abilityType1 = loserCard.abilityType;
+                    int abilityType1 = (int) loserCard.abilityType;
                     int abilityArea1 = loserCard.AreaSize ();
-                    int tokenType1 = loserCard.tokenType;
+                    int tokenType1 = (int) loserCard.tokenType;
                     int tokenValue1 = loserCard.tokenValue;
                     foreach (CardClass winnerCard in usedCards [winnerNumber]) {
-                        int abilityType2 = winnerCard.abilityType;
+                        int abilityType2 = (int) winnerCard.abilityType;
                         int abilityArea2 = winnerCard.AreaSize ();
-                        int tokenType2 = winnerCard.tokenType;
+                        int tokenType2 = (int) winnerCard.tokenType;
                         int tokenValue2 = winnerCard.tokenValue;
                         abilityAgainstAbility [abilityType2, abilityArea2, abilityType1, abilityArea1] *= 0.999f;
                         abilityAgainstToken [abilityType2, abilityArea2, tokenType1, tokenValue1] *= 0.999f;

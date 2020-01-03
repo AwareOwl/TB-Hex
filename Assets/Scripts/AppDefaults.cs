@@ -5,14 +5,15 @@ using UnityEngine;
 public class AppDefaults {
 
     static public Color green = new Color (0, 0.95f, 0);
-    static public Color red = Color.red;
+    static public Color red = new Color (1f, 0f, 0f);
+    static public Color darkRed = new Color (0.95f, 0.05f, 0f);
     static public Color yellow = new Color (1, 1, 0);
     static public Color blue = new Color (0.2f, 0.2f, 1);
     static public Color purple = new Color (0.85f, 0.05f, 1);
     static public Color teal = new Color (0.0f, 0.95f, 0.75f);
 
     static public int availableTokens = 24; // Always + 1, to include null
-    static public int availableAbilities = 72; // Always + 1, to include null
+    static public int availableAbilities = 76; // Always + 1, to include null
     static public int availableAvatars = 23; // Always + 1, to include null
     static public int availableBosses = 13; // Always + 1, to include null
 
@@ -101,96 +102,98 @@ public class AppDefaults {
         }
     }
 
-    static public Color GetBorderColorMain (int type) {
+    static public Color GetBorderColorMain (TokenType type) {
         switch (type) {
             // dark
-            case 0:
-            case 6:
-            case 16:
-            case 17:
+            case TokenType.T0:
+            case TokenType.T6:
+            case TokenType.T16:
+            case TokenType.T17:
                 return new Color (0.1f, 0.1f, 0.1f);
             // Yellowish
-            case 1:
-            case 12:
+            case TokenType.T1:
+            case TokenType.T12:
                 return new Color (0.8f, 0.6f, 0.1f);
             // Darker orange
-            case 10:
+            case TokenType.T10:
                 return new Color (0.55f, 0.275f, 0.1f);
             // Dark yellow
-            case 2:
-            case 8:
+            case TokenType.T2:
+            case TokenType.T8:
                 return new Color (0.1f, 0.1f, 0.0f);
             // Bright blue
-            case 13:
+            case TokenType.T13:
                 return new Color (0.4f, 0.5f, 1f);
             // Dark blue
-            case 3:
-            case 4:
-            case 5:
-            case 22:
-            case 23:
+            case TokenType.T3:
+            case TokenType.T4:
+            case TokenType.T5:
+            case TokenType.T22:
+            case TokenType.T23:
                 return new Color (0.0f, 0.05f, 0.2f);
             // Dark green
-            case 11:
-            case 7:
+            case TokenType.T11:
+            case TokenType.T7:
                 return new Color (0.1f, 0.4f, 0.1f);
-            case 14:
+            case TokenType.T14:
                 return new Color (0.07f, 0.3f, 0.07f);
-            case 18:
+            case TokenType.T18:
                 return new Color (0.05f, 0.05f, 0.4f);
-            case 19:
+            case TokenType.T19:
                 return new Color (0.3f, 0.4f, 0.1f);
-            case 20:
+            case TokenType.T20:
                 return new Color (0.4f, 0, 0);
-            case 21:
+            case TokenType.T21:
                 return new Color (0.2f, 0.15f, 0);
             // Dark pink
-            case 100:
-                return new Color (0.6f, 0.4f, 0.3f);
+                //return new Color (0.6f, 0.4f, 0.3f);
             default:
                 return Color.black;
         }
     }
-
     static public Color GetBorderColorAccent (int type) {
+        return GetBorderColorAccent ((TokenType) type);
+    }
+
+    static public Color GetBorderColorAccent (TokenType type) {
         switch (type) {
-            case 2:
+            case TokenType.T2:
                 return new Color (0.6f, 0f, 0.1f);
-            case 3:
+            case TokenType.T3:
                 return new Color (0.0f, 0.9f, 0f);
                 // Red
-            case 4:
-            case 5:
-            case 11:
-            case 23:
+            case TokenType.T4:
+            case TokenType.T5:
+            case TokenType.T11:
+            case TokenType.T23:
                 return new Color (0.9f, 0, 0);
-            case 6:
+            case TokenType.T6:
                 return new Color (0.7f, 0.7f, 0.7f);
-            case 7:
-            case 10:
-            case 16:
-            case 21:
+            case TokenType.T7:
+            case TokenType.T10:
+            case TokenType.T16:
+            case TokenType.T21:
                 return new Color (0.8f, 0.8f, 0f);
-            case 14:
+            case TokenType.T14:
                 return new Color (0.7f, 0.7f, 0f);
-            case 8:
+            case TokenType.T8:
                 return new Color (0.6f, 0.4f, 0.3f);
-            case 12:
+            case TokenType.T12:
                 return new Color (0.8f, 0.45f, 0.125f);
-            case 9:
-            case 13:
+            case TokenType.T9:
+            case TokenType.T13:
                 return new Color (0.1f, 0.1f, 0.9f);
-            case 15:
+            case TokenType.T15:
                 return new Color (1, 0.1f, 0.6f);
-            case 17:
+            case TokenType.T17:
                 return new Color (0.5f, 0.5f, 0.5f);
-            case 18:
+            case TokenType.T18:
                 return purple;
-            case 19:
+            case TokenType.T19:
                 return new Color (0.8f, 0.9f, 0.1f);
-            case 20:
+            case TokenType.T20:
                 return new Color (1, 0, 0);
-            case 22:
+            case TokenType.T22:
                 return new Color (0.6f, 0.6f, 0f);
             default:
                 return Color.black;
@@ -209,6 +212,9 @@ public class AppDefaults {
             PlayerColor [6] = new Color (0.3f, 0.8f, 0.8f);
         }
     }
+    static public Color GetAbilityColor (AbilityType type) {
+        return GetAbilityColor ((int) type);
+    }
 
     static public Color GetAbilityColor (int type) {
         switch (type) {
@@ -216,19 +222,21 @@ public class AppDefaults {
             case 1:
             case 8:
             case 12:
-            case 14:
             case 21:
             case 24:
-            case 29:
-            case 30:
-            case 35:
             case 41:
             case 44:
             case 57:
+                return red;
+            case 14:
+            case 29:
+            case 30:
+            case 35:
             case 63:
             case 67:
             case 69:
-                return red;
+            case 75:
+                return darkRed;
             // Green
             case 2:
             case 18:
@@ -266,6 +274,7 @@ public class AppDefaults {
             case 56:
             case 65:
             case 68:
+            case 74:
                 return yellow;
             // Teal
             case 4:
@@ -285,6 +294,7 @@ public class AppDefaults {
             case 50:
             case 58:
             case 64:
+            case 73:
                 return purple;
             // Blue
             case 20:
@@ -296,6 +306,7 @@ public class AppDefaults {
             case 61:
             case 62:
             case 71:
+            case 72:
                 return blue;
         }
         return Color.white;

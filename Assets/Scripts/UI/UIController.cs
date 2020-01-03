@@ -22,8 +22,8 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public PlayerClass player;
     public CardClass card;
     public TileClass tile;
-    public int abilityType = -1;
-    public int tokenType = -1;
+    public AbilityType abilityType = AbilityType.NULL;
+    public TokenType tokenType = TokenType.NULL;
 
     public List<GameObject> references = new List<GameObject> ();
 
@@ -184,10 +184,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             TutorialManager.NewState (TutorialManager.inspectToken);
             Tooltip.NewTooltip (transform, tile.token);
         }
-        if (abilityType > -1) {
+        if (abilityType != AbilityType.NULL) {
             Tooltip.NewAbilityTypeTooltip (transform, abilityType);
         }
-        if (tokenType > -1) {
+        if (tokenType != TokenType.NULL) {
             TutorialManager.NewState (TutorialManager.inspectToken);
             Tooltip.NewTokenTypeTooltip (transform, tokenType);
         }
@@ -428,7 +428,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             return;
         }
         if (pageUI != null) {
-            pageUI.SelectPage (number);
+            //pageUI.SelectPage (number);
         }
         switch (name) {
             case UIString.InGameAvatar:
@@ -443,7 +443,7 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 break;
             case UIString.SetEditorSetCard:
                 if (SetEditor.Set [x, y] != null) {
-                    Debug.Log (SetEditor.Set [x, y]);
+                    //Debug.Log (SetEditor.Set [x, y]);
                     SoundManager.PlayAudioClip (MyAudioClip.SetClick);
                 }
                 break;
@@ -702,10 +702,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 LibraryMenu.ShowLibrary ();
                 break;
             case UIString.LibraryMenuTokenType:
-                LibraryMenu.SelectButton (0, tokenType);
+                LibraryMenu.SelectButton (0, (int) tokenType);
                 break;
             case UIString.LibraryMenuAbilityType:
-                LibraryMenu.SelectButton (1, abilityType);
+                LibraryMenu.SelectButton (1, (int) abilityType);
                 break;
             case UIString.LibraryMenuNextAbilityPage:
                 LibraryMenu.NextAbilityPage ();
@@ -967,10 +967,10 @@ public class UIController : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                             break;
 
                         case UIString.LibraryMenuTokenType:
-                            LibraryMenu.EditElementToggle (0, tokenType);
+                            LibraryMenu.EditElementToggle (0, (int) tokenType);
                             break;
                         case UIString.LibraryMenuAbilityType:
-                            LibraryMenu.EditElementToggle (1, abilityType);
+                            LibraryMenu.EditElementToggle (1, (int) abilityType);
                             break;
 
                         case UIString.InGameHandCard:

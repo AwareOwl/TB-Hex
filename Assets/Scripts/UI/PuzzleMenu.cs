@@ -113,6 +113,7 @@ public class PuzzleMenu : GOUI {
                 Clone.name = UIString.PuzzleMenuRow;
             }
         }
+        pageUI.SelectPage (currentPage [pageType]);
     }
 
     static public int RowNumberToNumber (int rowNumber) {
@@ -149,6 +150,7 @@ public class PuzzleMenu : GOUI {
         SelectType (pageType);
     }
 
+
     static public void SelectType (int type) {
         pageType = type;
         for (int x = 0; x < 2; x++) {
@@ -168,9 +170,9 @@ public class PuzzleMenu : GOUI {
                 pageCount = Mathf.Max (1, (puzzleCount - 1) / count + 1);
                 break;
         }
+
         pageUI.Init (10, pageCount, new Vector2Int (90, 870), UIString.PuzzleMenuPageButton);
         Mathf.Min (currentPage [pageType], pageCount - 1);
-        pageUI.SelectPage (currentPage [pageType]);
 
         RefreshPage ();
     }

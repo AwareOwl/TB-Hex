@@ -343,135 +343,138 @@ public class SoundResourcesManager : MonoBehaviour {
                 return null;
         }
     }
-    public AudioClip [] GetAbilitySound (int abilityType) {
+    public AudioClip [] GetAbilitySound (AbilityType abilityType) {
         List <AudioClip> output = new List<AudioClip>();
         switch (abilityType) {
-            case 47:
+            case AbilityType.T47:
                 output.Add (AbilityTokenSacrifice);
                 break;
-            case 2:
+            case AbilityType.T2:
                 output.Add (AbilityTokenCreation);
                 break;
         }
 
         switch (abilityType) {
-            case 20:
-            case 62:
+            case AbilityType.T20:
+            case AbilityType.T62:
                 output.Add (ShufflingCard);
                 break;
 
-            case 6:
-            case 40:
+            case AbilityType.T6:
+            case AbilityType.T40:
                     output.Add (AbilityOther1);
                 break;
             //       output.Add (AbilityOther2);
             //       output.Add (AbilityOther3);
-            case 7:
+            case AbilityType.T7:
                 output.Add (AbilityEmptyEffect);
                 break;
 
-            case 3:
-            case 59:
-            case 60:
+            case AbilityType.T3:
+            case AbilityType.T59:
+            case AbilityType.T60:
                 output.Add (AbilityTileDisable);
                 break;
                 
 
-            case 38:
-            case 42:
-            case 49:
-            case 51:
-            case 71:
+            case AbilityType.T38:
+            case AbilityType.T42:
+            case AbilityType.T49:
+            case AbilityType.T51:
+            case AbilityType.T71:
                 output.Add (AbilityCardChange);
                 break;
-            case 45:
-            case 61:
+            case AbilityType.T45:
+            case AbilityType.T61:
+            case AbilityType.T72:
                 output.Add (AbilityCardChangeRepeated);
                 break;
                 output.Add (AbilityGettingACard);
             
                 output.Add (AbilityOwnScoreLose);
-            case 4:
-            case 28:
-            case 47:
+            case AbilityType.T4:
+            case AbilityType.T28:
+            case AbilityType.T47:
                 output.Add (AbilityOwnScoreGain);
                 break;
-            case 46:
-            case 70:
+            case AbilityType.T46:
+            case AbilityType.T70:
                 output.Add (AbilityEnemyScoreChange);
                 break;
 
-            case 1:
-            case 8:
-            case 12:
-            case 21:
-            case 24:
-            case 41:
-            case 44:
-            case 57:
+            case AbilityType.T1:
+            case AbilityType.T8:
+            case AbilityType.T12:
+            case AbilityType.T21:
+            case AbilityType.T24:
+            case AbilityType.T41:
+            case AbilityType.T44:
+            case AbilityType.T57:
                 output.Add (AbilityTokenValueReduction);
                 break;
-            case 14:
-            case 29:
-            case 30:
-            case 35:
-            case 63:
-            case 67:
-            case 69:
+            case AbilityType.T14:
+            case AbilityType.T29:
+            case AbilityType.T30:
+            case AbilityType.T35:
+            case AbilityType.T63:
+            case AbilityType.T67:
+            case AbilityType.T69:
                 output.Add (AbilityTokenDestruction);
                 break;
-            case 2:
-            case 9:
-            case 27:
-            case 32:
-            case 52:
-            case 54:
-            case 68:
+            case AbilityType.T2:
+            case AbilityType.T9:
+            case AbilityType.T27:
+            case AbilityType.T32:
+            case AbilityType.T52:
+            case AbilityType.T54:
+            case AbilityType.T68:
+            case AbilityType.T74:
                 output.Add (AbilityTokenValueGain);
                 break;
-            case 13:
-            case 26:
-            case 43:
+            case AbilityType.T13:
+            case AbilityType.T26:
+            case AbilityType.T43:
                 output.Add (AbilityTokenValueChange);
                 break;
-            case 25:
-            case 31:
-            case 48:
+            case AbilityType.T25:
+            case AbilityType.T31:
+            case AbilityType.T48:
                 output.Add (AbilityTokenCreation);
                 break;
-            case 15:
-            case 23:
-            case 55:
-            case 56:
-            case 65:
+            case AbilityType.T15:
+            case AbilityType.T23:
+            case AbilityType.T55:
+            case AbilityType.T56:
+            case AbilityType.T65:
                 output.Add (AbilityTokenValueSteal);
                 break;
-            case 18:
-            case 39:
-            case 53:
+            case AbilityType.T18:
+            case AbilityType.T39:
+            case AbilityType.T53:
+            case AbilityType.T73:
                 output.Add (AbilityTokenCloning);
                 break;
-            case 10:
-            case 16:
-            case 17:
-            case 22:
-            case 33:
-            case 37:
-            case 58:
+            case AbilityType.T10:
+            case AbilityType.T16:
+            case AbilityType.T17:
+            case AbilityType.T22:
+            case AbilityType.T33:
+            case AbilityType.T37:
+            case AbilityType.T58:
                 output.Add (AbilityTokenTypeChange);
                 break;
-            case 50:
-            case 64:
+            case AbilityType.T50:
+            case AbilityType.T64:
                 output.Add (AbilityTokenOwnerChange);
                 break;
-            case 5:
-            case 34:
+            case AbilityType.T5:
+            case AbilityType.T34:
                 output.Add (AbilityTokenPush);
                 break;
-            case 11:
-            case 19:
-            case 36:
-            case 66:
+            case AbilityType.T11:
+            case AbilityType.T19:
+            case AbilityType.T36:
+            case AbilityType.T66:
                 output.Add (AbilityTokenPositionSwap);
                 break;
             //case 50:

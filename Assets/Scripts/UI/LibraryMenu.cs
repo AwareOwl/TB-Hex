@@ -29,6 +29,7 @@ public class LibraryMenu : GOUI {
 
     // Use this for initialization
     void Start () {
+        editMode = ServerManagement.TestServer;
         NumberOfButtons [0] = AppDefaults.availableTokens;
         NumberOfButtons [1] = AppDefaults.availableAbilities;
         WorksWellWithID = new List<int> [2, 2] [];
@@ -78,6 +79,7 @@ public class LibraryMenu : GOUI {
                 selectedEditMode = 3;
             }
             if (Input.GetKeyDown ("s")) {
+                Debug.Log ("Saving");
                 LibraryData.SaveWorksWellWith (LibraryData.ListToString (WorksWellWithID));
                 LibraryData.SaveIsGoodAgainst (LibraryData.ListToString (IsGoodAgainstID));
                 LibraryData.SaveIsWeakAgainst (LibraryData.ListToString (IsWeakAgainstID));
@@ -108,7 +110,7 @@ public class LibraryMenu : GOUI {
         List <int> list = null;
         int number = Selected [selectedType];
         if (elementType == 1) {
-            elementNumber = AbilityButtonNumberToAbilityNumber (elementNumber);
+            //elementNumber = elementNumber;
         }
         switch (selectedEditMode) {
             case 1:
@@ -180,7 +182,7 @@ public class LibraryMenu : GOUI {
     }
 
     static bool IsUICActive (UIController UIC, int number) {
-        return (selectedType == 1 && UIC.abilityType == number) || (selectedType == 0 && UIC.tokenType == number);
+        return (selectedType == 1 && UIC.abilityType == (AbilityType) number) || (selectedType == 0 && UIC.tokenType == (TokenType) number);
     }
 
     static GameObject ElementPreview;
@@ -204,14 +206,15 @@ public class LibraryMenu : GOUI {
     static public GameObject CreateToken (Transform background, int number) {
         GameObject Clone;
         VisualToken VT;
+        TokenType tokenType = (TokenType) number;
         VT = new VisualToken ();
         Clone = VT.Anchor;
         Clone.transform.SetParent (background.transform);
         Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
         Clone.transform.localPosition = Vector3.zero;
         Clone.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-        VT.SetType (number);
-        background.GetComponent<UIController> ().tokenType = number;
+        VT.SetType (tokenType);
+        background.GetComponent<UIController> ().tokenType = tokenType;
         background.name = UIString.LibraryMenuTokenType;
         DestroyImmediate (VT.Text);
         return Clone;
@@ -224,7 +227,7 @@ public class LibraryMenu : GOUI {
         Clone = CreateSprite (VisualCard.GetIconPath (number), 150, 150, 12, 45, 45, false);
         Clone.transform.SetParent (background);
         Clone.transform.localPosition = Vector3.zero;
-        background.GetComponent<UIController> ().abilityType = number;
+        background.GetComponent<UIController> ().abilityType = (AbilityType) number;
         Destroy (Clone.GetComponent<Collider> ());
         Clone.GetComponent<SpriteRenderer> ().color = AppDefaults.GetAbilityColor (number);
         return Clone;
@@ -341,7 +344,7 @@ public class LibraryMenu : GOUI {
                     if (number < AppDefaults.availableAbilities) {
                         SetSprite (buttonImage, VisualCard.GetIconPath (number));
                         buttonImage.GetComponent<SpriteRenderer> ().color = AppDefaults.GetAbilityColor (number);
-                        UIC.abilityType = number;
+                        UIC.abilityType = (AbilityType) number;
                         buttonImage.GetComponent<Renderer> ().enabled = true;
                     } else {
                         button.GetComponent<Renderer> ().enabled = false;
@@ -455,6 +458,7 @@ public class LibraryMenu : GOUI {
         for (int y = 0; y < maxY; y++) {
             for (int x = 0; x < maxX; x++) {
                 int number = x + y * maxX;
+                TokenType tokenType = (TokenType) number;
                 if (number >= NumberOfButtons [type]) {
                     continue;
                 }
@@ -464,7 +468,7 @@ public class LibraryMenu : GOUI {
                 UIController UIC = BackgroundObject.GetComponent<UIController> ();
                 switch (type) {
                     case 0:
-                        UIC.tokenType = number;
+                        UIC.tokenType = tokenType;
                         BackgroundObject.name = UIString.LibraryMenuTokenType;
                         VT = new VisualToken ();
                         Clone = VT.Anchor;
@@ -472,7 +476,7 @@ public class LibraryMenu : GOUI {
                         Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
                         Clone.transform.localPosition = Vector3.zero;
                         Clone.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-                        VT.SetType (number);
+                        VT.SetType (tokenType);
                         DestroyImmediate (VT.Text);
                         break;
                     case 1:

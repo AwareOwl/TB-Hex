@@ -70,3 +70,6 @@
 [69] Hunt
 [70] Slow
 [71] Corection
+[72] Valuable lesson
+[73] Imitation 
+[74] Bounds

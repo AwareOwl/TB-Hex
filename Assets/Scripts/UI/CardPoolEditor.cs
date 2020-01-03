@@ -147,7 +147,7 @@ public class CardPoolEditor : GOUI {
                     if (number < AppDefaults.availableAbilities) {
                         SetSprite (buttonImage, VisualCard.GetIconPath (number));
                         buttonImage.GetComponent<SpriteRenderer> ().color = AppDefaults.GetAbilityColor (number);
-                        UIC.abilityType = number;
+                        UIC.abilityType = (AbilityType) number;
                         buttonImage.GetComponent<Renderer> ().enabled = true;
                         if (Selected [type] == number) {
                             UIC.PressAndLock ();
@@ -173,6 +173,7 @@ public class CardPoolEditor : GOUI {
         int count = Buttons [type].Length;
         for (int x = 0; x < count; x++) {
             int number = TokenButtonToTokenNumber (x);
+            TokenType tokenType = (TokenType) number;
             GameObject button = Buttons [type] [x];
             GameObject buttonText = ButtonText [type] [x];
             if (button != null) {
@@ -198,12 +199,12 @@ public class CardPoolEditor : GOUI {
                         Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
                         Clone.transform.localPosition = Vector3.zero;
                         Clone.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-                        VT.SetType (number);
+                        VT.SetType (tokenType);
                         DestroyImmediate (VT.Text);
                         if (Selected [type] == number) {
                             UIC.PressAndLock ();
                         }
-                        UIC.tokenType = number;
+                        UIC.tokenType = tokenType;
                     } else {
                         button.GetComponent<Renderer> ().enabled = false;
                         button.GetComponent<Collider> ().enabled = false;
@@ -235,7 +236,7 @@ public class CardPoolEditor : GOUI {
         if (!editMode) {
             return;
         }
-        EditedCardPool.SetCard (number + DeltaNumber (), Selected [1] + 1, Selected [2], Selected [3] * 3 + 1, Selected [4]);
+        EditedCardPool.SetCard (number + DeltaNumber (), Selected [1] + 1, (TokenType) Selected [2], Selected [3] * 3 + 1, (AbilityType) Selected [4]);
         RefreshPage ();
         /*UpdateCard (number);
         if (number == EditedCardPool.Card.Count - 1) {
@@ -289,6 +290,7 @@ public class CardPoolEditor : GOUI {
 
     static void UpdateCard (int number) {
         int cardNumber = number + DeltaNumber ();
+        //Debug.Log (number + " " + cardNumber + " " + EditedCardPool.Card.Count);
         if (cardNumber < EditedCardPool.Card.Count) {
             if (CardSlot [number] == null) {
                 CreateCard (number);
@@ -484,6 +486,7 @@ public class CardPoolEditor : GOUI {
         for (int y = 0; y < maxY; y++) {
             for (int x = 0; x < maxX; x++) {
                 int number = x + y * maxX;
+                TokenType tokenType = (TokenType) number;
                 if (!editMode && type == 0 && number == 0) {
                     continue;
                 }
@@ -521,7 +524,7 @@ public class CardPoolEditor : GOUI {
                             AddTextToGameObject (BackgroundObject, Clone);
                             break;
                         case 2:
-                            BackgroundObject.GetComponent<UIController> ().tokenType = number;
+                            BackgroundObject.GetComponent<UIController> ().tokenType = tokenType;
                             BackgroundObject.name = UIString.CardPoolEditorTokenType;
                             ButtonText [type] [number] = CreateText ("", npx, npy, 13, 0.03f);
                             break;

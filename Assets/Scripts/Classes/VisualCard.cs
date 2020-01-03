@@ -33,7 +33,7 @@ public class VisualCard {
         VES.SetLastPhaseTimer (0.25f);
     }
 
-    public void DelayedSetState (int tokenValue, int tokenType, int abilityArea, int abilityType) {
+    public void DelayedSetState (int tokenValue, TokenType tokenType, int abilityArea, AbilityType abilityType) {
         VisualMatch.instance.SetState (this, tokenValue, tokenType, abilityArea, abilityType);
     }
 
@@ -42,7 +42,7 @@ public class VisualCard {
         SetState (card.tokenValue, card.tokenType, card.abilityArea, card.abilityType);
     }
 
-    public void SetState (int value, int tokenType, int abilityArea, int abilityType) {
+    public void SetState (int value, TokenType tokenType, int abilityArea, AbilityType abilityType) {
         Token.SetType (tokenType);
         Token.SetValue (value);
         Area.SetAbilityArea (abilityArea);
@@ -57,23 +57,23 @@ public class VisualCard {
         GameObject.DestroyImmediate (Anchor);
     }
 
-    public void SetAbilityIcon (int type) {
-        switch (type) {
-            case 0:
-            case 11:
-            case 22:
-            case 38:
-            case 42:
+    public void SetAbilityIcon (AbilityType abilityType) {
+        switch (abilityType) {
+            case AbilityType.T0:
+            case AbilityType.T11:
+            case AbilityType.T22:
+            case AbilityType.T38:
+            case AbilityType.T42:
                 Area.DisableAbilityArea ();
                 break;
         }
-        if (type == 0) {
+        if (abilityType == 0) {
             EnableAbilityTile (false);
         } else {
             EnableAbilityTile (true);
         }
-        SetAbilityIconInObject (AbilityIcon, type);
-        AbilityTile.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetAbilityColor (type));
+        SetAbilityIconInObject (AbilityIcon, abilityType);
+        AbilityTile.GetComponent<VisualEffectScript> ().SetColor (AppDefaults.GetAbilityColor (abilityType));
     }
 
     public void EnableAbilityTile (bool enable) {
@@ -86,6 +86,10 @@ public class VisualCard {
         }
     }
 
+    static public string GetIconPath (AbilityType abilityType) {
+        return GetIconPath ((int) abilityType);
+    }
+
     static public string GetIconPath (int type) {
         if (type < 10) {
             return "Textures/Ability/Ability0" + type.ToString ();
@@ -94,7 +98,7 @@ public class VisualCard {
         }
     }
 
-    static public void SetAbilityIconInObject (GameObject icon, int type) {
+    static public void SetAbilityIconInObject (GameObject icon, AbilityType type) {
         Texture2D abilityTex = Resources.Load (GetIconPath (type)) as Texture2D;
         if (abilityTex == null) {
             icon.GetComponent<Renderer> ().enabled = false;

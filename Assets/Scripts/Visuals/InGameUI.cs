@@ -405,9 +405,9 @@ public class InGameUI : GOUI {
 
         if (PlayedMatch.Board.tile [x, y].IsPlayable (myPlayerNumber) && stack.atLeast1Enabled) {
             CardClass card = GetSelectedCard ();
-            int abilityType = card.abilityType;
+            AbilityType abilityType = card.abilityType;
             int abilityArea = card.abilityArea;
-            int tokenType = card.tokenType;
+            TokenType tokenType = card.tokenType;
             int tokenValue = card.tokenValue;
             int tokenModifier = PlayedMatch.Board.NumberOfTypes [7] - PlayedMatch.Board.NumberOfTypes [11];
             tokenValue += tokenModifier;
@@ -424,8 +424,8 @@ public class InGameUI : GOUI {
             TileClass tokenTile = PlayedMatch.Board.GetTile (x, y);
             VectorInfo tokenInfo = PlayedMatch.GetTokenVectorInfo (tokenTile, new TokenClass (null, tokenType, tokenValue, myPlayerNumber));
             switch (tokenType) {
-                case 3:
-                case 4:
+                case TokenType.T3:
+                case TokenType.T4:
                     if (tokenInfo.Triggered1 == null || tokenInfo.Triggered1.Count == 0) {
                         break;
                     }
@@ -435,20 +435,20 @@ public class InGameUI : GOUI {
             }
 
             switch (abilityType) {
-                case 7:
+                case AbilityType.T7:
                     GameObject Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, true, false);
                     Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
                     if (PlayedMatch.LastMove != null) {
                         abilityType = PlayedMatch.GetLastPlayedCard ().abilityType;
                     }
                     break;
-                case 38:
-                case 42:
-                case 49:
+                case AbilityType.T38:
+                case AbilityType.T42:
+                case AbilityType.T49:
                     Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, true, false);
                     Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
                     break;
-                case 40:
+                case AbilityType.T40:
                     Clone = VisualEffectInterface.CreateEffect1 (GetAnchor (x, y), abilityType, tokenInfo.remainsCount < 2, false);
                     Clone.transform.localPosition = new Vector3 (0, 0.5f, 0);
                     break;

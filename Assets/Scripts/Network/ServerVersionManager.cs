@@ -280,6 +280,22 @@ public class ServerVersionManager : VersionManager {
                         ConvertTo0_15_0_3 ();
                     }
                 }
+                PathVersion = 16;
+                HotfixVersion = 0;
+                DevelopVersion = 0;
+            }
+            if (PathVersion <= 16) {
+                if (HotfixVersion <= 0) {
+                    if (DevelopVersion < 1) {
+                        ConvertTo0_16_0_1 ();
+                    }
+                    if (DevelopVersion < 2) {
+                        ConvertTo0_16_0_2 ();
+                    }
+                    if (DevelopVersion < 3) {
+                        ConvertTo0_16_0_3 ();
+                    }
+                }
             }
         }
     }
@@ -344,6 +360,71 @@ public class ServerVersionManager : VersionManager {
         RatingData.SaveRatingAbilityTokenStackSize (GetResource ("ExportFolder/Rating/AbilityTokenStackSize"));
         ratingExported = true;
     }
+
+    static bool libraryExported;
+
+    static public void ExportLibrary () {
+        if (libraryExported) {
+            return;
+        }
+        LibraryData.SaveWorksWellWith (GetResource ("ExportFolder/Library/WorksWellWith"));
+        LibraryData.SaveIsGoodAgainst (GetResource ("ExportFolder/Library/IsGoodAgainst"));
+        LibraryData.SaveIsWeakAgainst (GetResource ("ExportFolder/Library/IsWeakAgainst"));
+        libraryExported = true;
+    }
+
+    static public void ConvertTo0_16_0_3 () {
+
+        ExportLibrary ();
+        ExportRating ();
+        
+
+        GameVersion = 0;
+        PathVersion = 16;
+        HotfixVersion = 0;
+        DevelopVersion = 3;
+    }
+
+    static public void ConvertTo0_16_0_2 () {
+
+        for (int x = 76; x <= 78; x++) {
+            int numberOfTurns = 4;
+            ServerData.CreateNewPuzzle ("Puzzle #" + x.ToString (),
+                        GetResource ("ExportFolder/Puzzles/Boards/Board" + x.ToString ()),
+                        GetResource ("ExportFolder/Puzzles/CardPools/CardPool" + x.ToString ()),
+                        numberOfTurns);
+        }
+
+        GameVersion = 0;
+        PathVersion = 16;
+        HotfixVersion = 0;
+        DevelopVersion = 2;
+    }
+
+    static public void ConvertTo0_16_0_1 () {
+
+        int newId;
+        newId = ServerData.CreateNewGameMode ("");
+        ServerData.SetCardPool (newId, GetResource ("ExportFolder/v0.16/CardPools/CardPool"));
+        ServerData.SetGameModeName (newId, "Version 0.16.0");
+        ServerData.SetGameModeIsOfficial (newId, true);
+
+        int [] officialBoards = ServerData.GetAllOfficialNonSpecialBoards ();
+        foreach (int offId in officialBoards) {
+            string name = ServerData.GetBoardName (offId);
+            if (name != "Board 6") {
+                ServerData.SetGameModeBoard (newId, offId);
+            }
+        }
+
+        CopyPlayerGameModeSets ("Version 0.15.0", newId);
+
+        GameVersion = 0;
+        PathVersion = 16;
+        HotfixVersion = 0;
+        DevelopVersion = 1;
+    }
+
     static public void ConvertTo0_15_0_3 () {
 
         int newId;

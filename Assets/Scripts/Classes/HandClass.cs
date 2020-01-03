@@ -431,27 +431,27 @@ public class HandClass  {
                 for (int z = 0; z < CardValue.Length; z++) {
                     CardClass card = CardPool.Card [z];
                     modifier [z] = CardValue [z];
-                    modifier [z] *= Normalize (RatingClass.abilityOnRow [card.abilityType, card.AreaSize (), y], AI.abilityRow)
-                        * Normalize (RatingClass.tokenOnRow [card.tokenType, card.tokenValue, y], AI.tokenRow)
-                        * Normalize (RatingClass.abilityTokenOnRow [card.abilityType, card.tokenType, y], AI.abilityTokenRow)
+                    modifier [z] *= Normalize (RatingClass.abilityOnRow [(int) card.abilityType, card.AreaSize (), y], AI.abilityRow)
+                        * Normalize (RatingClass.tokenOnRow [(int) card.tokenType, card.tokenValue, y], AI.tokenRow)
+                        * Normalize (RatingClass.abilityTokenOnRow [(int) card.abilityType, (int) card.tokenType, y], AI.abilityTokenRow)
 
-                        * Normalize (RatingClass.abilityStackSize [card.abilityType, card.AreaSize (), stackSize [x]], AI.tokenRow)
-                        * Normalize (RatingClass.tokenStackSize [card.tokenType, card.tokenValue, stackSize [x]], AI.tokenRow)
-                        * Normalize (RatingClass.abilityTokenStackSize [card.tokenType, card.tokenType, stackSize [x]], AI.tokenRow);
+                        * Normalize (RatingClass.abilityStackSize [(int) card.abilityType, card.AreaSize (), stackSize [x]], AI.tokenRow)
+                        * Normalize (RatingClass.tokenStackSize [(int) card.tokenType, card.tokenValue, stackSize [x]], AI.tokenRow)
+                        * Normalize (RatingClass.abilityTokenStackSize [(int) card.tokenType, (int) card.tokenType, stackSize [x]], AI.tokenRow);
                     if (y > 0) {
                         CardClass prevCard = stack [x].card [y - 1];
                         modifier [z] *= Normalize (RatingClass.abilityAfterAbility [
-                            card.abilityType, card.AreaSize(),
-                            prevCard.abilityType, prevCard.AreaSize()], AI.abilityAfterAbility);
+                            (int) card.abilityType, card.AreaSize(),
+                            (int) prevCard.abilityType, prevCard.AreaSize()], AI.abilityAfterAbility);
                         modifier [z] *= Normalize (RatingClass.abilityAfterToken [
-                            card.abilityType, card.AreaSize (),
-                            prevCard.tokenType, prevCard.tokenValue], AI.abilityAfterToken);
+                            (int) card.abilityType, card.AreaSize (),
+                            (int) prevCard.tokenType, prevCard.tokenValue], AI.abilityAfterToken);
                         modifier [z] *= Normalize (RatingClass.tokenAfterAbility [
-                            card.tokenType, card.tokenValue,
-                            prevCard.abilityType, prevCard.AreaSize ()], AI.tokenAfterAbility);
+                            (int) card.tokenType, card.tokenValue,
+                            (int) prevCard.abilityType, prevCard.AreaSize ()], AI.tokenAfterAbility);
                         modifier [z] *= Normalize (RatingClass.tokenAfterToken [
-                            card.tokenType, card.tokenValue,
-                            prevCard.tokenType, prevCard.tokenValue], AI.tokenAfterToken);
+                            (int) card.tokenType, card.tokenValue,
+                            (int) prevCard.tokenType, prevCard.tokenValue], AI.tokenAfterToken);
                     }
                     AIClass.maxCardValue = Mathf.Max (AIClass.maxCardValue, modifier [z]);
                     modifier [z] = Mathf.Min (modifier [z], 100000);
@@ -473,14 +473,14 @@ public class HandClass  {
                     }
                 }
                 CardValue [id] = 0;
-                int abilityType = CardPool.Card [id].abilityType;
+                int abilityType = (int) CardPool.Card [id].abilityType;
                 int abilityArea = CardPool.Card [id].AreaSize ();
-                int tokenType = CardPool.Card [id].tokenType;
+                int tokenType = (int) CardPool.Card [id].tokenType;
                 int tokenValue = CardPool.Card [id].tokenValue;
                 for (int z = 0; z < count; z++) {
-                    int abilityType2 = CardPool.Card [z].abilityType;
+                    int abilityType2 = (int) CardPool.Card [z].abilityType;
                     int abilityArea2 = CardPool.Card [z].AreaSize ();
-                    int tokenType2 = CardPool.Card [z].tokenType;
+                    int tokenType2 = (int) CardPool.Card [z].tokenType;
                     int tokenValue2 = CardPool.Card [z].tokenValue;
                     if (abilityType < abilityType2) {
                         CardValue [z] *= Normalize (RatingClass.ability_AbilitySynergy [abilityType, abilityArea, abilityType2, abilityArea2], AI.ability_AbilitySynergy);
@@ -497,7 +497,7 @@ public class HandClass  {
 
                     if (CardValue [z] != 0) {
                         CardValue [z] = Mathf.Sqrt (CardValue [z]);
-                        CardValue [z] = Mathf.Max (0.01f, CardValue [z]);
+                        CardValue [z] = Mathf.Clamp (CardValue [z], 0.012f, 100000f);
                     }
 
                 }
@@ -547,7 +547,7 @@ public class HandClass  {
             for (int y = 0; y < stack [x].card.Count; y++) {
                 CardClass card = GetCard (x, y);
                 if (card != null) {
-                    s2 += card.abilityType + " " + card.abilityArea + " " + card.tokenType + " " + card.tokenValue.ToString() + " ";
+                    s2 += (int) card.abilityType + " " + card.abilityArea + " " + (int) card.tokenType + " " + card.tokenValue.ToString() + " ";
                 }
             }
             s.Add (s2);
@@ -566,7 +566,7 @@ public class HandClass  {
             for (int y = 0; y < tStack.card.Count; y++) {
                 CardClass card = tStack.card [y];
                 //Debug.Log (card.abilityArea);
-                if (!unlockedAbilities [card.abilityType] || !unlockedTokens [card.tokenType]) {
+                if (!unlockedAbilities [(int) card.abilityType] || !unlockedTokens [(int) card.tokenType]) {
                 } else {
                     newStack.Add (card);
                 }

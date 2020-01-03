@@ -132,7 +132,7 @@ public class BoardEditorMenu : GOUI {
 
     static public void SetToken (int x, int y) {
         if (Selected [1] == 2) {
-            EditedBoard.SetToken (x, y, Selected [4], Selected [3] + 1, Selected [2]);
+            EditedBoard.SetToken (x, y, (TokenType) Selected [4], Selected [3] + 1, Selected [2]);
         } else {
             EditedBoard.DestroyToken (x, y);
             EditedBoard.DestroyRemains (x, y);
@@ -323,7 +323,8 @@ public class BoardEditorMenu : GOUI {
                             AddTextToGameObject (BackgroundObject, Clone);
                             break;
                         case 4:
-                            BackgroundObject.GetComponent<UIController> ().tokenType = number;
+                            TokenType tokenType = (TokenType) number;
+                            BackgroundObject.GetComponent<UIController> ().tokenType = tokenType;
                             BackgroundObject.name = "BoardEditorTokenType";
                             VT = new VisualToken ();
                             Clone = VT.Anchor;
@@ -331,7 +332,7 @@ public class BoardEditorMenu : GOUI {
                             Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
                             Clone.transform.localPosition = Vector3.zero;
                             Clone.transform.localScale = new Vector3 (0.5f, 0.5f, 0.5f);
-                            VT.SetType (number);
+                            VT.SetType (tokenType);
                             DestroyImmediate (VT.Text);
                             break;
                     }

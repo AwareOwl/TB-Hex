@@ -593,12 +593,19 @@ public class Language {
         return s;
     }
 
+    static public string GetTokenDescription (TokenType tokenType) {
+        return GetTokenDescription ((int) tokenType);
+    }
+
     static public string GetTokenDescription (int tokenType) {
         string s = TokenDescription [tokenType];
         if (InputController.debuggingEnabled) {
             s = "[" + tokenType + "] " + s;
         }
         return s;
+    }
+    static public string GetAbilityDescription (AbilityType abilityType) {
+        return GetAbilityDescription ((int) abilityType);
     }
 
     static public string GetAbilityDescription (int abilityType) {

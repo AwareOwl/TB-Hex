@@ -19,7 +19,7 @@ public class ClientInterface : NetworkBehaviour {
         if (isLocalPlayer) {
             ClientLogic.MyInterface = this;
             gameObject.AddComponent<InputController> ();
-            CmdCompareServerVersion ("0.15.0.3");
+            CmdCompareServerVersion ("0.16.0.3");
         }
     }
 
@@ -395,7 +395,7 @@ public class ClientInterface : NetworkBehaviour {
     [TargetRpc]
     public void TargetCurrentGameMakeAMove (NetworkConnection target, int moveId, int x, int y, int playerNumber, int stackNumber, int abilityType, int abilityArea, int tokenType, int tokenValue) {
         if (InGameUI.PlayedMatch != null) {
-            InGameUI.PlayedMatch.PlayCard (moveId, x, y, playerNumber, stackNumber, abilityType, abilityArea, tokenType, tokenValue);
+            InGameUI.PlayedMatch.PlayCard (moveId, x, y, playerNumber, stackNumber, (AbilityType) abilityType, abilityArea, (TokenType) tokenType, tokenValue);
         }
     }
 

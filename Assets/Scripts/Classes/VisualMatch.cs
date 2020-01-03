@@ -62,10 +62,10 @@ public class VisualMatch : MonoBehaviour {
     }
 
 
-    public void Init (VisualToken token, GameObject parent, int owner, int type, int value) {
+    public void Init (VisualToken token, GameObject parent, int owner, TokenType type, int value) {
         StartCoroutine (IEInit (token, parent, owner, type, value));
     }
-    public IEnumerator IEInit (VisualToken token, GameObject parent, int owner, int type, int value) {
+    public IEnumerator IEInit (VisualToken token, GameObject parent, int owner, TokenType type, int value) {
         yield return new WaitForSeconds (GlobalTimer);
         token.Init (parent, owner, type, value);
     }
@@ -96,11 +96,11 @@ public class VisualMatch : MonoBehaviour {
         token.AddCreateAnimation ();
     }
 
-    public void SetState (VisualToken token, int owner, int type, int value) {
+    public void SetState (VisualToken token, int owner, TokenType type, int value) {
         StartCoroutine (IESetState (token, owner, type, value));
     }
 
-    public IEnumerator IESetState (VisualToken token, int owner, int type, int value) {
+    public IEnumerator IESetState (VisualToken token, int owner, TokenType type, int value) {
         yield return new WaitForSeconds (GlobalTimer);
         token.SetState (owner, type, value);
     }
@@ -174,38 +174,38 @@ public class VisualMatch : MonoBehaviour {
 
 
 
-    public void CreateRealEffects (VectorInfo info, int abilityType) {
+    public void CreateRealEffects (VectorInfo info, AbilityType abilityType) {
         StartCoroutine (IECreateRealEffects (info, abilityType));
     }
 
-    public IEnumerator IECreateRealEffects (VectorInfo info, int abilityType) {
+    public IEnumerator IECreateRealEffects (VectorInfo info, AbilityType abilityType) {
         yield return new WaitForSeconds (GlobalTimer);
         VisualEffectInterface.CreateRealEffects (info, abilityType);
     }
 
-    public void RealEffect (int x, int y, int abilityType, bool triggered) {
+    public void RealEffect (int x, int y, AbilityType abilityType, bool triggered) {
         StartCoroutine (IERealEffect (x, y, abilityType, triggered));
     }
 
-    public IEnumerator IERealEffect (int x, int y, int abilityType, bool triggered) {
+    public IEnumerator IERealEffect (int x, int y, AbilityType abilityType, bool triggered) {
         yield return new WaitForSeconds (GlobalTimer);
         VisualEffectInterface.RealEffect (x, y, abilityType, triggered);
     }
 
-    public void CreateRealTokenEffect (TileClass token, int effectType) {
+    public void CreateRealTokenEffect (TileClass token, TokenType effectType) {
         StartCoroutine (IECreateRealTokenEffect (token, effectType));
     }
 
-    public IEnumerator IECreateRealTokenEffect (TileClass token, int effectType) {
+    public IEnumerator IECreateRealTokenEffect (TileClass token, TokenType effectType) {
         yield return new WaitForSeconds (GlobalTimer);
         VisualEffectInterface.CreateRealTokenEffect (token, effectType);
     }
 
-    public void CreateRealTokenVectorEffect (TileClass token, TileClass destination, int effectType) {
+    public void CreateRealTokenVectorEffect (TileClass token, TileClass destination, TokenType effectType) {
         StartCoroutine (IECreateRealTokenVectorEffect (token, destination, effectType));
     }
 
-    public IEnumerator IECreateRealTokenVectorEffect (TileClass token, TileClass destination, int effectType) {
+    public IEnumerator IECreateRealTokenVectorEffect (TileClass token, TileClass destination, TokenType effectType) {
         yield return new WaitForSeconds (GlobalTimer);
         VisualEffectInterface.CreateRealTokenVectorEffect (token, destination, effectType);
     }
@@ -258,11 +258,11 @@ public class VisualMatch : MonoBehaviour {
         vCard.DestroyCardVisual ();
     }
 
-    public void SetState (VisualCard vCard, int tokenValue, int tokenType, int abilityArea, int abilityType) {
+    public void SetState (VisualCard vCard, int tokenValue, TokenType tokenType, int abilityArea, AbilityType abilityType) {
         StartCoroutine (IESetState (vCard, tokenValue, tokenType, abilityArea, abilityType));
     }
 
-    public IEnumerator IESetState (VisualCard vCard, int tokenValue, int tokenType, int abilityArea, int abilityType) {
+    public IEnumerator IESetState (VisualCard vCard, int tokenValue, TokenType tokenType, int abilityArea, AbilityType abilityType) {
         yield return new WaitForSeconds (GlobalTimer);
         vCard.SetState (tokenValue, tokenType, abilityArea, abilityType);
     }

@@ -70,3 +70,7 @@
 [69] Łowy
 [70] Spowolnienie
 [71] Korekcja
+[72] Nauka na błędach
+[73] Naśladownictwo 
+[74] Więzi
+[75] Meteoryty

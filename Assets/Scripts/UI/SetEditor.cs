@@ -149,7 +149,7 @@ public class SetEditor : GOUI {
                     Collection [x, y] = null;
                     CollectionCollider [x, y].GetComponent<Collider> ().enabled = false;
                 }
-                int number = y * MaxX + x + page * PageCount;
+                int number = y * MaxX + x + currentPage * PageCount;
                 if (number < filteredCard.Count) {
                     int cardNumber = filteredCard [number];
                     if (available [cardNumber]) {
@@ -406,6 +406,8 @@ public class SetEditor : GOUI {
 
             this.number = number;
             int alteredNumber = number - 1;
+            TokenType tokenType = (TokenType) alteredNumber;
+            AbilityType abilityType = (AbilityType) alteredNumber;
             Clone = CreateSpriteWithText ("UI/Butt_M_EmptySquare", "", px, py, 11, (int) (45 * scale), (int) (45 * scale), 0.025f);
             Text = Clone.transform.Find ("Text").gameObject;
             Clone.transform.parent = parent;
@@ -434,7 +436,7 @@ public class SetEditor : GOUI {
             if (number > 0 && currentFilterMenu != 0) {
                 switch (currentFilterMenu) {
                     case 1:
-                        UIC.tokenType = alteredNumber;
+                        UIC.tokenType = tokenType;
                         if (unlockedTokens [alteredNumber]) {
                             VisualToken VT = new VisualToken ();
                             Clone = VT.Anchor;
@@ -442,7 +444,7 @@ public class SetEditor : GOUI {
                             Clone.transform.localEulerAngles = new Vector3 (-90, 0, 0);
                             Clone.transform.localPosition = Vector3.zero;
                             Clone.transform.localScale = new Vector3 (0.4f, 0.4f, 0.4f);
-                            VT.SetType (alteredNumber);
+                            VT.SetType (tokenType);
                             DestroyImmediate (VT.Text);
                         } else {
                             Clone = CreateSprite ("Textures/Other/Lock", px, py, 12, 40, 40, false);
@@ -451,7 +453,7 @@ public class SetEditor : GOUI {
                         }
                         break;
                     case 2:
-                        UIC.abilityType = alteredNumber;
+                        UIC.abilityType = abilityType;
                         if (unlockedAbilities [alteredNumber]) {
                             Clone = CreateSprite (VisualCard.GetIconPath (alteredNumber), px, py, 12, 40, 40, false);
                             Clone.GetComponent<Renderer> ().material.color = AppDefaults.GetAbilityColor (alteredNumber);
@@ -565,10 +567,10 @@ public class SetEditor : GOUI {
         for (int x = 0; x < count; x++) {
             CardClass card = cards [x];
             if ((filter [0] [0] || filter [0] [card.tokenValue]) &&
-                (filter [1] [0] || filter [1] [card.tokenType + 1]) &&
-                (filter [2] [0] || filter [2] [card.abilityType + 1]) &&
+                (filter [1] [0] || filter [1] [(int) card.tokenType + 1]) &&
+                (filter [2] [0] || filter [2] [(int) card.abilityType + 1]) &&
                 (filter [3] [0] || filter [3] [card.AreaSize () + 1])) {
-                if (unlockedTokens [card.tokenType] && unlockedAbilities [card.abilityType]) {
+                if (unlockedTokens [(int) card.tokenType] && unlockedAbilities [(int) card.abilityType]) {
                     filteredCard.Add (x);
                 } else {
                     moreToUnlock++;

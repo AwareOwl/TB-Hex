@@ -125,7 +125,6 @@ public class BossMenu : GOUI {
         }
         pageUI.Init (10, pageCount, new Vector2Int (90, 870), UIString.BossMenuPageButton);
         Mathf.Min (currentPage [pageType], pageCount - 1);
-        pageUI.SelectPage (currentPage [pageType]);
 
         RefreshPage ();
     }
@@ -172,6 +171,7 @@ public class BossMenu : GOUI {
                 Clone.name = UIString.BossMenuRow;
             }
         }
+        pageUI.SelectPage (currentPage [pageType]);
     }
 
     static public void SelectRow (int rowNumber) {

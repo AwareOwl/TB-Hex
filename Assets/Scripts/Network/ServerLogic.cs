@@ -411,8 +411,8 @@ public class ServerLogic : MonoBehaviour {
         List<int> tokens = new List<int> ();
         for (int x = 0; x < count; x++) {
             CardClass card = cards [x];
-            int aType = card.abilityType;
-            int tType = card.tokenType;
+            int aType = (int) card.abilityType;
+            int tType = (int) card.tokenType;
             if (!abilities.Contains (aType) && !previouslyUnlockedAbilities [aType]) {
                 abilities.Add (aType);
             }
@@ -542,12 +542,12 @@ public class ServerLogic : MonoBehaviour {
         CardPoolClass cardPool = new CardPoolClass ();
         cardPool.LoadFromString (ServerData.GetCardPool (id));
         foreach (CardClass card in cardPool.Card) {
-            int aType = card.abilityType;
+            int aType = (int) card.abilityType;
             if (!availableAbilities [aType]){
                 differencesCount++;
                 availableAbilities [aType] = true;
             }
-            int tType = card.tokenType;
+            int tType = (int) card.tokenType;
             if (!availableTokens [tType]) {
                 differencesCount++;
                 availableTokens [tType] = true;
@@ -1258,7 +1258,7 @@ public class ServerLogic : MonoBehaviour {
         if (mHistory != null && mHistory.moveId > lastMoveId) {
             CurrentGameFetchMissingMoves (client, lastMoveId, mHistory.prev);
             CardClass card = mHistory.usedCard;
-            TargetCurrentGameMakeAMove (client, mHistory.moveId, mHistory.x, mHistory.y, mHistory.playerNumber, mHistory.stackNumber, card.abilityType, card.abilityArea, card.tokenType, card.tokenValue);
+            TargetCurrentGameMakeAMove (client, mHistory.moveId, mHistory.x, mHistory.y, mHistory.playerNumber, mHistory.stackNumber, (int) card.abilityType, card.abilityArea, (int) card.tokenType, card.tokenValue);
         }
     }
 

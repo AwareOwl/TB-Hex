@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 public class ServerManagement : MonoBehaviour {
 
+    static public bool TestServer = true;
+
     static ServerManagement Instance;
 
     static List<Task <AIResult>> listOfTasksToDoOnSeperateThread = new List<Task<AIResult>> ();
@@ -17,7 +19,9 @@ public class ServerManagement : MonoBehaviour {
 
     private void Awake () {
         Instance = this;
-        //ServerData.SaveBackUp ();
+        if (TestServer) {
+            ServerData.SaveBackUp ();
+        }
         //ServerData.DeleteBackUps ();
         ServerData.SetInitVector ();
         ServerVersionManager.CheckServerVersion ();
